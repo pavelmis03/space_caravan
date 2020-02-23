@@ -6,6 +6,12 @@ from objects.base import SpriteObject
 
 class Player(SpriteObject):
     filename = 'images/player.png'
+    controls = {
+        'up': pygame.K_w,
+        'down': pygame.K_s,
+        'right': pygame.K_d,
+        'left': pygame.K_a,
+    }
 
     def __init__(self, game, x=400, y=400):
         super().__init__(game, Player.filename)
@@ -17,7 +23,7 @@ class Player(SpriteObject):
 
         self.window_width = self.game.width
         self.window_height = self.game.height
-        self.speed = 5
+        self.speed = 4
         self.shift_x, self.shift_y = 0, 0
 
     def process_logic(self):
@@ -39,21 +45,21 @@ class Player(SpriteObject):
             self.keydown(event.key)
 
     def keyup(self, key):
-        if key == pygame.K_w:
+        if key == Player.controls['up']:
             self.shift_y -= 1
-        if key == pygame.K_s:
+        if key == Player.controls['down']:
             self.shift_y += 1
-        if key == pygame.K_a:
+        if key == Player.controls['left']:
             self.shift_x -= 1
-        if key == pygame.K_d:
+        if key == Player.controls['right']:
             self.shift_x += 1
 
     def keydown(self, key):
-        if key == pygame.K_w:
+        if key == Player.controls['up']:
             self.shift_y += 1
-        if key == pygame.K_s:
+        if key == Player.controls['down']:
             self.shift_y -= 1
-        if key == pygame.K_a:
+        if key == Player.controls['left']:
             self.shift_x += 1
-        if key == pygame.K_d:
+        if key == Player.controls['right']:
             self.shift_x -= 1
