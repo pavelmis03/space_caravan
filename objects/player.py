@@ -7,7 +7,7 @@ from objects.base import SpriteObject
 class Player(SpriteObject):
     filename = 'images/player.png'
 
-    def __init__(self, game, x=100, y=100):
+    def __init__(self, game, x=400, y=400):
         super().__init__(game, Player.filename)
         self.resize(0.5)
         self.rect.centerx = x
@@ -17,11 +17,12 @@ class Player(SpriteObject):
 
         self.window_width = self.game.width
         self.window_height = self.game.height
+        self.speed = 5
         self.shift_x, self.shift_y = 0, 0
 
     def process_logic(self):
-        self.rect.x += self.shift_x
-        self.rect.y += self.shift_y
+        self.rect.x += self.shift_x * self.speed
+        self.rect.y += self.shift_y * self.speed
         if self.rect.left <= 0 or self.rect.right >= self.window_width:
             self.shift_x = 0
         if self.rect.top <= 0 or self.rect.bottom >= self.window_height:
@@ -33,20 +34,26 @@ class Player(SpriteObject):
 
     def process_event(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_w:
-                self.shift_y = -1
-            elif event.key == pygame.K_s:
-                self.shift_y = 1
-            if event.key == pygame.K_a:
-                self.shift_x = -1
-            elif event.key == pygame.K_d:
-                self.shift_x = 1
+            self.keyup(event.key)
         if event.type == pygame.KEYUP:
-            if event.key == pygame.K_w:
-                self.shift_y = 0
-            elif event.key == pygame.K_s:
-                self.shift_y = 0
-            if event.key == pygame.K_a:
-                self.shift_x = 0
-            elif event.key == pygame.K_d:
-                self.shift_x = 0
+            self.keydown(event.key)
+
+    def keyup(self, key):
+        if key == pygame.K_w:
+            self.shift_y -= 1
+        if key == pygame.K_s:
+            self.shift_y += 1
+        if key == pygame.K_a:
+            self.shift_x -= 1
+        if key == pygame.K_d:
+            self.shift_x += 1
+
+    def keydown(self, key):
+        if key == pygame.K_w:
+            self.shift_y += 1
+        if key == pygame.K_s:
+            self.shift_y -= 1
+        if key == pygame.K_a:
+            self.shift_x += 1
+        if key == pygame.K_d:
+            self.shift_x -= 1
