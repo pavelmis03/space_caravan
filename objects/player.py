@@ -8,10 +8,8 @@ class Player(SpriteObject):
     filename = 'images/player.png'
 
     def __init__(self, game, x=100, y=100):
-        super().__init__(game)
-        self.image = pygame.image.load(Player.filename)
+        super().__init__(game, Player.filename)
         self.resize(0.5)
-        self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.centery = y
         self.x = x
@@ -21,9 +19,6 @@ class Player(SpriteObject):
         self.window_height = self.game.height
         self.shift_x, self.shift_y = 0, 0
 
-    def process_draw(self):
-        self.game.screen.blit(self.image, self.rect)
-
     def process_logic(self):
         self.rect.x += self.shift_x
         self.rect.y += self.shift_y
@@ -31,9 +26,6 @@ class Player(SpriteObject):
             self.shift_x = 0
         if self.rect.top <= 0 or self.rect.bottom >= self.window_height:
             self.shift_y = 0
-
-    def collides_with(self, other_ball):
-        return pygame.sprite.collide_mask(self, other_ball)
 
     def collision(self, other_ball):
         self.shift_x, other_ball.shift_x = other_ball.shift_x, self.shift_x

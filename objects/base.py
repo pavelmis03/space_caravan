@@ -16,8 +16,10 @@ class DrawObject:
 
 
 class SpriteObject(DrawObject):
-    def __init__(self, game):
+    def __init__(self, game, filename):
         super().__init__(game)
+        self.image = pygame.image.load(filename)
+        self.rect = self.image.get_rect()
 
     def resize(self, percents):
         # resizing self.image in (0, 1)
@@ -27,3 +29,9 @@ class SpriteObject(DrawObject):
             int(rect.height * percents)
         )
         self.image = pygame.transform.scale(self.image, size)
+
+    def process_draw(self):
+        self.game.screen.blit(self.image, self.rect)
+
+    def collides_with(self, other_object):
+        return pygame.sprite.collide_mask(self, other_object)
