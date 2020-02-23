@@ -1,5 +1,6 @@
+import math
+
 import pygame
-from random import randint
 
 from objects.base import SpriteObject
 
@@ -41,6 +42,8 @@ class Player(SpriteObject):
             self.keyup(event.key)
         if event.type == pygame.KEYUP:
             self.keydown(event.key)
+        if event.type == pygame.MOUSEMOTION:
+            self.mousemotion()
 
     def keyup(self, key):
         if key == Player.controls['up']:
@@ -61,3 +64,7 @@ class Player(SpriteObject):
             self.shift_x += 1
         if key == Player.controls['right']:
             self.shift_x -= 1
+
+    def mousemotion(self):
+        pos = pygame.mouse.get_pos()
+        # here's rotation
