@@ -29,6 +29,7 @@ class SpriteObject(DrawObject):
             int(rect.height * percents)
         )
         self.image = pygame.transform.scale(self.image, size)
+        self.rect = self.image.get_rect()
 
     def process_draw(self):
         self.game.screen.blit(self.image, self.rect)
