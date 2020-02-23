@@ -1,5 +1,6 @@
 from constants import Color
 from objects.balls import LinearMovingBall
+from objects.player import Player
 from objects.text import Text
 from scenes.base import Scene
 
@@ -10,7 +11,8 @@ class MainScene(Scene):
     def create_objects(self):
         self.text_count = Text(self.game, text='', color=Color.RED, x=400, y=550)
         self.balls = [LinearMovingBall(self.game) for _ in range(5)]
-        self.objects = self.balls + [self.text_count]
+        self.player = Player(self.game)
+        self.objects = self.balls + [self.text_count] + [self.player]
 
     def additional_logic(self):
         self.process_ball_collisions()
