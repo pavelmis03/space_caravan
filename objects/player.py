@@ -27,12 +27,10 @@ class Player(SpriteObject):
         self.shift_x, self.shift_y = 0, 0
 
     def process_logic(self):
-        self.rect.x += self.shift_x * self.speed
-        self.rect.y += self.shift_y * self.speed
-        if self.rect.left <= 0 or self.rect.right >= self.window_width:
-            self.shift_x = 0
-        if self.rect.top <= 0 or self.rect.bottom >= self.window_height:
-            self.shift_y = 0
+        if not (self.rect.left <= 0 and self.shift_x < 0) and not (self.rect.right >= self.window_width and self.shift_x > 0):
+            self.rect.x += self.shift_x * self.speed
+        if not (self.rect.top <= 0 and self.shift_y < 0) and not (self.rect.bottom >= self.window_height and self.shift_y > 0):
+            self.rect.y += self.shift_y * self.speed
 
     def collision(self, other_ball):
         self.shift_x, other_ball.shift_x = other_ball.shift_x, self.shift_x
