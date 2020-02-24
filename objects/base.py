@@ -2,6 +2,9 @@ import pygame
 
 
 class DrawObject:
+    """
+    Базовый класс отрисовываемого объекта
+    """
     def __init__(self, game):
         self.game = game
 

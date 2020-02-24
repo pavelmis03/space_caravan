@@ -3,17 +3,18 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to Space Caravan's documentation!
-=========================================
+Документация проекта Space Caravan
+==================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Содержание:
+
+   developer_docs/code
 
 
-
-Indices and tables
-==================
+Инструменты
+===========
 
 * :ref:`genindex`
 * :ref:`modindex`
