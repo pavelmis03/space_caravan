@@ -262,4 +262,7 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Самое главное
+venv/
+
 # End of https://www.gitignore.io/api/linux,macos,python,windows,pycharm+all
