@@ -7,10 +7,11 @@
 ==================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Содержание:
 
    developer_docs/code
+   architecture_docs/arch
 
 
 Инструменты
