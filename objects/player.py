@@ -21,6 +21,9 @@ class Player(SpriteObject):
         self.rect.centery = y
         self.x = x
         self.y = y
+        self.rotation = 0
+        self.rotated_image = self.image
+        self.rotated_rect = self.rect
 
         self.window_width = self.game.width
         self.window_height = self.game.height
@@ -28,6 +31,7 @@ class Player(SpriteObject):
         self.shift_x, self.shift_y = 0, 0
 
     def process_logic(self):
+        self.mousemotion()
         if not (self.rect.left <= 0 and self.shift_x < 0) and not (self.rect.right >= self.window_width and self.shift_x > 0):
             self.rect.x += self.shift_x * self.speed
         if not (self.rect.top <= 0 and self.shift_y < 0) and not (self.rect.bottom >= self.window_height and self.shift_y > 0):
@@ -42,8 +46,11 @@ class Player(SpriteObject):
             self.keyup(event.key)
         if event.type == pygame.KEYUP:
             self.keydown(event.key)
-        if event.type == pygame.MOUSEMOTION:
-            self.mousemotion()
+
+    def process_draw(self):
+        self.rotated_rect = self.rotated_image.get_rect(center=(self.rect.centerx, self.rect.centery))
+
+        self.game.screen.blit(self.rotated_image, self.rotated_rect)
 
     def keyup(self, key):
         if key == Player.controls['up']:
@@ -67,4 +74,8 @@ class Player(SpriteObject):
 
     def mousemotion(self):
         pos = pygame.mouse.get_pos()
+
+        self.rotation = 180 * (math.atan2(self.rect.centery - pos[1], pos[0] - self.rect.centerx) / math.pi)
+        self.rotated_image = pygame.transform.rotate (self.image, self.rotation)
+        self.rotated_rect = self.rotated_image.get_rect (center=(self.rect.centerx, self.rect.centery))
         # here's rotation
