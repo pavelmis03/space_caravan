@@ -2,7 +2,7 @@ import math
 
 import pygame
 
-from objects.base import SpriteObject
+from drawable_objects.base import SpriteObject
 
 
 class Player(SpriteObject):

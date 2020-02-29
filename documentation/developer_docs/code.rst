@@ -5,7 +5,7 @@
    :maxdepth: 2
    :caption: Разделы:
 
-   objects
+   drawable_objects
    scenes
    third_party
    other

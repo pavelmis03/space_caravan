@@ -1,5 +1,5 @@
 from constants import Color
-from objects.player import Player
+from drawable_objects.player import Player
 from scenes.base import Scene
 
 

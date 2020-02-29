@@ -1,5 +1,5 @@
 from constants import Color
-from objects.text import Text
+from drawable_objects.text import Text
 from scenes.base import Scene
 
 

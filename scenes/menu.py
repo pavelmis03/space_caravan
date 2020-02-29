@@ -1,5 +1,5 @@
 from constants import Color
-from objects.button import Btn
+from drawable_objects.button import Btn
 from scenes.base import Scene
 
 

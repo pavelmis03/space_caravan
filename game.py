@@ -17,9 +17,7 @@ class Game:
         self.size = self.width, self.height
 
         self.create_window()
-        self.game_over = False
-        self.wall_collision_count = 0
-        self.ticks = 0
+        self.running = False
         self.scenes = [MenuScene(self), MainScene(self), FinalScene(self)]
         self.current_scene = 0
 
