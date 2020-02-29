@@ -13,4 +13,4 @@ class MenuScene(Scene):
         self.set_next_scene(self.game.MAIN_SCENE_INDEX)
 
     def exit(self):
-        self.game.game_over = True
+        self.game.running = False

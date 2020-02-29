@@ -17,7 +17,7 @@ class Game:
         self.size = self.width, self.height
 
         self.create_window()
-        self.running = False
+        self.running = True
         self.scenes = [MenuScene(self), MainScene(self), FinalScene(self)]
         self.current_scene = 0
 
@@ -26,11 +26,11 @@ class Game:
         self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
 
     def main_loop(self):
-        while not self.game_over:
+        while self.running:
             eventlist = pygame.event.get()
             for event in eventlist:
                 if event.type == pygame.QUIT:
                     print('Пользователь нажал крестик')
-                    self.game_over = True
-            self.scenes[self.current_scene].process_frame(eventlist)
+                    self.running = False
+            self.scenes[self.current_scene].process_frame(self.screen, eventlist)
         sys.exit(0)

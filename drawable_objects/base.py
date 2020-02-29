@@ -16,7 +16,7 @@ class DrawableObject:
         """
         pass
 
-    def process_draw(self):
+    def process_draw(self, screen):
         """
         Отрисовка объекта.
         """
@@ -27,7 +27,7 @@ class SpriteObject(DrawableObject):
     """
     Базовый класс объекта с текстурой.
 
-    :param controller: ссылка на объект контроллера
+    :param controller: ссылка на объект контроллера (пока None)
     :param filename: имя файла с текстурой
     """
     def __init__(self, controller, filename):
@@ -47,9 +47,9 @@ class SpriteObject(DrawableObject):
         )
         self.image = pygame.transform.scale(self.image, size)
 
-    def process_draw(self):
+    def process_draw(self, screen):
         rect = self.image.get_rect()
-        self.game.screen.blit(self.image, rect)
+        screen.blit(self.image, rect)
 
     def collides_with(self, other_object):
         """

@@ -6,7 +6,7 @@ from scenes.base import Scene
 class MainScene(Scene):
 
     def create_objects(self):
-        self.player = Player(self.game)
+        self.player = Player(self.game.width, self.game.height, None)
         self.objects = [self.player]
 
     def additional_logic(self):

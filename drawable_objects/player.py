@@ -14,9 +14,10 @@ class Player(SpriteObject):
         'left': pygame.K_a,
     }
 
-    def __init__(self, game, x=400, y=400):
-        super().__init__(game, Player.filename)
+    def __init__(self, window_width, window_height, controller, x=400, y=400):
+        super().__init__(controller, Player.filename)
         self.resize(0.5)
+        self.rect = self.image.get_rect()
         self.rect.centerx = x
         self.rect.centery = y
         self.x = x
@@ -25,8 +26,8 @@ class Player(SpriteObject):
         self.rotated_image = self.image
         self.rotated_rect = self.rect
 
-        self.window_width = self.game.width
-        self.window_height = self.game.height
+        self.window_width = window_width
+        self.window_height = window_height
         self.speed = 4
         self.shift_x, self.shift_y = 0, 0
 
@@ -47,10 +48,10 @@ class Player(SpriteObject):
         if event.type == pygame.KEYUP:
             self.keydown(event.key)
 
-    def process_draw(self):
+    def process_draw(self, screen):
         self.rotated_rect = self.rotated_image.get_rect(center=(self.rect.centerx, self.rect.centery))
 
-        self.game.screen.blit(self.rotated_image, self.rotated_rect)
+        screen.blit(self.rotated_image, self.rotated_rect)
 
     def keyup(self, key):
         if key == Player.controls['up']:

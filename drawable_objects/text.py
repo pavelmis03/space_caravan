@@ -21,5 +21,5 @@ class Text(DrawableObject):
         self.text = text
         self.text_surface = self.font.render(self.text, True, self.color)
 
-    def process_draw(self):
-        self.game.screen.blit(self.text_surface, [self.x, self.y])
+    def process_draw(self, screen):
+        screen.blit(self.text_surface, [self.x, self.y])

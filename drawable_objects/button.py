@@ -12,8 +12,8 @@ class Btn(DrawableObject):
         "hover_font_color": Color.ORANGE
     }
 
-    def __init__(self, game, geometry=(10, 10, 100, 40), color=(255, 255, 0), text='Test', function=None):
-        super().__init__(game)
+    def __init__(self, controller, geometry=(10, 10, 100, 40), color=(255, 255, 0), text='Test', function=None):
+        super().__init__(controller)
         self.geometry = geometry
         self.color = color
         self.function = function if function else Btn.no_action
@@ -28,5 +28,5 @@ class Btn(DrawableObject):
     def process_event(self, event):
         self.internal_button.check_event(event)
 
-    def process_draw(self):
-        self.internal_button.update(self.game.screen)
+    def process_draw(self, screen):
+        self.internal_button.update(screen)

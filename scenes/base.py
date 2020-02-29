@@ -13,10 +13,10 @@ class Scene:
     def create_objects(self):
         pass
 
-    def process_frame(self, eventlist):
+    def process_frame(self, screen, eventlist):
         self.process_all_events(eventlist)
         self.process_all_logic()
-        self.process_all_draw()
+        self.process_all_draw(screen)
 
     def process_all_events(self, eventlist):
         for event in eventlist:
@@ -38,10 +38,10 @@ class Scene:
     def additional_logic(self):
         pass
 
-    def process_all_draw(self):
+    def process_all_draw(self, screen):
         self.screen.fill(Color.BLACK)
         for item in self.objects:
-            item.process_draw()
+            item.process_draw(screen)
         self.additional_draw()
         pygame.display.flip()  # double buffering
         pygame.time.wait(10)  # подождать 10 миллисекунд
