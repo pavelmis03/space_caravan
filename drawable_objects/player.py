@@ -8,6 +8,15 @@ from constants import DIRECTIONS
 
 
 class Player(GameSprite):
+    """
+    Игрок на уровне (далек от завершения).
+
+    :param scene: сцена, на которой находится игрок
+    :param controller: контроллер
+    :param pos: начальная позиция игрока
+    :param angle: начальный угол поворота игрока
+    """
+
     FILENAME = 'images/player.png'
     CONTROLS = [
         pygame.K_d,

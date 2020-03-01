@@ -20,7 +20,7 @@ player.py
    :members:
 
 text.py
----------
+-------
 
 .. automodule:: drawable_objects.text
    :members:

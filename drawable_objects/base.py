@@ -45,12 +45,13 @@ class SpriteObject(DrawableObject):
     :param controller: ссылка на объект контроллера (пока None)
     :param filename: имя файла с текстурой
     :param pos: координаты объекта
-    :param rot: угол поворота объекта
+    :param angle: угол поворота объекта
     """
     def __init__(self, scene, controller, filename, pos, angle):
         super().__init__(scene, controller, pos)
         self.image = pygame.image.load(filename)
         self.rotated_image = self.image
+        self.angle = 0
         self.rotate(angle)
 
     def resize(self, percents):
@@ -68,10 +69,9 @@ class SpriteObject(DrawableObject):
 
     def rotate(self, new_angle):
         """
-        Задать объекту желаемый игол поворота.
+        Задать объекту желаемый угол поворота.
 
         :param new_angle: новый угол поворота
-        :return:
         """
         self.angle = new_angle
         self.rotated_image = pygame.transform.rotate(self.image, degrees(self.angle))

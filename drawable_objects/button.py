@@ -7,6 +7,17 @@ from geometry.rectangle import rectangle_to_rect, tuple_to_rectangle
 
 
 class Button(DrawableObject):
+    """
+    Прямоугольная кнопка с текстом. При наведении на нее мыши меняет цвет. При нажании запускает заданную процедуру.
+
+    :param scene: сцена, на которой кнопка находится
+    :param controller: контроллер
+    :param geometry: кортеж с координатами левого верхнего и правого нижнего углов кнопки
+    :param text: текст
+    :param function: процедура, которую кнопка исполнит по нажатию
+    :param function_args: аргумент, который кнопка передаст в функцию (None, если передавать не нужно)
+    :param font_size: размер шрифта текста на кнопке
+    """
     BG_COLOR = Color.YELLOW
     BG_HOVER_COLOR = Color.ORANGE
     TEXT_COLOR = Color.CYAN

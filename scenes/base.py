@@ -5,6 +5,11 @@ from geometry.point import Point
 
 
 class Scene:
+    """
+    Базовый класс сцены.
+
+    :param game: игра, создающая сцену
+    """
     def __init__(self, game):
         self.game = game
         self.screen = self.game.screen

@@ -20,12 +20,20 @@ class Rectangle:
         self._height = down_y - up_y
 
     def move(self, movement):
+        """
+        Передвигает прямоугольник параллельным переносом на заданный вектор.
+
+        :param movement: вектор переноса
+        """
         self._top_left += movement
-        self.bottom_right += movement
-        self.center += movement
+        self._bottom_right += movement
+        self._center += movement
 
     @property
     def center(self):
+        """
+        Центр прямоугольника.
+        """
         return self._center
 
     @center.setter
@@ -35,6 +43,9 @@ class Rectangle:
 
     @property
     def top_left(self):
+        """
+        Верхний левый угол прямоугольника.
+        """
         return self._top_left
 
     @top_left.setter
@@ -44,6 +55,9 @@ class Rectangle:
 
     @property
     def bottom_right(self):
+        """
+        Правый нижний угол прямоугольника.
+        """
         return self._bottom_right
 
     @bottom_right.setter
@@ -53,6 +67,9 @@ class Rectangle:
 
     @property
     def width(self):
+        """
+        Ширина прямоугольника.
+        """
         return self._width
 
     @width.setter
@@ -64,6 +81,9 @@ class Rectangle:
 
     @property
     def height(self):
+        """
+        Высота прямоугольника.
+        """
         return self._height
 
     @height.setter
@@ -74,6 +94,12 @@ class Rectangle:
         self._bottom_right += movement
 
     def in_inside(self, point):
+        """
+        Проверка принадлежности точки прямоугольнику.
+
+        :param point: точка
+        :return: логическое значение
+        """
         if self._top_left.x > point.x or self._top_left.y > point.y:
             return False
         if self._bottom_right.x < point.x or self._bottom_right.y < point.y:
@@ -82,13 +108,32 @@ class Rectangle:
 
 
 def rect_to_rectangle(rect):
+    """
+    Приводит pygame.Rect к формату прямоугольника Rectangle.
+
+    :param rect: объект pygame.Rect
+    :return: соответствующий Rectangle
+    """
     rectangle = Rectangle(rect.left, rect.top, rect.right, rect.bottom)
     return rectangle
 
 
 def rectangle_to_rect(rectangle):
+    """
+    Приводит прямоугольник Rectangle к формату pygame.Rect.
+
+    :param rectangle: объект Rectangle
+    :return: соответствующий pygame.Rect
+    """
     return Rect(point_to_tuple(rectangle.top_left), (rectangle.width, rectangle.height))
 
 
 def tuple_to_rectangle(tuple):
+    """
+    Приводит кортеж из координат левого верхнего и правого нижнего углов прямоугольника соответственно к формату
+    прямоугольника Rectangle.
+
+    :param tuple: кортеж с координатами
+    :return: соответствующий Rectangle
+    """
     return Rectangle(tuple[0], tuple[1], tuple[2], tuple[3])
