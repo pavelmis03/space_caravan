@@ -1,5 +1,8 @@
 import pygame as pg
 
+from drawable_objects.base import DrawableObject
+from constants import Color
+
 
 class Button(object):
     """A fairly straight forward button class."""
@@ -90,3 +93,31 @@ class Button(object):
         if self.text:
             text_rect = text.get_rect(center=self.rect.center)
             surface.blit(text, text_rect)
+
+class Btn(DrawableObject):
+    BUTTON_STYLE = {
+        "hover_color": Color.BLUE,
+        "font_color": Color.RED,
+        "clicked_color": Color.GREEN,
+        "clicked_font_color": Color.BLACK,
+        "hover_font_color": Color.ORANGE
+    }
+
+    def __init__(self, controller, geometry=(10, 10, 100, 40), color=(255, 255, 0), text='Test', function=None):
+        super().__init__(controller)
+        self.geometry = geometry
+        self.color = color
+        self.function = function if function else Btn.no_action
+        self.internal_button = Button(self.geometry, self.color, self.function, **Btn.BUTTON_STYLE)
+        self.internal_button.text = text
+        self.internal_button.render_text()
+
+    @staticmethod
+    def no_action(self):
+        pass
+
+    def process_event(self, event):
+        self.internal_button.check_event(event)
+
+    def process_draw(self, screen):
+        self.internal_button.update(screen)

@@ -1,33 +1,11 @@
 from pygame import Rect
 
-
-class Point:
-    """
-    Геометрическая точка, она же вектор. Я всегда против такого, но тут слабая типизация.
-
-    :param x: абсцисса
-    :param y: ордината
-    """
-    def __init__(self, x=0, y=0):
-        self.x = x
-        self.y = y
-
-    def __add__(self, other):
-        return Point(self.x + other.x, self.y + other.y)
-
-    def __sub__(self, other):
-        return Point(self.x - other.x, self.y - other.y)
-
-    def __mul__(self, other):
-        return Point(self.x * other, self.y * other)
-
-    def __truediv__(self, other):
-        return Point(self.x / other, self.y / other)
+from geometry.point import Point, point_to_tuple
 
 
 class Rectangle:
     """
-    Прямоугольник
+    Прямоугольник. Почти pygame.Rect, только работает с точками Point.
 
     :param left_x: абсцисса левой границы (меньшая)
     :param up_y: ордината верхней границы (меньшая)
@@ -95,16 +73,22 @@ class Rectangle:
         self._top_left -= movement
         self._bottom_right += movement
 
+    def in_inside(self, point):
+        if self._top_left.x > point.x or self._top_left.y > point.y:
+            return False
+        if self._bottom_right.x < point.x or self._bottom_right.y < point.y:
+            return False
+        return True
 
-def rectangle_from_rect(rect):
+
+def rect_to_rectangle(rect):
     rectangle = Rectangle(rect.left, rect.top, rect.right, rect.bottom)
     return rectangle
 
 
-def rect_from_rectangle(rectangle):
-    rect = Rect()
-    rect.left = rectangle.top_left.x
-    rect.top = rectangle.top_left.y
-    rect.right = rectangle.bottom_right.x
-    rect.bottom = rectangle.bottom_right.y
-    return rect
+def rectangle_to_rect(rectangle):
+    return Rect(point_to_tuple(rectangle.top_left), (rectangle.width, rectangle.height))
+
+
+def tuple_to_rectangle(tuple):
+    return Rectangle(tuple[0], tuple[1], tuple[2], tuple[3])

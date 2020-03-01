@@ -1,16 +1,9 @@
-from constants import Color
-from drawable_objects.button import Btn
+from drawable_objects.button import Button
 from scenes.base import Scene
 
 
 class MenuScene(Scene):
     def create_objects(self):
-        self.button_start = Btn(self.game, (350, 255, 100, 40), Color.WHITE, "Запуск игры", self.set_main_scene)
-        self.button_exit = Btn(self.game, (350, 305, 100, 40), Color.WHITE, 'Выход', self.exit)
-        self.objects = [self.button_start, self.button_exit]
-
-    def set_main_scene(self):
-        self.set_next_scene(self.game.MAIN_SCENE_INDEX)
-
-    def exit(self):
-        self.game.running = False
+        self.interface_objects.append(Button(self, self.game.controller, (350, 255, 450, 295), 'Играть',
+                                             self.game.set_scene, self.game.MAIN_SCENE_INDEX))
+        self.interface_objects.append(Button(self, self.game.controller, (350, 305, 450, 345), 'Выход', self.game.end))

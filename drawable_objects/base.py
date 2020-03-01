@@ -2,7 +2,7 @@ from math import atan2, degrees
 
 import pygame
 
-from geometry.basic_geometry import Point
+from geometry.point import Point
 
 class DrawableObject:
     """
@@ -11,13 +11,11 @@ class DrawableObject:
     :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
     :param pos: координаты объекта
-    :param angle: угол поворота объекта
     """
-    def __init__(self, scene, controller, pos, angle):
+    def __init__(self, scene, controller, pos):
         self.scene = scene
         self.controller = controller
         self.pos = pos
-        self.angle = angle
 
     def process_logic(self):
         """
@@ -39,14 +37,6 @@ class DrawableObject:
         """
         self.pos = new_pos
 
-    def rotate(self, new_angle):
-        """
-        Поворот объекта
-
-        :param new_angle: новый угол поворота
-        """
-        self.angle = new_angle
-
 
 class SpriteObject(DrawableObject):
     """
@@ -59,14 +49,14 @@ class SpriteObject(DrawableObject):
     :param rot: угол поворота объекта
     """
     def __init__(self, scene, controller, filename, pos, angle):
-        super().__init__(scene, controller, pos, angle)
+        super().__init__(scene, controller, pos)
         self.image = pygame.image.load(filename)
         self.rotated_image = self.image
         self.rotate(angle)
 
     def resize(self, percents):
         """
-        Установить размер текстуры в некоторую долю от исходного.
+        Изменить размер текстуры в заданное число раз.
 
         :param percents: доля исходного размера (десятичная дробь)
         """
@@ -78,6 +68,12 @@ class SpriteObject(DrawableObject):
         self.image = pygame.transform.scale(self.image, size)
 
     def rotate(self, new_angle):
+        """
+        Задать объекту желаемый игол поворота.
+
+        :param new_angle: новый угол поворота
+        :return:
+        """
         self.angle = new_angle
         self.rotated_image = pygame.transform.rotate(self.image, degrees(self.angle))
 

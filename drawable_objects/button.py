@@ -1,32 +1,44 @@
-from third_party.button import Button
+import pygame
+
 from constants import Color
 from drawable_objects.base import DrawableObject
+from drawable_objects.text import Text
+from geometry.point import Rectangle, rectangle_to_rect, tuple_to_rectangle
 
 
-class Btn(DrawableObject):
-    BUTTON_STYLE = {
-        "hover_color": Color.BLUE,
-        "font_color": Color.RED,
-        "clicked_color": Color.GREEN,
-        "clicked_font_color": Color.BLACK,
-        "hover_font_color": Color.ORANGE
-    }
+class Button(DrawableObject):
+    BG_COLOR = Color.YELLOW
+    BG_HOVER_COLOR = Color.ORANGE
+    TEXT_COLOR = Color.CYAN
+    TEXT_HOVER_COLOR = Color.BLUE
+    FONT_NAME = 'Consolas'
 
-    def __init__(self, controller, geometry=(10, 10, 100, 40), color=(255, 255, 0), text='Test', function=None):
-        super().__init__(controller)
-        self.geometry = geometry
-        self.color = color
-        self.function = function if function else Btn.no_action
-        self.internal_button = Button(self.geometry, self.color, self.function, **Btn.BUTTON_STYLE)
-        self.internal_button.text = text
-        self.internal_button.render_text()
+    def __init__(self, scene, controller, geometry, text='Test', function=None,
+                 function_args=None, font_size=20):
+        self.geometry = tuple_to_rectangle(geometry)
+        super().__init__(scene, controller, self.geometry.center)
+        self.function = function
+        self.function_args = function_args
+        self.hover = False
+        self.text = Text(scene, self.geometry.center, text, Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
+        self.hover_text = Text(scene, self.geometry.center, text, Button.TEXT_HOVER_COLOR, 'center', Button.FONT_NAME,
+                               font_size)
 
-    @staticmethod
-    def no_action(self):
-        pass
-
-    def process_event(self, event):
-        self.internal_button.check_event(event)
+    def process_logic(self):
+        self.hover = self.geometry.in_inside(self.controller.get_mouse_pos())
+        click_pos = self.controller.get_click_pos()
+        if click_pos and self.geometry.in_inside(click_pos):
+            if self.function_args:
+                self.function(self.function_args)
+            else:
+                self.function()
 
     def process_draw(self):
-        self.internal_button.update()
+        if self.hover:
+            bg_color = Button.BG_HOVER_COLOR
+            text = self.hover_text
+        else:
+            bg_color = Button.BG_COLOR
+            text = self.text
+        pygame.draw.rect(self.scene.screen, bg_color, rectangle_to_rect(self.geometry))
+        text.process_draw()
