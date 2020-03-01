@@ -1,7 +1,7 @@
 import pygame
 
 from constants import Color
-
+from geometry.basic_geometry import Point
 
 class Scene:
     def __init__(self, game):
@@ -13,10 +13,10 @@ class Scene:
     def create_objects(self):
         pass
 
-    def process_frame(self, screen, eventlist):
+    def process_frame(self, eventlist):
         self.process_all_events(eventlist)
         self.process_all_logic()
-        self.process_all_draw(screen)
+        self.process_all_draw()
 
     def process_all_events(self, eventlist):
         for event in eventlist:
@@ -38,10 +38,10 @@ class Scene:
     def additional_logic(self):
         pass
 
-    def process_all_draw(self, screen):
+    def process_all_draw(self):
         self.screen.fill(Color.BLACK)
         for item in self.objects:
-            item.process_draw(screen)
+            item.process_draw(Point(0, 0))
         self.additional_draw()
         pygame.display.flip()  # double buffering
         pygame.time.wait(10)  # подождать 10 миллисекунд

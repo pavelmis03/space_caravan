@@ -28,5 +28,5 @@ class Btn(DrawableObject):
     def process_event(self, event):
         self.internal_button.check_event(event)
 
-    def process_draw(self, screen):
-        self.internal_button.update(screen)
+    def process_draw(self):
+        self.internal_button.update()

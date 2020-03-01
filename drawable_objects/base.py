@@ -1,14 +1,23 @@
+from math import atan2, degrees
+
 import pygame
 
+from geometry.basic_geometry import Point
 
 class DrawableObject:
     """
     Базовый класс отрисовываемого объекта.
 
+    :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
+    :param pos: координаты объекта
+    :param angle: угол поворота объекта
     """
-    def __init__(self, controller):
+    def __init__(self, scene, controller, pos, angle):
+        self.scene = scene
         self.controller = controller
+        self.pos = pos
+        self.angle = angle
 
     def process_logic(self):
         """
@@ -16,23 +25,44 @@ class DrawableObject:
         """
         pass
 
-    def process_draw(self, screen):
+    def process_draw(self):
         """
         Отрисовка объекта.
         """
         pass
+
+    def move(self, new_pos):
+        """
+        Перемещение объекта
+
+        :param new_pos: новое положение
+        """
+        self.pos = new_pos
+
+    def rotate(self, new_angle):
+        """
+        Поворот объекта
+
+        :param new_angle: новый угол поворота
+        """
+        self.angle = new_angle
 
 
 class SpriteObject(DrawableObject):
     """
     Базовый класс объекта с текстурой.
 
+    :param scene: сцена объекта
     :param controller: ссылка на объект контроллера (пока None)
     :param filename: имя файла с текстурой
+    :param pos: координаты объекта
+    :param rot: угол поворота объекта
     """
-    def __init__(self, controller, filename):
-        super().__init__(controller)
+    def __init__(self, scene, controller, filename, pos, angle):
+        super().__init__(scene, controller, pos, angle)
         self.image = pygame.image.load(filename)
+        self.rotated_image = self.image
+        self.rotate(angle)
 
     def resize(self, percents):
         """
@@ -47,9 +77,14 @@ class SpriteObject(DrawableObject):
         )
         self.image = pygame.transform.scale(self.image, size)
 
-    def process_draw(self, screen):
-        rect = self.image.get_rect()
-        screen.blit(self.image, rect)
+    def rotate(self, new_angle):
+        self.angle = new_angle
+        self.rotated_image = pygame.transform.rotate(self.image, degrees(self.angle))
+
+    def process_draw(self):
+        rect = self.rotated_image.get_rect()
+        rect.center = (self.Point.x, self.Point.y)
+        self.scene.screen.blit(self.rotated_image, rect)
 
     def collides_with(self, other_object):
         """
@@ -58,3 +93,19 @@ class SpriteObject(DrawableObject):
         :param other_object: другой объект для проверки на коллизию
         """
         return pygame.sprite.collide_mask(self, other_object)
+
+
+class GameSprite(SpriteObject):
+    """
+    Базовый класс объекта на игровом уровне
+    """
+    def process_draw(self, relative_center):
+        """
+        Отрасовка объекта в относительных координатах
+
+        :param relative_center: центр относительных координат
+        """
+        rect = self.rotated_image.get_rect()
+        relative_pos = self.pos - relative_center
+        rect.center = (relative_pos.x, relative_pos.y)
+        self.scene.screen.blit(self.rotated_image, rect)

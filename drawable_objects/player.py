@@ -2,41 +2,31 @@ import math
 
 import pygame
 
-from drawable_objects.base import SpriteObject
+from drawable_objects.base import GameSprite
+from geometry.basic_geometry import Point
 
 
-class Player(SpriteObject):
-    filename = 'images/player.png'
-    controls = {
+class Player(GameSprite):
+    FILENAME = 'images/player.png'
+    CONTROLS = {
         'up': pygame.K_w,
         'down': pygame.K_s,
         'right': pygame.K_d,
         'left': pygame.K_a,
     }
+    SPEED = 4
 
-    def __init__(self, window_width, window_height, controller, x=400, y=400):
-        super().__init__(controller, Player.filename)
+    def __init__(self, scene, controller, pos, angle):
+        super().__init__(scene, controller, Player.FILENAME, pos, angle)
         self.resize(0.5)
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
-        self.rect.centery = y
-        self.x = x
-        self.y = y
-        self.rotation = 0
-        self.rotated_image = self.image
-        self.rotated_rect = self.rect
 
-        self.window_width = window_width
-        self.window_height = window_height
-        self.speed = 4
-        self.shift_x, self.shift_y = 0, 0
+        self.shift_x = 0
+        self.shift_y = 0
 
     def process_logic(self):
         self.mousemotion()
-        if not (self.rect.left <= 0 and self.shift_x < 0) and not (self.rect.right >= self.window_width and self.shift_x > 0):
-            self.rect.x += self.shift_x * self.speed
-        if not (self.rect.top <= 0 and self.shift_y < 0) and not (self.rect.bottom >= self.window_height and self.shift_y > 0):
-            self.rect.y += self.shift_y * self.speed
+
+        self.pos += Point(self.shift_x, self.shift_y) * self.SPEED
 
     def collision(self, other_ball):
         self.shift_x, other_ball.shift_x = other_ball.shift_x, self.shift_x
@@ -48,35 +38,28 @@ class Player(SpriteObject):
         if event.type == pygame.KEYUP:
             self.keydown(event.key)
 
-    def process_draw(self, screen):
-        self.rotated_rect = self.rotated_image.get_rect(center=(self.rect.centerx, self.rect.centery))
-
-        screen.blit(self.rotated_image, self.rotated_rect)
-
     def keyup(self, key):
-        if key == Player.controls['up']:
+        if key == Player.CONTROLS['up']:
             self.shift_y -= 1
-        if key == Player.controls['down']:
+        if key == Player.CONTROLS['down']:
             self.shift_y += 1
-        if key == Player.controls['left']:
+        if key == Player.CONTROLS['left']:
             self.shift_x -= 1
-        if key == Player.controls['right']:
+        if key == Player.CONTROLS['right']:
             self.shift_x += 1
 
     def keydown(self, key):
-        if key == Player.controls['up']:
+        if key == Player.CONTROLS['up']:
             self.shift_y += 1
-        if key == Player.controls['down']:
+        if key == Player.CONTROLS['down']:
             self.shift_y -= 1
-        if key == Player.controls['left']:
+        if key == Player.CONTROLS['left']:
             self.shift_x += 1
-        if key == Player.controls['right']:
+        if key == Player.CONTROLS['right']:
             self.shift_x -= 1
 
     def mousemotion(self):
         pos = pygame.mouse.get_pos()
 
-        self.rotation = 180 * (math.atan2(self.rect.centery - pos[1], pos[0] - self.rect.centerx) / math.pi)
-        self.rotated_image = pygame.transform.rotate (self.image, self.rotation)
-        self.rotated_rect = self.rotated_image.get_rect (center=(self.rect.centerx, self.rect.centery))
+        self.rotate(math.atan2(-pos[1] + self.pos.y, pos[0] - self.pos.x))
         # here's rotation

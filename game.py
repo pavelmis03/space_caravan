@@ -8,7 +8,7 @@ from scenes.menu import MenuScene
 
 class Game:
     MENU_SCENE_INDEX = 0
-    MAIN_SCENE_INDEX = 1
+    MAIN_SCENE_INDEX = 0
     GAMEOVER_SCENE_INDEX = 2
 
     def __init__(self, width=800, height=600):
@@ -18,7 +18,7 @@ class Game:
 
         self.create_window()
         self.running = True
-        self.scenes = [MenuScene(self), MainScene(self), FinalScene(self)]
+        self.scenes = [MainScene(self)]
         self.current_scene = 0
 
     def create_window(self):
@@ -32,5 +32,5 @@ class Game:
                 if event.type == pygame.QUIT:
                     print('Пользователь нажал крестик')
                     self.running = False
-            self.scenes[self.current_scene].process_frame(self.screen, eventlist)
+            self.scenes[self.current_scene].process_frame(eventlist)
         sys.exit(0)
