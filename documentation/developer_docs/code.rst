@@ -2,10 +2,12 @@
 =========================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Разделы:
+    :maxdepth: 2
+    :caption: Разделы:
 
-   drawable_objects
-   scenes
-   third_party
-   other
+    controller
+    drawable_objects
+    geometry
+    scenes
+    third_party
+    other

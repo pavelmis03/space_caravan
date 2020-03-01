@@ -2,7 +2,6 @@ from math import atan2, degrees
 
 import pygame
 
-from geometry.point import Point
 
 class DrawableObject:
     """
