@@ -15,7 +15,7 @@ class Button(DrawableObject):
     :param geometry: кортеж с координатами левого верхнего и правого нижнего углов кнопки
     :param text: текст
     :param function: процедура, которую кнопка исполнит по нажатию
-    :param function_args: аргумент, который кнопка передаст в функцию (None, если передавать не нужно)
+    :param kwargs: именованные аргументы процедуры, вызываемой по нажатию
     :param font_size: размер шрифта текста на кнопке
     """
     BG_COLOR = Color.YELLOW
@@ -24,12 +24,11 @@ class Button(DrawableObject):
     TEXT_HOVER_COLOR = Color.BLUE
     FONT_NAME = 'Consolas'
 
-    def __init__(self, scene, controller, geometry, text='Test', function=None,
-                 function_args=None, font_size=20):
+    def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs={}, font_size=20):
         self.geometry = tuple_to_rectangle(geometry)
         super().__init__(scene, controller, self.geometry.center)
         self.function = function
-        self.function_args = function_args
+        self.kwargs = kwargs
         self.hover = False
         self.text = Text(scene, self.geometry.center, text, Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
         self.hover_text = Text(scene, self.geometry.center, text, Button.TEXT_HOVER_COLOR, 'center', Button.FONT_NAME,
@@ -39,10 +38,7 @@ class Button(DrawableObject):
         self.hover = self.geometry.in_inside(self.controller.get_mouse_pos())
         click_pos = self.controller.get_click_pos()
         if click_pos and self.geometry.in_inside(click_pos):
-            if self.function_args:
-                self.function(self.function_args)
-            else:
-                self.function()
+            self.function(**self.kwargs)
 
     def process_draw(self):
         if self.hover:
