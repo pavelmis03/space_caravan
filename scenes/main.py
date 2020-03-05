@@ -8,9 +8,13 @@ from map.grid import GeneratedGird
 class MainScene(Scene):
 
     def create_objects(self):
-        self.player = Player(self, self.game.controller, Point(self.game.width / 2, self.game.height / 2), 0)
-        self.game_objects = [self.player]
+        self.player = Player(self, self.game.controller, Point(0, 0), 0)
         self.grid = GeneratedGird(self, self.game.controller, 1, 1)
+        self.game_objects = [self.grid]
+
+    def additional_logic(self):
+        self.relative_origin = self.player.pos - self.game.center
+        self.player.process_logic(self.game.center)
 
     def additional_draw(self):
-        self.grid.process_draw(self.player.pos)
+        self.player.process_draw(self.relative_origin)

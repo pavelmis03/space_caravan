@@ -24,14 +24,14 @@ class Player(GameSprite):
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 10#4
+    SPEED = 10
 
     def __init__(self, scene, controller, pos, angle):
         super().__init__(scene, controller, Player.FILENAME, pos, angle)
         self.resize(0.5)
 
-    def process_logic(self):
-        vector_to_mouse = self.controller.get_mouse_pos() - self.pos
+    def process_logic(self, relative_center):
+        vector_to_mouse = self.controller.get_mouse_pos() - relative_center
         self.rotate(math.atan2(-vector_to_mouse.y, vector_to_mouse.x))
 
         velocity = Point(0, 0)

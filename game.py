@@ -6,6 +6,7 @@ from scenes.main import MainScene
 from scenes.menu import MenuScene
 from controller.controller import Controller
 
+from geometry.point import Point
 
 class Game:
     MENU_SCENE_INDEX = 0
@@ -15,6 +16,7 @@ class Game:
     def __init__(self, width=800, height=600):
         self.width = width
         self.height = height
+        self.center = Point(self.width / 2, self.height / 2)
         self.size = self.width, self.height
 
         self.screen = None

@@ -138,6 +138,11 @@ class GeneratedGird(Grid):
                                 [new_i, new_j, self.arr[new_i][new_j]]])
 
     def connect_rects(self):
+        """
+        делает проходы(двери) между прямоугольниками.
+
+        :return:
+        """
         self.dis_set = DisjointSet(self.rect_splitter.rects_count + 1)
         for i in range(len(self.edges)):
             edge = self.edges[i]
