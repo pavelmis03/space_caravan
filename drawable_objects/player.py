@@ -24,7 +24,7 @@ class Player(GameSprite):
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 4
+    SPEED = 10#4
 
     def __init__(self, scene, controller, pos, angle):
         super().__init__(scene, controller, Player.FILENAME, pos, angle)

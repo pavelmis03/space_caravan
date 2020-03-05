@@ -8,6 +8,9 @@ class Scene:
     """
     Базовый класс сцены.
 
+    additional_draw, additional_logic - методы, которые
+    следует перегружать для модификации
+
     :param game: игра, создающая сцену
     """
     def __init__(self, game):

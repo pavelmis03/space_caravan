@@ -1,17 +1,28 @@
 from typing import List
 
-from random import randint, shuffle
-from auxiliary.random import is_random_proc
+from geometry.point import Point
 
-from auxiliary.disjoint_set import DisjointSet
+from random import randint, shuffle
+from utils.random import is_random_proc
+
+from utils.disjoint_set import DisjointSet
+
+from drawable_objects.player import GameSprite
+
+from controller.controller import Controller
+from scenes.base import Scene
 
 class Grid:
-    def __init__(self, width: int=100, height: int=100, default_value=0):
+    def __init__(self, screen: Scene, controller: Controller,
+                 width: int=100, height: int=100, default_value=0):
         '''
         :param width:
         :param height:
         :param default_value:
         '''
+        self.screen = screen
+        self.controller = controller
+
         self.width = width
         self.height = height
         self.arr = [[default_value] * self.width for i in range(self.height)]
@@ -22,22 +33,50 @@ class Grid:
                 print(self.arr[i][j], end='')
             print()
 
+
 class GeneratedGird(Grid):
     '''
     Сетка для данжа.
     Результат генерации - заполнение исходного прямоугольника фигурами
     с углами 270 и 90 градусов.
     '''
-    def __init__(self, width: int=25, height: int=25,
-                 min_area: int=8, min_w: int=2, min_h: int=2):
+    def __init__(self, screen: Scene, controller: Controller,
+                 cell_width: int, cell_height: int,
+                 width: int=100, height: int=100,
+                 min_area: int=16, min_w: int=10, min_h: int=10):
         '''
         :param width:
         :param height:
         :param default_value:
         '''
-        super().__init__(width, height, 0)
+        super().__init__(screen, controller, width, height, 0)
+
+        self.cell_width = cell_width
+        self.cell_height = cell_height
+
         self.rect_splitter = RectSplitter(self.arr, min_area, min_w, min_h)
         self.generate()
+        self.transform_ints_to_objects()
+
+    def process_draw(self, p: Point):
+        for i in range(len(self.arr)):
+            for j in range(len(self.arr[i])):
+                self.arr[i][j].process_draw(p)
+
+    def process_logic(self):
+        pass
+
+    def transform_ints_to_objects(self):
+        for i in range(len(self.arr)):
+            for j in range(len(self.arr[i])):
+                pos_x = j * self.cell_width
+                pos_y = i * self.cell_height
+                if self.arr[i][j]:
+                    self.arr[i][j] = GameSprite(self.screen, self.controller,
+                                                'images/floor.png', Point(pos_x, pos_y))
+                else:
+                    self.arr[i][j] = GameSprite(self.screen, self.controller,
+                                                'images/wall.png', Point(pos_x, pos_y))
 
     def generate(self):
         '''
@@ -82,10 +121,17 @@ class GeneratedGird(Grid):
                 for k in range(len(dy)):
                     new_i = i + dy[k]
                     new_j = j + dx[k]
+
                     if new_i < 0 or new_j < 0:
                         continue
+
                     if not (self.arr[i][j] and self.arr[new_i][new_j]):
                         continue # 0 - внутренняя часть rect
+
+                    if self.rect_splitter.is_vertex_of_rect[i][j] or \
+                        self.rect_splitter.is_vertex_of_rect[new_i][new_j]:
+                        continue
+
                     if self.arr[i][j] == self.arr[new_i][new_j]:
                         continue
                     res.append([[i, j, self.arr[i][j]],
@@ -109,6 +155,7 @@ class RectSplitter:
         self.min_area = min_area
         self.min_size = [min_h, min_w]
         self.rects_count = 0
+        self.is_vertex_of_rect = [[False] * len(self.arr[0]) for i in range(len(self.arr))]
 
     def start_random_split(self):
         self.split_rectangle([0, 0], [len(self.arr) - 1, len(self.arr[0]) - 1])
@@ -130,13 +177,15 @@ class RectSplitter:
             self.fill_rect(pos0, pos1)
             return
 
+        wall_size = 1
+
         min_pos = []
         for i in range(len(pos0)):
-            min_pos.append(pos0[i] + self.min_size[i] + 1)
+            min_pos.append(pos0[i] + self.min_size[i] + 2 * wall_size)
 
         max_pos = []
         for i in range(len(pos1)):
-            max_pos.append(pos1[i] - self.min_size[i] - 1)
+            max_pos.append(pos1[i] - self.min_size[i] - 2 * wall_size)
 
         for i in range(len(min_pos)):
             if min_pos[i] > max_pos[i]:
@@ -158,6 +207,11 @@ class RectSplitter:
 
     def fill_rect(self, pos0: List[int], pos1: List[int]):
         self.rects_count += 1
+
+        self.is_vertex_of_rect[pos0[0]][pos0[1]] = True
+        self.is_vertex_of_rect[pos0[0]][pos1[1]] = True
+        self.is_vertex_of_rect[pos1[0]][pos0[1]] = True
+        self.is_vertex_of_rect[pos1[0]][pos1[1]] = True
 
         for i in range(pos0[0], pos1[0] + 1):
             self.arr[i][pos0[1]] = self.arr[i][pos1[1]] = self.rects_count
