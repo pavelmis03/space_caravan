@@ -13,8 +13,8 @@ class MainScene(Scene):
         self.game_objects = [self.grid]
 
     def additional_logic(self):
-        self.relative_origin = self.player.pos - self.game.center
+        self.relative_center = self.player.pos - self.game.center
         self.player.process_logic(self.game.center)
 
     def additional_draw(self):
-        self.player.process_draw(self.relative_origin)
+        self.player.process_draw(self.relative_center)

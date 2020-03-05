@@ -18,7 +18,7 @@ class Scene:
         self.screen = self.game.screen
         self.interface_objects = []
         self.game_objects = []
-        self.relative_origin = Point(0, 0)
+        self.relative_center = Point(0, 0)
         self.create_objects()
 
     def create_objects(self):
@@ -40,7 +40,7 @@ class Scene:
         for item in self.interface_objects:
             item.process_draw()
         for item in self.game_objects:
-            item.process_draw(self.relative_origin)
+            item.process_draw(self.relative_center)
         self.additional_draw()
         pygame.display.flip()  # double buffering
         pygame.time.wait(10)  # подождать 10 миллисекунд
