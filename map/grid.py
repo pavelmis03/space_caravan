@@ -42,7 +42,7 @@ class GeneratedGird(Grid):
     '''
     def __init__(self, screen: Scene, controller: Controller,
                  cell_width: int, cell_height: int,
-                 width: int=200, height: int=200,
+                 width: int=100, height: int=100,
                  min_area: int=100, min_w: int=8, min_h: int=8):
         '''
         :param width:
@@ -105,6 +105,9 @@ class GeneratedGird(Grid):
         self.save_edges_between_rects(self.edges)
         self.shuffle(self.edges)
 
+        '''self.print_arr()
+        print()'''
+
         self.union_rects()
         self.delete_edges_between_united_rects()
 
@@ -113,7 +116,7 @@ class GeneratedGird(Grid):
         self.shuffle(self.edges)
 
         self.connect_rects()
-        self.print_arr()
+        #self.print_arr()
 
     def shuffle(self, arr):
         for i in range(len(arr) - 1, 0, -1):
@@ -158,8 +161,8 @@ class GeneratedGird(Grid):
         new_figure_count = self.figures_count[rect_num1] * \
                             self.figures_count[rect_num2]
 
-        START_CHANCE = 20
-        return START_CHANCE // (new_figure_count ** 2)
+        START_CHANCE = (len(self.arr) * len(self.arr[0])) ** (1 / 2) / 2
+        return int(START_CHANCE // (new_figure_count ** 2))
 
     def union_rects(self):
         """
@@ -288,7 +291,7 @@ class RectSplitter:
         :param pos1_x:
         :return:
         '''
-        w = pos1[1] - pos0[0] + 1
+        w = pos1[1] - pos0[1] + 1
         h = pos1[0] - pos0[0] + 1
         if w * h < self.min_area:
             self.fill_rect(pos0, pos1)
