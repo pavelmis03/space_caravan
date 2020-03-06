@@ -1,6 +1,8 @@
-from math import atan2, degrees
+from math import degrees
 
 import pygame
+
+from geometry.rectangle import rect_to_rectangle, intersect
 
 
 class DrawableObject:
@@ -94,28 +96,19 @@ class GameSprite(SpriteObject):
     """
     Базовый класс объекта на игровом уровне
     """
-    def is_out_of_screen(self, rel_pos, w, h):
-        left = rel_pos.x - w / 2
-        top = rel_pos.y - h / 2
-        right = rel_pos.x + w / 2
-        bottom = rel_pos.y + h / 2
-        if right < 0 or bottom < 0 or \
-            left > self.scene.game.width or \
-            top > self.scene.game.height:
-            return True
-        return False
+    def is_out_of_screen(self, rectangle):
+        return intersect(rectangle, self.scene.game.screen_rectangle).is_empty()
 
     def process_draw(self, relative_center):
         """
-        Отрисовка объекта в относительных координатах
+        Отрисовка объекта в относительных координатах. Если объект вне экрана, он не отрисовывается.
 
-        Если объект вне экрана, он не отрисовывается
         :param relative_center: центр относительных координат
         """
         rect = self.rotated_image.get_rect()
         relative_pos = self.pos - relative_center
 
-        if self.is_out_of_screen(relative_pos, rect.width, rect.height):
+        if self.is_out_of_screen(rect_to_rectangle(rect)):
             return
 
         rect.center = (relative_pos.x, relative_pos.y)

@@ -106,6 +106,14 @@ class Rectangle:
             return False
         return True
 
+    def is_empty(self):
+        """
+        Вырожден ли прямоугольник (отрицательна ли ширина или высота).
+
+        :return: логическое значение
+        """
+        return self._width < 0 or self._height < 0
+
 
 def rect_to_rectangle(rect):
     """
@@ -137,3 +145,18 @@ def tuple_to_rectangle(tuple):
     :return: соответствующий Rectangle
     """
     return Rectangle(tuple[0], tuple[1], tuple[2], tuple[3])
+
+
+def intersect(rectangle1, rectangle2):
+    """
+    Пересечение прямоугольников.
+
+    :param rectangle1: первый прямоугольник
+    :param rectangle2: второй прямоугольник
+    :return: прямоугольник - пересечение первых двух
+    """
+    left_x = max(rectangle1.top_left.x, rectangle2.top_left.x)
+    right_x = min(rectangle1.bottom_right.x, rectangle2.bottom_right.x)
+    top_y = max(rectangle1.top_left.y, rectangle2.top_left.y)
+    bottom_y = min(rectangle1.bottom_right.y, rectangle2.bottom_right.y)
+    return Rectangle(left_x, top_y, right_x, bottom_y)

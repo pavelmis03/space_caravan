@@ -31,7 +31,7 @@ class Player(GameSprite):
         self.resize(0.5)
 
     def process_logic(self, relative_center):
-        vector_to_mouse = self.controller.get_mouse_pos() - relative_center
+        vector_to_mouse = self.controller.get_mouse_pos() + relative_center - self.pos
         self.rotate(math.atan2(-vector_to_mouse.y, vector_to_mouse.x))
 
         velocity = Point(0, 0)
