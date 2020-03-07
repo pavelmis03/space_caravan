@@ -14,10 +14,8 @@ class RectUnioner:
         self.arr = arr
         self.UNION_CHANCE = (len(self.arr) * len(self.arr[0])) ** (1 / 2)
 
-        self.is_vertex_of_rect = is_vertex_of_rect
-
         self.rect_graph = []
-        RectGraphManager.save_rect_graph(self.arr, rects_count, self.rect_graph)
+        RectGraphManager.save_rect_graph(self.arr, is_vertex_of_rect, rects_count, self.rect_graph)
 
         self.figures_count = [1 for i in range(rects_count)]
         self.dis_set = DisjointSet(rects_count)
@@ -50,7 +48,7 @@ class RectUnioner:
     def delete_edges(self):
         """
         удаляет клетки, которые разделяют
-        прямоугольники одной фигуры. 
+        прямоугольники одной фигуры.
         :return:
         """
 

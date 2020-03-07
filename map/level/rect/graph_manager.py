@@ -1,3 +1,5 @@
+from typing import List
+
 class Edge:
     def __init__(self, i1, j1, i2, j2, arr):
         self.i = [i1, i2]
@@ -5,7 +7,7 @@ class Edge:
         self.color = [arr[i1][j1], arr[i2][j2]]
     def delete(self, arr):
         i, j = self.i, self.j
-        arr[i[0]][j[0]] = arr[i[1]][j[1]] = 0
+        arr[i[0]][j[0]], arr[i[1]][j[1]] = 0, 0
 
 class RectGraphManager:
     """
@@ -16,7 +18,7 @@ class RectGraphManager:
     dx = [0, -1]
 
     @staticmethod
-    def save_rect_graph(arr, r_count, res):
+    def save_rect_graph(arr, is_vertex_of_rect, r_count, res):
         dy = RectGraphManager.dy
         dx = RectGraphManager.dx
 
@@ -32,12 +34,11 @@ class RectGraphManager:
                 for k in range(len(dy)):
                     new_i = i + dy[k]
                     new_j = j + dx[k]
-                    if new_i < 0 or new_j < 0:
+
+                    if not RectGraphManager.is_can_be_edge(i, j, new_i, new_j,
+                            arr, is_vertex_of_rect):
                         continue
-                    if not arr[new_i][new_j]:
-                        continue
-                    if arr[i][j] == arr[new_i][new_j]:
-                        continue
+
                     c1 = arr[i][j]
                     c2 = arr[new_i][new_j]
                     if has_edge[c1][c2]:
@@ -56,16 +57,23 @@ class RectGraphManager:
                     new_i = i + dy[k]
                     new_j = j + dx[k]
 
-                    if new_i < 0 or new_j < 0:
+                    if not RectGraphManager.is_can_be_edge(i, j, new_i, new_j,
+                            arr, is_vertex_of_rect):
                         continue
 
-                    if not (arr[i][j] and arr[new_i][new_j]):
-                        continue # 0 - внутренняя часть rect
-
-                    if is_vertex_of_rect[i][j] or \
-                        is_vertex_of_rect[new_i][new_j]:
-                        continue
-
-                    if arr[i][j] == arr[new_i][new_j]:
-                        continue
                     res.append(Edge(i, j, new_i, new_j, arr))
+
+    @staticmethod
+    def is_can_be_edge(i: int, j: int, new_i: int, new_j: int,
+                       arr, is_vertex_of_rect: List[bool]) -> bool:
+        if new_i < 0 or new_j < 0:
+            return False
+
+        if not (arr[i][j] and arr[new_i][new_j]):
+            return False  # 0 - внутренняя часть rect
+
+        if is_vertex_of_rect[i][j] or \
+                is_vertex_of_rect[new_i][new_j]:
+            return False
+
+        return arr[i][j] != arr[new_i][new_j]
