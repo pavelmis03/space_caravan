@@ -9,7 +9,7 @@ class MainScene(Scene):
 
     def create_objects(self):
         self.player = Player(self, self.game.controller, Point(0, 0), 0)
-        self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 1, 1)
+        self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 20, 20)
         self.game_objects = [self.grid]
 
     def additional_logic(self):

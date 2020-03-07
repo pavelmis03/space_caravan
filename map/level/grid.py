@@ -38,7 +38,7 @@ class LevelGrid(Grid):
             for j in range(len(self.arr[i])):
                 pos_x = self.pos.x + j * self.cell_width
                 pos_y = self.pos.y + i * self.cell_height
-                filenames = ['images/wall.png', 'images/floor.png']
+                filenames = ['images/floor.png', 'images/wall.png']
                 filename_index = int(bool(self.arr[i][j]))
 
                 self.arr[i][j] = GameSprite(self.scene, self.controller,

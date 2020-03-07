@@ -1,3 +1,8 @@
+"""
+Результат - двумерный список. Если стоит 0 - пустая клетка,
+если положительное число - стена.
+"""
+
 from typing import List
 
 from map.level.rect.splitter import RectSplitter

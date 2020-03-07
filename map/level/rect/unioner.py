@@ -48,51 +48,36 @@ class RectUnioner:
 
 
     def delete_edges(self):
-        dy = [-1, 0]
-        dx = [0, -1]
-        for i in range(len(self.arr)):
-            for j in range(len(self.arr[i])):
-                if not self.arr[i]:
-                    continue
-                for k in range(len(dy)):
-                    new_i = i + dy[k]
-                    new_j = j + dx[k]
-
-                    if new_i < 0 or new_j < 0:
-                        continue
-
-                    if not self.arr[new_i][new_j]:
-                        continue
-
-                    if self.arr[i][j] == self.arr[new_i][new_j]:
-                        continue
-
-                    if self.dis_set.check(self.arr[i][j], self.arr[new_i][new_j]):
-                        if not self.is_vertex_of_rect[i][j]:
-                            self.arr[i][j] = 0
-                        if not self.is_vertex_of_rect[new_i][new_j]:
-                            self.arr[new_i][new_j] = 0
+        """
+        удаляет клетки, которые разделяют
+        прямоугольники одной фигуры. 
+        :return:
+        """
 
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):
                 if self.arr[i][j]:
                     self.arr[i][j] = self.dis_set.get_parent(self.arr[i][j])
 
-        #return
-        dy = [-1, 0, 1, 0]
-        dx = [0, 1, 0, -1]
+        dy = [-1, -1, 0, 1, 1, 1, 0, -1]
+        dx = [0, 1, 1, 1, 0, -1, -1, -1]
         for i in range(1, len(self.arr) - 1):
             for j in range(1, len(self.arr[i]) - 1):
-                if not self.is_vertex_of_rect[i][j]:
+                if not self.arr[i][j]:
                     continue
-                has_side_cell = False
+
+                has_other_cells = False
                 for k in range(len(dy)):
                     new_i = i + dy[k]
                     new_j = j + dx[k]
                     if self.arr[new_i][new_j] and \
-                        not self.is_vertex_of_rect[new_i][new_j]:
-                        has_side_cell = True
+                        self.arr[i][j] != self.arr[new_i][new_j]:
+                        has_other_cells = True
                         break
 
-                if not has_side_cell:
+                """
+                если клетка не граничит с клетками другой фигуры,
+                то эта клетка внутренняя, и она подлежит удалению
+                """
+                if not has_other_cells:
                     self.arr[i][j] = 0
