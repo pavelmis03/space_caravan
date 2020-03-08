@@ -17,9 +17,12 @@ class ConsoleModel:
 class Console(DrawableObject):
     INPUTDICT = string.ascii_letters + string.digits
     CONTROLS = pygame.K_RETURN
+    PRESS_DELAY = 6
 
     def __init__(self, scene, controller, pos):
         super().__init__(scene, controller, pos)
+        self.presscnt = 1
+        self.console_status = False
 
     def process_logic(self):
         if self in self.controller.input_objects:
@@ -28,10 +31,21 @@ class Console(DrawableObject):
                     print(ch, end=' ')
             print()
         if self.controller.is_key_pressed(Console.CONTROLS):
-            print('Console')
+            self.presscnt += 1
+            self.presscnt %= Console.PRESS_DELAY
 
-    def process_draw(self, rel):
-        pass # заглушка
+        if self.presscnt == 0:
+            print('Console', self.console_status)
+            self.console_status = not self.console_status
+            self.presscnt += 1
+
+    def process_draw(self, relative_center):
+        """
+        Отрисовка объекта в относительных координатах
+
+        :param relative_center: центр относительных координат
+        """
+        pass
 
 
 #CONTROLLER
