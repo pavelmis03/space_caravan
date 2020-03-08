@@ -1,5 +1,5 @@
 from map.grid import Grid
-from map.level.generator import Generator
+from map.level.generator import LevelGenerator
 
 from drawable_objects.player import GameSprite
 from geometry.point import Point
@@ -25,7 +25,7 @@ class LevelGrid(Grid):
         """
         super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
 
-        generator = Generator(self.arr, min_area, min_w, min_h)
+        generator = LevelGenerator(self.arr, min_area, min_w, min_h)
         generator.generate()
 
         self.transform_ints_to_objects()

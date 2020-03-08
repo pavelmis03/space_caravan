@@ -11,7 +11,7 @@ from map.level.rect.unioner import RectUnioner
 from map.level.rect.connecter import RectConnecter
 
 
-class Generator:
+class LevelGenerator:
     """
     Результат генерации - заполнение исходного прямоугольника фигурами
     с углами 270 и 90 градусов.
