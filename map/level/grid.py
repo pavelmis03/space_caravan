@@ -10,7 +10,7 @@ from scenes.base import Scene
 class LevelGrid(Grid):
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
-                 width: int = 500, height: int = 500,
+                 width: int = 100, height: int = 100,
                  min_area: int = 100, min_w: int = 8, min_h: int = 8):
         """
         :param scene:

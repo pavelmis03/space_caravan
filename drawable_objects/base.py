@@ -99,6 +99,7 @@ class GameSprite(SpriteObject):
         top = rel_pos.y - h / 2
         right = rel_pos.x + w / 2
         bottom = rel_pos.y + h / 2
+
         if right < 0 or bottom < 0 or \
             left > self.scene.game.width or \
             top > self.scene.game.height:

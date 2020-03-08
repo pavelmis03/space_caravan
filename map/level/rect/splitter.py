@@ -56,6 +56,15 @@ class RectSplitter:
         for i in range(len(pos1)):
             max_pos.append(pos1[i] - self.min_size[i] - 2 * wall_size)
 
+        self.choose_direction_and_split(pos0, pos1, min_pos, max_pos)
+
+    def choose_direction_and_split(self, pos0: List[int], pos1: List[int],
+                                   min_pos: List[int], max_pos: List[int]):
+        """
+        если нельзя разбить, тогда вызывается fill_rect,
+        если можно только по одному из направлений, разбивается по нему,
+        иначе выбирается рандомное направление.
+        """
         split_directions = 2
         for i in range(len(min_pos)):
             if min_pos[i] > max_pos[i]:
