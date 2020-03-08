@@ -32,18 +32,18 @@ class Grid(DrawableObject):
         self.height = height
         self.arr = [[default_value] * self.width for i in range(self.height)]
 
-    def process_draw(self, relative_center: Point):
+    def process_draw(self):
         """
         Отрисовывает только объекты на экране
 
-        :param relative_center:
         :return:
         """
+        relative_center = self.scene.relative_center
         index_i, index_j = self.get_index_of_objects_on_screen(relative_center)
 
         for i in range(index_i['min'], index_i['max']):
             for j in range(index_j['min'], index_j['max']):
-                self.arr[i][j].process_draw(relative_center)
+                self.arr[i][j].process_draw()
 
     def get_index_of_objects_on_screen(self, relative_center: Point) \
             -> Tuple[Dict[str, int], Dict[str, int]]:

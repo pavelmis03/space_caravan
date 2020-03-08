@@ -40,7 +40,7 @@ class Scene:
         for item in self.interface_objects:
             item.process_draw()
         for item in self.game_objects:
-            item.process_draw(self.relative_center)
+            item.process_draw()
         self.additional_draw()
         pygame.display.flip()  # double buffering
         pygame.time.wait(10)  # подождать 10 миллисекунд

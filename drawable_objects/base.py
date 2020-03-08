@@ -1,7 +1,10 @@
-from math import atan2, degrees
+from utils.image import ImageManager
 
 import pygame
 
+from geometry.point import Point
+from controller.controller import Controller
+from scenes.base import Scene
 
 class DrawableObject:
     """
@@ -11,7 +14,7 @@ class DrawableObject:
     :param controller: ссылка на объект контроллера
     :param pos: координаты объекта
     """
-    def __init__(self, scene, controller, pos):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point):
         self.scene = scene
         self.controller = controller
         self.pos = pos
@@ -40,46 +43,25 @@ class DrawableObject:
 class SpriteObject(DrawableObject):
     """
     Базовый класс объекта с текстурой.
-
-    :param scene: сцена объекта
-    :param controller: ссылка на объект контроллера (пока None)
-    :param filename: имя файла с текстурой
-    :param pos: координаты объекта
-    :param angle: угол поворота объекта
     """
-    def __init__(self, scene, controller, filename, pos, angle = 0):
+    def __init__(self, scene: Scene, controller: Controller, image_str: str,
+                 pos: Point, angle: float = 0, resize_percents: float = 1):
+        """
+        :param scene:
+        :param controller:
+        :param image_str:
+        :param pos:
+        :param angle:
+        :param resize_percents:
+        """
         super().__init__(scene, controller, pos)
-        self.image = pygame.image.load(filename)
-        self.rotated_image = self.image
-        self.angle = 0
-        self.rotate(angle)
-
-    def resize(self, percents):
-        """
-        Изменить размер текстуры в заданное число раз.
-
-        :param percents: доля исходного размера (десятичная дробь)
-        """
-        rect = self.image.get_rect()
-        size = (
-            int(rect.width * percents),
-            int(rect.height * percents)
-        )
-        self.image = pygame.transform.scale(self.image, size)
-
-    def rotate(self, new_angle):
-        """
-        Задать объекту желаемый угол поворота.
-
-        :param new_angle: новый угол поворота
-        """
-        self.angle = new_angle
-        self.rotated_image = pygame.transform.rotate(self.image, degrees(self.angle))
+        self.image = image_str
+        self.resize_percents = resize_percents
+        self.angle = angle
 
     def process_draw(self):
-        rect = self.rotated_image.get_rect()
-        rect.center = (self.Point.x, self.Point.y)
-        self.scene.screen.blit(self.rotated_image, rect)
+        ImageManager.process_draw(self.image, self.pos, self.scene.screen,
+                                  self.resize_percents, self.angle)
 
     def collides_with(self, other_object):
         """
@@ -94,7 +76,7 @@ class GameSprite(SpriteObject):
     """
     Базовый класс объекта на игровом уровне
     """
-    def is_out_of_screen(self, rel_pos, w, h):
+    def is_out_of_screen(self, rel_pos: Point, w: float, h: float):
         left = rel_pos.x - w / 2
         top = rel_pos.y - h / 2
         right = rel_pos.x + w / 2
@@ -106,18 +88,25 @@ class GameSprite(SpriteObject):
             return True
         return False
 
-    def process_draw(self, relative_center):
+    def process_draw(self):
         """
         Отрисовка объекта в относительных координатах
 
         Если объект вне экрана, он не отрисовывается
-        :param relative_center: центр относительных координат
+        relative_center: центр относительных координат
         """
-        rect = self.rotated_image.get_rect()
+        relative_center = self.scene.relative_center
         relative_pos = self.pos - relative_center
 
-        if self.is_out_of_screen(relative_pos, rect.width, rect.height):
+        w = ImageManager.get_width(self.image, self.resize_percents)
+        h = ImageManager.get_height(self.image, self.resize_percents)
+        if self.is_out_of_screen(relative_pos, w, h):
             return
 
-        rect.center = (relative_pos.x, relative_pos.y)
-        self.scene.screen.blit(self.rotated_image, rect)
+        old_pos = self.pos
+        self.pos = relative_pos
+        super().process_draw()
+        self.pos = old_pos
+
+
+
