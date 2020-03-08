@@ -9,5 +9,6 @@
     drawable_objects
     geometry
     scenes
+    map
     third_party
     other
