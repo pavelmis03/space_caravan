@@ -21,6 +21,12 @@ class RectUnioner:
         self.dis_set = DisjointSet(rects_count)
 
     def start_random_union(self):
+        """
+        Проходится по всем ребрам графа (ребро есть, если прямоугольники граничат).
+
+        с некоторой вероятностью объединяет прямоугольники.
+        :return:
+        """
         for i in range(len(self.rect_graph)):
             for j in self.rect_graph[i]:
                 chance = self.get_union_chance(i, j)
@@ -51,7 +57,6 @@ class RectUnioner:
         прямоугольники одной фигуры.
         :return:
         """
-
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):
                 if self.arr[i][j]:

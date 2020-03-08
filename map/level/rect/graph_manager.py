@@ -10,23 +10,34 @@ class Edge:
         arr[i[0]][j[0]], arr[i[1]][j[1]] = 0, 0
 
 class RectGraphManager:
+    dy = [-1, 0]
+    dx = [0, -1]
     """
     Чтобы не дублировать ребра, проверяются только
     ребра из клетки влево и из клетки вверх
     """
-    dy = [-1, 0]
-    dx = [0, -1]
-
     @staticmethod
     def save_rect_graph(arr, is_vertex_of_rect, r_count, res):
+        """
+        Ребро означает наличие непосредственного
+        контакта двух прямоугольников. То есть прямоугольники - вершины,
+        ребро есть, если прямоугольники граничат.
+
+        Прямоугольники граничат,
+        если какие-то 2 клетки их сторон граничат (вершины прямоугольников не считаются).
+
+        :param arr:
+        :param is_vertex_of_rect:
+        :param r_count:
+        :param res:
+        :return:
+        """
         dy = RectGraphManager.dy
         dx = RectGraphManager.dx
 
         for i in range(r_count):
             res.append([])
-
         has_edge = [[0] * r_count for i in range(r_count)]
-
         for i in range(len(arr)):
             for j in range(len(arr[i])):
                 if not arr[i][j]:
@@ -48,6 +59,16 @@ class RectGraphManager:
                     res[c2].append(c1)
     @staticmethod
     def save_edges_between_rects(arr, is_vertex_of_rect, res):
+        """
+        Вершины - клетки arr.
+        Ребро - две клетки различных цветов, которые не
+        являются вершинами прямоугольника.
+
+        :param arr:
+        :param is_vertex_of_rect:
+        :param res:
+        :return:
+        """
         dy = RectGraphManager.dy
         dx = RectGraphManager.dx
 

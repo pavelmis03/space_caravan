@@ -8,6 +8,15 @@ from controller.controller import Controller
 from scenes.base import Scene
 
 class LevelGrid(Grid):
+    """
+    Сетка уровня (данжа).
+    Представляет собой двумерный список объектов,
+    либо стена, либо пол.
+    Все они статические (не меняются со временем).
+
+    Генерируется с помощью LevelGenerator, далее преобразует
+    инты в объекты.
+    """
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
                  width: int = 100, height: int = 100,

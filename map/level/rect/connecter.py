@@ -4,6 +4,11 @@ from utils.random import is_random_proc, shuffle
 
 
 class RectConnecter:
+    """
+    делает проходы(двери) между прямоугольниками.
+
+    :return:
+    """
     def __init__(self, arr, is_vertex_of_rect, rects_count):
         self.arr = arr
 
@@ -15,8 +20,12 @@ class RectConnecter:
 
     def start_random_connection(self):
         """
-        делает проходы(двери) между прямоугольниками.
+        Проходится по всем ребрам в случайном порядке
+        (ребро - 2 клетки граничащих прямоугольников).
 
+        Если от одного прямоугольника до другого добраться нельзя,
+        соединяет их, удаляя 2 клетки, формирующие ребро.
+        Если можно, то соединяет с некоторой вероятностью.
         :return:
         """
         shuffle(self.edges)
