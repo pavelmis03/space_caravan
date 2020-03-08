@@ -35,7 +35,8 @@ class Player(GameSprite):
         self.rotate(math.atan2(-vector_to_mouse.y, vector_to_mouse.x))
 
         velocity = Point(0, 0)
-        for i in range(4):
-            if self.controller.is_key_pressed(Player.CONTROLS[i]):
-                velocity += DIRECTIONS[i]
+        if self in self.controller.input_objects:
+            for i in range(4):
+                if self.controller.is_key_pressed(Player.CONTROLS[i]):
+                    velocity += DIRECTIONS[i]
         self.move(self.pos + velocity * Player.SPEED)
