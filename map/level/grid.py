@@ -10,7 +10,7 @@ from scenes.base import Scene
 class LevelGrid(Grid):
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
-                 width: int = 100, height: int = 100,
+                 width: int = 500, height: int = 500,
                  min_area: int = 100, min_w: int = 8, min_h: int = 8):
         """
         :param scene:
@@ -23,13 +23,10 @@ class LevelGrid(Grid):
         :param min_w:
         :param min_h:
         """
-        super().__init__(scene, controller, pos, width, height, 0)
+        super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
 
         generator = Generator(self.arr, min_area, min_w, min_h)
         generator.generate()
-
-        self.cell_width = cell_width
-        self.cell_height = cell_height
 
         self.transform_ints_to_objects()
 
