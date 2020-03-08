@@ -52,11 +52,13 @@ class Grid(DrawableObject):
         offset_x = int(relative_center.x - self.pos.x)
 
         i = {'min': offset_y // self.cell_height,
-             'max': (self.scene.game.height + offset_y) // self.cell_height + 1}
+             'max': (self.scene.game.height + offset_y + (self.cell_height - 1)) // self.cell_height + 1}
 
         j = {'min': offset_x // self.cell_width,
-             'max': (self.scene.game.width + offset_x) // self.cell_width + 1}
-
+             'max': (self.scene.game.width + offset_x + (self.cell_width - 1)) // self.cell_width + 1}
+        """
+        Прибавляем (self.cell_height - 1) и (self.cell_width - 1) для деления с округлением вверх
+        """
         i['min'] = max(i['min'], 0)
         i['max'] = min(i['max'], len(self.arr))
 
