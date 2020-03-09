@@ -9,6 +9,9 @@ from geometry.rectangle import Rectangle
 
 from geometry.point import Point
 
+from utils.image import ImageManager
+
+
 class Game:
     MENU_SCENE_INDEX = 0
     MAIN_SCENE_INDEX = 1
@@ -26,6 +29,8 @@ class Game:
         self.controller = Controller(self)
         self.scenes = [MenuScene(self), MainScene(self)]
         self.current_scene = 0
+
+        ImageManager.load_all()
 
     def create_window(self):
         pygame.init()

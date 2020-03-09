@@ -3,14 +3,14 @@ from drawable_objects.player import Player
 from scenes.base import GameScene
 from geometry.point import Point
 
-from map.grid import GeneratedGird
+from map.level.grid import LevelGrid
 
 
 class MainScene(GameScene):
     def __init__(self, game):
         super().__init__(game)
         self.player = Player(self, self.game.controller, Point(0, 0), 0)
-        self.grid = GeneratedGird(self, self.game.controller, 1, 1)
+        self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
 
     def process_all_logic(self):
         super().process_all_logic()
