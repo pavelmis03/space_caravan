@@ -9,12 +9,11 @@ class RectConnecter:
 
     :return:
     """
-    def __init__(self, arr, is_vertex_of_rect, rects_count):
+    def __init__(self, arr, rects_count):
         self.arr = arr
 
         self.edges = []
-        RectGraphManager.save_edges_between_rects(self.arr,
-                            is_vertex_of_rect, self.edges)
+        RectGraphManager.save_edges_between_rects(self.arr, self.edges)
 
         self.rects_count = rects_count
 
@@ -24,7 +23,7 @@ class RectConnecter:
         (ребро - 2 клетки граничащих прямоугольников).
 
         Если от одного прямоугольника до другого добраться нельзя,
-        соединяет их, удаляя 2 клетки, формирующие ребро.
+        соединяет их, удаляя стену, между клетками ребра.
         Если можно, то соединяет с некоторой вероятностью.
         :return:
         """

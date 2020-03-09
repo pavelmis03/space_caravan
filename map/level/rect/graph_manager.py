@@ -6,6 +6,11 @@ class Edge:
         self.j = [j1, j2]
         self.color = [arr[i1][j1], arr[i2][j2]]
     def delete(self, arr):
+        '''
+        Стена лежит между i[0]j[0] и i[1]j[1]
+        :param arr:
+        :return:
+        '''
         i, j = self.i, self.j
         wall_i = i[0] + (i[1] - i[0]) // 2
         wall_j = j[0] + (j[1] - j[0]) // 2
@@ -20,15 +25,21 @@ class RectGraphManager:
     ребра из клетки влево и из клетки вверх
     """
     @staticmethod
-    def save_rect_graph(arr, is_vertex_of_rect, r_count, res):
+    def save_rect_graph(arr, r_count, res):
         """
         Ребро означает наличие непосредственного
         контакта двух прямоугольников. То есть прямоугольники - вершины,
         ребро есть, если прямоугольники граничат.
 
-        Прямоугольники граничат,
-        если какие-то 2 клетки их сторон граничат (вершины прямоугольников не считаются).
+        Прямоугольники граничат, существует стена, по 1 сторону (либо по оси x, либо по оси у)
+        от нее клетка прямоугольника одного цвета, а по другую (по той же оси) другого цвета.
 
+        Например:
+        102
+        или
+        1
+        0
+        2
         :param arr:
         :param is_vertex_of_rect:
         :param r_count:
@@ -51,8 +62,9 @@ class RectGraphManager:
 
                     new2_i = i - dy[k]
                     new2_j = j - dx[k]
-                    if not (arr[new1_i][new1_j] and arr[new2_i][new2_j] and
-                        arr[new1_i][new1_j] != arr[new2_i][new2_j]):
+
+                    if not RectGraphManager.is_can_be_edge(new1_i, new1_j,
+                                                           new2_i, new2_j, arr):
                         continue
 
                     c1 = arr[new1_i][new1_j]
@@ -65,12 +77,17 @@ class RectGraphManager:
 
 
     @staticmethod
-    def save_edges_between_rects(arr, is_vertex_of_rect, res):
+    def save_edges_between_rects(arr, res):
         """
         Вершины - клетки arr.
-        Ребро - две клетки различных цветов, которые не
-        являются вершинами прямоугольника.
+        Ребро - две клетки различных цветов (не 0).
 
+        Две клетки составляют ребро, существует стена, по 1 сторону (либо по оси x, либо по оси у)
+        от нее первая клетка, а по другую (по той же оси) вторая.
+        Клетки 1 и 2 не ребра:
+        144
+        000
+        332
         :param arr:
         :param is_vertex_of_rect:
         :param res:
@@ -87,23 +104,15 @@ class RectGraphManager:
 
                     new2_i = i - dy[k]
                     new2_j = j - dx[k]
-                    if not (arr[new1_i][new1_j] and arr[new2_i][new2_j] and
-                        arr[new1_i][new1_j] != arr[new2_i][new2_j]):
+                    if not RectGraphManager.is_can_be_edge(new1_i, new1_j,
+                                                           new2_i, new2_j, arr):
                         continue
 
                     res.append(Edge(new1_i, new1_j, new2_i, new2_j, arr))
 
     @staticmethod
-    def is_can_be_edge(i: int, j: int, new_i: int, new_j: int,
-                       arr, is_vertex_of_rect: List[bool]) -> bool:
-        if new_i < 0 or new_j < 0:
-            return False
+    def is_can_be_edge(new1_i: int, new1_j: int, new2_i: int, new2_j: int,
+                       arr: List[bool]) -> bool:
+        return (arr[new1_i][new1_j] and arr[new2_i][new2_j] and
+                        arr[new1_i][new1_j] != arr[new2_i][new2_j])
 
-        if not (arr[i][j] and arr[new_i][new_j]):
-            return False  # 0 - внутренняя часть rect
-
-        if is_vertex_of_rect[i][j] or \
-                is_vertex_of_rect[new_i][new_j]:
-            return False
-
-        return arr[i][j] != arr[new_i][new_j]

@@ -10,12 +10,12 @@ class RectUnioner:
 
     :return:
     """
-    def __init__(self, arr, is_vertex_of_rect, rects_count):
+    def __init__(self, arr, rects_count):
         self.arr = arr
         self.UNION_CHANCE = (len(self.arr) * len(self.arr[0])) ** (1 / 2)
 
         self.rect_graph = []
-        RectGraphManager.save_rect_graph(self.arr, is_vertex_of_rect, rects_count, self.rect_graph)
+        RectGraphManager.save_rect_graph(self.arr, rects_count, self.rect_graph)
 
         self.figures_count = [1 for i in range(rects_count)]
         self.dis_set = DisjointSet(rects_count)
@@ -50,18 +50,13 @@ class RectUnioner:
 
         return int(self.UNION_CHANCE // (new_figure_count ** 2))
 
-
     def delete_edges(self):
         """
         удаляет клетки, которые разделяют
         прямоугольники одной фигуры.
         :return:
         """
-        for i in range(1, len(self.arr) - 1):
-            for j in range(1, len(self.arr[i]) - 1):
-                if self.arr[i][j]:
-                    self.arr[i][j] = self.dis_set.get_parent(self.arr[i][j])
-
+        self.change_colors_of_same_figures()
         dy = [-1, -1, 0, 1, 1, 1, 0, -1]
         dx = [0, 1, 1, 1, 0, -1, -1, -1]
         for i in range(1, len(self.arr) - 1):
@@ -81,10 +76,15 @@ class RectUnioner:
                     elif cell_color != self.arr[new_i][new_j]:
                         has_other_cells = True
                         break
-
                 """
-                если клетка не граничит с клетками другой фигуры,
-                то эта клетка внутренняя, и она подлежит удалению
+                если стена граничит только с другими стенами или 
+                клетками одной и той же фигуры, то ее следует удалить
                 """
                 if not has_other_cells:
                     self.arr[i][j] = cell_color
+
+    def change_colors_of_same_figures(self):
+        for i in range(1, len(self.arr) - 1):
+            for j in range(1, len(self.arr[i]) - 1):
+                if self.arr[i][j]:
+                    self.arr[i][j] = self.dis_set.get_parent(self.arr[i][j])

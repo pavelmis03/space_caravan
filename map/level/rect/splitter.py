@@ -23,8 +23,7 @@ class RectSplitter:
         self.arr = arr
         self.min_area = min_area
         self.min_size = [min_h, min_w]
-        self.is_vertex_of_rect = [[False] * len(self.arr[0]) for i in range(len(self.arr))]
-        self.last_rect_num = 1
+        self.last_rect_num = 0
 
     def start_random_split(self):
         self.split_rectangle([0, 0], [len(self.arr) - 1, len(self.arr[0]) - 1])
@@ -101,10 +100,6 @@ class RectSplitter:
     def fill_rect(self, pos0: List[int], pos1: List[int]):
         self.last_rect_num += 1
 
-        self.is_vertex_of_rect[pos0[0]][pos0[1]] = True
-        self.is_vertex_of_rect[pos0[0]][pos1[1]] = True
-        self.is_vertex_of_rect[pos1[0]][pos0[1]] = True
-        self.is_vertex_of_rect[pos1[0]][pos1[1]] = True
         for i in range(pos0[0] + 1, pos1[0]):
             for j in range(pos0[1] + 1, pos1[1]):
                 self.arr[i][j] = self.last_rect_num

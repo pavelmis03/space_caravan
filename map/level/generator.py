@@ -39,14 +39,13 @@ class LevelGenerator:
 
     def split(self):
         self.rect_splitter.start_random_split()
-        self.is_vertex_of_rect = self.rect_splitter.is_vertex_of_rect
         self.rects_count = self.rect_splitter.rects_count
 
     def union(self):
-        self.rect_unioner = RectUnioner(self.arr, self.is_vertex_of_rect, self.rects_count)
+        self.rect_unioner = RectUnioner(self.arr, self.rects_count)
         self.rect_unioner.start_random_union()
         self.rect_unioner.delete_edges()
 
     def connect(self):
-        self.rect_connecter = RectConnecter(self.arr, self.is_vertex_of_rect, self.rects_count)
+        self.rect_connecter = RectConnecter(self.arr, self.rects_count)
         self.rect_connecter.start_random_connection()
