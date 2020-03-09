@@ -24,7 +24,7 @@ class RectSplitter:
         self.min_area = min_area
         self.min_size = [min_h, min_w]
         self.is_vertex_of_rect = [[False] * len(self.arr[0]) for i in range(len(self.arr))]
-        self.last_rect_num = 0
+        self.last_rect_num = 1
 
     def start_random_split(self):
         self.split_rectangle([0, 0], [len(self.arr) - 1, len(self.arr[0]) - 1])
@@ -50,11 +50,11 @@ class RectSplitter:
 
         min_pos = []
         for i in range(len(pos0)):
-            min_pos.append(pos0[i] + self.min_size[i] + 2 * wall_size)
+            min_pos.append(pos0[i] + self.min_size[i] + wall_size)
 
         max_pos = []
         for i in range(len(pos1)):
-            max_pos.append(pos1[i] - self.min_size[i] - 2 * wall_size)
+            max_pos.append(pos1[i] - self.min_size[i] - wall_size)
 
         self.choose_direction_and_split(pos0, pos1, min_pos, max_pos)
 
@@ -88,11 +88,11 @@ class RectSplitter:
 
     def split_horizontally(self, pos0, pos1, new_pos):
         self.split_rectangle(pos0, [new_pos, pos1[1]])
-        self.split_rectangle([new_pos + 1, pos0[1]], pos1)
+        self.split_rectangle([new_pos, pos0[1]], pos1)
 
     def split_vertical(self, pos0, pos1, new_pos):
         self.split_rectangle(pos0, [pos1[0], new_pos])
-        self.split_rectangle([pos0[0], new_pos + 1], pos1)
+        self.split_rectangle([pos0[0], new_pos], pos1)
 
     @property
     def rects_count(self):
@@ -105,9 +105,6 @@ class RectSplitter:
         self.is_vertex_of_rect[pos0[0]][pos1[1]] = True
         self.is_vertex_of_rect[pos1[0]][pos0[1]] = True
         self.is_vertex_of_rect[pos1[0]][pos1[1]] = True
-
-        for i in range(pos0[0], pos1[0] + 1):
-            self.arr[i][pos0[1]] = self.arr[i][pos1[1]] = self.last_rect_num
-
-        for i in range(pos0[1], pos1[1] + 1):
-            self.arr[pos0[0]][i] = self.arr[pos1[0]][i] = self.last_rect_num
+        for i in range(pos0[0] + 1, pos1[0]):
+            for j in range(pos0[1] + 1, pos1[1]):
+                self.arr[i][j] = self.last_rect_num

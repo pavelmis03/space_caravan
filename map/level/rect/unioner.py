@@ -57,8 +57,8 @@ class RectUnioner:
         прямоугольники одной фигуры.
         :return:
         """
-        for i in range(len(self.arr)):
-            for j in range(len(self.arr[i])):
+        for i in range(1, len(self.arr) - 1):
+            for j in range(1, len(self.arr[i]) - 1):
                 if self.arr[i][j]:
                     self.arr[i][j] = self.dis_set.get_parent(self.arr[i][j])
 
@@ -66,15 +66,19 @@ class RectUnioner:
         dx = [0, 1, 1, 1, 0, -1, -1, -1]
         for i in range(1, len(self.arr) - 1):
             for j in range(1, len(self.arr[i]) - 1):
-                if not self.arr[i][j]:
+                if self.arr[i][j]:
                     continue
 
                 has_other_cells = False
+                cell_color = 0
                 for k in range(len(dy)):
                     new_i = i + dy[k]
                     new_j = j + dx[k]
-                    if self.arr[new_i][new_j] and \
-                        self.arr[i][j] != self.arr[new_i][new_j]:
+                    if not self.arr[new_i][new_j]:
+                        continue
+                    if not cell_color:
+                        cell_color = self.arr[new_i][new_j]
+                    elif cell_color != self.arr[new_i][new_j]:
                         has_other_cells = True
                         break
 
@@ -83,4 +87,4 @@ class RectUnioner:
                 то эта клетка внутренняя, и она подлежит удалению
                 """
                 if not has_other_cells:
-                    self.arr[i][j] = 0
+                    self.arr[i][j] = cell_color
