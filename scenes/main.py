@@ -13,8 +13,8 @@ class MainScene(Scene):
         self.game.controller.input_objects.append(self.player)
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
         self.game_objects = [self.grid]
-        # cmd = Console(self, self.game.controller, Point(600, 600))
-        # self.game_objects.append(cmd)
+        cmd = Console(self, self.game.controller, Point(600, 600))
+        self.game_objects.append(cmd)
 
     def additional_logic(self):
         self.relative_center = self.player.next_step_pos - self.game.center

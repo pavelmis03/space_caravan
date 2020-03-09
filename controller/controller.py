@@ -122,3 +122,15 @@ class Controller:
         :return: логическое значение
         """
         return key in self.pressed_keys
+
+    def is_one_of_keys_pressed(self, keys):
+        """
+        Нажата ли хотя бы одна из клавиш.
+
+        :param keys: массив кодов клавиш
+        :return: логическое значение
+        """
+        b = 0
+        for key in keys:
+            b += self.is_key_pressed(key)
+        return bool(b)
