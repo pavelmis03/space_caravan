@@ -1,6 +1,9 @@
 import string
 
 #MVC
+# Viewer will display console
+# Controller would be getting keys when Viewer is active
+# Model will parse and run commands, which controller got
 
 
 #MODEL
@@ -15,7 +18,6 @@ class ConsoleModel:
 
 #VIEWER
 class Console(DrawableObject):
-    INPUTDICT = string.ascii_letters + string.digits
     CONTROLS = {
         'on': [pygame.K_SLASH],
         'off': [pygame.K_ESCAPE, pygame.K_RETURN],
@@ -23,30 +25,20 @@ class Console(DrawableObject):
 
     def __init__(self, scene, controller, pos):
         super().__init__(scene, controller, pos)
-        self.presscnt = 1
         self.console_on = False
+        self.console_controller = ConsoleController(scene, controller, self)
 
     def process_logic(self):
-        if self in self.controller.input_objects:
-            for ch in Console.INPUTDICT:
-                if self.controller.is_key_pressed(ord(ch)):
-                    print(ch, end=' ')
-            print()
+        # change text on lable
+
         if self.controller.is_one_of_keys_pressed(Console.CONTROLS['on']):
             print('Console is now on')
-            self.switch_on()
+            self.switch(True)
         if self.controller.is_one_of_keys_pressed(Console.CONTROLS['off']):
             print('Console is now off')
-            self.switch_off()
+            self.switch(False)
 
-    def switch_on(self):
-        self.console_on = True
-        self.controller.input_objects = [self]
-
-    def switch_off(self):
-        self.console_on = False
-        self.controller.input_objects = [self.scene.player]
-
+        self.console_controller.process_logic()
 
     def process_draw(self):
         """
@@ -57,7 +49,26 @@ class Console(DrawableObject):
         relative_center = self.scene.relative_center
         relative_pos = self.pos - relative_center
 
+    def switch(self, state):
+        self.console_on = state
+        if state:
+            self.controller.input_objects = [self]
+        else:
+            self.controller.input_objects = [self.scene.player]
+
 
 #CONTROLLER
 class ConsoleController:
-    pass
+    INPUTDICT = string.ascii_letters + string.digits
+
+    def __init__(self, scene, controller, console):
+        self.scene = scene
+        self.controller = controller
+        self.console = console
+
+    def process_logic(self):
+        if self.console.console_on:
+            for ch in ConsoleController.INPUTDICT:
+                if self.controller.is_key_pressed(ord(ch)):
+                    print(ch, end=' ')
+            print()
