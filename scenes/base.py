@@ -8,6 +8,9 @@ class Scene:
     """
     Базовый класс сцены.
 
+    additional_draw, additional_logic - методы, которые
+    следует перегружать для модификации
+
     :param game: игра, создающая сцену
     """
     def __init__(self, game):
@@ -15,6 +18,7 @@ class Scene:
         self.screen = self.game.screen
         self.interface_objects = []
         self.game_objects = []
+        self.relative_center = Point(0, 0)
         self.create_objects()
 
     def create_objects(self):
@@ -36,7 +40,7 @@ class Scene:
         for item in self.interface_objects:
             item.process_draw()
         for item in self.game_objects:
-            item.process_draw(Point(0, 0))
+            item.process_draw()
         self.additional_draw()
         pygame.display.flip()  # double buffering
         pygame.time.wait(10)  # подождать 10 миллисекунд
