@@ -1,4 +1,4 @@
-from map.level.rect.graph_manager import RectGraphManager
+from map.level.rect.graph.manager import RectGraphManager
 from utils.disjoint_set import DisjointSet
 from utils.random import is_random_proc
 
@@ -10,21 +10,21 @@ class RectUnioner:
 
     :return:
     """
-    def __init__(self, arr, rects_count):
-        self.arr = arr
+    def __init__(self, graph_manager: RectGraphManager):
+        self.arr = graph_manager.arr
         self.UNION_CHANCE = (len(self.arr) * len(self.arr[0])) ** (1 / 2)
 
         self.rect_graph = []
-        RectGraphManager.save_rect_graph(self.arr, rects_count, self.rect_graph)
+        graph_manager.save_rect_graph(self.rect_graph)
 
-        self.figures_count = [1 for i in range(rects_count)]
-        self.dis_set = DisjointSet(rects_count)
+        self.figures_count = [1 for i in range(graph_manager.rects_count)]
+        self.dis_set = DisjointSet(graph_manager.rects_count)
 
     def start_random_union(self):
         """
         Проходится по всем ребрам графа (ребро есть, если прямоугольники граничат).
 
-        с некоторой вероятностью объединяет прямоугольники.
+        с некоторой вероятностью UNION_CHANCE объединяет прямоугольники.
         :return:
         """
         for i in range(len(self.rect_graph)):
