@@ -1,8 +1,11 @@
+from typing import List
+
 from map.grid import Grid
 from map.level.generator import LevelGenerator
 
 from drawable_objects.player import GameSprite
 from geometry.point import Point
+from geometry.rectangle import Rectangle, create_rect_with_center
 
 from controller.controller import Controller
 from scenes.base import Scene
@@ -49,3 +52,23 @@ class LevelGrid(Grid):
 
                 self.arr[i][j] = GameSprite(self.scene, self.controller,
                            filenames[filename_index], Point(pos_x, pos_y))
+
+    def get_collision_rects_nearby(self, pos: Point) -> List[Rectangle]:
+        center_i, center_j = self.coord_manager.get_coord_by_pos(pos)
+        INDEX_OFFSET = 1
+
+        min_i = max(0, center_i - INDEX_OFFSET)
+        min_j = max(0, center_j - INDEX_OFFSET)
+        max_i = min(len(self.arr), center_i + INDEX_OFFSET)
+        max_j = min(len(self.arr[0]), center_j + INDEX_OFFSET)
+
+        res = []
+        for i in range(min_i, max_i + 1):
+            for j in range(min_j, max_j + 1):
+                if self.arr[i][j].image_name == 'wall':
+                    h = self.cell_height
+                    w = self.cell_width
+                    y = i * h
+                    x = j * w
+                    res.append(create_rect_with_center(Point(x, y), w, h))
+        return res
