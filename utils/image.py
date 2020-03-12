@@ -4,10 +4,11 @@
 import pygame
 from math import degrees
 from geometry.point import Point
+from geometry.rectangle import intersect, Rectangle
 
 class ImageManager:
     images = {} # получить по ключу pygame картинку
-
+    IMG_NAMES = ['player', 'floor', 'wall']
     @staticmethod
     def load_all():
         """
@@ -16,9 +17,10 @@ class ImageManager:
 
         :return:
         """
-        img_names = ['player', 'floor', 'wall']
-        for i in range(len(img_names)):
-            ImageManager.images[img_names[i]] = pygame.image.load('images/' + img_names[i] + '.png')
+
+        for i in range(len(ImageManager.IMG_NAMES)):
+            ImageManager.images[ImageManager.IMG_NAMES[i]] = \
+                pygame.image.load('images/' + ImageManager.IMG_NAMES[i] + '.png')
 
     @staticmethod
     def process_draw(img_str: str, pos_center: Point, screen,
@@ -60,10 +62,30 @@ class ImageManager:
         return pygame.transform.rotate(image, degrees(angle))
 
     @staticmethod
+    def is_out_of_screen(image_name: str, zoom: float,
+                         relative_pos: Point, screen_rectangle: Rectangle):
+        """
+        relative_pos - координаты относительно центра экрана.
+
+        если прямоугольник картинки не пересекается с прямоугольником экрана(и не находится
+        внутри), то картинка все экрана.
+        :param image_name:
+        :param zoom:
+        :param relative_pos:
+        :return:
+        """
+        w = ImageManager.get_width(image_name, zoom)
+        h = ImageManager.get_height(image_name, zoom)
+        rectangle = Rectangle(0, 0, w, h)
+        rectangle.center = relative_pos
+        return intersect(rectangle, screen_rectangle).is_empty()
+
+    @staticmethod
     def get_width(image_str: str, percents: float) -> float:
         return ImageManager.images[image_str].get_width() * percents
 
     @staticmethod
     def get_height(image_str: str, percents: float) -> float:
         return ImageManager.images[image_str].get_height() * percents
+
 

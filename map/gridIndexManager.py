@@ -1,10 +1,10 @@
 from typing import Dict, Tuple
 from geometry.point import Point
 
-class GridCoordManager:
+class GridIndexManager:
     """
     Вынесена значитльная часть кода из Grid, чтобы класс был не слишком большим.
-    Эта часть отвечает за обработку запросов, связанных с координатами, позицией grid
+    Эта часть отвечает за обработку запросов, связанных с индексами, позицией grid
     """
     def __init__(self, grid, pos, cell_width, cell_height):
         self.grid = grid
@@ -13,12 +13,18 @@ class GridCoordManager:
         self.cell_height = cell_height
         self.cell_width = cell_width
 
-    def get_coord_of_objects_on_screen(self, relative_center: Point) \
+    def get_index_of_objects_on_screen(self, relative_center: Point) \
             -> Tuple[Dict[str, int], Dict[str, int]]:
+        """
+        Проходится по всем эл-там сетки затратно по времени, поэтому
+        с помощью математики ищем интервалы координат, по которым следует пройтись
+        :param relative_center:
+        :return:
+        """
 
         pos = self.get_pos_in_grid_origin(relative_center)
 
-        i_min, j_min = self.get_coord_by_pos_in_grid_origin(pos)
+        i_min, j_min = self.get_index_by_pos_in_grid_origin(pos)
         i = {'min': i_min,
              'max': (self.grid.scene.game.height + int(pos.y) + (self.cell_height - 1)) // self.cell_height + 1}
 
@@ -35,13 +41,13 @@ class GridCoordManager:
 
         return i, j
 
-    def get_coord_by_pos(self, pos: Point) -> Tuple[int, int]:
+    def get_index_by_pos(self, pos: Point) -> Tuple[int, int]:
         relative_pos = self.get_pos_in_grid_origin(pos)
-        return self.get_coord_by_pos_in_grid_origin(relative_pos)
+        return self.get_index_by_pos_in_grid_origin(relative_pos)
 
-    def get_coord_by_pos_in_grid_origin(self, pos: Point) -> Tuple[int, int]:
+    def get_index_by_pos_in_grid_origin(self, pos: Point) -> Tuple[int, int]:
         """
-        coord означает index
+        index эл-та на данной позиции в системе координат grid_origin
         :param pos:
         :return:
         """
@@ -50,4 +56,11 @@ class GridCoordManager:
         return i, j
 
     def get_pos_in_grid_origin(self, pos: Point) -> Point:
+        """
+        grid origin - система координат (математических) относительно grid.
+        Обычно у grid позиция (0, 0), grid_origin поэтому совпадает
+        с обычной системо координат.
+        :param pos:
+        :return:
+        """
         return Point(pos.x - self.pos.x, pos.y - self.pos.y)

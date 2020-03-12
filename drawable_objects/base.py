@@ -1,9 +1,6 @@
 import pygame
 
-from math import degrees
-
 from geometry.point import Point
-from geometry.rectangle import rect_to_rectangle, intersect, Rectangle
 from controller.controller import Controller
 from scenes.base import Scene
 from utils.image import ImageManager
@@ -77,7 +74,6 @@ class GameSprite(SpriteObject):
     """
     Базовый класс объекта на игровом уровне
     """
-
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
                  zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
@@ -86,9 +82,6 @@ class GameSprite(SpriteObject):
 
     def destroy(self):
         self.enabled = False
-
-    def is_out_of_screen(self, rectangle):
-        return intersect(rectangle, self.scene.game.screen_rectangle).is_empty()
 
     def process_draw(self):
         """
@@ -100,11 +93,8 @@ class GameSprite(SpriteObject):
         relative_center = self.scene.relative_center
         relative_pos = self.pos - relative_center
 
-        w = ImageManager.get_width(self.image_name, self.zoom)
-        h = ImageManager.get_height(self.image_name, self.zoom)
-        rectangle = Rectangle(0, 0, w, h)
-        rectangle.center = relative_pos
-        if self.is_out_of_screen(rectangle):
+        if ImageManager.is_out_of_screen(self.image_name, self.zoom,
+                                         relative_pos, self.scene.game.screen_rectangle):
             return
 
         ImageManager.process_draw(self.image_name, relative_pos, self.scene.screen, self.zoom, self.angle)
