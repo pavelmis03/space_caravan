@@ -36,7 +36,7 @@ class DrawableObject:
 
     def move(self, new_pos):
         """
-        Перемещение объекта
+        Перемещение объекта.
 
         :param new_pos: новое положение
         """
@@ -78,6 +78,15 @@ class GameSprite(SpriteObject):
     Базовый класс объекта на игровом уровне
     """
 
+    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
+                 zoom: float = 1):
+        super().__init__(scene, controller, image_name, pos, angle, zoom)
+        self.scene.plane.insert(self, self.pos)
+        self.enabled = True
+
+    def destroy(self):
+        self.enabled = False
+
     def is_out_of_screen(self, rectangle):
         return intersect(rectangle, self.scene.game.screen_rectangle).is_empty()
 
@@ -99,3 +108,7 @@ class GameSprite(SpriteObject):
             return
 
         ImageManager.process_draw(self.image_name, relative_pos, self.scene.screen, self.zoom, self.angle)
+
+    def move(self, new_pos):
+        self.scene.plane.do_step(self, self.pos, new_pos)
+        self.pos = new_pos
