@@ -16,16 +16,25 @@ class Scene:
         self.interface_objects = []
 
     def iteration(self):
+        """
+        Итерация работы сцены - обработка логики и отрисовка.
+        """
         self.process_all_logic()
         self.process_all_draw()
         pygame.display.flip()  # double buffering
         pygame.time.wait(10)  # подождать 10 миллисекунд
 
     def process_all_logic(self):
+        """
+        Обработка логики сцены и ее объектов.
+        """
         for item in self.interface_objects:
             item.process_logic()
 
     def process_all_draw(self):
+        """
+        Обработка отрисовки сцены и ее объектов.
+        """
         self.screen.fill(Color.BLACK)
         for item in self.interface_objects:
             item.process_draw()

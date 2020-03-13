@@ -6,6 +6,11 @@ from utils.game_plane import GamePlane
 
 
 class MainScene(GameScene):
+    """
+    Класс главной игровой сцены. Называется так, потому что пока это единственная игровая сцена.
+
+    :param game: игра, создающая сцену
+    """
     def __init__(self, game):
         super().__init__(game)
         self.plane = GamePlane()

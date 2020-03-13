@@ -8,7 +8,8 @@
     controller
     drawable_objects
     geometry
-    scenes
     map
+    scenes
     third_party
+    utils
     other

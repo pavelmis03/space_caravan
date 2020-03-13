@@ -137,6 +137,13 @@ def rectangle_to_rect(rectangle):
 
 
 def create_rect_with_center(center: Point, w: float, h: float) -> Rectangle:
+    """
+    Создает прямоугольник с заданным центром.
+    :param center: точка центра
+    :param w: ширина
+    :param h: высота
+    :return: соответствующий прямоугольник
+    """
     return Rectangle(center.x - w / 2, center.y - h / 2, center.x + w / 2, center.y + h / 2)
 
 def tuple_to_rectangle(tuple):

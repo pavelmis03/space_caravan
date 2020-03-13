@@ -73,6 +73,13 @@ class SpriteObject(DrawableObject):
 class GameSprite(SpriteObject):
     """
     Базовый класс объекта на игровом уровне
+
+    :param scene: сцена объекта
+    :param controller: ссылка на объект контроллера (пока None)
+    :param image_name: имя картинки в базе менеджера
+    :param pos: координаты объекта
+    :param angle: угол поворота объекта
+    :param zoom: масштаб картинки
     """
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
                  zoom: float = 1):
@@ -81,6 +88,9 @@ class GameSprite(SpriteObject):
         self.enabled = True
 
     def destroy(self):
+        """
+        Уничтожение игрового объекта. Будет уничтожен на ближайшей итерации своей сценой.
+        """
         self.enabled = False
 
     def process_draw(self):
