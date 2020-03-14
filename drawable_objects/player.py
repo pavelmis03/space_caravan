@@ -2,14 +2,15 @@ import math
 
 import pygame
 
-from drawable_objects.base import GameSprite
+from drawable_objects.base import Humanoid
 from geometry.point import Point
 from constants import DIRECTIONS
 
 from scenes.base import Scene
 from controller.controller import Controller
 
-class Player(GameSprite):
+
+class Player(Humanoid):
     """
     Игрок на уровне (далек от завершения).
 
