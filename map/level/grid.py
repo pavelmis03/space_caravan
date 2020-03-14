@@ -3,7 +3,7 @@ from typing import List
 from map.grid import Grid
 from map.level.generator import LevelGenerator
 
-from drawable_objects.player import GameSprite
+from drawable_objects.base import GameSprite
 from geometry.point import Point
 from geometry.rectangle import Rectangle, create_rect_with_center
 
