@@ -18,9 +18,9 @@ class Button(DrawableObject):
     :param kwargs: именованные аргументы процедуры, вызываемой по нажатию
     :param font_size: размер шрифта текста на кнопке
     """
-    BG_COLOR = Color.YELLOW
+    BG_COLOR = Color.CYAN
     BG_HOVER_COLOR = Color.ORANGE
-    TEXT_COLOR = Color.CYAN
+    TEXT_COLOR = Color.BLACK
     TEXT_HOVER_COLOR = Color.BLUE
     FONT_NAME = 'Consolas'
 
