@@ -23,6 +23,9 @@ class Point:
     def __truediv__(self, other):
         return Point(self.x / other, self.y / other)
 
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+
 
 def point_to_tuple(point):
     """

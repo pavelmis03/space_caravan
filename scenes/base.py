@@ -16,16 +16,25 @@ class Scene:
         self.interface_objects = []
 
     def iteration(self):
+        """
+        Итерация работы сцены - обработка логики и отрисовка.
+        """
         self.process_all_logic()
         self.process_all_draw()
         pygame.display.flip()  # double buffering
         pygame.time.wait(10)  # подождать 10 миллисекунд
 
     def process_all_logic(self):
+        """
+        Обработка логики сцены и ее объектов.
+        """
         for item in self.interface_objects:
             item.process_logic()
 
     def process_all_draw(self):
+        """
+        Обработка отрисовки сцены и ее объектов.
+        """
         self.screen.fill(Color.BLACK)
         for item in self.interface_objects:
             item.process_draw()
@@ -43,6 +52,7 @@ class GameScene(Scene):
         self.relative_center = Point(0, 0)
         self.grid = None
         self.player = None
+        self.plane = None
 
     def process_all_logic(self):
         """
@@ -55,6 +65,10 @@ class GameScene(Scene):
             item.process_logic()
         self.player.process_logic()
         self.relative_center = self.player.pos - self.game.screen_rectangle.center
+        # Удаление уничтоженных игровых объектов
+        for item in self.game_objects:
+            if not item.enabled:
+                self.game_objects.remove(item)
 
     def process_all_draw(self):
         """
