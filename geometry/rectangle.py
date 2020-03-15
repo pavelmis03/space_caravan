@@ -114,6 +114,12 @@ class Rectangle:
         """
         return self._width < 0 or self._height < 0
 
+    def get_vertexes(self):
+        r1 = self._top_left
+        r2 = self._bottom_right
+        p = [r1, Point(r2.x, r1.y), r2, Point(r1.x, r2.y)]
+        return p
+
 
 def rect_to_rectangle(rect):
     """

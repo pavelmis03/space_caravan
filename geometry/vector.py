@@ -20,5 +20,10 @@ def sign(x: float) -> int:
     return -1
 
 
-def length(v: Point):
+def length(v: Point) -> float:
     return sqrt(v.x * v.x + v.y * v.y)
+
+
+def normalized(v: Point) -> Point:
+    l = length(v)
+    return v / l

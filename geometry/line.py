@@ -1,6 +1,7 @@
+from math import sqrt
+
 from geometry.point import Point
-from geometry.vector import cross_product, sign
-from constants import EPS
+from geometry.vector import sign
 
 
 class Line:
@@ -20,9 +21,9 @@ def line_from_points(p1: Point, p2: Point) -> Line:
     return Line(a, b, c)
 
 
-def intersect_lines(l1: Line, l2: Line) -> Point:
-    if sign(cross_product(l1.get_normal(), l2.get_normal())) == 0:
-        return None
-    x = (l1.b * l2.c - l2.b * l1.c) / (l1.a * l2.b - l2.a * l1.b)
-    y = (l1.a * l2.c - l2.a * l1.c) / (l2.a * l1.b - l1.a * l2.b)
-    return Point(x, y)
+def point_on_line(p: Point, l: Line):
+    return sign(l.a * p.x + l.b * p.y + l.c) == 0
+
+
+def dist_point_line(p: Point, l: Line) -> float:
+    return abs(l.a * p.x + l.b * p.y + l.c) / sqrt(l.a * l.a + l.b * l.b)

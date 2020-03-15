@@ -1,18 +1,16 @@
 from geometry.point import Point
-from geometry.segment import Segment, point_on_segment, intersect_segments, intersect_seg_rect
-from geometry.line import Line, line_from_points, intersect_lines
+from geometry.segment import Segment
 from geometry.rectangle import Rectangle
+from geometry.circle import Circle
+from geometry.intersections import intersect_seg_circle, intersert_circle_rect
 
 
 def main():
-    x1, y1, x2, y2 = map(float, input().split())
-    seg = Segment(Point(x1, y1), Point(x2, y2))
+    x1, y1, r = map(float, input().split())
+    c = Circle(Point(x1, y1), r)
     rect = Rectangle(0, 0, 2, 2)
-    p = intersect_seg_rect(seg, rect)
-    if p:
-        print(p.x, p.y)
-    else:
-        print("None")
+    q = intersert_circle_rect(c, rect)
+    print(q)
 
 
 if __name__ == '__main__':
