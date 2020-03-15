@@ -6,18 +6,17 @@ from scenes.base import Scene
 from utils.image import ImageManager
 
 
-class DrawableObject:
+class AbstractObject:
     """
-    Базовый класс отрисовываемого объекта.
+        Базовый класс неотрисовымаевого объекта, но содержащего отрисовывательные элементы
 
-    :param scene: сцена объекта
-    :param controller: ссылка на объект контроллера
-    :param pos: координаты объекта
-    """
-    def __init__(self, scene: Scene, controller: Controller, pos: Point):
+        :param scene: сцена объекта
+        :param controller: ссылка на объект контроллера
+        :param pos: координаты объекта
+        """
+    def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
         self.controller = controller
-        self.pos = pos
 
     def process_logic(self):
         """
@@ -30,6 +29,20 @@ class DrawableObject:
         Отрисовка объекта.
         """
         pass
+
+
+class DrawableObject(AbstractObject):
+    """
+    Базовый класс отрисовываемого объекта.
+
+    :param scene: сцена объекта
+    :param controller: ссылка на объект контроллера
+    :param pos: координаты объекта
+    """
+    def __init__(self, scene: Scene, controller: Controller, pos: Point):
+        super().__init__(scene, controller)
+        self.pos = pos
+
 
     def move(self, new_pos):
         """
