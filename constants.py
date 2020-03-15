@@ -19,3 +19,5 @@ DIRECTIONS = [
     Point(-1, 0),
     Point(0, 1),
 ]
+
+EPS = 1e-5
