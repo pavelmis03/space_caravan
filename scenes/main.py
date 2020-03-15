@@ -1,3 +1,4 @@
+from console.entry import Entry
 from drawable_objects.player import Player
 from scenes.base import GameScene
 from geometry.point import Point
@@ -16,6 +17,8 @@ class MainScene(GameScene):
         self.plane = GamePlane()
         self.player = Player(self, self.game.controller, Point(0, 0), 0)
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
+        self.consoleEntry = Entry(self, self.game.controller, (0, self.game.height-20, 200, self.game.height), "kek")
+        self.interface_objects.append(self.consoleEntry)
 
     def process_all_logic(self):
         super().process_all_logic()
