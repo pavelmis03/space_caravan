@@ -1,4 +1,5 @@
 from drawable_objects.console import Console
+from console.entry import Entry
 from drawable_objects.player import Player
 from scenes.base import GameScene
 from geometry.point import Point
@@ -18,8 +19,11 @@ class MainScene(GameScene):
         self.player = Player(self, self.game.controller, Point(0, 0), 0)
         self.game.controller.input_objects.append(self.player)
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
+
         cmd = Console(self, self.game.controller, Point(600, 600))
-        self.game_objects.append(cmd)
+        self.interface_objects.append(cmd)
+        # self.consoleEntry = Entry(self, self.game.controller, (0, self.game.height-20, 200, self.game.height), "kek")
+        # self.interface_objects.append(self.consoleEntry)
 
     def process_all_logic(self):
         super().process_all_logic()
