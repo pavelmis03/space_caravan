@@ -15,18 +15,20 @@ class Entry(DrawableObject):
     TEXT_SHIFT = Point(3, 3)
     FONT_NAME = "Consolas"
 
-    def __init__(self, scene, controller, geometry, initial_text="", font_size=20):
+    def __init__(self, scene, controller, geometry, initial_text="", font_size=20, visible=True):
         self.geometry = tuple_to_rectangle(geometry)
         super().__init__(scene, controller, self.geometry.center)
         self.text = Text(scene, self.geometry.top_left + Entry.TEXT_SHIFT, initial_text, Entry.TEXT_COLOR, 'left', Entry.FONT_NAME, font_size, is_bold=False)
-
-        self.visible = True
-
-    def process_logic(self):
-        if self.controller.is_key_pressed(pygame.K_w):
-            self.text.update_text("/set Player.speed 4")
+        self.visible = visible
 
     def process_draw(self):
+        if not self.visible: return;
         pygame.draw.rect(self.scene.screen, Entry.BG_COLOR, rectangle_to_rect(self.geometry))
         pygame.draw.rect(self.scene.screen, Entry.BORDER_COLOR, rectangle_to_rect(self.geometry), 1)
         self.text.process_draw()
+
+    def hide(self):
+        self.visible = False
+
+    def show(self):
+        self.visible = True
