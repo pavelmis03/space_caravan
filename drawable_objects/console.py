@@ -24,6 +24,7 @@ class Console(DrawableObject):
     }
 
     def __init__(self, scene, controller, pos):
+        self.enabled = True
         super().__init__(scene, controller, pos)
         self.console_on = False
         self.console_controller = ConsoleController(scene, controller, self)

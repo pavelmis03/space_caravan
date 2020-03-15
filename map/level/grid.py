@@ -1,8 +1,11 @@
+from typing import List
+
 from map.grid import Grid
 from map.level.generator import LevelGenerator
 
 from drawable_objects.player import GameSprite
 from geometry.point import Point
+from geometry.rectangle import Rectangle, create_rect_with_center
 
 from controller.controller import Controller
 from scenes.base import Scene
@@ -40,6 +43,10 @@ class LevelGrid(Grid):
         self.transform_ints_to_objects()
 
     def transform_ints_to_objects(self):
+        """
+        Необходимо применять после генерации.
+        :return:
+        """
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):
                 pos_x = self.pos.x + j * self.cell_width
@@ -49,3 +56,34 @@ class LevelGrid(Grid):
 
                 self.arr[i][j] = GameSprite(self.scene, self.controller,
                            filenames[filename_index], Point(pos_x, pos_y))
+
+    def get_collision_rects_nearby(self, pos: Point) -> List[Rectangle]:
+        """
+        Возвращает все прямоугольники коллизий статических объектов (стен)
+        в квадрате длиной (1 + INDEX_OFFSET * 2) с центром в клетке,
+        соответствующей координате pos.
+        :param pos:
+        :return:
+        """
+        center_i, center_j = self.index_manager.get_index_by_pos(pos)
+        INDEX_OFFSET = 1
+
+        min_i = max(0, center_i - INDEX_OFFSET)
+        min_j = max(0, center_j - INDEX_OFFSET)
+        max_i = min(len(self.arr), center_i + INDEX_OFFSET)
+        max_j = min(len(self.arr[0]), center_j + INDEX_OFFSET)
+
+        res = []
+        for i in range(min_i, max_i + 1):
+            for j in range(min_j, max_j + 1):
+                if self.arr[i][j].image_name == 'wall':
+                    """
+                    простая проверка, но в выдумывании чего-то другого
+                    нет необходимости.
+                    """
+                    h = self.cell_height
+                    w = self.cell_width
+                    y = i * h
+                    x = j * w
+                    res.append(create_rect_with_center(Point(x, y), w, h))
+        return res

@@ -19,32 +19,27 @@ class Player(GameSprite):
     :param angle: начальный угол поворота игрока
     """
 
-    FILENAME = 'player'
+    IMAGE_NAME = 'player'
+    IMAGE_ZOOM = 0.25
     CONTROLS = [
         pygame.K_d,
         pygame.K_w,
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 20
+    SPEED = 12
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point,
-                 angle: float = 0, resize_percents: float = 0.25):
-        super().__init__(scene, controller, Player.FILENAME, pos, angle, resize_percents)
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+        super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
 
-    @property
-    def next_step_pos(self):
+    def process_logic(self):
+        relative_center = self.scene.relative_center
+        vector_to_mouse = self.controller.get_mouse_pos() + relative_center - self.pos
+        self.angle = math.atan2(-vector_to_mouse.y, vector_to_mouse.x)
+
         velocity = Point(0, 0)
         if self in self.controller.input_objects:
             for i in range(4):
                 if self.controller.is_key_pressed(Player.CONTROLS[i]):
                     velocity += DIRECTIONS[i]
-        return self.pos + velocity * Player.SPEED
-
-    def process_logic(self):
-        screen_center = self.scene.game.center
-
-        vector_to_mouse = self.controller.get_mouse_pos() - screen_center
-        self.angle = math.atan2(-vector_to_mouse.y, vector_to_mouse.x)
-
-        self.move(self.next_step_pos)
+            self.move(self.pos + velocity * Player.SPEED)

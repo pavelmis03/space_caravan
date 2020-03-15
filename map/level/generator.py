@@ -1,8 +1,9 @@
 from typing import List
 
+from map.level.rect.graph.manager import RectGraphManager
+
 from map.level.rect.splitter import RectSplitter
 from map.level.rect.unioner import RectUnioner
-
 from map.level.rect.connecter import RectConnecter
 
 
@@ -39,13 +40,13 @@ class LevelGenerator:
 
     def split(self):
         self.rect_splitter.start_random_split()
-        self.rects_count = self.rect_splitter.rects_count
+        self.graph_manager = RectGraphManager(self.rect_splitter.arr, self.rect_splitter.rects_count)
 
     def union(self):
-        self.rect_unioner = RectUnioner(self.arr, self.rects_count)
+        self.rect_unioner = RectUnioner(self.graph_manager)
         self.rect_unioner.start_random_union()
         self.rect_unioner.delete_edges()
 
     def connect(self):
-        self.rect_connecter = RectConnecter(self.arr, self.rects_count)
+        self.rect_connecter = RectConnecter(self.graph_manager)
         self.rect_connecter.start_random_connection()

@@ -1,4 +1,4 @@
-from map.level.rect.graph_manager import RectGraphManager
+from map.level.rect.graph.manager import RectGraphManager
 from utils.disjoint_set import DisjointSet
 from utils.random import is_random_proc, shuffle
 
@@ -9,13 +9,13 @@ class RectConnecter:
 
     :return:
     """
-    def __init__(self, arr, rects_count):
-        self.arr = arr
+    def __init__(self, graph_manager: RectGraphManager):
+        self.arr = graph_manager.arr
 
         self.edges = []
-        RectGraphManager.save_edges_between_rects(self.arr, self.edges)
+        graph_manager.save_edges_between_rects(self.edges)
 
-        self.rects_count = rects_count
+        self.rects_count = graph_manager.rects_count
 
     def start_random_connection(self):
         """

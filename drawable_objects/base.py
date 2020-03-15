@@ -1,10 +1,10 @@
-from utils.image import ImageManager
-
 import pygame
 
 from geometry.point import Point
 from controller.controller import Controller
 from scenes.base import Scene
+from utils.image import ImageManager
+
 
 class DrawableObject:
     """
@@ -33,7 +33,7 @@ class DrawableObject:
 
     def move(self, new_pos):
         """
-        Перемещение объекта
+        Перемещение объекта.
 
         :param new_pos: новое положение
         """
@@ -43,25 +43,23 @@ class DrawableObject:
 class SpriteObject(DrawableObject):
     """
     Базовый класс объекта с текстурой.
+
+    :param scene: сцена объекта
+    :param controller: ссылка на объект контроллера (пока None)
+    :param image_name: имя картинки в базе менеджера
+    :param pos: координаты объекта
+    :param angle: угол поворота объекта
+    :param zoom: масштаб картинки
     """
-    def __init__(self, scene: Scene, controller: Controller, image_str: str,
-                 pos: Point, angle: float = 0, resize_percents: float = 1):
-        """
-        :param scene:
-        :param controller:
-        :param image_str:
-        :param pos:
-        :param angle:
-        :param resize_percents:
-        """
+    def __init__(self, scene: Scene, controller: Controller, image_name: str,
+                 pos: Point, angle: float = 0, zoom: float = 1):
         super().__init__(scene, controller, pos)
-        self.image = image_str
-        self.resize_percents = resize_percents
+        self.image_name = image_name
         self.angle = angle
+        self.zoom = zoom
 
     def process_draw(self):
-        ImageManager.process_draw(self.image, self.pos, self.scene.screen,
-                                  self.resize_percents, self.angle)
+        ImageManager.process_draw(self.image_name, self.pos, self.scene.screen, self.zoom, self.angle)
 
     def collides_with(self, other_object):
         """
@@ -75,18 +73,25 @@ class SpriteObject(DrawableObject):
 class GameSprite(SpriteObject):
     """
     Базовый класс объекта на игровом уровне
-    """
-    def is_out_of_screen(self, rel_pos: Point, w: float, h: float):
-        left = rel_pos.x - w / 2
-        top = rel_pos.y - h / 2
-        right = rel_pos.x + w / 2
-        bottom = rel_pos.y + h / 2
 
-        if right < 0 or bottom < 0 or \
-            left > self.scene.game.width or \
-            top > self.scene.game.height:
-            return True
-        return False
+    :param scene: сцена объекта
+    :param controller: ссылка на объект контроллера (пока None)
+    :param image_name: имя картинки в базе менеджера
+    :param pos: координаты объекта
+    :param angle: угол поворота объекта
+    :param zoom: масштаб картинки
+    """
+    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
+                 zoom: float = 1):
+        super().__init__(scene, controller, image_name, pos, angle, zoom)
+        self.scene.plane.insert(self, self.pos)
+        self.enabled = True
+
+    def destroy(self):
+        """
+        Уничтожение игрового объекта. Будет уничтожен на ближайшей итерации своей сценой.
+        """
+        self.enabled = False
 
     def process_draw(self):
         """
@@ -98,15 +103,12 @@ class GameSprite(SpriteObject):
         relative_center = self.scene.relative_center
         relative_pos = self.pos - relative_center
 
-        w = ImageManager.get_width(self.image, self.resize_percents)
-        h = ImageManager.get_height(self.image, self.resize_percents)
-        if self.is_out_of_screen(relative_pos, w, h):
+        if ImageManager.is_out_of_screen(self.image_name, self.zoom,
+                                         relative_pos, self.scene.game.screen_rectangle):
             return
 
-        old_pos = self.pos
-        self.pos = relative_pos
-        super().process_draw()
-        self.pos = old_pos
+        ImageManager.process_draw(self.image_name, relative_pos, self.scene.screen, self.zoom, self.angle)
 
-
-
+    def move(self, new_pos):
+        self.scene.plane.do_step(self, self.pos, new_pos)
+        self.pos = new_pos
