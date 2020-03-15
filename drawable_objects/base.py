@@ -125,3 +125,7 @@ class GameSprite(SpriteObject):
     def move(self, new_pos):
         self.scene.plane.do_step(self, self.pos, new_pos)
         self.pos = new_pos
+
+
+class Humanoid(GameSprite):
+    HITBOX_RADIUS = 10
