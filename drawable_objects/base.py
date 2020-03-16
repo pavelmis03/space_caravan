@@ -128,4 +128,4 @@ class GameSprite(SpriteObject):
 
 
 class Humanoid(GameSprite):
-    HITBOX_RADIUS = 10
+    HITBOX_RADIUS = 20

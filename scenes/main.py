@@ -16,8 +16,8 @@ class MainScene(GameScene):
     def __init__(self, game):
         super().__init__(game)
         self.plane = GamePlane()
-        self.player = Player(self, self.game.controller, Point(0, 0), 0)
         self.game.controller.input_objects.append(self.player)
+        self.player = Player(self, self.game.controller, Point(100, 100), 0)
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
 
         cmd = Console(self, self.game.controller, (0, self.game.height-20, 200, self.game.height))
