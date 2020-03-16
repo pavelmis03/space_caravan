@@ -1,4 +1,5 @@
 from pygame import Rect
+from typing import List
 
 from geometry.point import Point, point_to_tuple
 
@@ -106,7 +107,7 @@ class Rectangle:
             return False
         return True
 
-    def is_empty(self):
+    def is_empty(self) -> bool:
         """
         Вырожден ли прямоугольник (отрицательна ли ширина или высота).
 
@@ -114,7 +115,7 @@ class Rectangle:
         """
         return self._width < 0 or self._height < 0
 
-    def get_vertexes(self):
+    def get_vertexes(self) -> List[Point]:
         r1 = self._top_left
         r2 = self._bottom_right
         p = [r1, Point(r2.x, r1.y), r2, Point(r1.x, r2.y)]

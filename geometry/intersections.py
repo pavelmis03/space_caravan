@@ -81,10 +81,10 @@ def intersect_seg_circle(seg: Segment, c: Circle) -> Point:
         return p[1]
 
 
-def intersert_circle_rect(c: Circle, rect: Rectangle):
+def intersert_circle_rect(c: Circle, rect: Rectangle) -> Point:
     vert = rect.get_vertexes()
     for i in range(4):
         p = intersect_seg_circle(Segment(vert[i], vert[(i + 1) % 4]), c)
         if p:
-            return True
-    return False
+            return p
+    return None

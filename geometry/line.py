@@ -21,7 +21,7 @@ def line_from_points(p1: Point, p2: Point) -> Line:
     return Line(a, b, c)
 
 
-def point_on_line(p: Point, l: Line):
+def point_on_line(p: Point, l: Line) -> bool:
     return sign(l.a * p.x + l.b * p.y + l.c) == 0
 
 

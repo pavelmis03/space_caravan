@@ -66,7 +66,7 @@ class LevelGrid(Grid):
         :return:
         """
         center_i, center_j = self.index_manager.get_index_by_pos(pos)
-        INDEX_OFFSET = 1
+        INDEX_OFFSET = 2
 
         min_i = max(0, center_i - INDEX_OFFSET)
         min_j = max(0, center_j - INDEX_OFFSET)

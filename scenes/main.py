@@ -14,7 +14,7 @@ class MainScene(GameScene):
     def __init__(self, game):
         super().__init__(game)
         self.plane = GamePlane()
-        self.player = Player(self, self.game.controller, Point(0, 0), 0)
+        self.player = Player(self, self.game.controller, Point(100, 100), 0)
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
 
     def process_all_logic(self):
