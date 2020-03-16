@@ -45,7 +45,7 @@ class Console(AbstractObject):
 
 
 class ConsoleController(AbstractObject):
-    INPUTDICT = string.ascii_letters + string.digits
+    INPUTDICT = string.ascii_letters + string.digits + " "
     CONTROLS = {
         'on': [pygame.K_SLASH],
         'off': [pygame.K_RETURN, pygame.K_ESCAPE],  # first to enter, second to exit
