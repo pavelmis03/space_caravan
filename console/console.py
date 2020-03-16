@@ -10,10 +10,11 @@ class Console(AbstractObject):
         'on': [pygame.K_SLASH],
         'off': [pygame.K_RETURN, pygame.K_ESCAPE],  # first to enter, second to exit
     }
+    ENTRY_WIDTH_LIMIT=190
 
     def __init__(self, scene, controller, entry_rect):
         super().__init__(scene, controller)
-        self.console_entry = Entry(scene, controller, entry_rect, initial_text="/", visible=False)
+        self.console_entry = Entry(scene, controller, entry_rect, initial_text="/", visible=False, width_limit=Console.ENTRY_WIDTH_LIMIT)
         self.console_controller = ConsoleController(scene, controller)
         self.console_controller.clear()
 
