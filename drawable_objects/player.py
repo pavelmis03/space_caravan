@@ -10,6 +10,8 @@ from scenes.base import Scene
 from controller.controller import Controller
 
 
+from drawable_objects.bullet import Bullet
+
 class Player(Humanoid):
     """
     Игрок на уровне (далек от завершения).
@@ -39,6 +41,9 @@ class Player(Humanoid):
         self.angle = math.atan2(-vector_to_mouse.y, vector_to_mouse.x)
 
         velocity = Point(0, 0)
+        if self.controller.get_click_button ():
+            self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))
+
         if self in self.controller.input_objects:
             for i in range(4):
                 if self.controller.is_key_pressed(Player.CONTROLS[i]):
