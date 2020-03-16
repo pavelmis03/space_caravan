@@ -49,6 +49,7 @@ class ConsoleController(AbstractObject):
     CONTROLS = {
         'on': [pygame.K_SLASH],
         'off': [pygame.K_RETURN, pygame.K_ESCAPE],  # first to enter, second to exit
+        'erase': [pygame.K_BACKSPACE]
     }
 
     def __init__(self, scene, controller):
@@ -60,9 +61,10 @@ class ConsoleController(AbstractObject):
         if self in self.controller.input_objects:
             pressed = list(map(chr, self.controller.pressed_keys))
             for ch in pressed:
-                print(ch, pressed)
                 if ch in ConsoleController.INPUTDICT and ch not in self.key_down:
                     self.text += ch
+                if ord(ch) in ConsoleController.CONTROLS['erase'] and ch not in self.key_down:
+                    self.text = self.text[:-1]
             self.key_down = pressed
 
     def is_on_pressed(self):
