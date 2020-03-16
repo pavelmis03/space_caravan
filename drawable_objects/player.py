@@ -2,7 +2,7 @@ import math
 
 import pygame
 
-from drawable_objects.base import GameSprite
+from drawable_objects.base import Humanoid
 from geometry.point import Point
 from constants import DIRECTIONS
 
@@ -11,7 +11,7 @@ from controller.controller import Controller
 
 from drawable_objects.bullet import Bullet
 
-class Player(GameSprite):
+class Player(Humanoid):
     """
     Игрок на уровне (далек от завершения).
 
