@@ -24,7 +24,7 @@ class Enemy(Humanoid):
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         self.angle = angle
         self.speed = 1
-        self.direction = self.direction_calculation()
+        self.direction = Point(0, 0)
         self.enemy_type = 'player'
         super().__init__ (scene, controller, self.enemy_type, pos, angle, Enemy.IMAGE_ZOOM)
 

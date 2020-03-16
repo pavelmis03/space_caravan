@@ -8,6 +8,7 @@ from constants import DIRECTIONS
 
 from scenes.base import Scene
 from controller.controller import Controller
+from drawable_objects.enemy import Enemy
 
 
 class Player(Humanoid):
@@ -32,6 +33,8 @@ class Player(Humanoid):
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
+
+        self.scene.game_objects.append(Enemy(self.scene, self.controller, Point(100, 100), 0)) #Спавн врага, потом удалить
 
     def process_logic(self):
         relative_center = self.scene.relative_center
