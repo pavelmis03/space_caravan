@@ -14,13 +14,18 @@ class ImageManager:
         """
         по умолчанию считает, что все картинки png. Ключ должен
         совпадать с названием картинки.
-
-        :return:
         """
-
         for i in range(len(ImageManager.IMG_NAMES)):
-            ImageManager.images[ImageManager.IMG_NAMES[i]] = \
-                pygame.image.load('images/' + ImageManager.IMG_NAMES[i] + '.png')
+            ImageManager.load_img(ImageManager.IMG_NAMES[i])
+
+    @staticmethod
+    def load_img(img_name: str):
+        ImageManager.images[img_name] = \
+            pygame.image.load(ImageManager.img_name_to_path(img_name))
+
+    @staticmethod
+    def img_name_to_path(img_name: str) -> str:
+        return 'images/' + img_name + '.png'
 
     @staticmethod
     def process_draw(img_str: str, pos_center: Point, screen,

@@ -10,6 +10,9 @@ from geometry.rectangle import Rectangle, create_rect_with_center
 from controller.controller import Controller
 from scenes.base import Scene
 
+from drawable_objects.background.transfusion_background import TransfusionBackground, RGB
+from drawable_objects.background.gradient_background import GradientBackground, RGB
+
 class LevelGrid(Grid):
     """
     Сетка уровня (данжа).
@@ -42,6 +45,19 @@ class LevelGrid(Grid):
 
         self.transform_ints_to_objects()
 
+        self.background = TransfusionBackground(scene, controller, pos,
+                (RGB(64, 0, 0), RGB(0, 64, 0), RGB(0, 0, 64)))
+
+        #self.background = GradientBackground(scene, controller, 'dungeon_background', pos,
+        #                                     RGB(19, 135, 8), RGB(0, 0, 0))
+    def process_draw(self):
+        self.background.process_draw()
+        super().process_draw()
+
+    def process_logic(self):
+        self.background.process_logic()
+        pass
+
     def transform_ints_to_objects(self):
         """
         Необходимо применять после генерации.
@@ -70,12 +86,12 @@ class LevelGrid(Grid):
 
         min_i = max(0, center_i - INDEX_OFFSET)
         min_j = max(0, center_j - INDEX_OFFSET)
-        max_i = min(len(self.arr), center_i + INDEX_OFFSET)
-        max_j = min(len(self.arr[0]), center_j + INDEX_OFFSET)
+        max_i = min(len(self.arr), center_i + INDEX_OFFSET + 1)
+        max_j = min(len(self.arr[0]), center_j + INDEX_OFFSET + 1)
 
         res = []
-        for i in range(min_i, max_i + 1):
-            for j in range(min_j, max_j + 1):
+        for i in range(min_i, max_i):
+            for j in range(min_j, max_j):
                 if self.arr[i][j].image_name == 'wall':
                     """
                     простая проверка, но в выдумывании чего-то другого
