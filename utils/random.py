@@ -11,6 +11,6 @@ def is_random_proc(chance: int=50) -> bool:
 
 def shuffle(arr):
     for i in range(len(arr) - 1, 0, -1):
-        j = randint(0, i + 1)
+        j = randint(0, i)
 
         arr[i], arr[j] = arr[j], arr[i]

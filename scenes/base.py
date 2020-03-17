@@ -15,6 +15,18 @@ class Scene:
         self.screen = self.game.screen
         self.interface_objects = []
 
+    @property
+    def width(self):
+        return self.game.width
+
+    @property
+    def height(self):
+        return self.game.height
+
+    @property
+    def center(self):
+        return Point(self.width / 2, self.height / 2)
+
     def iteration(self):
         """
         Итерация работы сцены - обработка логики и отрисовка.

@@ -23,7 +23,7 @@ class TransfusionBackground(DrawableObject):
 
     def process_logic(self):
         dt = self.colors[self.next_color_index] - self.this_color
-        self.this_color += RGB(sign(dt.r), sign(dt.g), sign(dt.b))
+        self.this_color += RGB(sign(dt.r), sign(dt.g), sign(dt.b), sign(dt.a))
         if self.this_color == self.colors[self.next_color_index]:
             self.next_color_index = (self.next_color_index + 1) % len(self.colors)
 

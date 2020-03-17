@@ -48,12 +48,12 @@ class LevelGrid(Grid):
         #self.background = TransfusionBackground(scene, controller, pos,
         #        (RGB(64, 0, 0), RGB(0, 64, 0), RGB(0, 0, 64)))
 
-        self.background = GradientBackground(scene, controller, 'dungeon_background', pos,
-                                             RGB(19, 135, 8), RGB(0, 0, 0))
+        self.background = GradientBackground(scene, controller, pos,
+                                             RGB(19, 135, 8, 125), RGB(0, 0, 0, 0))
         #RGB(19, 135, 8), RGB(0, 0, 0))
     def process_draw(self):
-        self.background.process_draw()
         super().process_draw()
+        self.background.process_draw()
 
     def process_logic(self):
         self.background.process_logic()
