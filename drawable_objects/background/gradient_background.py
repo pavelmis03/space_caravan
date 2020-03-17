@@ -41,7 +41,7 @@ class GradientBackground(SpriteObject):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.start_color = start_color
         self.final_color = final_color
-        
+
         self.img = radial(int(self.scene.game.width / 2), self.start_color.tuple, self.final_color.tuple)
 
     def process_draw(self):
