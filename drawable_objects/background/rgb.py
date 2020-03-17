@@ -27,4 +27,4 @@ class RGB:
 
     @property
     def tuple(self) -> Tuple:
-        return (self.r, self.g, self.b)
+        return (self.r, self.g, self.b, 255)

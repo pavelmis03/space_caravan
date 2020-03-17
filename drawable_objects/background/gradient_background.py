@@ -4,42 +4,45 @@ from drawable_objects.base import SpriteObject
 from geometry.point import Point
 from controller.controller import Controller
 from scenes.base import Scene
-from PIL import Image
-from math import sqrt
+import pygame
+
+
+def radial(radius, startcolor, endcolor):
+    """
+    Draws a linear raidal gradient on a square sized surface and returns
+    that surface.
+    """
+    bigSurf = pygame.Surface((2 * radius, 2 * radius)).convert_alpha()
+    bigSurf.fill((0, 0, 0, 0))
+    dd = -1.0 / radius
+    sr, sg, sb, sa = endcolor
+    er, eg, eb, ea = startcolor
+    rm = (er - sr) * dd
+    gm = (eg - sg) * dd
+    bm = (eb - sb) * dd
+    am = (ea - sa) * dd
+
+    draw_circle = pygame.draw.circle
+    for rad in range(radius, 0, -1):
+        draw_circle(bigSurf, (er + int(rm * rad),
+                              eg + int(gm * rad),
+                              eb + int(bm * rad),
+                              ea + int(am * rad)), (radius, radius), rad)
+    return bigSurf
+
 
 class GradientBackground(SpriteObject):
     def __init__(self, scene: Scene, controller: Controller,
                  image_name: str, pos: Point,
                  start_color: RGB, final_color: RGB,
                  angle: float = 0, zoom: float = 1):
-        pos = Point(scene.game.width / 2, scene.game.height / 2)
+        pos.y -= (scene.game.width - scene.game.height) / 2
+        # позиция смещается из-за того, что используется круг, а не эллипс
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.start_color = start_color
         self.final_color = final_color
+        
+        self.img = radial(int(self.scene.game.width / 2), self.start_color.tuple, self.final_color.tuple)
 
-        imgsize = (self.scene.game.width, self.scene.game.height)  # The size of the image
-
-        image = Image.new('RGB', imgsize)  # Create the image
-
-        innerColor = self.start_color.tuple  # Color at the center
-        outerColor = self.final_color.tuple # Color at the corners
-        print('begin')
-        for y in range(imgsize[1]):
-            for x in range(imgsize[0]):
-                # Find the distance to the center
-                distanceToCenter = sqrt((x - imgsize[0] / 2) ** 2 + (y - imgsize[1] / 2) ** 2)
-
-                # Make it on a scale from 0 to 1
-                distanceToCenter = float(distanceToCenter) / (sqrt(2) * imgsize[0] / 2)
-
-                # Calculate r, g, and b values
-                r = outerColor[0] * distanceToCenter + innerColor[0] * (1 - distanceToCenter)
-                g = outerColor[1] * distanceToCenter + innerColor[1] * (1 - distanceToCenter)
-                b = outerColor[2] * distanceToCenter + innerColor[2] * (1 - distanceToCenter)
-
-                # Place the pixel
-                image.putpixel((x, y), (int(r), int(g), int(b)))
-
-        image.save(ImageManager.img_name_to_path(self.image_name))
-        ImageManager.load_img(self.image_name)
-        print('end')
+    def process_draw(self):
+        self.scene.screen.blit(self.img, (self.pos.x, self.pos.y))
