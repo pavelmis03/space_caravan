@@ -48,7 +48,6 @@ class Grid(DrawableObject):
     def process_logic(self):
         """
         у статических объектов нет process_logic
-        :return:
         """
         pass
 
@@ -62,7 +61,6 @@ class Grid(DrawableObject):
     def print_arr(self):
         """
         для отладки
-        :return:
         """
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):

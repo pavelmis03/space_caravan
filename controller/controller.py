@@ -60,6 +60,13 @@ class StrategyKeyUp(ControllerStrategy):
         if event.key in controller.pressed_keys:
             controller.pressed_keys.remove(event.key)
 
+class StrategyWindowResize(ControllerStrategy):
+    """
+    При изменении размера окна меняется game.width и game.height,
+    при этом размер спрайтов остается тем же (за исключением меню).
+    """
+    def execute(self, controller, event):
+        controller.game.size = event.size
 
 class Controller:
     """
@@ -74,6 +81,7 @@ class Controller:
         pygame.MOUSEBUTTONDOWN: StrategyMouseDown(),
         pygame.KEYDOWN: StrategyKeyDown(),
         pygame.KEYUP: StrategyKeyUp(),
+        pygame.VIDEORESIZE: StrategyWindowResize()
     }
 
     def __init__(self, game):
