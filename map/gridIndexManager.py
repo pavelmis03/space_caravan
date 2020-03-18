@@ -34,11 +34,7 @@ class GridIndexManager:
         """
         Прибавляем (self.cell_height - 1) и (self.cell_width - 1) для деления с округлением вверх
         """
-        i['min'] = i['min']
-        i['max'] = i['max']
-
-        j['min'] = j['min']
-        j['max'] = j['max']
+        i, j = self.get_corrected_indexes((i, j))
 
         return i, j
 

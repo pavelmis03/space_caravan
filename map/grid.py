@@ -24,6 +24,7 @@ class Grid(DrawableObject):
         расчет индексов по позиции делегирован index_manager
         """
         self.index_manager = GridIndexManager(self, self.pos, cell_width, cell_height)
+
         width = cell_width * len(self.arr[0])
         height = cell_height * len(self.arr)
         self.grid_rectangle = Rectangle(pos.x - cell_width / 2, pos.y - cell_height / 2,
@@ -35,8 +36,8 @@ class Grid(DrawableObject):
         Отрисовывает только объекты на экране
         """
         relative_center = self.scene.relative_center
-        index_i, index_j = self.index_manager.get_corrected_indexes(
-            self.index_manager.get_index_of_objects_on_screen(relative_center))
+        index_i, index_j = \
+            self.index_manager.get_index_of_objects_on_screen(relative_center)
 
         for i in range(index_i['min'], index_i['max']):
             for j in range(index_j['min'], index_j['max']):
