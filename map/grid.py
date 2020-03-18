@@ -2,6 +2,7 @@
 from drawable_objects.base import DrawableObject
 
 from geometry.point import Point
+from geometry.rectangle import Rectangle
 
 from controller.controller import Controller
 from scenes.base import Scene
@@ -23,6 +24,11 @@ class Grid(DrawableObject):
         расчет индексов по позиции делегирован index_manager
         """
         self.index_manager = GridIndexManager(self, self.pos, cell_width, cell_height)
+        width = cell_width * len(self.arr[0])
+        height = cell_height * len(self.arr)
+        self.grid_rectangle = Rectangle(pos.x - cell_width / 2, pos.y - cell_height / 2,
+                                        pos.x + width - cell_width / 2,
+                                        pos.y + height - cell_height / 2)
 
     def process_draw(self):
         """
@@ -53,21 +59,29 @@ class Grid(DrawableObject):
         i, j = self.index_manager.get_index_of_objects_on_screen(relative_pos)
         res_pos = Point(relative_pos.x, relative_pos.y)
 
-        res_pos.x = max(res_pos.x, self.pos.x)
-        res_pos.y = max(res_pos.y, self.pos.y)
+        res_pos.x = max(res_pos.x, self.left)
+        res_pos.y = max(res_pos.y, self.top)
 
-        res_pos.x = min(res_pos.x, self.pos.x + self.width - self.scene.width)
-        res_pos.y = min(res_pos.y, self.pos.y + self.height - self.scene.height)
+        res_pos.x = min(res_pos.x, self.right - self.scene.width)
+        res_pos.y = min(res_pos.y, self.bottom - self.scene.height)
 
         return res_pos
 
     @property
-    def width(self):
-        return self.cell_width * (len(self.arr[0]) - 1)
+    def left(self) -> float:
+        return self.grid_rectangle.top_left.x
 
     @property
-    def height(self):
-        return self.cell_height * (len(self.arr) - 1)
+    def top(self) -> float:
+        return self.grid_rectangle.top_left.y
+
+    @property
+    def right(self):
+        return self.grid_rectangle.bottom_right.x
+
+    @property
+    def bottom(self):
+        return self.grid_rectangle.bottom_right.y
 
     @property
     def cell_width(self):
