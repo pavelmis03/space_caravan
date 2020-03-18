@@ -38,6 +38,7 @@ class Player(Humanoid):
     ACCURACY = 100
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+        self.time = 0
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
 
     def process_logic(self):
@@ -47,8 +48,12 @@ class Player(Humanoid):
 
         velocity = Point(0, 0)
 
-        if self.controller.get_click_button ():
-            self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))
+        if self.controller.get_click_button():
+            self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))#'''
+        '''self.time += 1
+        self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))#''"
+        if (self.time == 5):
+            self.time = 0#'''
 
         if self in self.controller.input_objects:
             for i in range(4):
