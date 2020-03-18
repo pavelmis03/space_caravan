@@ -77,6 +77,7 @@ class GameScene(Scene):
             item.process_logic()
         self.player.process_logic()
         self.relative_center = self.player.pos - self.game.screen_rectangle.center
+        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
         # Удаление уничтоженных игровых объектов
         for item in self.game_objects:
             if not item.enabled:
