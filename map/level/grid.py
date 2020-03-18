@@ -1,17 +1,11 @@
 from typing import List
-
 from map.grid import Grid
 from map.level.generator import LevelGenerator
-
 from drawable_objects.base import GameSprite
 from geometry.point import Point
 from geometry.rectangle import Rectangle, create_rect_with_center
-
 from controller.controller import Controller
 from scenes.base import Scene
-
-from drawable_objects.background.transfusion_background import TransfusionBackground, RGB
-from drawable_objects.background.gradient_background import GradientBackground, RGB
 
 class LevelGrid(Grid):
     """
@@ -27,17 +21,6 @@ class LevelGrid(Grid):
                  cell_width: int, cell_height: int,
                  width: int = 100, height: int = 100,
                  min_area: int = 100, min_w: int = 8, min_h: int = 8):
-        """
-        :param scene:
-        :param controller:
-        :param cell_width:
-        :param cell_height:
-        :param width:
-        :param height:
-        :param min_area:
-        :param min_w:
-        :param min_h:
-        """
         super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
 
         generator = LevelGenerator(self.arr, min_area, min_w, min_h)
@@ -45,24 +28,15 @@ class LevelGrid(Grid):
 
         self.transform_ints_to_objects()
 
-        #self.background = TransfusionBackground(scene, controller, pos,
-        #        (RGB(64, 0, 0), RGB(0, 64, 0), RGB(0, 0, 64)))
-
-        self.background = GradientBackground(scene, controller, pos,
-                                             RGB(19, 135, 8, 125), RGB(0, 0, 0, 0))
-        #RGB(19, 135, 8), RGB(0, 0, 0))
     def process_draw(self):
         super().process_draw()
-        self.background.process_draw()
 
     def process_logic(self):
-        self.background.process_logic()
         pass
 
     def transform_ints_to_objects(self):
         """
         Необходимо применять после генерации.
-        :return:
         """
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):

@@ -16,14 +16,6 @@ class Grid(DrawableObject):
                  default_value: any,
                  cell_width: int, cell_height: int,
                  width: int=100, height: int=100):
-        """
-
-        :param scene:
-        :param controller:
-        :param width:
-        :param height:
-        :param default_value:
-        """
         super().__init__(scene, controller, pos)
 
         self.arr = [[default_value] * width for i in range(height)]

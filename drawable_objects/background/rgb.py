@@ -1,3 +1,6 @@
+"""
+Неиспользуемый модуль. Может, позже пригодится.
+"""
 from typing import Tuple
 
 class RGB:
