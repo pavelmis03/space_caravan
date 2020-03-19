@@ -7,7 +7,7 @@ from geometry.rectangle import Rectangle
 from controller.controller import Controller
 from scenes.base import Scene
 
-from map.gridIndexManager import GridIndexManager
+from map.grid_index_manager import GridIndexManager
 
 class Grid(DrawableObject):
     """
@@ -16,10 +16,10 @@ class Grid(DrawableObject):
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  default_value: any,
                  cell_width: int, cell_height: int,
-                 width: int=100, height: int=100):
+                 width_arr: int=100, height_arr: int=100):
         super().__init__(scene, controller, pos)
 
-        self.arr = [[default_value] * width for i in range(height)]
+        self.arr = [[default_value] * width_arr for i in range(height_arr)]
         """
         расчет индексов по позиции делегирован index_manager
         """
@@ -57,7 +57,6 @@ class Grid(DrawableObject):
         То есть, если игрок у левой границы, то камера
         смещается вправо.
         """
-        i, j = self.index_manager.get_index_of_objects_on_screen(relative_pos)
         res_pos = Point(relative_pos.x, relative_pos.y)
 
         res_pos.x = max(res_pos.x, self.left)
@@ -67,6 +66,14 @@ class Grid(DrawableObject):
         res_pos.y = min(res_pos.y, self.bottom - self.scene.height)
 
         return res_pos
+
+    @property
+    def width(self) -> float:
+        return self.grid_rectangle.width
+
+    @property
+    def height(self) -> float:
+        return self.grid_rectangle.height
 
     @property
     def left(self) -> float:

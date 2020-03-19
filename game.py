@@ -18,7 +18,7 @@ class Game:
     ABOUT_MENU_SCENE_INDEX = 3
     GAMEOVER_SCENE_INDEX = 4
 
-    def __init__(self, width=800, height=600):
+    def __init__(self, width=1300, height=800):
         self.size = (width, height)
 
         self.screen = None
@@ -26,10 +26,9 @@ class Game:
         self.create_window()
         self.running = True
         self.controller = Controller(self)
+        ImageManager.load_all()
         self.scenes = [Main_MenuScene(self), MainScene(self), Settings_MenuScene(self), About_MenuScene(self)]
         self.current_scene = 0
-
-        ImageManager.load_all()
 
     @property
     def size(self) -> Tuple[int, int]:

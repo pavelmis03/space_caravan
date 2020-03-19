@@ -28,15 +28,19 @@ class ImageManager:
         return 'images/' + img_name + '.png'
 
     @staticmethod
+    def draw_surface(surface: pygame.Surface, pos_center: Point, screen):
+        rect = surface.get_rect()
+        rect.center = (pos_center.x, pos_center.y)
+        screen.blit(surface, rect)
+
+    @staticmethod
     def process_draw(img_str: str, pos_center: Point, screen,
                      resize_percents: float, rotate_angle: float):
         image = ImageManager.images[img_str]
         image = ImageManager.resize(image, resize_percents)
         image = ImageManager.rotate(image, rotate_angle)
 
-        rect = image.get_rect()
-        rect.center = (pos_center.x, pos_center.y)
-        screen.blit(image, rect)
+        ImageManager.draw_surface(image, pos_center, screen)
 
     @staticmethod
     def resize(image, percents: float):

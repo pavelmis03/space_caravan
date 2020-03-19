@@ -6,6 +6,7 @@ from geometry.point import Point
 from geometry.rectangle import Rectangle, create_rect_with_center
 from controller.controller import Controller
 from scenes.base import Scene
+from map.level.grid_static_draw_manager import GridStaticDrawManager
 
 class LevelGrid(Grid):
     """
@@ -27,9 +28,11 @@ class LevelGrid(Grid):
         generator.generate()
 
         self.transform_ints_to_objects()
+        self.static_draw_manager = GridStaticDrawManager(self)
 
     def process_draw(self):
-        super().process_draw()
+        self.static_draw_manager.process_draw()
+#        super().process_draw()
 
     def process_logic(self):
         pass
