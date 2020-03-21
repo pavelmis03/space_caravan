@@ -18,8 +18,9 @@ class GridIndexManager:
         """
         Проходится по всем эл-там сетки затратно по времени, поэтому
         с помощью математики ищем интервалы координат, по которым следует пройтись
-        :param relative_center:
-        :return:
+
+        Полученные индексы могут быть вне grid.arr, поэтому
+        их нужно прогнать через метод get_corrected_indexes
         """
 
         pos = self.get_pos_in_grid_origin(relative_center)
@@ -33,6 +34,13 @@ class GridIndexManager:
         """
         Прибавляем (self.cell_height - 1) и (self.cell_width - 1) для деления с округлением вверх
         """
+        i, j = self.get_corrected_indexes((i, j))
+
+        return i, j
+
+    def get_corrected_indexes(self, indexes: Tuple[Dict[str, int], Dict[str, int]]) -> \
+            Tuple[Dict[str, int], Dict[str, int]]:
+        i, j = indexes
         i['min'] = max(i['min'], 0)
         i['max'] = min(i['max'], len(self.grid.arr))
 
@@ -48,8 +56,6 @@ class GridIndexManager:
     def get_index_by_pos_in_grid_origin(self, pos: Point) -> Tuple[int, int]:
         """
         index эл-та на данной позиции в системе координат grid_origin
-        :param pos:
-        :return:
         """
         i = int(pos.y / self.cell_height)
         j = int(pos.x / self.cell_width)
@@ -60,7 +66,5 @@ class GridIndexManager:
         grid origin - система координат (математических) относительно grid.
         Обычно у grid позиция (0, 0), grid_origin поэтому совпадает
         с обычной системо координат.
-        :param pos:
-        :return:
         """
         return Point(pos.x - self.pos.x, pos.y - self.pos.y)
