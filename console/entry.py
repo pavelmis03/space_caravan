@@ -15,10 +15,12 @@ class Entry(DrawableObject):
     TEXT_SHIFT = Point(3, 3)
     FONT_NAME = "Consolas"
 
-    def __init__(self, scene, controller, geometry, initial_text="", font_size=20, visible=True):
+    def __init__(self, scene, controller, geometry, initial_text="", font_size=20, visible=True, width_limit=None):
         self.geometry = tuple_to_rectangle(geometry)
         super().__init__(scene, controller, self.geometry.center)
-        self.text = Text(scene, self.geometry.top_left + Entry.TEXT_SHIFT, initial_text, Entry.TEXT_COLOR, 'left', Entry.FONT_NAME, font_size, is_bold=False)
+        self.text = Text(scene, self.geometry.top_left + Entry.TEXT_SHIFT,
+                         initial_text, Entry.TEXT_COLOR, 'left', Entry.FONT_NAME,
+                         font_size, is_bold=False, width_limit=width_limit)
         self.visible = visible
 
     def process_draw(self):
