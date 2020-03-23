@@ -32,8 +32,8 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 12
-    ACCURACY = 100
+    SPEED = 3
+    ACCURACY = 20
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
@@ -48,7 +48,14 @@ class Player(Humanoid):
             if self.controller.is_key_pressed(Player.CONTROLS[i]):
                 velocity += DIRECTIONS[i]
         velocity *= Player.SPEED
+        tmp = velocity
         velocity = self.collide_walls(velocity)
+
+        rects = self.scene.grid.get_collision_rects_nearby(self.pos)
+        p = self.collide_rects(self.pos + velocity, rects)
+        if len(p) > 0:
+            velocity = self.collide_walls(tmp)
+
         self.move(self.pos + velocity)
 
     def collide_rects(self, pos: Point, rects: List[Rectangle]) -> List[Point]:
@@ -92,12 +99,12 @@ class Player(Humanoid):
             return after_first
         if len(points) > 1:
             return before_first
-        to_bump = normalized(points[0] + before_first - self.pos)
+        to_bump = normalized(points[0] - (self.pos + before_first))
         proj_len = cross_product(vel - before_first, to_bump)
         new_vel = Point(to_bump.y, -to_bump.x) * proj_len
         before_second, after_second = self.get_velocity_edge(self.pos + before_first, new_vel, rects)
         points = self.collide_rects(self.pos + before_first + after_second, rects)
         if len(points) == 0:
-            return before_first + before_second
-        if len(points) > 0:
             return before_first + after_second
+        else:
+            return before_first + before_second
