@@ -15,6 +15,18 @@ class Scene:
         self.screen = self.game.screen
         self.interface_objects = []
 
+    @property
+    def width(self):
+        return self.game.width
+
+    @property
+    def height(self):
+        return self.game.height
+
+    @property
+    def center(self):
+        return Point(self.width / 2, self.height / 2)
+
     def iteration(self):
         """
         Итерация работы сцены - обработка логики и отрисовка.
@@ -65,6 +77,7 @@ class GameScene(Scene):
             item.process_logic()
         self.player.process_logic()
         self.relative_center = self.player.pos - self.game.screen_rectangle.center
+        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
         # Удаление уничтоженных игровых объектов
         for item in self.game_objects:
             if not item.enabled:
