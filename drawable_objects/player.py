@@ -15,6 +15,8 @@ from controller.controller import Controller
 
 
 from drawable_objects.bullet import Bullet
+from utils.image import ImageManager
+
 
 class Player(Humanoid):
     """
@@ -39,6 +41,12 @@ class Player(Humanoid):
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
+        # head - 140x126
+        print(ImageManager.get_width(self.image_name, 1), ImageManager.get_height(self.image_name, 1))
+        self.rotation_offset = [
+            140 * Player.IMAGE_ZOOM,
+            126 * Player.IMAGE_ZOOM
+        ]
 
     def process_logic(self):
         relative_center = self.scene.relative_center
