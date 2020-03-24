@@ -6,7 +6,10 @@ from drawable_objects.button import Button
 
 
 class PauseManager(AbstractObject):
-    OPEN = pygame.K_ESCAPE
+    CONTROLS = {
+        'OPEN': pygame.K_ESCAPE,
+        'CLOSE': pygame.K_RETURN
+    }
     SURFACE_ALPHA = 160
     SURFACE_COLOR = Color.BLACK
 
@@ -24,8 +27,10 @@ class PauseManager(AbstractObject):
 
     def process_logic(self):
         if self in self.controller.input_objects:
-            if self.controller.is_key_pressed(PauseManager.OPEN):
+            if self.controller.is_key_pressed(PauseManager.CONTROLS['OPEN']) and not self.active:
                 self.pause()
+            if self.controller.is_key_pressed(PauseManager.CONTROLS['CLOSE']) and self.active:
+                self.unpause()
         if self.active:
             for button in self.buttons:
                 button.process_logic()
