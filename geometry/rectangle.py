@@ -2,6 +2,7 @@ from pygame import Rect
 from typing import List
 
 from geometry.point import Point, point_to_tuple
+from geometry.segment import Segment
 
 
 class Rectangle:
@@ -116,10 +117,27 @@ class Rectangle:
         return self._width < 0 or self._height < 0
 
     def get_vertexes(self) -> List[Point]:
+        """
+        Вершины прямоугольника.
+
+        :return: список точек - вершин прямоугольника
+        """
         r1 = self._top_left
         r2 = self._bottom_right
         p = [r1, Point(r2.x, r1.y), r2, Point(r1.x, r2.y)]
         return p
+
+    def get_edges(self) -> List[Segment]:
+        """
+        Стороны прямоугольника.
+
+        :return: список отрезков - сторон прямоугольника
+        """
+        p = self.get_vertexes()
+        edges = []
+        for i in range(4):
+            edges.append(Segment(p[i], p[(i + 1) % 4]))
+        return edges
 
 
 def rect_to_rectangle(rect):

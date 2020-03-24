@@ -35,10 +35,10 @@ class ImageManager:
 
     @staticmethod
     def process_draw(img_str: str, pos_center: Point, screen,
-                     resize_percents: float, rotate_angle: float):
+                     resize_percents: float, rotate_angle: float, rotate_offset: list=None):
         image = ImageManager.images[img_str]
         image = ImageManager.resize(image, resize_percents)
-        image = ImageManager.rotate(image, rotate_angle)
+        image = ImageManager.rotate(image, rotate_angle, rotate_offset)
 
         ImageManager.draw_surface(image, pos_center, screen)
 
@@ -60,15 +60,22 @@ class ImageManager:
         return pygame.transform.scale(image, size)
 
     @staticmethod
-    def rotate(image, angle: float):
+    def rotate(image, angle: float, rotate_offset=None):
         """
         Задать объекту желаемый угол поворота.
 
-        :param new_angle: новый угол поворота
+        :param image: поворачиваемая картинка
+        :param angle: новый угол поворота
+        :param rotate_offset: оффсет относительно центра для точки поворота
         """
         if not angle:
             return image
-        return pygame.transform.rotate(image, degrees(angle))
+        if not rotate_offset:
+            rotate_offset = image.get_rect().center
+        w, h = image.get_size()
+        img = pygame.Surface((w*2, h*2), pygame.SRCALPHA)
+        img.blit(image, (w - rotate_offset[0], h - rotate_offset[1]))
+        return pygame.transform.rotate(img, degrees(angle))
 
     @staticmethod
     def is_out_of_screen(image_name: str, zoom: float,

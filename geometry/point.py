@@ -51,8 +51,3 @@ def tuple_to_point(tuple):
     :return: точка с координатами из кортежа
     """
     return Point(tuple[0], tuple[1])
-
-
-def dist(p1: Point, p2: Point) -> float:
-    v = p2 - p1
-    return sqrt(v.x * v.x + v.y * v.y)

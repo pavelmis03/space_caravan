@@ -65,19 +65,22 @@ class GameScene(Scene):
         self.grid = None
         self.player = None
         self.plane = None
+        self.game_paused = False
 
     def process_all_logic(self):
         """
         Обработка логики в следующем порядке: объекты интерфейса, сетка, игровые объекты, игрок.
+        Если флаг game_paused установлен в True, то логика вызывается только для объектов интерфейса
         """
         for item in self.interface_objects:
             item.process_logic()
-        self.grid.process_logic()
-        for item in self.game_objects:
-            item.process_logic()
-        self.player.process_logic()
-        self.relative_center = self.player.pos - self.game.screen_rectangle.center
-        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
+        if not self.game_paused:
+            self.grid.process_logic()
+            for item in self.game_objects:
+                item.process_logic()
+            self.player.process_logic()
+            self.relative_center = self.player.pos - self.game.screen_rectangle.center
+            self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
         # Удаление уничтоженных игровых объектов
         for item in self.game_objects:
             if not item.enabled:
