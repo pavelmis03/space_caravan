@@ -65,6 +65,14 @@ class Player(Humanoid):
         self.move(new_pos)
 
     def go_from_walls(self, p: Point) -> Point:
+        """
+        Вытаскивание игрока из стен. Проверяет расстояния от центра хитбокса до блоков стен, и если какое-то из них
+        меньше радиуса, то происходит выталкивание по вектору этого расстояния. Это повторяется, пока игрок не выйдет
+        из стены.
+
+        :param p: позиция игрока
+        :return: позиция игрока после выталкивания из стен
+        """
         pos = Point(p.x, p.y)
         rects = self.scene.grid.get_collision_rects_nearby(pos)
         while True:
