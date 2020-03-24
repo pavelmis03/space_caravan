@@ -5,11 +5,9 @@ from typing import List
 
 from drawable_objects.base import Humanoid
 from geometry.point import Point
-from geometry.vector import sign, length, normalized, cross_product
-from geometry.rectangle import Rectangle
-from geometry.circle import Circle
-from geometry.intersections import intersert_circle_rect
-from constants import DIRECTIONS, EPS
+from geometry.vector import sign, length, normalized
+from geometry.distances import vector_dist_point_rect
+from constants import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
 
@@ -35,7 +33,7 @@ class Player(Humanoid):
         pygame.K_s,
     ]
     SPEED = 3
-    ACCURACY = 20
+    ACCURACY = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
@@ -60,63 +58,26 @@ class Player(Humanoid):
             if self.controller.is_key_pressed(Player.CONTROLS[i]):
                 velocity += DIRECTIONS[i]
         velocity *= Player.SPEED
-        tmp = velocity
-        velocity = self.collide_walls(velocity)
 
-        rects = self.scene.grid.get_collision_rects_nearby(self.pos)
-        p = self.collide_rects(self.pos + velocity, rects)
-        if len(p) > 0:
-            velocity = self.collide_walls(tmp)
+        new_pos = self.go_from_walls(self.pos + velocity)
+        if sign(length(new_pos - self.pos - velocity)) != 0:
+            new_pos = self.go_from_walls(self.pos + velocity)
+        self.move(new_pos)
 
-        self.move(self.pos + velocity)
-
-    def collide_rects(self, pos: Point, rects: List[Rectangle]) -> List[Point]:
-        points = []
-        for rect in rects:
-            p = intersert_circle_rect(Circle(pos, Player.HITBOX_RADIUS), rect)
-            if p:
-                points.append(p)
-        for i in range(len(points)):
-            for j in range(i + 1, len(points)):
-                if points[i] and points[j] and sign(length(points[i] - points[j])) == 0:
-                    points[j] = None
-        i = 0
-        while i < len(points):
-            if not points[i]:
-                points[i], points[-1] = points[-1], points[i]
-                points.pop()
-            i += 1
-        return points
-
-    def get_velocity_edge(self, pos: Point, velocity: Point, rects: List[Rectangle]) -> (Point, Point):
-        l = Point(0, 0)
-        r = Point(velocity.x, velocity.y)
-        for i in range(Player.ACCURACY):
-            c = (l + r) / 2
-            if len(self.collide_rects(pos + c, rects)) > 0:
-                r = c
-            else:
-                l = c
-        return l, r
-
-    def collide_walls(self, velocity: Point) -> Point:
-        if length(velocity) == 0:
-            return velocity
-        vel = Point(velocity.x, velocity.y)
-        rects = self.scene.grid.get_collision_rects_nearby(self.pos)
-
-        before_first, after_first = self.get_velocity_edge(self.pos, vel, rects)
-        points = self.collide_rects(self.pos + after_first, rects)
-        if len(points) == 0:
-            return after_first
-        if len(points) > 1:
-            return before_first
-        to_bump = normalized(points[0] - (self.pos + before_first))
-        proj_len = cross_product(vel - before_first, to_bump)
-        new_vel = Point(to_bump.y, -to_bump.x) * proj_len
-        before_second, after_second = self.get_velocity_edge(self.pos + before_first, new_vel, rects)
-        points = self.collide_rects(self.pos + before_first + after_second, rects)
-        if len(points) == 0:
-            return before_first + after_second
-        else:
-            return before_first + before_second
+    def go_from_walls(self, p: Point) -> Point:
+        pos = Point(p.x, p.y)
+        rects = self.scene.grid.get_collision_rects_nearby(pos)
+        while True:
+            v = []
+            for rect in rects:
+                current_v = vector_dist_point_rect(pos, rect)
+                if sign(self.HITBOX_RADIUS - length(current_v)) == 1:
+                    v.append(current_v)
+            if len(v) == 0:
+                break;
+            for i in range(1, len(v)):
+                if length(v[0]) > length(v[i]):
+                    v[0], v[i] = v[i], v[0]
+            push_v = normalized(v[0]) * (self.HITBOX_RADIUS - length(v[0]))
+            pos += push_v
+        return pos

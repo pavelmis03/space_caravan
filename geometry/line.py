@@ -23,7 +23,3 @@ def line_from_points(p1: Point, p2: Point) -> Line:
 
 def point_on_line(p: Point, l: Line) -> bool:
     return sign(l.a * p.x + l.b * p.y + l.c) == 0
-
-
-def dist_point_line(p: Point, l: Line) -> float:
-    return abs(l.a * p.x + l.b * p.y + l.c) / sqrt(l.a * l.a + l.b * l.b)

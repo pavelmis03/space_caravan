@@ -1,11 +1,12 @@
 from math import sqrt
 
 from geometry.point import Point
-from geometry.line import Line, line_from_points, dist_point_line, point_on_line
+from geometry.line import Line, line_from_points, point_on_line
 from geometry.vector import sign, cross_product, normalized
 from geometry.segment import Segment, point_on_segment
 from geometry.rectangle import Rectangle
 from geometry.circle import Circle
+from geometry.distances import dist_point_line
 
 
 def intersect_lines(l1: Line, l2: Line) -> Point:
@@ -40,10 +41,10 @@ def intersect_segments(seg1: Segment, seg2: Segment) -> Point:
 
 
 def intersect_seg_rect(seg: Segment, rect: Rectangle) -> Point:
-    vert = rect.get_vertexes()
-    p = [Point() for _ in range(4)]
+    edges = rect.get_edges()
+    p = []
     for i in range(4):
-        p[i] = intersect_segments(seg, Segment(vert[i], vert[(i + 1) % 4]))
+        p.append(intersect_segments(seg, edges[i]))
     for i in range(1, 4):
         if (not p[0]) or (p[i] and point_on_segment(p[i], Segment(seg.p1, p[0]))):
             p[0], p[i] = p[i], p[0]
@@ -52,12 +53,10 @@ def intersect_seg_rect(seg: Segment, rect: Rectangle) -> Point:
 
 def intersect_line_circle(l: Line, c: Circle) -> (Point, Point):
     to_line_dist = dist_point_line(c.center, l)
-    if sign(to_line_dist - c.r) == 1:
+    if sign(abs(to_line_dist) - c.r) == 1:
         return None, None
     to_line = normalized(l.get_normal()) * to_line_dist
-    if not point_on_line(c.center + to_line, l):
-        to_line = to_line * (-1)
-    if sign(to_line_dist - c.r) == 0:
+    if sign(abs(to_line_dist) - c.r) == 0:
         return c.center + to_line, None
     aside_dist = sqrt(c.r * c.r - to_line_dist * to_line_dist)
     aside = l.get_normal()
@@ -81,10 +80,10 @@ def intersect_seg_circle(seg: Segment, c: Circle) -> Point:
         return p[1]
 
 
-def intersert_circle_rect(c: Circle, rect: Rectangle) -> Point:
-    vert = rect.get_vertexes()
+def intersect_circle_rect(c: Circle, rect: Rectangle) -> Point:
+    edges = rect.get_edges()
     for i in range(4):
-        p = intersect_seg_circle(Segment(vert[i], vert[(i + 1) % 4]), c)
+        p = intersect_seg_circle(edges[i], c)
         if p:
             return p
     return None

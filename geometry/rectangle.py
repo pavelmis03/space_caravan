@@ -2,6 +2,7 @@ from pygame import Rect
 from typing import List
 
 from geometry.point import Point, point_to_tuple
+from geometry.segment import Segment
 
 
 class Rectangle:
@@ -120,6 +121,13 @@ class Rectangle:
         r2 = self._bottom_right
         p = [r1, Point(r2.x, r1.y), r2, Point(r1.x, r2.y)]
         return p
+
+    def get_edges(self) -> List[Segment]:
+        p = self.get_vertexes()
+        edges = []
+        for i in range(4):
+            edges.append(Segment(p[i], p[(i + 1) % 4]))
+        return edges
 
 
 def rect_to_rectangle(rect):
