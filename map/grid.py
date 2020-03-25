@@ -2,7 +2,7 @@
 from drawable_objects.base import DrawableObject
 
 from geometry.point import Point
-from geometry.rectangle import Rectangle
+from geometry.rectangle import create_rectangle_with_left_top
 
 from controller.controller import Controller
 from scenes.base import Scene
@@ -27,9 +27,7 @@ class Grid(DrawableObject):
 
         width = cell_width * len(self.arr[0])
         height = cell_height * len(self.arr)
-        self.grid_rectangle = Rectangle(pos.x - cell_width / 2, pos.y - cell_height / 2,
-                                        pos.x + width - cell_width / 2,
-                                        pos.y + height - cell_height / 2)
+        self.grid_rectangle = create_rectangle_with_left_top(pos, width, height)
 
     def process_draw(self):
         """

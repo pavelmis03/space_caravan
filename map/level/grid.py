@@ -1,14 +1,16 @@
 from typing import List
-from map.grid import Grid
-from map.level.generator import LevelGenerator
+
+from controller.controller import Controller
 from drawable_objects.base import GameSprite
 from drawable_objects.enemy import Enemy
 from geometry.point import Point
-from geometry.rectangle import Rectangle, create_rect_with_center
-from controller.controller import Controller
-from scenes.base import Scene
+from geometry.rectangle import Rectangle, create_rectangle_with_left_top
+from map.grid import Grid
+from map.level.generator import LevelGenerator
+from map.level.grid_interaction_with_enemy.grid_interaction_with_enemy_manager import GridInteractionWithEnemyManager
 from map.level.grid_static_draw_manager import GridStaticDrawManager
-from map.level.grid_path_manager import GridPathManager
+from scenes.base import Scene
+
 
 class LevelGrid(Grid):
     """
@@ -31,7 +33,7 @@ class LevelGrid(Grid):
 
         self.transform_ints_to_objects()
         self.static_draw_manager = GridStaticDrawManager(self)
-        self.path_manager = GridPathManager(self)
+        self.path_manager = GridInteractionWithEnemyManager(self)
 
     def process_draw(self):
         self.static_draw_manager.process_draw()
@@ -45,8 +47,8 @@ class LevelGrid(Grid):
         """
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):
-                pos_x = self.pos.x + j * self.cell_width
-                pos_y = self.pos.y + i * self.cell_height
+                pos_x = self.pos.x + j * self.cell_width + self.cell_width / 2
+                pos_y = self.pos.y + i * self.cell_height + self.cell_height / 2
                 filenames = ['wall', 'floor']
                 filename_index = int(bool(self.arr[i][j]))
 
@@ -61,7 +63,7 @@ class LevelGrid(Grid):
         w = self.cell_width
         y = i * h
         x = j * w
-        return create_rect_with_center(Point(x, y), w, h)
+        return create_rectangle_with_left_top(Point(x, y) + self.pos, w, h)
 
     def get_collision_rects_nearby(self, pos: Point) -> List[Rectangle]:
         """

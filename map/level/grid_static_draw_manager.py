@@ -42,14 +42,10 @@ class GridStaticDrawManager(Grid):
         self.surface_width = grid.width + self.cell_width
         self.surface_height = grid.height + self.cell_height
         res = Surface((self.surface_width, self.surface_height))
-        pos_offset = Point(grid.cell_width / 2, grid.cell_height / 2)
-        """
-        необходимо прибавить pos_offset, так как у этих sprite центры смещены
-        """
         for i in range(len(grid.arr)):
             for j in range(len(grid.arr[i])):
                 sprite = grid.arr[i][j]
-                ImageManager.process_draw(sprite.image_name, sprite.pos - self.pos + pos_offset,
+                ImageManager.process_draw(sprite.image_name, sprite.pos - self.pos,
                     res, sprite.zoom, sprite.angle)
         return res
 
@@ -59,9 +55,9 @@ class GridStaticDrawManager(Grid):
         что на экране
         """
         frame_rect = Rect(0, 0, self.cell_width, self.cell_height)
-        pos_offset = Point((self.cell_width - grid.cell_width) / 2, (self.cell_height - grid.cell_height) / 2)
+        pos_offset = Point((self.cell_width) / 2, (self.cell_height) / 2)
         """
-        здесь тоже нужно учитывать смещение центром прямоугольников
+        учитываем смещение прямоугольников
         """
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):
