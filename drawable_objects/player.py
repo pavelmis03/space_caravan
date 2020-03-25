@@ -49,11 +49,7 @@ class Player(Humanoid):
         velocity = Point(0, 0)
 
         if self.controller.get_click_button():
-            self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))#'''
-        '''self.time += 1
-        self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))#''"
-        if (self.time == 5):
-            self.time = 0#'''
+            self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))
 
         if self in self.controller.input_objects:
             for i in range(4):

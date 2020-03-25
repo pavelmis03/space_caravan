@@ -65,22 +65,22 @@ class Bullet(GameSprite):
         pass
 
     def collision_with_wall(self, collision_point):
-        self.scene.game_objects.append(Bad_Bullet(self.scene, self.controller, collision_point, self.angle))
+        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, collision_point, self.angle))
         self.destroy()
 
     def collision_with_entity(self):
         pass
 
 
-class Bad_Bullet(Bullet):
+class Collision_Point(Bullet):
     IMAGE_ZOOM = 0.5
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         self.speed = 0
         self.bullet_type = 'bullet'
         self.lifetime = 200
-        angle = 0
-        super().__init__ (scene, controller, pos, angle)
+        angle = angle
+        super().__init__(scene, controller, pos, angle)
 
     def process_logic(self):
         self.lifetime -= 1
