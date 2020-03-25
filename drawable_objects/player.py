@@ -35,7 +35,6 @@ class Player(Humanoid):
         pygame.K_s,
     ]
     SPEED = 3
-    ACCURACY = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
