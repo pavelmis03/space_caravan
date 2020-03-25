@@ -37,7 +37,7 @@ class LevelGrid(Grid):
         self.static_draw_manager.process_draw()
 
     def process_logic(self):
-        self.path_manager.path_finding()
+        self.path_manager.process_logic()
 
     def transform_ints_to_objects(self):
         """
@@ -55,6 +55,13 @@ class LevelGrid(Grid):
 
     def is_passable(self, i: int, j: int) -> bool:
         return self.arr[i][j].image_name != 'wall'
+
+    def get_collision_rect(self, i: int, j: int) -> Rectangle:
+        h = self.cell_height
+        w = self.cell_width
+        y = i * h
+        x = j * w
+        return create_rect_with_center(Point(x, y), w, h)
 
     def get_collision_rects_nearby(self, pos: Point) -> List[Rectangle]:
         """
@@ -76,11 +83,7 @@ class LevelGrid(Grid):
         for i in range(min_i, max_i):
             for j in range(min_j, max_j):
                 if not self.is_passable(i, j):
-                    h = self.cell_height
-                    w = self.cell_width
-                    y = i * h
-                    x = j * w
-                    res.append(create_rect_with_center(Point(x, y), w, h))
+                    res.append(self.get_collision_rect(i, j))
         return res
 
     def set_enemy_in_arr(self, enemy: Enemy):

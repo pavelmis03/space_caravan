@@ -11,7 +11,8 @@ from scenes.base import Scene
 class Enemy(Humanoid):
 
     IMAGE_ZOOM = 0.3
-    VISION_RADIUS = 20
+    VISION_RADIUS = 25 * 20
+    HEARING_RANGE = 30
 
     def direction_calculation(self):
         x_speed = math.cos(self.angle) * self.speed
