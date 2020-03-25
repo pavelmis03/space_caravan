@@ -139,7 +139,7 @@ class GameSprite(SpriteObject):
                                          relative_pos, self.scene.game.screen_rectangle):
             return
 
-        ImageManager.process_draw(self.image_name, relative_pos, self.scene.screen, self.zoom, self.angle, self.rotation_offset)
+        ImageManager.process_draw(self.image_name, relative_pos, self.scene.screen, self.zoom, self.angle, None)
 
     def move(self, new_pos):
         self.scene.plane.do_step(self, self.pos, new_pos)

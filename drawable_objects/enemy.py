@@ -11,6 +11,7 @@ from scenes.base import Scene
 class Enemy(Humanoid):
 
     IMAGE_ZOOM = 0.3
+    VISION_RADIUS = 20
 
     def direction_calculation(self):
         x_speed = math.cos(self.angle) * self.speed
@@ -30,9 +31,10 @@ class Enemy(Humanoid):
 
 
     def process_logic(self):
-        self.recount_angle()
+        #self.recount_angle()
+        self.scene.grid.set_enemy_in_arr(self)
         self.direction = self.direction_calculation()
-        self.move(self.pos + self.direction)
+        #self.move(self.pos + self.direction)
 
     def collision(self):
         pass

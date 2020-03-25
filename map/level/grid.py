@@ -2,11 +2,13 @@ from typing import List
 from map.grid import Grid
 from map.level.generator import LevelGenerator
 from drawable_objects.base import GameSprite
+from drawable_objects.enemy import Enemy
 from geometry.point import Point
 from geometry.rectangle import Rectangle, create_rect_with_center
 from controller.controller import Controller
 from scenes.base import Scene
 from map.level.grid_static_draw_manager import GridStaticDrawManager
+from map.level.grid_path_manager import GridPathManager
 
 class LevelGrid(Grid):
     """
@@ -29,13 +31,13 @@ class LevelGrid(Grid):
 
         self.transform_ints_to_objects()
         self.static_draw_manager = GridStaticDrawManager(self)
+        self.path_manager = GridPathManager(self)
 
     def process_draw(self):
         self.static_draw_manager.process_draw()
-#        super().process_draw()
 
     def process_logic(self):
-        pass
+        self.path_manager.path_finding()
 
     def transform_ints_to_objects(self):
         """
@@ -50,6 +52,9 @@ class LevelGrid(Grid):
 
                 self.arr[i][j] = GameSprite(self.scene, self.controller,
                            filenames[filename_index], Point(pos_x, pos_y))
+
+    def is_passable(self, i: int, j: int) -> bool:
+        return self.arr[i][j].image_name != 'wall'
 
     def get_collision_rects_nearby(self, pos: Point) -> List[Rectangle]:
         """
@@ -70,14 +75,13 @@ class LevelGrid(Grid):
         res = []
         for i in range(min_i, max_i):
             for j in range(min_j, max_j):
-                if self.arr[i][j].image_name == 'wall':
-                    """
-                    простая проверка, но в выдумывании чего-то другого
-                    нет необходимости.
-                    """
+                if not self.is_passable(i, j):
                     h = self.cell_height
                     w = self.cell_width
                     y = i * h
                     x = j * w
                     res.append(create_rect_with_center(Point(x, y), w, h))
         return res
+
+    def set_enemy_in_arr(self, enemy: Enemy):
+        self.path_manager.set_enemy_in_arr(enemy)
