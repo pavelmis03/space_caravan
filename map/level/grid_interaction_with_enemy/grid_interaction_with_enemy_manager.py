@@ -11,7 +11,7 @@ class GridInteractionWithEnemyManager:
     """
     def __init__(self, grid):
         self.grid_path_finder = GridPathFinder(grid)
-        self.enemy_vision_manager = EnemyVisionManager(self.grid_path_finder)
+        self.enemy_vision_manager = EnemyVisionManager(grid)
         self.enemy_hearing_manager = EnemyHearingManager(self.grid_path_finder)
 
     def set_enemy_in_arr(self, enemy: Enemy):

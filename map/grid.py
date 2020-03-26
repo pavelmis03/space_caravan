@@ -1,3 +1,4 @@
+from typing import Tuple
 
 from drawable_objects.base import DrawableObject
 
@@ -96,6 +97,12 @@ class Grid(DrawableObject):
     @property
     def cell_height(self):
         return self.index_manager.cell_height
+
+    def get_center_of_cell_by_indexes(self, i: int, j: int) -> Point:
+        return self.index_manager.get_center_of_cell_by_indexes(i, j)
+
+    def get_index_by_pos(self, pos: Point) -> Tuple[int, int]:
+        return self.index_manager.get_index_by_pos(pos)
 
     def print_arr(self):
         """

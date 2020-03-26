@@ -1,16 +1,17 @@
-from typing import List
+from typing import List, Tuple
 
 from controller.controller import Controller
 from drawable_objects.base import GameSprite
 from drawable_objects.enemy import Enemy
 from geometry.point import Point
 from geometry.rectangle import Rectangle, create_rectangle_with_left_top
+from geometry.segment import Segment
 from map.grid import Grid
 from map.level.generator import LevelGenerator
 from map.level.grid_interaction_with_enemy.grid_interaction_with_enemy_manager import GridInteractionWithEnemyManager
 from map.level.grid_static_draw_manager import GridStaticDrawManager
 from scenes.base import Scene
-
+from map.level.intersection import GridIntersectionManager
 
 class LevelGrid(Grid):
     """
@@ -33,6 +34,7 @@ class LevelGrid(Grid):
 
         self.transform_ints_to_objects()
         self.static_draw_manager = GridStaticDrawManager(self)
+        self.grid_intersection_manager = GridIntersectionManager(self)
         self.path_manager = GridInteractionWithEnemyManager(self)
 
     def process_draw(self):
@@ -91,5 +93,8 @@ class LevelGrid(Grid):
     def set_enemy_in_arr(self, enemy: Enemy):
         self.path_manager.set_enemy_in_arr(enemy)
 
-    def get_point_to_move(self, enemy: Enemy) -> Point:
-        return self.path_manager.grid_path_finder.get_point_to_move(enemy)
+    def get_pos_to_move(self, enemy: Enemy) -> Point:
+        return self.path_manager.grid_path_finder.get_pos_to_move(enemy)
+
+    def is_segment_intersect_walls(self, seg: Segment) -> bool:
+        return self.grid_intersection_manager.is_segment_intersect_walls(seg)

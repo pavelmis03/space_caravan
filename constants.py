@@ -26,6 +26,9 @@ side_dj = [0, 1, 0, -1]
 diagonal_di = [-1, 1, 1, -1]
 diagonal_dj = [1, 1, -1, -1]
 
+rect_di = side_di + diagonal_di
+rect_dj = side_dj + diagonal_dj
+
 
 
 EPS = 1e-5

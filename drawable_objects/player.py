@@ -35,7 +35,7 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 1
+    SPEED = 2#1
     ACCURACY = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
@@ -93,7 +93,7 @@ class Player(Humanoid):
                 if sign(self.HITBOX_RADIUS - length(current_v)) == 1:
                     v.append(current_v)
             if len(v) == 0:
-                break;
+                break
             for i in range(1, len(v)):
                 if length(v[0]) > length(v[i]):
                     v[0], v[i] = v[i], v[0]
