@@ -12,4 +12,4 @@ class EnemyHearingManager:
         self.grid_path_finder.add_enemy(enemy)
 
     def process_logic(self):
-        pass
+        self.grid_path_finder.find_path_to_enemies(Enemy.HEARING_RANGE)

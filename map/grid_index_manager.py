@@ -68,3 +68,8 @@ class GridIndexManager:
         с обычной системо координат.
         """
         return Point(pos.x - self.pos.x, pos.y - self.pos.y)
+
+    def get_center_of_cell_by_indexes(self, i: int, j: int) -> Point:
+        y = i * self.cell_height + self.cell_height / 2
+        x = j * self.cell_width + self.cell_width / 2
+        return Point(x, y)

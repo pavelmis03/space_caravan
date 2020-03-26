@@ -20,8 +20,11 @@ DIRECTIONS = [
     Point(0, 1),
 ]
 
-di = [1, 0, -1, 0]
-dj = [0, 1, 0, -1]
+side_di = [-1, 0, 1, 0]
+side_dj = [0, 1, 0, -1]
+
+diagonal_di = [-1, 1, 1, -1]
+diagonal_dj = [1, 1, -1, -1]
 
 
 

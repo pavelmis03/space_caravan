@@ -90,3 +90,6 @@ class LevelGrid(Grid):
 
     def set_enemy_in_arr(self, enemy: Enemy):
         self.path_manager.set_enemy_in_arr(enemy)
+
+    def get_point_to_move(self, enemy: Enemy) -> Point:
+        return self.path_manager.grid_path_finder.get_point_to_move(enemy)
