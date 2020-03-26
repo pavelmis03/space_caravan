@@ -18,14 +18,20 @@ class LevelGrid(Grid):
     Генерируется с помощью LevelGenerator, далее преобразует
     инты в объекты.
     """
+    def map_construction(self, min_area: int = 100, min_w: int = 8, min_h: int = 8):
+        """
+        Построение уровня вынесено отдельно для более удобного наследования
+        """
+        generator = LevelGenerator (self.arr, min_area, min_w, min_h)
+        generator.generate()
+
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
                  width: int = 100, height: int = 100,
                  min_area: int = 100, min_w: int = 8, min_h: int = 8):
         super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
 
-        generator = LevelGenerator(self.arr, min_area, min_w, min_h)
-        generator.generate()
+        self.map_construction()
 
         self.transform_ints_to_objects()
         self.static_draw_manager = GridStaticDrawManager(self)
@@ -81,3 +87,17 @@ class LevelGrid(Grid):
                     x = j * w
                     res.append(create_rect_with_center(Point(x, y), w, h))
         return res
+
+
+class SpaceshipGrid(LevelGrid):
+    def map_construction(self, width: int = 21, height: int = 21):
+        for i in range(width):
+            for j in range(height):
+                self.arr[i][j] = 1
+        for i in range(height):
+            self.arr[i][0] = 0
+            self.arr[i][width - 1] = 0
+        for i in range(width):
+            self.arr[0][i] = 0
+            self.arr[height - 1][i] = 0
+        self.arr[height - 2][width // 2] = 0
