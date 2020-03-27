@@ -7,7 +7,7 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import sign, length, normalized
 from geometry.distances import vector_dist_point_rect
-from constants import DIRECTIONS
+from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
 from drawable_objects.enemy import Enemy

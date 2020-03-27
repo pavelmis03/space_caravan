@@ -1,23 +1,23 @@
 from drawable_objects.enemy import Enemy
-from map.level.grid_interaction_with_enemy.enemy_vision_manager import EnemyVisionManager
+from geometry.segment import Segment
 from map.level.grid_interaction_with_enemy.enemy_hearing_manager import EnemyHearingManager
-from map.level.grid_path_finder import GridPathFinder
+from geometry.point import Point
 
 class GridInteractionWithEnemyManager:
-    """
-    Возможны ошибки:
-    если два enemy в одной клетке
-    если enemy в клетке с player
-    """
     def __init__(self, grid):
-        self.grid_path_finder = GridPathFinder(grid)
-        self.enemy_vision_manager = EnemyVisionManager(grid)
-        self.enemy_hearing_manager = EnemyHearingManager(self.grid_path_finder)
+        self.grid = grid
+        self.enemy_hearing_manager = EnemyHearingManager(grid)
 
-    def set_enemy_in_arr(self, enemy: Enemy):
-        self.enemy_hearing_manager.add_enemy(enemy)
-        self.enemy_vision_manager.add_enemy(enemy)
+    def is_enemy_see_player(self, enemy: Enemy) -> bool:
+        player_pos = self.grid.scene.player.pos
+        segment = Segment(enemy.pos, player_pos)
+        if segment.length > Enemy.VISION_RADIUS:
+            return False
+
+        return not self.grid.is_segment_intersect_walls(segment)
+
+    def get_pos_to_move(self, enemy: Enemy) -> Point:
+        return self.enemy_hearing_manager.get_pos_to_move(enemy)
 
     def process_logic(self):
-        self.enemy_vision_manager.process_logic()
         self.enemy_hearing_manager.process_logic()

@@ -1,6 +1,6 @@
 import pygame
 
-from constants import Color
+from constants.color import Color
 from drawable_objects.base import AbstractObject
 from drawable_objects.button import Button
 

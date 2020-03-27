@@ -1,15 +1,18 @@
 from map.level.grid_path_finder import GridPathFinder
 from drawable_objects.enemy import Enemy
+from geometry.point import Point
 
 class EnemyHearingManager:
     """
-    Не доделано
+    Не доделано до конца.
+    Enemy должен реагировать на выстрел игрока
     """
-    def __init__(self, grid_path_finder: GridPathFinder):
-        self.grid_path_finder = grid_path_finder
+    def __init__(self, grid):
+        self.grid_path_finder = GridPathFinder(grid)
 
-    def add_enemy(self, enemy: Enemy):
-        self.grid_path_finder.add_enemy(enemy)
+    def get_pos_to_move(self, enemy: Enemy) -> Point:
+        return self.grid_path_finder.get_pos_to_move(enemy)
+
 
     def process_logic(self):
         self.grid_path_finder.find_path_to_enemies(Enemy.HEARING_RANGE)

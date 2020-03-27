@@ -6,7 +6,7 @@
 from math import sqrt
 
 from geometry.point import Point
-from constants import EPS
+from constants.math import EPS
 
 
 def cross_product(v1: Point, v2: Point) -> float:

@@ -1,6 +1,6 @@
 import pygame
 
-from constants import Color
+from constants.color import Color
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
 from geometry.point import Point

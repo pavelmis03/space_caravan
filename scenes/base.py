@@ -1,6 +1,6 @@
 import pygame
 
-from constants import Color
+from constants.color import Color
 from geometry.point import Point
 
 

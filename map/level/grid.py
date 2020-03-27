@@ -90,11 +90,11 @@ class LevelGrid(Grid):
                     res.append(self.get_collision_rect(i, j))
         return res
 
-    def set_enemy_in_arr(self, enemy: Enemy):
-        self.path_manager.set_enemy_in_arr(enemy)
+    def is_enemy_see_player(self, enemy: Enemy) -> bool:
+        return self.path_manager.is_enemy_see_player(enemy)
 
     def get_pos_to_move(self, enemy: Enemy) -> Point:
-        return self.path_manager.grid_path_finder.get_pos_to_move(enemy)
+        return self.path_manager.get_pos_to_move(enemy)
 
     def is_segment_intersect_walls(self, seg: Segment) -> bool:
         return self.grid_intersection_manager.is_segment_intersect_walls(seg)
