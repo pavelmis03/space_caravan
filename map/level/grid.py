@@ -9,9 +9,9 @@ from geometry.segment import Segment
 from map.grid import Grid
 from map.level.generator import LevelGenerator
 from map.level.grid_interaction_with_enemy.grid_interaction_with_enemy_manager import GridInteractionWithEnemyManager
-from map.level.grid_static_draw_manager import GridStaticDrawManager
+from map.level.draw_static_manager import GridDrawStaticManager
 from scenes.base import Scene
-from map.level.intersection import GridIntersectionManager
+from map.level.intersection_manager import GridIntersectionManager
 
 class LevelGrid(Grid):
     """
@@ -33,7 +33,7 @@ class LevelGrid(Grid):
         generator.generate()
 
         self.transform_ints_to_objects()
-        self.static_draw_manager = GridStaticDrawManager(self)
+        self.static_draw_manager = GridDrawStaticManager(self)
         self.grid_intersection_manager = GridIntersectionManager(self)
         self.path_manager = GridInteractionWithEnemyManager(self)
 

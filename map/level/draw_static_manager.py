@@ -4,7 +4,7 @@ from utils.image import ImageManager
 from drawable_objects.base import SurfaceObject
 from geometry.point import Point
 
-class GridStaticDrawManager(Grid):
+class GridDrawStaticManager(Grid):
     """
     Класс для оптимизации отрисовки статической графики.
     Принимает grid, отрисовывает все на 1 surface,
