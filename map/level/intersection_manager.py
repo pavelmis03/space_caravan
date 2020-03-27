@@ -25,6 +25,11 @@ class GridIntersectionManager:
             for k in range(len(side_di)):
                 new_i = i + side_di[k]
                 new_j = j + side_dj[k]
+
+                if new_i < 0 or new_j < 0 or \
+                    new_i >= len(self.grid.arr) or new_j >= len(self.grid.arr[new_i]):
+                    continue
+
                 if self.used_manager.is_marked(new_i, new_j):
                     continue
 
