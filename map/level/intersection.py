@@ -1,8 +1,10 @@
-from map.level.grid_path_finder import IsMarkedManager
-from geometry.segment import Segment
-from geometry.intersections import intersect_seg_rect
 from collections import deque
+
 from constants.directions import side_di, side_dj
+from geometry.intersections import intersect_seg_rect
+from geometry.segment import Segment
+from map.level.grid_interaction_with_enemy.grid_path_finder import IsMarkedManager
+
 
 class GridIntersectionManager:
     def __init__(self, grid):

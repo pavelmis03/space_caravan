@@ -1,6 +1,7 @@
-from map.level.grid_path_finder import GridPathFinder
 from drawable_objects.enemy import Enemy
 from geometry.point import Point
+from map.level.grid_interaction_with_enemy.grid_path_finder import GridPathFinder
+
 
 class EnemyHearingManager:
     """

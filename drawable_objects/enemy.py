@@ -6,6 +6,7 @@ from controller.controller import Controller
 from drawable_objects.base import Humanoid
 from geometry.point import Point
 from scenes.base import Scene
+from geometry.vector import length
 
 class EnemyCommand:
     def __init__(self, type: str, *params):
@@ -15,14 +16,13 @@ class EnemyCommand:
 class Enemy(Humanoid):
 
     IMAGE_ZOOM = 0.3
-    VISION_RADIUS = 25 * 50
-    HEARING_RANGE = 50
+    VISION_RADIUS = 25 * 20
+    HEARING_RANGE = 30
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         ENEMY_TYPE = 'player'
         super().__init__ (scene, controller, ENEMY_TYPE, pos, angle, Enemy.IMAGE_ZOOM)
-        self.speed = 2#1
-        self.direction = Point(0, 0)
+        self.speed = 5
 
         self.is_has_command = False
         self.command = None
@@ -40,6 +40,16 @@ class Enemy(Humanoid):
         vector_to_player = self.pos - new_pos
         self.angle = math.atan2(vector_to_player.y, -vector_to_player.x)
 
+    def get_correct_velocity_vector(self, velocity: Point, pos: Point):
+        """
+        Enemy может "перепрыгнуть" точку назначения, поэтому
+        последний прыжок должен быть на меньший вектор
+        """
+        remainig_vector = pos - self.pos
+        if length(velocity) > length(remainig_vector):
+            return remainig_vector
+        return velocity
+
     def command_move_to(self, pos: Point):
         if pos == self.pos:
             self.is_has_command = False
@@ -47,8 +57,9 @@ class Enemy(Humanoid):
             return
 
         self.recount_angle(pos)
-        self.direction = self.direction_calculation()
-        self.move(self.pos + self.direction)
+        velocity = self.get_correct_velocity_vector(self.direction_calculation(), pos)
+
+        self.move(self.pos + velocity)
 
     def command_shoot(self):
         if not self.is_see_player:
