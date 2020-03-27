@@ -1,6 +1,7 @@
 from collections import deque
 
 from constants.directions import side_di, side_dj
+from geometry.point import Point
 from geometry.intersections import intersect_seg_rect
 from geometry.segment import Segment
 from map.level.grid_interaction_with_enemy.grid_path_finder import IsMarkedManager
@@ -11,7 +12,7 @@ class GridIntersectionManager:
         self.grid = grid
         self.used_manager = IsMarkedManager(grid.arr)
 
-    def is_segment_intersect_walls(self, seg: Segment) -> bool:
+    def intersect_seg_walls(self, seg: Segment) -> Point:
         self.used_manager.next_iteration()
         i0, j0 = self.grid.index_manager.get_index_by_pos(seg.p1)
 
@@ -20,41 +21,23 @@ class GridIntersectionManager:
         s.append((i0, j0))
 
         while (len(s)):
-            i, j = s.pop()
+            i, j = s.popleft()
             for k in range(len(side_di)):
                 new_i = i + side_di[k]
                 new_j = j + side_dj[k]
                 if self.used_manager.is_marked(new_i, new_j):
                     continue
+
                 rect = self.grid.get_collision_rect(new_i, new_j)
-                if intersect_seg_rect(seg, rect) is None:
+                interset_point = intersect_seg_rect(seg, rect)
+                if interset_point is None:
                     continue
 
                 if not self.grid.is_passable(new_i, new_j):
-                    return True
+                    return interset_point
 
                 self.used_manager.mark(new_i, new_j)
                 s.append((new_i, new_j))
 
-            if i == i0 and j == j0 and not len(s):
-                for k in range(len(side_di)):
-                    new_i = i + side_di[k]
-                    new_j = j + side_dj[k]
-                    if self.used_manager.is_marked(new_i, new_j):
-                        continue
-                    rect = self.grid.get_collision_rect(new_i, new_j)
-                    print(rect.top_left.x)
-                    print(rect.bottom_right.x)
-                    print(rect.top_left.y)
-                    print(rect.bottom_right.y)
-                    if intersect_seg_rect(seg, rect) is None:
-                        continue
-
-                    if not self.grid.is_passable(new_i, new_j):
-                        return True
-
-                    self.used_manager.mark(new_i, new_j)
-                    s.append((new_i, new_j))
-
-        return False
+        return None
 

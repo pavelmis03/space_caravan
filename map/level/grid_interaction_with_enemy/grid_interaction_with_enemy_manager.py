@@ -14,7 +14,8 @@ class GridInteractionWithEnemyManager:
         if segment.length > Enemy.VISION_RADIUS:
             return False
 
-        return not self.grid.is_segment_intersect_walls(segment)
+        intersect_point = self.grid.intersect_seg_walls(segment)
+        return (intersect_point is None)
 
     def get_pos_to_move(self, enemy: Enemy) -> Point:
         return self.enemy_hearing_manager.get_pos_to_move(enemy)

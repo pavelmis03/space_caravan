@@ -7,16 +7,12 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from scenes.base import Scene
 from geometry.vector import length
+from drawable_objects.bullet import create_bullet
 
 class MovingHumanoid(Humanoid):
-    def __init__(self, scene: Scene, controller: Controller,
-                 type, pos: Point, speed: float, angle: float=0, zoom: float=1):
-        super().__init__(scene, controller, type, pos, angle, zoom)
-        self.speed = speed
-
     def get_move_vector(self, pos: Point):
         self.recount_angle(pos)
-        direction = self.get_direction()
+        direction = self.get_direction_vector()
         result = self.correct_direction_vector(direction, pos)
         return result
 
@@ -29,11 +25,6 @@ class MovingHumanoid(Humanoid):
         if length(velocity) > length(remainig_vector):
             return remainig_vector
         return velocity
-
-    def get_direction(self):
-        x_speed = math.cos(self.angle) * self.speed
-        y_speed = -math.sin(self.angle) * self.speed
-        return Point(x_speed, y_speed)
 
     def recount_angle(self, new_pos):
         vector_to_player = self.pos - new_pos
@@ -49,6 +40,7 @@ class Enemy(MovingHumanoid):
     IMAGE_ZOOM = 0.3
     VISION_RADIUS = 25 * 20
     HEARING_RANGE = 30
+    COOLDOWN_TIME = 50
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         ENEMY_TYPE = 'player'
@@ -58,9 +50,11 @@ class Enemy(MovingHumanoid):
         self.is_has_command = False
         self.command = None
         self.is_aggred = False
+        self.cooldown = 0
 
         self.command_functions = {'move_to': self.command_move_to,
-                                  'shoot': self.command_shoot}
+                                  'shoot': self.command_shoot,
+                                  'aim': self.command_aim,}
 
     def command_move_to(self, pos: Point):
         if pos == self.pos:
@@ -71,14 +65,27 @@ class Enemy(MovingHumanoid):
         self.move(self.pos + self.get_move_vector(pos))
 
     def command_shoot(self):
-        if not self.is_see_player:
+        self.recount_angle(self.scene.player.pos)
+
+        create_bullet(self)
+        self.cooldown = Enemy.COOLDOWN_TIME
+
+        self.command = EnemyCommand('aim')
+
+    def command_aim(self):
+        if not self.is_see_player or self.can_shoot_now:
             self.is_has_command = False
             self.command_logic()
             return
+
         self.recount_angle(self.scene.player.pos)
 
+    @property
+    def can_shoot_now(self):
+        return self.is_see_player and not self.cooldown
+
     def create_new_command(self):
-        if self.is_see_player:
+        if self.can_shoot_now:
             self.is_aggred = True
             self.is_has_command = True
             self.command = EnemyCommand('shoot')
@@ -100,6 +107,8 @@ class Enemy(MovingHumanoid):
     def process_logic(self):
         self.is_see_player = self.scene.grid.is_enemy_see_player(self)
         self.command_logic()
+        if self.cooldown:
+            self.cooldown -= 1
 
     def process_draw(self):
         super().process_draw()

@@ -96,5 +96,5 @@ class LevelGrid(Grid):
     def get_pos_to_move(self, enemy: Enemy) -> Point:
         return self.path_manager.get_pos_to_move(enemy)
 
-    def is_segment_intersect_walls(self, seg: Segment) -> bool:
-        return self.grid_intersection_manager.is_segment_intersect_walls(seg)
+    def intersect_seg_walls(self, seg: Segment) -> Point:
+        return self.grid_intersection_manager.intersect_seg_walls(seg)

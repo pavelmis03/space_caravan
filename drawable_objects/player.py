@@ -13,7 +13,7 @@ from controller.controller import Controller
 from drawable_objects.enemy import Enemy
 
 
-from drawable_objects.bullet import Bullet
+from drawable_objects.bullet import create_bullet
 from utils.image import ImageManager
 
 
@@ -35,12 +35,12 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 2#1
     ACCURACY = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         self.time = 0
-        super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
+        PLAYER_SPEED = 2
+        super().__init__(scene, controller, Player.IMAGE_NAME, pos, PLAYER_SPEED, angle, Player.IMAGE_ZOOM)
         # head - 140x126
         print(ImageManager.get_width(self.image_name, 1), ImageManager.get_height(self.image_name, 1))
         self.rotation_offset = [
@@ -58,18 +58,18 @@ class Player(Humanoid):
         velocity = Point(0, 0)
 
         if self.controller.get_click_button():
-            self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))
+            create_bullet(self)
 
         if self in self.controller.input_objects:
             for i in range(4):
                 if self.controller.is_key_pressed(Player.CONTROLS[i]):
                     velocity += DIRECTIONS[i]
-            self.move(self.pos + velocity * Player.SPEED)
+            self.move(self.pos + velocity * self.speed)
 
         for i in range(4):
             if self.controller.is_key_pressed(Player.CONTROLS[i]):
                 velocity += DIRECTIONS[i]
-        velocity *= Player.SPEED
+        velocity *= self.speed
 
         new_pos = self.go_from_walls(self.pos + velocity)
         if sign(length(new_pos - self.pos - velocity)) != 0:
