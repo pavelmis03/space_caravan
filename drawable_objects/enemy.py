@@ -8,39 +8,19 @@ from geometry.point import Point
 from scenes.base import Scene
 from geometry.vector import length
 
-class EnemyCommand:
-    def __init__(self, type: str, *params):
-        self.type = type
-        self.params = params
+class MovingHumanoid(Humanoid):
+    def __init__(self, scene: Scene, controller: Controller,
+                 type, pos: Point, speed: float, angle: float=0, zoom: float=1):
+        super().__init__(scene, controller, type, pos, angle, zoom)
+        self.speed = speed
 
-class Enemy(Humanoid):
+    def get_move_vector(self, pos: Point):
+        self.recount_angle(pos)
+        direction = self.get_direction()
+        result = self.correct_direction_vector(direction, pos)
+        return result
 
-    IMAGE_ZOOM = 0.3
-    VISION_RADIUS = 25 * 20
-    HEARING_RANGE = 30
-
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        ENEMY_TYPE = 'player'
-        super().__init__ (scene, controller, ENEMY_TYPE, pos, angle, Enemy.IMAGE_ZOOM)
-        self.speed = 5
-
-        self.is_has_command = False
-        self.command = None
-        self.is_aggred = False
-
-        self.command_functions = {'move_to': self.command_move_to,
-                                  'shoot': self.command_shoot}
-
-    def direction_calculation(self):
-        x_speed = math.cos(self.angle) * self.speed
-        y_speed = -math.sin(self.angle) * self.speed
-        return Point(x_speed, y_speed)
-
-    def recount_angle(self, new_pos):
-        vector_to_player = self.pos - new_pos
-        self.angle = math.atan2(vector_to_player.y, -vector_to_player.x)
-
-    def get_correct_velocity_vector(self, velocity: Point, pos: Point):
+    def correct_direction_vector(self, velocity: Point, pos: Point):
         """
         Enemy может "перепрыгнуть" точку назначения, поэтому
         последний прыжок должен быть на меньший вектор
@@ -50,16 +30,45 @@ class Enemy(Humanoid):
             return remainig_vector
         return velocity
 
+    def get_direction(self):
+        x_speed = math.cos(self.angle) * self.speed
+        y_speed = -math.sin(self.angle) * self.speed
+        return Point(x_speed, y_speed)
+
+    def recount_angle(self, new_pos):
+        vector_to_player = self.pos - new_pos
+        self.angle = math.atan2(vector_to_player.y, -vector_to_player.x)
+
+class EnemyCommand:
+    def __init__(self, type: str, *params):
+        self.type = type
+        self.params = params
+
+class Enemy(MovingHumanoid):
+
+    IMAGE_ZOOM = 0.3
+    VISION_RADIUS = 25 * 20
+    HEARING_RANGE = 30
+
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+        ENEMY_TYPE = 'player'
+        ENEMY_SPEED = 5
+        super().__init__ (scene, controller, ENEMY_TYPE, pos, ENEMY_SPEED, angle, Enemy.IMAGE_ZOOM)
+
+        self.is_has_command = False
+        self.command = None
+        self.is_aggred = False
+
+        self.command_functions = {'move_to': self.command_move_to,
+                                  'shoot': self.command_shoot}
+
     def command_move_to(self, pos: Point):
         if pos == self.pos:
             self.is_has_command = False
             self.command_logic()
             return
 
-        self.recount_angle(pos)
-        velocity = self.get_correct_velocity_vector(self.direction_calculation(), pos)
-
-        self.move(self.pos + velocity)
+        self.move(self.pos + self.get_move_vector(pos))
 
     def command_shoot(self):
         if not self.is_see_player:
@@ -103,6 +112,3 @@ class Enemy(Humanoid):
             new_pos = self.command.params[0]
             np = new_pos - self.scene.relative_center
             pygame.draw.circle(self.scene.screen, (0, 0, 255), (int(np.x), int(np.y)), 10)
-
-    def collision(self):
-        pass
