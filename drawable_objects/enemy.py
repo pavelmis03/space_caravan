@@ -38,7 +38,11 @@ class EnemyCommand:
 class Enemy(MovingHumanoid):
 
     IMAGE_ZOOM = 0.3
-    VISION_RADIUS = 25 * 20
+    """
+    VISION_RADIUS не должен быть большим, так
+    как grid.intersect_seg_walls работает медленно
+    """
+    VISION_RADIUS = 25 * 15
     HEARING_RANGE = 30
     COOLDOWN_TIME = 50
 
