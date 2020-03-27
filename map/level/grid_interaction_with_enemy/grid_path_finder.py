@@ -67,8 +67,6 @@ class GridPathFinder:
         self.distance[player_i][player_j] = 0
         self.used_manager.mark(player_i, player_j)
 
-        enemies_in_range = []
-
         while len(q):
             i, j = q.popleft()
 
@@ -91,24 +89,14 @@ class GridPathFinder:
                 q.append((new_i, new_j))
 
     def get_pos_to_move(self, enemy: Enemy) -> Point:
-        self.grid.scene.delete_me_later = []
         i, j = self.grid.index_manager.get_index_by_pos(enemy.pos)
-
 
         if not self.used_manager.is_marked(i, j):
             return None
 
-        p = self.parent[i][j]
-        player_i, player_j = self.grid.index_manager.get_index_by_pos(self.grid.scene.player.pos)
+        new_i, new_j = self.parent[i][j]
 
-        while p != (player_i, player_j):
-            gs = GameSprite(self.grid.scene, self.grid.controller,
-                            'green', Point(p[1] * self.grid.cell_width + self.grid.cell_width / 2,
-                                           p[0] * self.grid.cell_height + self.grid.cell_height / 2))
-            self.grid.scene.delete_me_later.append(gs)
-            p = self.parent[p[0]][p[1]]
-
-        return self.grid.get_center_of_cell_by_indexes(self.parent[i][j][0], self.parent[i][j][1])
+        return self.grid.get_center_of_cell_by_indexes(new_i, new_j)
 
 
 

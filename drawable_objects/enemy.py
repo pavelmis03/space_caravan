@@ -109,15 +109,3 @@ class Enemy(MovingHumanoid):
         self.command_logic()
         if self.cooldown:
             self.cooldown -= 1
-
-    def process_draw(self):
-        super().process_draw()
-        p1 = self.pos - self.scene.relative_center
-        p2 = self.scene.player.pos - self.scene.relative_center
-        pygame.draw.line(self.scene.screen, (255, 0, 0), [p1.x, p1.y],
-            [p2.x, p2.y], 5)
-
-        if self.is_has_command and self.command.type == 'move_to':
-            new_pos = self.command.params[0]
-            np = new_pos - self.scene.relative_center
-            pygame.draw.circle(self.scene.screen, (0, 0, 255), (int(np.x), int(np.y)), 10)

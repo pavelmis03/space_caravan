@@ -66,7 +66,6 @@ class GameScene(Scene):
         self.player = None
         self.plane = None
         self.game_paused = False
-        self.delete_me_later = []
 
     def process_all_logic(self):
         """
@@ -93,8 +92,6 @@ class GameScene(Scene):
         """
         self.screen.fill(Color.BLACK)
         self.grid.process_draw()
-        for i in range(len(self.delete_me_later)):
-            self.delete_me_later[i].process_draw()
         for item in self.game_objects:
             item.process_draw()
         self.player.process_draw()

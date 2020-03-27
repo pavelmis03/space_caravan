@@ -20,5 +20,8 @@ class GridInteractionWithEnemyManager:
     def get_pos_to_move(self, enemy: Enemy) -> Point:
         return self.enemy_hearing_manager.get_pos_to_move(enemy)
 
+    def can_stay(self, i: int, j: int):
+        return self.enemy_hearing_manager.can_stay(i, j)
+
     def process_logic(self):
         self.enemy_hearing_manager.process_logic()

@@ -48,8 +48,6 @@ class Player(Humanoid):
             126 * Player.IMAGE_ZOOM
         ]
 
-        self.scene.game_objects.append(Enemy(self.scene, self.controller, Point(400, 400), 0)) #Спавн врага, потом удалить
-
     def process_logic(self):
         relative_center = self.scene.relative_center
         vector_to_mouse = self.controller.get_mouse_pos() + relative_center - self.pos
