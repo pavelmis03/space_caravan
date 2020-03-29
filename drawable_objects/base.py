@@ -76,7 +76,7 @@ class SpriteObject(DrawableObject):
     Базовый класс объекта с текстурой.
 
     :param scene: сцена объекта
-    :param controller: ссылка на объект контроллера (пока None)
+    :param controller: ссылка на объект контроллера
     :param image_name: имя картинки в базе менеджера
     :param pos: координаты объекта
     :param angle: угол поворота объекта
@@ -106,7 +106,7 @@ class GameSprite(SpriteObject):
     Базовый класс объекта на игровом уровне
 
     :param scene: сцена объекта
-    :param controller: ссылка на объект контроллера (пока None)
+    :param controller: ссылка на объект контроллера
     :param image_name: имя картинки в базе менеджера
     :param pos: координаты объекта
     :param angle: угол поворота объекта
@@ -148,3 +148,4 @@ class GameSprite(SpriteObject):
 
 class Humanoid(GameSprite):
     HITBOX_RADIUS = 25
+
