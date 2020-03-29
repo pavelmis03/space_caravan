@@ -8,7 +8,7 @@ from geometry.rectangle import Rectangle, create_rectangle_with_left_top
 from geometry.segment import Segment
 from map.grid import Grid
 from map.level.generator import LevelGenerator, EnemyGenerator
-from map.level.grid_interaction_with_enemy.grid_interaction_with_enemy_manager import GridInteractionWithEnemyManager
+from map.level.grid_interaction_with_enemy.manager import GridInteractionWithEnemyManager
 from map.level.draw_static_manager import GridDrawStaticManager
 from scenes.base import Scene
 from map.level.intersection_manager import GridIntersectionManager

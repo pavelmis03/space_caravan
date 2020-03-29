@@ -4,7 +4,7 @@ from constants.directions import side_di, side_dj
 from geometry.point import Point
 from geometry.intersections import intersect_seg_rect
 from geometry.segment import Segment
-from map.level.grid_interaction_with_enemy.grid_path_finder import IsMarkedManager
+from map.level.grid_interaction_with_enemy.path_finder import IsMarkedManager
 
 
 class GridIntersectionManager:

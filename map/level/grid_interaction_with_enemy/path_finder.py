@@ -15,12 +15,17 @@ class IsMarkedManager:
 
     def mark(self, i: int, j: int):
         self._marked[i][j] = self._mark_counter
+        if i < 0 or j < 0 or (i >= len(self._marked)) or (j >= len(self._marked[i])):
+            print('errr')
 
     def is_marked(self, i: int, j: int) -> bool:
         return (self._marked[i][j] == self._mark_counter)
 
 
 class GridPathFinder:
+    """
+    Обход двумерного графа. Поиск пути.
+    """
     def __init__(self, grid):
         self.grid = grid
 
