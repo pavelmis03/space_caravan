@@ -4,7 +4,7 @@ from drawable_objects.interface.pause_manager import PauseManager
 from drawable_objects.player import Player
 from scenes.base import GameScene
 from geometry.point import Point
-from map.level.grid import SpaceshipGrid
+from map.spaceship_grid import SpaceshipGrid
 from utils.game_plane import GamePlane
 
 
