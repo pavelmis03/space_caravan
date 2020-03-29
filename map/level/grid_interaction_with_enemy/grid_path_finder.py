@@ -35,6 +35,9 @@ class GridPathFinder:
         self.fill_can_stay_array()
 
     def fill_can_stay_array(self):
+        """
+        can stay если клетка не стена и соседняя тоже.
+        """
         for i in range(len(self.grid.arr)):
             for j in range(len(self.grid.arr[i])):
                 if not self.grid.is_passable(i, j):
@@ -59,6 +62,9 @@ class GridPathFinder:
         return result
 
     def find_path_to_enemies(self, max_distance: int):
+        """
+        запускает всего один bfs от игрока, а не от каждого enemy.
+        """
         self.used_manager.next_iteration()
         player_pos = self.grid.scene.player.pos
         player_i, player_j = self.grid.index_manager.get_index_by_pos(player_pos)
@@ -89,6 +95,10 @@ class GridPathFinder:
                 q.append((new_i, new_j))
 
     def get_pos_to_move(self, enemy: Enemy) -> Point:
+        """
+        Важно понимать, что Enemy ходит по клеткам, а не ищет кратчайший путь.
+        Это сильно экономит производительность, но может выглядеть топорно.
+        """
         i, j = self.grid.index_manager.get_index_by_pos(enemy.pos)
 
         if not self.used_manager.is_marked(i, j):

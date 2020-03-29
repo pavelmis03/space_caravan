@@ -1,7 +1,5 @@
 import math
 
-import pygame
-
 from controller.controller import Controller
 from drawable_objects.base import Humanoid
 from geometry.point import Point
@@ -10,7 +8,16 @@ from geometry.vector import length
 from drawable_objects.bullet import create_bullet
 
 class MovingHumanoid(Humanoid):
+    """
+    Может принимать команду движения к точке
+    """
     def get_move_vector(self, pos: Point):
+        """
+        вообще могут быть проблемы из-за correct_direction_vector, так
+        как, делая последний шаг не на максимальный вектор,
+        теряет время. Может быть, не требуется переработка.
+        Может быть, это решается передачей следующией команды.
+        """
         self.recount_angle(pos)
         direction = self.get_direction_vector()
         result = self.correct_direction_vector(direction, pos)
@@ -18,7 +25,7 @@ class MovingHumanoid(Humanoid):
 
     def correct_direction_vector(self, velocity: Point, pos: Point):
         """
-        Enemy может "перепрыгнуть" точку назначения, поэтому
+        Humanoid может "перепрыгнуть" точку назначения, поэтому
         последний прыжок должен быть на меньший вектор
         """
         remainig_vector = pos - self.pos
@@ -36,18 +43,25 @@ class EnemyCommand:
         self.params = params
 
 class Enemy(MovingHumanoid):
+    """
+    Сейчас он ведет себя следующим образом:
+    Стоит на месте. Когда игрок попадает в радиус видимости и их не разделяет стена, начинает стрелять.
+    Если выстрелить становится нельзя, преследует игрока, пока он находится в радиусе слышимости.
+    Если игрок стал находиться вне радиуса слышимости, стоит на месте.
 
+    Еще не коллизий с пулей.
+    """
     IMAGE_ZOOM = 0.3
     """
     VISION_RADIUS не должен быть большим, так
-    как grid.intersect_seg_walls работает медленно
+    как grid.intersect_seg_walls работает медленно  
     """
     VISION_RADIUS = 25 * 15
     HEARING_RANGE = 30
     COOLDOWN_TIME = 50
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        ENEMY_TYPE = 'player'
+        ENEMY_TYPE = 'player' # пока нет спрайта для enemy
         ENEMY_SPEED = 5
         super().__init__ (scene, controller, ENEMY_TYPE, pos, ENEMY_SPEED, angle, Enemy.IMAGE_ZOOM)
 
@@ -63,6 +77,10 @@ class Enemy(MovingHumanoid):
     def command_move_to(self, pos: Point):
         if pos == self.pos:
             self.is_has_command = False
+            """
+            рекурсивно вызывать command_logic может быть
+            плохой идеей.
+            """
             self.command_logic()
             return
 
@@ -77,6 +95,10 @@ class Enemy(MovingHumanoid):
         self.command = EnemyCommand('aim')
 
     def command_aim(self):
+        """
+        Возможно, следует переработать, чтобы он
+         сначала целился какое-то время, а потом делал первый выстрел.
+        """
         if not self.is_see_player or self.can_shoot_now:
             self.is_has_command = False
             self.command_logic()

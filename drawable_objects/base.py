@@ -155,7 +155,10 @@ class MovingGameSprite(GameSprite):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.speed = speed
 
-    def get_direction_vector(self):
+    def get_direction_vector(self) -> Point:
+        """
+        Не учитывает коллизи и т.п.
+        """
         x_speed = cos(self.angle) * self.speed
         y_speed = -sin(self.angle) * self.speed
         return Point(x_speed, y_speed)

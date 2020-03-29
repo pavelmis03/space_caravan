@@ -4,11 +4,19 @@ from map.level.grid_interaction_with_enemy.enemy_hearing_manager import EnemyHea
 from geometry.point import Point
 
 class GridInteractionWithEnemyManager:
+    """
+    Enemy обладает слухом и зрением.
+    """
     def __init__(self, grid):
         self.grid = grid
         self.enemy_hearing_manager = EnemyHearingManager(grid)
 
     def is_enemy_see_player(self, enemy: Enemy) -> bool:
+        """
+        Пока что Enemy видит Player, если он в радиусе
+        видимости и стена не мешает.
+        Может быть, нужно еще учитывать поворот Enemy.
+        """
         player_pos = self.grid.scene.player.pos
         segment = Segment(enemy.pos, player_pos)
         if segment.length > Enemy.VISION_RADIUS:

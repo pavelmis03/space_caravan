@@ -22,6 +22,8 @@ class LevelGrid(Grid):
 
     Генерируется с помощью LevelGenerator, далее преобразует
     инты в объекты.
+
+    Взаимодействует с enemy.
     """
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,

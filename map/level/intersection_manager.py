@@ -8,11 +8,19 @@ from map.level.grid_interaction_with_enemy.grid_path_finder import IsMarkedManag
 
 
 class GridIntersectionManager:
+    """
+    Работает медленно, но не понятно как ускорить.
+    """
     def __init__(self, grid):
         self.grid = grid
         self.used_manager = IsMarkedManager(grid.arr)
 
     def intersect_seg_walls(self, seg: Segment) -> Point:
+        """
+        bfs'ом идет по клеткам, которые пересекает seg.
+        если одна из них wall, то вернет точку пересечения с одной из стен,
+        ближайшую к seg.p1, иначе None
+        """
         self.used_manager.next_iteration()
         i0, j0 = self.grid.index_manager.get_index_by_pos(seg.p1)
 

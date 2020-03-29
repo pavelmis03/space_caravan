@@ -30,7 +30,7 @@ class GridDrawStaticManager(Grid):
                          cell_width, cell_height, arr_width, arr_height)
 
         full_grid_surface = self.pre_render_all(grid)
-        self.split_on_frames(full_grid_surface, grid)
+        self.split_on_frames(full_grid_surface)
 
     def pre_render_all(self, grid: Grid) -> Surface:
         """
@@ -49,7 +49,7 @@ class GridDrawStaticManager(Grid):
                     res, sprite.zoom, sprite.angle)
         return res
 
-    def split_on_frames(self, surface: Surface, grid: Grid):
+    def split_on_frames(self, surface: Surface):
         """
         бьет полученную surface на квадраты, чтобы отрисовывать только то,
         что на экране
