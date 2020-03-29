@@ -80,9 +80,6 @@ class EnemyGenerator:
                     Наверно, временное решение
                     Нужно для того, чтобы враг не спавнился рядом с игроком.
                     """
-                    if self.grid.enemy_interaction_manager.can_stay(i, j) and \
-                            is_accurate_random_proc(5):
-                        create_enemy(self.grid, i, j)
                     continue
 
                 if self.grid.enemy_interaction_manager.can_stay(i, j) and \
