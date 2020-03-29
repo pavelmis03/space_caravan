@@ -13,16 +13,8 @@ class GridIndexManager:
         self.cell_height = cell_height
         self.cell_width = cell_width
 
-    def get_index_of_objects_on_screen(self, relative_center: Point) \
+    def get_not_corrected_index_of_objects_on_screen(self, relative_center: Point) \
             -> Tuple[Dict[str, int], Dict[str, int]]:
-        """
-        Проходится по всем эл-там сетки затратно по времени, поэтому
-        с помощью математики ищем интервалы координат, по которым следует пройтись
-
-        Полученные индексы могут быть вне grid.arr, поэтому
-        их нужно прогнать через метод get_corrected_indexes
-        """
-
         pos = self.get_pos_in_grid_origin(relative_center)
 
         i_min, j_min = self.get_index_by_pos_in_grid_origin(pos)
@@ -34,6 +26,18 @@ class GridIndexManager:
         """
         Прибавляем (self.cell_height - 1) и (self.cell_width - 1) для деления с округлением вверх
         """
+        return i, j
+
+    def get_index_of_objects_on_screen(self, relative_center: Point) \
+            -> Tuple[Dict[str, int], Dict[str, int]]:
+        """
+        Проходится по всем эл-там сетки затратно по времени, поэтому
+        с помощью математики ищем интервалы координат, по которым следует пройтись
+
+        Полученные индексы могут быть вне grid.arr, поэтому
+        их нужно прогнать через метод get_corrected_indexes
+        """
+        i, j = self.get_not_corrected_index_of_objects_on_screen(relative_center)
         i, j = self.get_corrected_indexes((i, j))
 
         return i, j

@@ -90,6 +90,12 @@ class Grid(DrawableObject):
     def bottom(self):
         return self.grid_rectangle.bottom_right.y
 
+    def is_out_of_grid(self, pos: Point) -> bool:
+        """
+        Пуля может вылететь за grid, для этого нужна это функция
+        """
+        return not self.grid_rectangle.in_inside(pos)
+
     @property
     def cell_width(self):
         return self.index_manager.cell_width

@@ -24,6 +24,10 @@ class Bullet(MovingGameSprite):
         self.move(next_pos)
 
     def collision_manager(self, next_pos: Point):
+        if self.scene.grid.is_out_of_grid(self.pos):
+            self.destroy()
+            return
+
         trajectory = Segment(self.pos, next_pos)
         intersect_point = self.scene.grid.intersect_seg_walls(trajectory)
         if intersect_point is not None:
