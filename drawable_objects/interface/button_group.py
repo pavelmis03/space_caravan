@@ -43,12 +43,25 @@ class ButtonGroup(AbstractObject):
             self.scene.game.height * self.offset[1]
         ]
         if self.pos != newpos:
-            for button in self.buttons:
-                button.move(Point(
-                    newpos[0] - self.pos[0],
-                    newpos[1] - self.pos[1]
-                ))
+            self.move(Point(
+                newpos[0] - self.pos[0],
+                newpos[1] - self.pos[1]
+            ))
             self.pos = newpos
+
+    def move(self, movement):
+        """
+        Передвигает группу кнопок параллельным переносом на заданный вектор.
+
+        :param movement: вектор переноса
+        """
+        for button in self.buttons:
+            button.move(movement)
+
+    def update_offset(self, offset):
+        self.offset = offset
+        self.recalc_pos()
+
 
     def process_logic(self):
         self.recalc_pos()
