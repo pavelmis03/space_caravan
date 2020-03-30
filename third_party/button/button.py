@@ -1,7 +1,7 @@
 import pygame as pg
 
 from drawable_objects.base import DrawableObject
-from constants import Color
+from constants.color import Color
 
 
 class Button(object):

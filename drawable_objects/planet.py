@@ -2,7 +2,7 @@ import pygame
 
 from geometry.point import Point
 from scenes.base import Scene
-from constants import Color
+from constants.color import Color
 from controller.controller import Controller
 from drawable_objects.base import DrawableObject, SpriteObject
 from drawable_objects.text import Text

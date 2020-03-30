@@ -4,7 +4,7 @@ from utils.image import ImageManager
 from drawable_objects.base import SurfaceObject
 from geometry.point import Point
 
-class GridStaticDrawManager(Grid):
+class GridDrawStaticManager(Grid):
     """
     Класс для оптимизации отрисовки статической графики.
     Принимает grid, отрисовывает все на 1 surface,
@@ -30,7 +30,7 @@ class GridStaticDrawManager(Grid):
                          cell_width, cell_height, arr_width, arr_height)
 
         full_grid_surface = self.pre_render_all(grid)
-        self.split_on_frames(full_grid_surface, grid)
+        self.split_on_frames(full_grid_surface)
 
     def pre_render_all(self, grid: Grid) -> Surface:
         """
@@ -42,26 +42,22 @@ class GridStaticDrawManager(Grid):
         self.surface_width = grid.width + self.cell_width
         self.surface_height = grid.height + self.cell_height
         res = Surface((self.surface_width, self.surface_height))
-        pos_offset = Point(grid.cell_width / 2, grid.cell_height / 2)
-        """
-        необходимо прибавить pos_offset, так как у этих sprite центры смещены
-        """
         for i in range(len(grid.arr)):
             for j in range(len(grid.arr[i])):
                 sprite = grid.arr[i][j]
-                ImageManager.process_draw(sprite.image_name, sprite.pos - self.pos + pos_offset,
+                ImageManager.process_draw(sprite.image_name, sprite.pos - self.pos,
                     res, sprite.zoom, sprite.angle)
         return res
 
-    def split_on_frames(self, surface: Surface, grid: Grid):
+    def split_on_frames(self, surface: Surface):
         """
         бьет полученную surface на квадраты, чтобы отрисовывать только то,
         что на экране
         """
         frame_rect = Rect(0, 0, self.cell_width, self.cell_height)
-        pos_offset = Point((self.cell_width - grid.cell_width) / 2, (self.cell_height - grid.cell_height) / 2)
+        pos_offset = Point((self.cell_width) / 2, (self.cell_height) / 2)
         """
-        здесь тоже нужно учитывать смещение центром прямоугольников
+        учитываем смещение прямоугольников
         """
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):

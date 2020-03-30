@@ -1,8 +1,9 @@
+from typing import Tuple
 
 from drawable_objects.base import DrawableObject
 
 from geometry.point import Point
-from geometry.rectangle import Rectangle
+from geometry.rectangle import create_rectangle_with_left_top
 
 from controller.controller import Controller
 from scenes.base import Scene
@@ -27,9 +28,7 @@ class Grid(DrawableObject):
 
         width = cell_width * len(self.arr[0])
         height = cell_height * len(self.arr)
-        self.grid_rectangle = Rectangle(pos.x - cell_width / 2, pos.y - cell_height / 2,
-                                        pos.x + width - cell_width / 2,
-                                        pos.y + height - cell_height / 2)
+        self.grid_rectangle = create_rectangle_with_left_top(pos, width, height)
 
     def process_draw(self):
         """
@@ -91,6 +90,12 @@ class Grid(DrawableObject):
     def bottom(self):
         return self.grid_rectangle.bottom_right.y
 
+    def is_out_of_grid(self, pos: Point) -> bool:
+        """
+        Пуля может вылететь за grid, для этого нужна это функция
+        """
+        return not self.grid_rectangle.in_inside(pos)
+
     @property
     def cell_width(self):
         return self.index_manager.cell_width
@@ -98,6 +103,12 @@ class Grid(DrawableObject):
     @property
     def cell_height(self):
         return self.index_manager.cell_height
+
+    def get_center_of_cell_by_indexes(self, i: int, j: int) -> Point:
+        return self.index_manager.get_center_of_cell_by_indexes(i, j)
+
+    def get_index_by_pos(self, pos: Point) -> Tuple[int, int]:
+        return self.index_manager.get_index_by_pos(pos)
 
     def print_arr(self):
         """
