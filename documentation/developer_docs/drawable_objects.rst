@@ -19,6 +19,18 @@ player.py
 .. automodule:: drawable_objects.player
    :members:
 
+enemy.py
+--------
+
+.. automodule:: drawable_objects.enemy
+   :members:
+
+bullet.py
+---------
+
+.. automodule:: drawable_objects.bullet
+   :members:
+
 text.py
 -------
 

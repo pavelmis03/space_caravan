@@ -6,7 +6,7 @@
 from math import sqrt
 
 from geometry.point import Point
-from constants import EPS
+from constants.math import EPS
 
 
 def cross_product(v1: Point, v2: Point) -> float:
@@ -45,6 +45,8 @@ def sign(x: float) -> int:
         return 1
     return -1
 
+def length_squared(v: Point) -> float:
+    return v.x * v.x + v.y * v.y
 
 def length(v: Point) -> float:
     """
@@ -53,7 +55,7 @@ def length(v: Point) -> float:
     :param v: вектор
     :return: числовое значение
     """
-    return sqrt(v.x * v.x + v.y * v.y)
+    return sqrt(length_squared(v))
 
 
 def normalized(v: Point) -> Point:
