@@ -17,9 +17,8 @@ class Game:
     MAIN_SCENE_INDEX = 1
     SETTINGS_MENU_SCENE_INDEX = 2
     ABOUT_MENU_SCENE_INDEX = 3
-    GAMEOVER_SCENE_INDEX = 4
-
-    SPACEMAP_SCENE_INDEX = 1
+    SPACEMAP_SCENE_INDEX = 4
+    GAMEOVER_SCENE_INDEX = 9
     def __init__(self, width=1300, height=800):
         self.size = (width, height)
 
@@ -29,7 +28,7 @@ class Game:
         self.running = True
         self.controller = Controller(self)
         ImageManager.load_all()
-        self.scenes = [Main_MenuScene(self), SpacemapScene(self), Settings_MenuScene(self), About_MenuScene(self)]
+        self.scenes = [Main_MenuScene(self), MainScene(self), Settings_MenuScene(self), About_MenuScene(self), SpacemapScene(self)]
         self.current_scene = 0
 
     @property
