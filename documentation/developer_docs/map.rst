@@ -9,16 +9,46 @@ grid.py
 .. automodule:: map.grid
    :members:
 
-gridIndexManager.py
--------------------
+grid_index_manager.py
+---------------------
 
-.. automodule:: map.gridIndexManager
+.. automodule:: map.grid_index_manager
    :members:
 
 level.grid.py
 -------------
 
 .. automodule:: map.level.grid
+   :members:
+
+map.level.draw_static_manager.py
+--------------------------------
+
+.. automodule:: map.level.draw_static_manager
+   :members:
+
+map.level.intersection_manager.py
+---------------------------------
+
+.. automodule:: map.level.intersection_manager
+   :members:
+
+map.level.grid_interaction_with_enemy.manager.py
+------------------------------------------------
+
+.. automodule:: map.level.grid_interaction_with_enemy.manager
+   :members:
+
+map.level.grid_interaction_with_enemy.enemy_hearing_manager.py
+--------------------------------------------------------------
+
+.. automodule:: map.level.grid_interaction_with_enemy.enemy_hearing_manager
+   :members:
+
+map.level.grid_interaction_with_enemy.path_finder.py
+----------------------------------------------------
+
+.. automodule:: map.level.grid_interaction_with_enemy.path_finder
    :members:
 
 level.generator.py

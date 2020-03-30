@@ -1,5 +1,5 @@
 from geometry.point import Point
-from geometry.vector import cross_product, dot_product, sign
+from geometry.vector import cross_product, dot_product, sign, length
 
 
 class Segment:
@@ -12,6 +12,10 @@ class Segment:
     def __init__(self, p1: Point = Point(), p2: Point = Point()):
         self.p1 = Point(p1.x, p1.y)
         self.p2 = Point(p2.x, p2.y)
+
+    @property
+    def length(self):
+        return length(self.p1 - self.p2)
 
 
 def point_on_segment(p: Point, seg: Segment) -> bool:

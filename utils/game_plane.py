@@ -63,7 +63,7 @@ class GamePlane:
         if old_chunk != new_chunk:
             self.erase(game_object, pos)
             self.insert(game_object, new_pos)
-            print("New chunk is {}, {}".format(new_chunk.x, new_chunk.y))
+            #print("New chunk is {}, {}".format(new_chunk.x, new_chunk.y))
 
     def get_neighbours(self, pos: Point):
         """

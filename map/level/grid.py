@@ -1,12 +1,17 @@
 from typing import List
-from map.grid import Grid
-from map.level.generator import LevelGenerator
-from drawable_objects.base import GameSprite
-from geometry.point import Point
-from geometry.rectangle import Rectangle, create_rect_with_center
+
 from controller.controller import Controller
+from drawable_objects.base import GameSprite
+from drawable_objects.enemy import Enemy
+from geometry.point import Point
+from geometry.rectangle import Rectangle, create_rectangle_with_left_top
+from geometry.segment import Segment
+from map.grid import Grid
+from map.level.generator import LevelGenerator, EnemyGenerator
+from map.level.grid_interaction_with_enemy.manager import GridInteractionWithEnemyManager
+from map.level.draw_static_manager import GridDrawStaticManager
 from scenes.base import Scene
-from map.level.grid_static_draw_manager import GridStaticDrawManager
+from map.level.intersection_manager import GridIntersectionManager
 
 class LevelGrid(Grid):
     """
@@ -17,6 +22,8 @@ class LevelGrid(Grid):
 
     Генерируется с помощью LevelGenerator, далее преобразует
     инты в объекты.
+
+    Взаимодействует с enemy.
     """
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
@@ -28,14 +35,18 @@ class LevelGrid(Grid):
         generator.generate()
 
         self.transform_ints_to_objects()
-        self.static_draw_manager = GridStaticDrawManager(self)
+        self.static_draw_manager = GridDrawStaticManager(self)
+        self.grid_intersection_manager = GridIntersectionManager(self)
+        self.enemy_interaction_manager = GridInteractionWithEnemyManager(self)
+
+        enemy_generator = EnemyGenerator(self)
+        enemy_generator.generate()
 
     def process_draw(self):
         self.static_draw_manager.process_draw()
-#        super().process_draw()
 
     def process_logic(self):
-        pass
+        self.enemy_interaction_manager.process_logic()
 
     def transform_ints_to_objects(self):
         """
@@ -43,13 +54,23 @@ class LevelGrid(Grid):
         """
         for i in range(len(self.arr)):
             for j in range(len(self.arr[i])):
-                pos_x = self.pos.x + j * self.cell_width
-                pos_y = self.pos.y + i * self.cell_height
+                pos_x = self.pos.x + j * self.cell_width + self.cell_width / 2
+                pos_y = self.pos.y + i * self.cell_height + self.cell_height / 2
                 filenames = ['wall', 'floor']
                 filename_index = int(bool(self.arr[i][j]))
 
                 self.arr[i][j] = GameSprite(self.scene, self.controller,
                            filenames[filename_index], Point(pos_x, pos_y))
+
+    def is_passable(self, i: int, j: int) -> bool:
+        return self.arr[i][j].image_name != 'wall'
+
+    def get_collision_rect(self, i: int, j: int) -> Rectangle:
+        h = self.cell_height
+        w = self.cell_width
+        y = i * h
+        x = j * w
+        return create_rectangle_with_left_top(Point(x, y) + self.pos, w, h)
 
     def get_collision_rects_nearby(self, pos: Point) -> List[Rectangle]:
         """
@@ -70,14 +91,15 @@ class LevelGrid(Grid):
         res = []
         for i in range(min_i, max_i):
             for j in range(min_j, max_j):
-                if self.arr[i][j].image_name == 'wall':
-                    """
-                    простая проверка, но в выдумывании чего-то другого
-                    нет необходимости.
-                    """
-                    h = self.cell_height
-                    w = self.cell_width
-                    y = i * h
-                    x = j * w
-                    res.append(create_rect_with_center(Point(x, y), w, h))
+                if not self.is_passable(i, j):
+                    res.append(self.get_collision_rect(i, j))
         return res
+
+    def is_enemy_see_player(self, enemy: Enemy) -> bool:
+        return self.enemy_interaction_manager.is_enemy_see_player(enemy)
+
+    def get_pos_to_move(self, enemy: Enemy) -> Point:
+        return self.enemy_interaction_manager.get_pos_to_move(enemy)
+
+    def intersect_seg_walls(self, seg: Segment) -> Point:
+        return self.grid_intersection_manager.intersect_seg_walls(seg)
