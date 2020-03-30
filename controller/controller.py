@@ -60,6 +60,13 @@ class StrategyKeyUp(ControllerStrategy):
         if event.key in controller.pressed_keys:
             controller.pressed_keys.remove(event.key)
 
+class StrategyWindowResize(ControllerStrategy):
+    """
+    При изменении размера окна меняется game.width и game.height,
+    при этом размер спрайтов остается тем же (за исключением меню).
+    """
+    def execute(self, controller, event):
+        controller.game.size = event.size
 
 class Controller:
     """
@@ -74,6 +81,7 @@ class Controller:
         pygame.MOUSEBUTTONDOWN: StrategyMouseDown(),
         pygame.KEYDOWN: StrategyKeyDown(),
         pygame.KEYUP: StrategyKeyUp(),
+        pygame.VIDEORESIZE: StrategyWindowResize()
     }
 
     def __init__(self, game):
@@ -83,6 +91,8 @@ class Controller:
         self.click_pos = None
         self.click_button = None
         self.pressed_keys = set()
+        # objects which will receive input
+        self.input_objects = []
 
     def iteration(self):
         """
@@ -120,3 +130,15 @@ class Controller:
         :return: логическое значение
         """
         return key in self.pressed_keys
+
+    def is_one_of_keys_pressed(self, keys):
+        """
+        Нажата ли хотя бы одна из клавиш.
+
+        :param keys: массив кодов клавиш
+        :return: логическое значение
+        """
+        b = 0
+        for key in keys:
+            b += self.is_key_pressed(key)
+        return bool(b)

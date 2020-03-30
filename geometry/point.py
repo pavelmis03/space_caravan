@@ -1,3 +1,6 @@
+from math import sqrt
+
+
 class Point:
     """
     Геометрическая точка, она же вектор. Я всегда против такого, но тут слабая типизация.
@@ -16,6 +19,9 @@ class Point:
 
     def __sub__(self, other):
         return Point(self.x - other.x, self.y - other.y)
+
+    def __neg__(self):
+        return Point(-self.x, -self.y)
 
     def __mul__(self, other):
         return Point(self.x * other, self.y * other)
@@ -45,3 +51,8 @@ def tuple_to_point(tuple):
     :return: точка с координатами из кортежа
     """
     return Point(tuple[0], tuple[1])
+
+
+def dist(p1: Point, p2: Point) -> float:
+    v = p2 - p1
+    return sqrt(v.x * v.x + v.y * v.y)

@@ -55,7 +55,7 @@ class Text(DrawableObject):
     }
 
     def __init__(self, scene, pos, text='Define me!', color=(255, 255, 255), align='left', font_name='Comic Sans',
-                 font_size=35, is_bold=True, is_italic=False):
+                 font_size=35, is_bold=True, is_italic=False, width_limit=None):
         super().__init__(scene, None, pos)
         self.color = color
         if align in Text.ALIGNS:
@@ -65,6 +65,7 @@ class Text(DrawableObject):
         self.font = pygame.font.SysFont(font_name, font_size, is_bold, is_italic)
         self.text = None
         self.text_surface = None
+        self.width_limit = width_limit
         self.update_text(text)
 
     def update_text(self, text):
@@ -75,6 +76,11 @@ class Text(DrawableObject):
         """
         self.text = text
         self.text_surface = self.font.render(self.text, True, self.color)
+        if self.width_limit:
+            rect = self.text_surface.get_rect()
+            if rect.width > self.width_limit:
+                x = rect.width - self.width_limit
+                self.text_surface = self.text_surface.subsurface((x, rect.y, rect.width - x, rect.height))
 
     def process_draw(self):
         rectangle = rect_to_rectangle(self.text_surface.get_rect())

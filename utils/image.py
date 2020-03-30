@@ -14,13 +14,24 @@ class ImageManager:
         """
         по умолчанию считает, что все картинки png. Ключ должен
         совпадать с названием картинки.
-
-        :return:
         """
-
         for i in range(len(ImageManager.IMG_NAMES)):
-            ImageManager.images[ImageManager.IMG_NAMES[i]] = \
-                pygame.image.load('images/' + ImageManager.IMG_NAMES[i] + '.png')
+            ImageManager.load_img(ImageManager.IMG_NAMES[i])
+
+    @staticmethod
+    def load_img(img_name: str):
+        ImageManager.images[img_name] = \
+            pygame.image.load(ImageManager.img_name_to_path(img_name))
+
+    @staticmethod
+    def img_name_to_path(img_name: str) -> str:
+        return 'images/' + img_name + '.png'
+
+    @staticmethod
+    def draw_surface(surface: pygame.Surface, pos_center: Point, screen):
+        rect = surface.get_rect()
+        rect.center = (pos_center.x, pos_center.y)
+        screen.blit(surface, rect)
 
     @staticmethod
     def process_draw(img_str: str, pos_center: Point, screen,
@@ -29,9 +40,7 @@ class ImageManager:
         image = ImageManager.resize(image, resize_percents)
         image = ImageManager.rotate(image, rotate_angle)
 
-        rect = image.get_rect()
-        rect.center = (pos_center.x, pos_center.y)
-        screen.blit(image, rect)
+        ImageManager.draw_surface(image, pos_center, screen)
 
     @staticmethod
     def resize(image, percents: float):

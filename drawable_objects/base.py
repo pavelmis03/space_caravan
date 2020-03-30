@@ -6,18 +6,17 @@ from scenes.base import Scene
 from utils.image import ImageManager
 
 
-class DrawableObject:
+class AbstractObject:
     """
-    Базовый класс отрисовываемого объекта.
+        Базовый класс неотрисовымаевого объекта, но содержащего отрисовывательные элементы
 
-    :param scene: сцена объекта
-    :param controller: ссылка на объект контроллера
-    :param pos: координаты объекта
-    """
-    def __init__(self, scene: Scene, controller: Controller, pos: Point):
+        :param scene: сцена объекта
+        :param controller: ссылка на объект контроллера
+        :param pos: координаты объекта
+        """
+    def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
         self.controller = controller
-        self.pos = pos
 
     def process_logic(self):
         """
@@ -30,6 +29,38 @@ class DrawableObject:
         Отрисовка объекта.
         """
         pass
+
+class SurfaceObject(AbstractObject):
+    """
+    Отдельный класс для отрисовки уже отреднеренного surface.
+    Используется для отрисовки статичной предподсчитанной графики (то есть той, которая
+    не двигается. Не стоит путать со SpriteObject. Он не двигается относительно экрана).
+
+    Не нужно его использовать для других целей, он хранит
+    в себе картинку, а значит потребляет много памяти.
+    """
+    def __init__(self, surface: pygame.Surface, scene: Scene, controller: Controller, pos: Point):
+        super().__init__(scene, controller)
+        self.surface = surface
+        self.pos = pos
+
+    def process_draw(self):
+        relative_center = self.scene.relative_center
+        relative_pos = self.pos - relative_center
+        ImageManager.draw_surface(self.surface, relative_pos, self.scene.screen)
+
+class DrawableObject(AbstractObject):
+    """
+    Базовый класс отрисовываемого объекта.
+
+    :param scene: сцена объекта
+    :param controller: ссылка на объект контроллера
+    :param pos: координаты объекта
+    """
+    def __init__(self, scene: Scene, controller: Controller, pos: Point):
+        super().__init__(scene, controller)
+        self.pos = pos
+
 
     def move(self, new_pos):
         """
@@ -115,4 +146,4 @@ class GameSprite(SpriteObject):
 
 
 class Humanoid(GameSprite):
-    HITBOX_RADIUS = 10
+    HITBOX_RADIUS = 20
