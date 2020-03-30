@@ -36,11 +36,11 @@ class Player(Humanoid):
         pygame.K_s,
     ]
     ACCURACY = 10
+    SPEED = 2
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         self.time = 0
-        PLAYER_SPEED = 2
-        super().__init__(scene, controller, Player.IMAGE_NAME, pos, PLAYER_SPEED, angle, Player.IMAGE_ZOOM)
+        super().__init__(scene, controller, Player.IMAGE_NAME, pos, Player.SPEED, angle, Player.IMAGE_ZOOM)
         # head - 140x126
         self.rotation_offset = [
             140 * Player.IMAGE_ZOOM,
