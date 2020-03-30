@@ -49,9 +49,12 @@ class Enemy(MovingHumanoid):
     Если выстрелить становится нельзя, преследует игрока, пока он находится в радиусе слышимости.
     Если игрок стал находиться вне радиуса слышимости, стоит на месте.
 
-    Еще не коллизий с пулей.
+    Еще нет коллизий с пулей.
     """
     IMAGE_ZOOM = 0.3
+    IMAGE_NAME = 'player' # пока нет спрайта для enemy
+
+    SPEED = 5
     """
     VISION_RADIUS не должен быть большим, так
     как grid.intersect_seg_walls работает медленно  
@@ -61,9 +64,7 @@ class Enemy(MovingHumanoid):
     COOLDOWN_TIME = 50
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        ENEMY_TYPE = 'player' # пока нет спрайта для enemy
-        ENEMY_SPEED = 5
-        super().__init__ (scene, controller, ENEMY_TYPE, pos, ENEMY_SPEED, angle, Enemy.IMAGE_ZOOM)
+        super().__init__ (scene, controller, Enemy.IMAGE_NAME, pos, Enemy.SPEED, angle, Enemy.IMAGE_ZOOM)
 
         self.is_has_command = False
         self.command = None

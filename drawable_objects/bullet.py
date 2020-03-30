@@ -11,11 +11,11 @@ def create_bullet(shooter: GameSprite):
 class Bullet(MovingGameSprite):
 
     IMAGE_ZOOM = 0.7
+    IMAGE_NAME = 'bullet' # нужно перерисовать
+    SPEED = 100
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        BULLET_SPEED = 100
-        BULLET_TYPE = 'bullet'
-        super().__init__ (scene, controller, BULLET_TYPE, pos, BULLET_SPEED, angle, Bullet.IMAGE_ZOOM)
+        super().__init__ (scene, controller, Bullet.IMAGE_NAME, pos, Bullet.SPEED, angle, Bullet.IMAGE_ZOOM)
         self.direction = self.get_direction_vector()
 
     def process_logic(self):

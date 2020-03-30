@@ -150,6 +150,12 @@ class GameSprite(SpriteObject):
 
 
 class MovingGameSprite(GameSprite):
+    """
+    Для движения по направлению self.angle
+    """
+    
+    SPEED = 1
+
     def __init__(self, scene: Scene, controller: Controller, image_name: str,
                  pos: Point, speed: float, angle: float = 0, zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
