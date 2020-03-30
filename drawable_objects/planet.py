@@ -39,3 +39,5 @@ class Planet(SpriteObject):
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()
+        if self.controller.is_key_pressed(key=pygame.K_e):
+            self.scene.game.set_scene(self.scene.game.SPACEMAP_SCENE_INDEX)

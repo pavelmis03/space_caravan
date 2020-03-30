@@ -19,6 +19,7 @@ class Game:
     ABOUT_MENU_SCENE_INDEX = 3
     GAMEOVER_SCENE_INDEX = 4
 
+    SPACEMAP_SCENE_INDEX = 1
     def __init__(self, width=1300, height=800):
         self.size = (width, height)
 
