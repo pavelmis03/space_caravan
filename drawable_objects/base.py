@@ -117,6 +117,7 @@ class GameSprite(SpriteObject):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.scene.plane.insert(self, self.pos)
         self.enabled = True
+        self.rotation_offset = [0, 0]
 
     def destroy(self):
         """
@@ -138,7 +139,7 @@ class GameSprite(SpriteObject):
                                          relative_pos, self.scene.game.screen_rectangle):
             return
 
-        ImageManager.process_draw(self.image_name, relative_pos, self.scene.screen, self.zoom, self.angle)
+        ImageManager.process_draw(self.image_name, relative_pos, self.scene.screen, self.zoom, self.angle, self.rotation_offset)
 
     def move(self, new_pos):
         self.scene.plane.do_step(self, self.pos, new_pos)
