@@ -120,7 +120,7 @@ class GameSprite(SpriteObject):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.scene.plane.insert(self, self.pos)
         self.enabled = True
-        self.rotation_offset = [0, 0]
+        self.rotation_offset = None
 
     def destroy(self):
         """
