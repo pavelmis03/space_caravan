@@ -11,7 +11,6 @@ from constants import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
 
-
 from drawable_objects.bullet import Bullet
 from utils.image import ImageManager
 
@@ -38,6 +37,7 @@ class Player(Humanoid):
     ACCURACY = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+        self.time = 0
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
         print(ImageManager.get_width(self.image_name, 1), ImageManager.get_height(self.image_name, 1))
@@ -53,7 +53,7 @@ class Player(Humanoid):
 
         velocity = Point(0, 0)
 
-        if self.controller.get_click_button ():
+        if self.controller.get_click_button():
             self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))
 
         if self in self.controller.input_objects:
