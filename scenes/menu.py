@@ -1,4 +1,5 @@
 from drawable_objects.button import Button
+from drawable_objects.interface.button_group import ButtonGroup
 from scenes.base import Scene
 
 
@@ -10,4 +11,5 @@ class MenuScene(Scene):
     """
     def __init__(self, game):
         super().__init__(game)
-        self.interface_objects.append(Button(self, self.game.controller, (350, 355, 450, 395), 'Выход', self.game.end))
+        self.menu = ButtonGroup(self, self.game.controller, [0.5, 0.3], [150, 60], 6)
+        self.interface_objects.append(self.menu)
