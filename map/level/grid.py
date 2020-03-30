@@ -24,7 +24,11 @@ class LevelGrid(Grid):
     инты в объекты.
 
     Взаимодействует с enemy.
+
+    FILENAMES - имена используемых спрайтов для стен и пола соответственно
     """
+    FILENAMES = ['wall1', 'floor3']
+
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
                  width: int = 100, height: int = 100,
@@ -56,14 +60,13 @@ class LevelGrid(Grid):
             for j in range(len(self.arr[i])):
                 pos_x = self.pos.x + j * self.cell_width + self.cell_width / 2
                 pos_y = self.pos.y + i * self.cell_height + self.cell_height / 2
-                filenames = ['wall', 'floor']
                 filename_index = int(bool(self.arr[i][j]))
 
                 self.arr[i][j] = GameSprite(self.scene, self.controller,
-                           filenames[filename_index], Point(pos_x, pos_y))
+                           LevelGrid.FILENAMES[filename_index], Point(pos_x, pos_y))
 
     def is_passable(self, i: int, j: int) -> bool:
-        return self.arr[i][j].image_name != 'wall'
+        return self.arr[i][j].image_name != LevelGrid.FILENAMES[0]
 
     def get_collision_rect(self, i: int, j: int) -> Rectangle:
         h = self.cell_height
