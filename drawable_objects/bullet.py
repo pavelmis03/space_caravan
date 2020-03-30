@@ -2,7 +2,7 @@ import math
 import pygame
 from drawable_objects.base import GameSprite
 from geometry.point import Point
-from geometry.point import dist
+from geometry.distances import dist
 from geometry.segment import Segment
 from geometry.intersections import intersect_seg_rect
 from scenes.base import Scene
