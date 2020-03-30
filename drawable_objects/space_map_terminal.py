@@ -20,5 +20,5 @@ class SpaceMapTerminal(GameSprite):
     def process_logic(self):
         if dist(self.pos, self.scene.player.pos) <= 100:
             if self.controller.is_key_pressed(key=pygame.K_e):
-                self.scene.game.set_scene(self.scene.game.SPACEMAP_SCENE_INDEX_SCENE_INDEX)
+                self.scene.game.set_scene(self.scene.game.SPACEMAP_SCENE_INDEX)
 
