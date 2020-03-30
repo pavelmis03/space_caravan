@@ -8,7 +8,7 @@ from geometry.rectangle import intersect, Rectangle
 
 class ImageManager:
     images = {} # получить по ключу pygame картинку
-    IMG_NAMES = ['player', 'floor', 'wall', 'bullet','one']
+    IMG_NAMES = ['player', 'floor', 'wall', 'bullet','planet']
     @staticmethod
     def load_all():
         """

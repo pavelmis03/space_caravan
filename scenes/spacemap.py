@@ -14,7 +14,9 @@ class SpacemapScene(Scene):
     """
     def __init__(self, game):
         super().__init__(game)
-        self.interface_objects.append(Planet(self, self.game.controller,'one', Point(100, 100), 0, 0.3,
-                                             self.game.set_scene, { 'scene_index': self.game.MAIN_SCENE_INDEX }))
+        self.interface_objects.append(Planet(self, self.game.controller, 'planet', Point(200, 200), 0, 0.3,
+                                             self.game.set_scene, {'scene_index': self.game.MAIN_SCENE_INDEX}))
+        self.interface_objects.append(Planet(self, self.game.controller, 'planet', Point(600, 600), 0, 0.3,
+                                             self.game.set_scene, {'scene_index': self.game.MAIN_SCENE_INDEX}))
 
 

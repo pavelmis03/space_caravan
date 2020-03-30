@@ -26,8 +26,10 @@ class Planet(SpriteObject):
     """
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str,
-                 pos: Point, angle: float = 0, zoom: float = 1, kwargs={}, planet_biom = 'None', planet_name = 'Test'):
+                 pos: Point, angle: float = 0, zoom: float = 1,function=None, kwargs={}, planet_biom = 'None', planet_name = 'Test'):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
+        self.function = function
+        self.kwargs = kwargs
         self.name = planet_name
         self.biom = planet_biom
         self.enabled = True
@@ -37,5 +39,3 @@ class Planet(SpriteObject):
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()
-        if click_pos and self.geometry.in_inside(click_pos):
-            self.function(**self.kwargs)
