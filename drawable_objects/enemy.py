@@ -52,7 +52,7 @@ class Enemy(MovingHumanoid):
     Еще нет коллизий с пулей.
     """
     IMAGE_ZOOM = 0.3
-    IMAGE_NAME = 'player' # пока нет спрайта для enemy
+    IMAGE_NAME = 'enemy'
 
     SPEED = 5
     """

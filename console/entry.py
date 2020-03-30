@@ -1,3 +1,6 @@
+"""
+Неиспользуемый модуль. Может, позже пригодится.
+"""
 import pygame
 
 from constants.color import Color
