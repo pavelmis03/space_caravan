@@ -42,7 +42,6 @@ class Player(Humanoid):
         PLAYER_SPEED = 2
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, PLAYER_SPEED, angle, Player.IMAGE_ZOOM)
         # head - 140x126
-        print(ImageManager.get_width(self.image_name, 1), ImageManager.get_height(self.image_name, 1))
         self.rotation_offset = [
             140 * Player.IMAGE_ZOOM,
             126 * Player.IMAGE_ZOOM
