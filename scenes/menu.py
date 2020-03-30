@@ -1,4 +1,3 @@
-from drawable_objects.button import Button
 from drawable_objects.interface.button_group import ButtonGroup
 from scenes.base import Scene
 

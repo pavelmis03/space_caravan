@@ -34,7 +34,24 @@ class ButtonGroup(AbstractObject):
         btn = Button(self.scene, self.controller, geometry, text, function, kwargs)
         self.buttons.append(btn)
 
+    def recalc_pos(self):
+        """
+        Перерасчет позиций кнопок для выравнивания по центру (относительно оффсета)
+        """
+        newpos = [
+            self.scene.game.width * self.offset[0],
+            self.scene.game.height * self.offset[1]
+        ]
+        if self.pos != newpos:
+            for button in self.buttons:
+                button.move(Point(
+                    newpos[0] - self.pos[0],
+                    newpos[1] - self.pos[1]
+                ))
+            self.pos = newpos
+
     def process_logic(self):
+        self.recalc_pos()
         for button in self.buttons:
             button.process_logic()
 
