@@ -3,14 +3,17 @@ import math
 from controller.controller import Controller
 from drawable_objects.base import Humanoid
 from geometry.point import Point
+from geometry.vector import length, polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from geometry.vector import length
 from drawable_objects.bullet import create_bullet
+
 
 class MovingHumanoid(Humanoid):
     """
     Может принимать команду движения к точке
     """
+    SPEED = 1
+
     def get_move_vector(self, pos: Point):
         """
         вообще могут быть проблемы из-за correct_direction_vector, так
@@ -19,7 +22,7 @@ class MovingHumanoid(Humanoid):
         Может быть, это решается передачей следующией команды.
         """
         self.recount_angle(pos)
-        direction = self.get_direction_vector()
+        direction = vector_from_length_angle(self.SPEED, self.angle)
         result = self.correct_direction_vector(direction, pos)
         return result
 
@@ -28,19 +31,21 @@ class MovingHumanoid(Humanoid):
         Humanoid может "перепрыгнуть" точку назначения, поэтому
         последний прыжок должен быть на меньший вектор
         """
-        remainig_vector = pos - self.pos
-        if length(velocity) > length(remainig_vector):
-            return remainig_vector
+        remaining_vector = pos - self.pos
+        if length(velocity) > length(remaining_vector):
+            return remaining_vector
         return velocity
 
     def recount_angle(self, new_pos):
-        vector_to_player = self.pos - new_pos
-        self.angle = math.atan2(vector_to_player.y, -vector_to_player.x)
+        vector_to_player = new_pos - self.pos
+        self.angle = polar_angle(vector_to_player)
+
 
 class EnemyCommand:
     def __init__(self, type: str, *params):
         self.type = type
         self.params = params
+
 
 class Enemy(MovingHumanoid):
     """
@@ -64,7 +69,7 @@ class Enemy(MovingHumanoid):
     COOLDOWN_TIME = 50
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__ (scene, controller, Enemy.IMAGE_NAME, pos, Enemy.SPEED, angle, Enemy.IMAGE_ZOOM)
+        super().__init__ (scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
 
         self.is_has_command = False
         self.command = None
