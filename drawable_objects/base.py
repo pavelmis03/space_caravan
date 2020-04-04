@@ -5,6 +5,9 @@ from controller.controller import Controller
 from scenes.base import Scene
 from utils.image import ImageManager
 
+from math import cos
+from math import sin
+
 
 class AbstractObject:
     """
@@ -117,7 +120,7 @@ class GameSprite(SpriteObject):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.scene.plane.insert(self, self.pos)
         self.enabled = True
-        self.rotation_offset = [0, 0]
+        self.rotation_offset = None
 
     def destroy(self):
         """
@@ -146,5 +149,25 @@ class GameSprite(SpriteObject):
         self.pos = new_pos
 
 
-class Humanoid(GameSprite):
-    HITBOX_RADIUS = 20
+class MovingGameSprite(GameSprite):
+    """
+    Для движения по направлению self.angle
+    """
+    
+    SPEED = 1
+
+    def __init__(self, scene: Scene, controller: Controller, image_name: str,
+                 pos: Point, speed: float, angle: float = 0, zoom: float = 1):
+        super().__init__(scene, controller, image_name, pos, angle, zoom)
+        self.speed = speed
+
+    def get_direction_vector(self) -> Point:
+        """
+        Не учитывает коллизи и т.п.
+        """
+        x_speed = cos(self.angle) * self.speed
+        y_speed = -sin(self.angle) * self.speed
+        return Point(x_speed, y_speed)
+
+class Humanoid(MovingGameSprite):
+    HITBOX_RADIUS = 25

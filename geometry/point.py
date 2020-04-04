@@ -1,5 +1,5 @@
 from math import sqrt
-
+from constants.math import EPS
 
 class Point:
     """
@@ -30,7 +30,9 @@ class Point:
         return Point(self.x / other, self.y / other)
 
     def __eq__(self, other):
-        return self.x == other.x and self.y == other.y
+        dt = self - other
+        distance = sqrt(dt.x * dt.x + dt.y * dt.y)
+        return distance < EPS
 
 
 def point_to_tuple(point):
@@ -51,8 +53,3 @@ def tuple_to_point(tuple):
     :return: точка с координатами из кортежа
     """
     return Point(tuple[0], tuple[1])
-
-
-def dist(p1: Point, p2: Point) -> float:
-    v = p2 - p1
-    return sqrt(v.x * v.x + v.y * v.y)

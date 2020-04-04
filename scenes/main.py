@@ -24,7 +24,6 @@ class MainScene(GameScene):
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
         self.game.controller.input_objects.append(self.pause_manager)
-
         # cmd = Console(self, self.game.controller, (0, self.game.height-20, 200, self.game.height))
         # self.interface_objects.append(cmd)
 
@@ -34,4 +33,5 @@ class MainScene(GameScene):
 
     def process_all_draw(self):
         super().process_all_draw()
+        return
         pass

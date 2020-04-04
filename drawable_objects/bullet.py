@@ -1,28 +1,24 @@
-import math
-import pygame
-from drawable_objects.base import GameSprite
+from drawable_objects.base import MovingGameSprite, GameSprite
 from geometry.point import Point
-from geometry.point import dist
 from geometry.segment import Segment
-from geometry.intersections import intersect_seg_rect
+from geometry.circle import Circle
+from geometry.intersections import intersect_seg_circle
 from scenes.base import Scene
 from controller.controller import Controller
 
+def create_bullet(shooter: GameSprite):
+    bullet = Bullet(shooter.scene, shooter.controller, shooter.pos, shooter.angle)
+    shooter.scene.game_objects.append(bullet)
 
-class Bullet(GameSprite):
+class Bullet(MovingGameSprite):
 
     IMAGE_ZOOM = 0.7
-
-    def direction_calculation(self, angle: float):
-        x_speed = math.cos(angle) * self.speed
-        y_speed = -math.sin(angle) * self.speed
-        return Point(x_speed, y_speed)
+    IMAGE_NAME = 'bullet' # нужно перерисовать
+    SPEED = 70
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        self.speed = 150
-        self.direction = self.direction_calculation(angle)
-        self.bullet_type = 'bullet'
-        super().__init__ (scene, controller, self.bullet_type, pos, angle, Bullet.IMAGE_ZOOM)
+        super().__init__ (scene, controller, Bullet.IMAGE_NAME, pos, Bullet.SPEED, angle, Bullet.IMAGE_ZOOM)
+        self.direction = self.get_direction_vector()
 
     def process_logic(self):
         next_pos = self.pos + self.direction
@@ -30,45 +26,36 @@ class Bullet(GameSprite):
         self.move(next_pos)
 
     def collision_manager(self, next_pos: Point):
-        tragectory = Segment(self.pos, next_pos)
-        collision_with_wall_point = self.is_colliding_with_walls(tragectory)
-        if collision_with_wall_point:
-            self.collision_with_wall(collision_with_wall_point)
+        if self.scene.grid.is_out_of_grid(self.pos):
+            self.destroy()
+            return
+        trajectory = Segment(self.pos, next_pos)
+        intersect_player_point = self.is_colliding_with_player(trajectory)
+        if intersect_player_point is not None:
+            self.collision_with_player(intersect_player_point)
+        intersect_walls_point = self.scene.grid.intersect_seg_walls(trajectory)
+        if intersect_walls_point is not None:
+            self.collision_with_wall(intersect_walls_point)
 
-    def collide_rects(self, tragectory: Segment, rects):
-        min = 1000000000.0
-        nearest_collision = None
-        for rect in rects:
-            intersection_point = intersect_seg_rect(tragectory, rect)
-            if intersection_point and dist(self.pos, intersection_point) < min:
-                min = dist(self.pos, intersection_point)
-                nearest_collision = intersection_point
-        return nearest_collision
-
-    def is_colliding_with_walls(self, tragectory: Segment):
-        current_pos_nearest_collision = self.collide_rects(tragectory, self.scene.grid.get_collision_rects_nearby(tragectory.p1))
-        nearest_collision = None
-        if current_pos_nearest_collision:
-            nearest_collision = current_pos_nearest_collision
-        else:
-            middle_pos = Point((tragectory.p2.x + tragectory.p1.x) / 2, (tragectory.p2.y + tragectory.p1.y) / 2)
-            middle_pos_nearest_collision = self.collide_rects(tragectory, self.scene.grid.get_collision_rects_nearby(middle_pos))
-            if middle_pos_nearest_collision:
-                nearest_collision = middle_pos_nearest_collision
-            else:
-                next_pos_nearest_collision = self.collide_rects (tragectory, self.scene.grid.get_collision_rects_nearby(tragectory.p2))
-                if next_pos_nearest_collision:
-                    nearest_collision = next_pos_nearest_collision
-        return nearest_collision
-
-    def is_colliding_with_entities(self):
-        pass
-
-    def collision_with_wall(self, collision_point):
-        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, collision_point, self.angle))
+    def collision_with_wall(self, intersection_point):
+        #self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
-    def collision_with_entity(self):
+    def is_colliding_with_player(self, tragectory: Segment):
+        player = Circle(self.scene.player.pos, self.scene.player.HITBOX_RADIUS - 5)
+        intersection_point = intersect_seg_circle(tragectory, player)
+        return intersection_point
+
+    def collision_with_player(self, intersection_point):
+        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
+        self.destroy()
+        pass
+
+    def is_colliding_with_enemies(self):
+
+        pass
+
+    def collision_with_enemy(self):
         pass
 
 

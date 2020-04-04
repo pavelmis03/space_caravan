@@ -1,6 +1,6 @@
 import pygame
 
-from constants import Color
+from constants.color import Color
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
 from geometry.rectangle import rectangle_to_rect, tuple_to_rectangle
@@ -33,6 +33,16 @@ class Button(DrawableObject):
         self.text = Text(scene, self.geometry.center, text, Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
         self.hover_text = Text(scene, self.geometry.center, text, Button.TEXT_HOVER_COLOR, 'center', Button.FONT_NAME,
                                font_size)
+
+    def move(self, movement):
+        """
+        Передвигает кнопку параллельным переносом на заданный вектор.
+
+        :param movement: вектор переноса
+        """
+        self.geometry.move(movement)
+        self.text.pos = self.geometry.center
+        self.hover_text.pos = self.geometry.center
 
     def process_logic(self):
         self.hover = self.geometry.in_inside(self.controller.get_mouse_pos())
