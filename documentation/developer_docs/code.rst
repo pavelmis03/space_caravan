@@ -5,6 +5,7 @@
     :maxdepth: 2
     :caption: Разделы:
 
+    constants
     controller
     drawable_objects
     geometry
