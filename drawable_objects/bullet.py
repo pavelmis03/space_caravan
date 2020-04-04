@@ -1,24 +1,27 @@
-from drawable_objects.base import MovingGameSprite, GameSprite
+from drawable_objects.base import GameSprite
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.circle import Circle
 from geometry.intersections import intersect_seg_circle
+from geometry.vector import vector_from_length_angle
 from scenes.base import Scene
 from controller.controller import Controller
+
 
 def create_bullet(shooter: GameSprite):
     bullet = Bullet(shooter.scene, shooter.controller, shooter.pos, shooter.angle)
     shooter.scene.game_objects.append(bullet)
 
-class Bullet(MovingGameSprite):
+
+class Bullet(GameSprite):
 
     IMAGE_ZOOM = 0.7
     IMAGE_NAME = 'bullet' # нужно перерисовать
     SPEED = 70
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__ (scene, controller, Bullet.IMAGE_NAME, pos, Bullet.SPEED, angle, Bullet.IMAGE_ZOOM)
-        self.direction = self.get_direction_vector()
+        super().__init__(scene, controller, Bullet.IMAGE_NAME, pos, angle, Bullet.IMAGE_ZOOM)
+        self.direction = vector_from_length_angle(Bullet.SPEED, self.angle)
 
     def process_logic(self):
         next_pos = self.pos + self.direction
@@ -42,7 +45,7 @@ class Bullet(MovingGameSprite):
         self.destroy()
 
     def is_colliding_with_player(self, tragectory: Segment):
-        player = Circle(self.scene.player.pos, self.scene.player.HITBOX_RADIUS - 5)
+        player = Circle(self.scene.player.pos, self.scene.player.HITBOX_RADIUS)
         intersection_point = intersect_seg_circle(tragectory, player)
         return intersection_point
 

@@ -5,4 +5,5 @@ controller.py
 -------------
 
 .. automodule:: controller.controller
-   :members:
+    :members:
+    :undoc-members:

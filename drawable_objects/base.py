@@ -11,11 +11,11 @@ from math import sin
 
 class AbstractObject:
     """
-        Базовый класс неотрисовымаевого объекта, но содержащего отрисовывательные элементы
+        Базовый класс объекта, хранящегося как поле у сцены. Подходит для наследования от него классов не видимых
+        на сцене объектов.
 
         :param scene: сцена объекта
         :param controller: ссылка на объект контроллера
-        :param pos: координаты объекта
         """
     def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
@@ -33,14 +33,15 @@ class AbstractObject:
         """
         pass
 
+
 class SurfaceObject(AbstractObject):
     """
-    Отдельный класс для отрисовки уже отреднеренного surface.
+    Отдельный класс для отрисовки уже отреднеренной surface.
     Используется для отрисовки статичной предподсчитанной графики (то есть той, которая
-    не двигается. Не стоит путать со SpriteObject. Он не двигается относительно экрана).
+    не двигается). Не стоит путать со SpriteObject'ом, который не двигается относительно экрана.
 
-    Не нужно его использовать для других целей, он хранит
-    в себе картинку, а значит потребляет много памяти.
+    Не нужно использовать объект этого класса для других целей, он хранит
+    в себе картинку, а значит, потребляет много памяти.
     """
     def __init__(self, surface: pygame.Surface, scene: Scene, controller: Controller, pos: Point):
         super().__init__(scene, controller)
@@ -52,9 +53,11 @@ class SurfaceObject(AbstractObject):
         relative_pos = self.pos - relative_center
         ImageManager.draw_surface(self.surface, relative_pos, self.scene.screen)
 
+
 class DrawableObject(AbstractObject):
     """
-    Базовый класс отрисовываемого объекта.
+    Базовый класс отрисовываемого объекта. Имеет абсолютную позицию на экране, не имеет текстуры. Подходит для
+    наследования от него объектов пользовательского интерфейса без текстуры.
 
     :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
@@ -63,7 +66,6 @@ class DrawableObject(AbstractObject):
     def __init__(self, scene: Scene, controller: Controller, pos: Point):
         super().__init__(scene, controller)
         self.pos = pos
-
 
     def move(self, new_pos):
         """
@@ -76,10 +78,10 @@ class DrawableObject(AbstractObject):
 
 class SpriteObject(DrawableObject):
     """
-    Базовый класс объекта с текстурой.
+    Базовый класс объекта с текстурой. Имеет абсолютную позицию на экране и угол поворота.
 
     :param scene: сцена объекта
-    :param controller: ссылка на объект контроллера (пока None)
+    :param controller: ссылка на объект контроллера
     :param image_name: имя картинки в базе менеджера
     :param pos: координаты объекта
     :param angle: угол поворота объекта
@@ -106,10 +108,12 @@ class SpriteObject(DrawableObject):
 
 class GameSprite(SpriteObject):
     """
-    Базовый класс объекта на игровом уровне
+    Базовый класс объекта на игровом уровне. Отрисовывается на сцене в относительных координатах. Взаимодействует с
+    GamePlane - плоскостью игрового мира. Может быть создан на сцене в процессе игры, может быть удален в процессе
+    игры (метод destroy).
 
     :param scene: сцена объекта
-    :param controller: ссылка на объект контроллера (пока None)
+    :param controller: ссылка на объект контроллера
     :param image_name: имя картинки в базе менеджера
     :param pos: координаты объекта
     :param angle: угол поворота объекта
@@ -149,25 +153,8 @@ class GameSprite(SpriteObject):
         self.pos = new_pos
 
 
-class MovingGameSprite(GameSprite):
+class Humanoid(GameSprite):
     """
-    Для движения по направлению self.angle
+    Базовый класс человекоподобного существа: это объект на уровне с текстурой, у которого круглый хитбокс.
     """
-    
-    SPEED = 1
-
-    def __init__(self, scene: Scene, controller: Controller, image_name: str,
-                 pos: Point, speed: float, angle: float = 0, zoom: float = 1):
-        super().__init__(scene, controller, image_name, pos, angle, zoom)
-        self.speed = speed
-
-    def get_direction_vector(self) -> Point:
-        """
-        Не учитывает коллизи и т.п.
-        """
-        x_speed = cos(self.angle) * self.speed
-        y_speed = -sin(self.angle) * self.speed
-        return Point(x_speed, y_speed)
-
-class Humanoid(MovingGameSprite):
     HITBOX_RADIUS = 25
