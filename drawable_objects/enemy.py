@@ -14,7 +14,7 @@ class MovingHumanoid(Humanoid):
     """
     SPEED = 1
 
-    def get_move_vector(self, pos: Point):
+    def get_move_vector(self, pos: Point) -> Point:
         """
         вообще могут быть проблемы из-за correct_direction_vector, так
         как, делая последний шаг не на максимальный вектор,
@@ -26,7 +26,7 @@ class MovingHumanoid(Humanoid):
         result = self.correct_direction_vector(direction, pos)
         return result
 
-    def correct_direction_vector(self, velocity: Point, pos: Point):
+    def correct_direction_vector(self, velocity: Point, pos: Point) -> Point:
         """
         Humanoid может "перепрыгнуть" точку назначения, поэтому
         последний прыжок должен быть на меньший вектор
@@ -61,11 +61,11 @@ class Enemy(MovingHumanoid):
 
     SPEED = 5
     """
-    VISION_RADIUS не должен быть большим, так
-    как grid.intersect_seg_walls работает медленно  
+    VISION_RANGE и HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 25 * 15
-    HEARING_RANGE = 30
+    # временные значения
+    VISION_RANGE = 50 #20
+    HEARING_RANGE = 50 #30
     COOLDOWN_TIME = 50
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):

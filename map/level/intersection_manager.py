@@ -1,10 +1,10 @@
 from collections import deque
 
 from constants.directions import side_di, side_dj
-from geometry.point import Point
 from geometry.intersections import intersect_seg_rect
+from geometry.point import Point
 from geometry.segment import Segment
-from map.level.grid_interaction_with_enemy.path_finder import IsMarkedManager
+from utils.is_marked_manager import IsMarkedManager
 
 
 class GridIntersectionManager:

@@ -8,7 +8,7 @@ from geometry.rectangle import Rectangle, create_rectangle_with_left_top
 from geometry.segment import Segment
 from map.grid import Grid
 from map.level.generator import LevelGenerator, EnemyGenerator
-from map.level.grid_interaction_with_enemy.manager import GridInteractionWithEnemyManager
+from map.level.interaction_with_enemy.manager import GridInteractionWithEnemyManager
 from map.level.draw_static_manager import GridDrawStaticManager
 from scenes.base import Scene
 from map.level.intersection_manager import GridIntersectionManager
@@ -31,7 +31,7 @@ class LevelGrid(Grid):
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
-                 width: int = 100, height: int = 100,
+                 width: int = 50, height: int = 50,
                  min_area: int = 100, min_w: int = 8, min_h: int = 8):
         super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
 
