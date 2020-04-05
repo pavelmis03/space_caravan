@@ -12,7 +12,7 @@ class Weapon(AbstractObject):
     ALTERNATIVE_BUTTON = MouseButtonID.RIGHT
     RELOAD_KEY = pygame.K_r
 
-    def __init__(self, shooter, ammo, cooldown_time, reload_time, magazine_size, is_automatic, barrel_length, bullets_in_magazine):
+    def __init__(self, shooter, ammo, cooldown_time, reload_time, magazine_size, is_automatic, barrel_length, bullets_in_magazine, type):
         super().__init__(shooter.scene, shooter.controller)
         self.is_working = True
         self.is_automatic = is_automatic
@@ -25,6 +25,7 @@ class Weapon(AbstractObject):
         self.magazine_size = magazine_size
         self.magazine = bullets_in_magazine
         self.ammo = ammo
+        self.type = type
 
     def reload(self):
         self.magazine = min(self.magazine_size, self.ammo)
@@ -41,7 +42,7 @@ class Weapon(AbstractObject):
                 self.is_working = True
         if self.is_reloading:
             self.is_reloading -= 1
-        if self.controller.is_key_pressed(Weapon.RELOAD_KEY) and not self.is_reloading:
+        if self.controller.is_key_pressed(Weapon.RELOAD_KEY) and not self.is_reloading and self.magazine < self.magazine_size:
             self.reload()
         button = self.controller.get_click_button()
         self.is_firing = self.is_automatic and self.controller.is_mouse_pressed(Weapon.MAIN_BUTTON) and self.is_firing
