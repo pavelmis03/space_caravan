@@ -1,18 +1,25 @@
 from weapons.base import Weapon
 from drawable_objects.bullet import Bullet
-from geometry.vector import vector_from_length_angle
 from geometry.point import Point
+from drawable_objects.bullet import Collision_Point
+from random import randrange
 
 
 class Pistol(Weapon):
 
-    def __init__(self, shooter):
-        super().__init__(shooter)
-        self.cooldown_time = 10
+    def __init__(self, shooter, ammo, bullets_in_magazine=0):
+        super().__init__(shooter, ammo, 12, 40, 12, False, 10, bullets_in_magazine)
 
     def attack(self, pos: Point, angle: float):
-        self.cooldown = self.cooldown_time
-        self.is_working = False
-        pos = pos + vector_from_length_angle(self.length, angle)
         bullet = Bullet(self.scene, self.controller, pos, angle)
         self.scene.game_objects.append(bullet)
+
+
+class Shotgun(Weapon):
+
+    def __init__(self, shooter, ammo, bullets_in_magazine=0):
+        super().__init__(shooter, ammo, 15, 80, 6, False, 0, bullets_in_magazine)
+
+    def attack(self, pos: Point, angle: float):
+        for i in range(5):
+            self.scene.game_objects.append(Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 600)))

@@ -9,6 +9,7 @@ from scenes.base import Scene
 from controller.controller import Controller
 from drawable_objects.bullet import create_bullet
 from weapons.weapons import Pistol
+from weapons.weapons import Shotgun
 
 
 class Player(Humanoid):
@@ -40,7 +41,7 @@ class Player(Humanoid):
             126 * Player.IMAGE_ZOOM
         ]
 
-        self.weapon = Pistol(self)
+        self.weapon = Shotgun(self, ammo=100)
         self.scene.interface_objects.append(self.weapon)
 
     def process_logic(self):
