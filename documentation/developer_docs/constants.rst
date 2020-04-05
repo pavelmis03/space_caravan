@@ -21,3 +21,10 @@ math.py
 .. automodule:: constants.math
     :members:
     :undoc-members:
+
+mouse_buttons.py
+----------------
+
+.. automodule:: constants.mouse_buttons
+    :members:
+    :undoc-members:
