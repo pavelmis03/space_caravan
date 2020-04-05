@@ -29,9 +29,6 @@ class Bullet(GameSprite):
         self.move(next_pos)
 
     def collision_manager(self, next_pos: Point):
-        if self.scene.grid.is_out_of_grid(self.pos):
-            self.destroy()
-            return
         trajectory = Segment(self.pos, next_pos)
         intersect_player_point = self.is_colliding_with_player(trajectory)
         if intersect_player_point is not None:
