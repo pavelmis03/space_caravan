@@ -7,6 +7,9 @@ from map.level.interaction_with_enemy.vision.vision_manager import EnemyVisionMa
 class GridInteractionWithEnemyManager:
     """
     Enemy обладает слухом и зрением.
+
+    слух отвечает за поиск кратчайшего пути.
+    зрение отвечает на запросы, видит ли enemy player'а
     """
     def __init__(self, grid):
         self.hearing_manager = EnemyHearingManager(grid)

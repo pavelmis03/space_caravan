@@ -31,7 +31,7 @@ class LevelGrid(Grid):
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
-                 width: int = 50, height: int = 50,
+                 width: int = 100, height: int = 100,
                  min_area: int = 100, min_w: int = 8, min_h: int = 8):
         super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
 

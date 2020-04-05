@@ -62,10 +62,28 @@ class Enemy(MovingHumanoid):
     SPEED = 5
     """
     VISION_RANGE и HEARING_RANGE - единица измерения - клетки
+    
+    важно:
+    
+    hearing распространяется как по сторонам квадрата, так и
+    по диагонали, а значит фигура слышимости (в случае, если нет стен) - квадрат.
+    Наглядно для случая hearing_range == 1:
+    00000
+    0###0
+    0#P#0
+    0###0
+    00000
+    vision распространяется только по сторонам квадрата, а значит фигура
+    видения - ромб (повернутый на 45 градусов квадрат).
+    Наглядно для случая vision_range == 1:
+    00000
+    00#00
+    0#P#0
+    00#00
+    00000
     """
-    # временные значения
-    VISION_RANGE = 50 #20
-    HEARING_RANGE = 50 #30
+    VISION_RANGE = 30
+    HEARING_RANGE = 30
     COOLDOWN_TIME = 50
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):

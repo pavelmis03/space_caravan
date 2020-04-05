@@ -72,7 +72,7 @@ class EnemyGenerator:
         self.grid = grid
 
     def generate(self):
-        CHANCE_SPAWN = 0.1
+        CHANCE_SPAWN = 0.3
         for i in range(len(self.grid.arr)):
             for j in range(len(self.grid.arr[i])):
                 if i < 20 and j < 20:

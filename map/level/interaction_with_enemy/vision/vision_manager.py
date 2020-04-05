@@ -4,6 +4,8 @@ from map.level.interaction_with_enemy.vision.vision_walls_intersection import Vi
 
 class EnemyVisionManager:
     """
+    Vision распространяется только по сторонам квадрата.
+
     Обертка для VisionWallsIntersection
 
     Enemy видит Player если
