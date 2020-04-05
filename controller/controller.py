@@ -60,6 +60,7 @@ class StrategyKeyUp(ControllerStrategy):
         if event.key in controller.pressed_keys:
             controller.pressed_keys.remove(event.key)
 
+
 class StrategyWindowResize(ControllerStrategy):
     """
     При изменении размера окна меняется game.width и game.height,
@@ -67,6 +68,7 @@ class StrategyWindowResize(ControllerStrategy):
     """
     def execute(self, controller, event):
         controller.game.size = event.size
+
 
 class Controller:
     """
@@ -130,6 +132,16 @@ class Controller:
         :return: логическое значение
         """
         return key in self.pressed_keys
+
+    def is_mouse_pressed(self, button_id):
+        """
+        Нажата ли заданная кнопка мыши.
+
+        :param button_id: ID кнопки в pygame
+        :return: логическое значение
+        """
+        pressed = pygame.mouse.get_pressed()
+        return bool(pressed[button_id - 1])
 
     def is_one_of_keys_pressed(self, keys):
         """

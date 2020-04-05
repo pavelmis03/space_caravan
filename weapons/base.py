@@ -2,15 +2,14 @@ from drawable_objects.base import AbstractObject
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
+from constants.mouse_buttons import MouseButtonID
 import pygame
 
 
 class Weapon(AbstractObject):
 
-    #MAIN_BUTTON = pygame.K_e
-    MAIN_BUTTON = 1
-    #ALTERNATIVE_BUTTON = pygame.MOUSEBUTTONDOWN
-    ALTERNATIVE_BUTTON = 2
+    MAIN_BUTTON = MouseButtonID.LEFT
+    ALTERNATIVE_BUTTON = MouseButtonID.RIGHT
     RELOAD_KEY = pygame.K_r
 
     def __init__(self, shooter, ammo, cooldown_time, reload_time, magazine_size, is_automatic, barrel_length, bullets_in_magazine):
@@ -45,6 +44,7 @@ class Weapon(AbstractObject):
         if self.controller.is_key_pressed(Weapon.RELOAD_KEY) and not self.is_reloading:
             self.reload()
         button = self.controller.get_click_button()
+        self.is_firing = self.is_automatic and self.controller.is_mouse_pressed(Weapon.MAIN_BUTTON) and self.is_firing
         if (button == Weapon.MAIN_BUTTON or self.is_firing) and self.is_working:
             self.main_attack(self.scene.player.pos, self.scene.player.angle)
         if button == Weapon.ALTERNATIVE_BUTTON:

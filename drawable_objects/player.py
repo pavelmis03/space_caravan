@@ -12,6 +12,7 @@ from weapons.weapons import Pistol
 from weapons.weapons import Shotgun
 
 
+
 class Player(Humanoid):
     """
     Игрок на уровне (далек от завершения).
@@ -41,7 +42,7 @@ class Player(Humanoid):
             126 * Player.IMAGE_ZOOM
         ]
 
-        self.weapon = Shotgun(self, ammo=100)
+        self.weapon = Shotgun(self, 100, 6)
         self.scene.interface_objects.append(self.weapon)
 
     def process_logic(self):

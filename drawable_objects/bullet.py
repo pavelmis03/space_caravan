@@ -41,7 +41,7 @@ class Bullet(GameSprite):
             self.collision_with_wall(intersect_walls_point)
 
     def collision_with_wall(self, intersection_point):
-        #self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
     def is_colliding_with_player(self, tragectory: Segment):
