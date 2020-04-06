@@ -84,7 +84,9 @@ class Enemy(MovingHumanoid):
     """
     VISION_RANGE = 30
     HEARING_RANGE = 30
+
     COOLDOWN_TIME = 50
+    DELAY_BEFORE_FIRST_SHOOT = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__ (scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
@@ -123,7 +125,12 @@ class Enemy(MovingHumanoid):
         Возможно, следует переработать, чтобы он
          сначала целился какое-то время, а потом делал первый выстрел.
         """
-        if not self.is_see_player or self.can_shoot_now:
+        if self.can_shoot_now:
+            self.command = EnemyCommand('shoot')
+            self.command_logic()
+            return
+
+        if not self.is_see_player:
             self.is_has_command = False
             self.command_logic()
             return
@@ -138,7 +145,9 @@ class Enemy(MovingHumanoid):
         if self.can_shoot_now:
             self.is_aggred = True
             self.is_has_command = True
-            self.command = EnemyCommand('shoot')
+
+            self.cooldown = Enemy.DELAY_BEFORE_FIRST_SHOOT
+            self.command = EnemyCommand('aim')
         elif self.is_aggred:
             new_pos = self.scene.grid.get_pos_to_move(self)
             if new_pos is None:
