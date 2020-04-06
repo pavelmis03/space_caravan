@@ -176,7 +176,7 @@ class UsableObject(GameSprite):
     def process_logic(self):
         super().process_logic()
         if dist(self.scene.player.pos, self.pos) <= self.usage_radius: #Проверка активации
-            if self.controller.is_key_pressed(key=ACTIVATION_KEY):
+            if self.controller.is_key_pressed(key=UsableObject.ACTIVATION_KEY):
                 self.activate()
 
     def activate(self):
