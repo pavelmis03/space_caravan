@@ -75,6 +75,8 @@ class ImageManager:
     def process_draw(img_str: str, pos_center: Point, screen,
                      resize_percents: float, rotate_angle: float, rotate_offset: list = None):
         image = ImageManager.get_image(img_str)
+        if isinstance(image, dict):
+            raise ValueError(img_str + ' is a dir, not a file')
         image = ImageManager.resize(image, resize_percents)
         image = ImageManager.rotate(image, rotate_angle, rotate_offset)
 
@@ -138,8 +140,14 @@ class ImageManager:
 
     @staticmethod
     def get_width(image_str: str, percents: float) -> float:
-        return ImageManager.get_image(image_str).get_width() * percents
+        image = ImageManager.get_image(image_str)
+        if isinstance(image, dict):
+            raise ValueError(image_str + ' is a dir, not a file')
+        return image.get_width() * percents
 
     @staticmethod
     def get_height(image_str: str, percents: float) -> float:
-        return ImageManager.get_image(image_str).get_height() * percents
+        image = ImageManager.get_image(image_str)
+        if isinstance(image, dict):
+            raise ValueError(image_str + ' is a dir, not a file')
+        return image.get_height() * percents
