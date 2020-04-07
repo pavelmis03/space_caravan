@@ -1,4 +1,3 @@
-
 from drawable_objects.base import DrawableObject
 
 from geometry.point import Point
