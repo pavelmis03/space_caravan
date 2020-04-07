@@ -140,6 +140,12 @@ class ImageManager:
 
     @staticmethod
     def get_width(image_str: str, percents: float) -> float:
+        """
+        Получить длинну изображения
+        :param image_str: название картинки (путь до нее)
+        :param percents: во сколько раз увеличить картинку, если нужно
+        :return: длинна изображения
+        """
         image = ImageManager.get_image(image_str)
         if isinstance(image, dict):
             raise ValueError(image_str + ' is a dir, not a file')
@@ -147,6 +153,12 @@ class ImageManager:
 
     @staticmethod
     def get_height(image_str: str, percents: float) -> float:
+        """
+        Получить высоту изображения
+        :param image_str: название картинки (путь до нее)
+        :param percents: во сколько раз увеличить картинку, если нужно
+        :return: высота изображения
+        """
         image = ImageManager.get_image(image_str)
         if isinstance(image, dict):
             raise ValueError(image_str + ' is a dir, not a file')
