@@ -37,6 +37,8 @@ class StrategyCenter(AlignmentStrategy):
 class Text(DrawableObject):
     """
     Надпись на экране игры.
+    Не умеет работать с строками со \n
+    Для текста с переносами строки см. класс MultilineText
 
     :param scene: сцена, на которой находится текст
     :param pos: точка, по которой текст выравнивается
