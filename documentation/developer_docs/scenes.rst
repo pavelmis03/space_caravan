@@ -5,22 +5,26 @@ base.py
 -------
 
 .. automodule:: scenes.base
-   :members:
+    :members:
+    :undoc-members:
 
 final.py
 --------
 
 .. automodule:: scenes.final
-   :members:
+    :members:
+    :undoc-members:
 
 main.py
 -------
 
 .. automodule:: scenes.main
-   :members:
+    :members:
+    :undoc-members:
 
 menu.py
 -------
 
 .. automodule:: scenes.menu
-   :members:
+    :members:
+    :undoc-members:

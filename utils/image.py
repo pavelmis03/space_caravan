@@ -8,30 +8,39 @@ from geometry.rectangle import intersect, Rectangle
 
 class ImageManager:
     images = {} # получить по ключу pygame картинку
-    IMG_NAMES = ['player', 'floor', 'wall', 'bullet']
+    IMG_NAMES = ['player', 'enemy', 'enemy2', 'floor', 'floor2', 'floor3', 'floor_wood', 'wall', 'wall1', 'bullet', 'green']
     @staticmethod
     def load_all():
         """
         по умолчанию считает, что все картинки png. Ключ должен
         совпадать с названием картинки.
-
-        :return:
         """
-
         for i in range(len(ImageManager.IMG_NAMES)):
-            ImageManager.images[ImageManager.IMG_NAMES[i]] = \
-                pygame.image.load('images/' + ImageManager.IMG_NAMES[i] + '.png')
+            ImageManager.load_img(ImageManager.IMG_NAMES[i])
+
+    @staticmethod
+    def load_img(img_name: str):
+        ImageManager.images[img_name] = \
+            pygame.image.load(ImageManager.img_name_to_path(img_name))
+
+    @staticmethod
+    def img_name_to_path(img_name: str) -> str:
+        return 'images/' + img_name + '.png'
+
+    @staticmethod
+    def draw_surface(surface: pygame.Surface, pos_center: Point, screen):
+        rect = surface.get_rect()
+        rect.center = (pos_center.x, pos_center.y)
+        screen.blit(surface, rect)
 
     @staticmethod
     def process_draw(img_str: str, pos_center: Point, screen,
-                     resize_percents: float, rotate_angle: float):
+                     resize_percents: float, rotate_angle: float, rotate_offset: list=None):
         image = ImageManager.images[img_str]
         image = ImageManager.resize(image, resize_percents)
-        image = ImageManager.rotate(image, rotate_angle)
+        image = ImageManager.rotate(image, rotate_angle, rotate_offset)
 
-        rect = image.get_rect()
-        rect.center = (pos_center.x, pos_center.y)
-        screen.blit(image, rect)
+        ImageManager.draw_surface(image, pos_center, screen)
 
     @staticmethod
     def resize(image, percents: float):
@@ -51,15 +60,22 @@ class ImageManager:
         return pygame.transform.scale(image, size)
 
     @staticmethod
-    def rotate(image, angle: float):
+    def rotate(image, angle: float, rotate_offset=None):
         """
         Задать объекту желаемый угол поворота.
 
-        :param new_angle: новый угол поворота
+        :param image: поворачиваемая картинка
+        :param angle: новый угол поворота
+        :param rotate_offset: оффсет относительно центра для точки поворота
         """
         if not angle:
             return image
-        return pygame.transform.rotate(image, degrees(angle))
+        if not rotate_offset:
+            rotate_offset = image.get_rect().center
+        w, h = image.get_size()
+        img = pygame.Surface((w*2, h*2), pygame.SRCALPHA)
+        img.blit(image, (w - rotate_offset[0], h - rotate_offset[1]))
+        return pygame.transform.rotate(img, degrees(angle))
 
     @staticmethod
     def is_out_of_screen(image_name: str, zoom: float,

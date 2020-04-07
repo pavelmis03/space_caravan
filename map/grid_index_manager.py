@@ -13,15 +13,8 @@ class GridIndexManager:
         self.cell_height = cell_height
         self.cell_width = cell_width
 
-    def get_index_of_objects_on_screen(self, relative_center: Point) \
+    def get_not_corrected_index_of_objects_on_screen(self, relative_center: Point) \
             -> Tuple[Dict[str, int], Dict[str, int]]:
-        """
-        Проходится по всем эл-там сетки затратно по времени, поэтому
-        с помощью математики ищем интервалы координат, по которым следует пройтись
-        :param relative_center:
-        :return:
-        """
-
         pos = self.get_pos_in_grid_origin(relative_center)
 
         i_min, j_min = self.get_index_by_pos_in_grid_origin(pos)
@@ -33,6 +26,25 @@ class GridIndexManager:
         """
         Прибавляем (self.cell_height - 1) и (self.cell_width - 1) для деления с округлением вверх
         """
+        return i, j
+
+    def get_index_of_objects_on_screen(self, relative_center: Point) \
+            -> Tuple[Dict[str, int], Dict[str, int]]:
+        """
+        Проходится по всем эл-там сетки затратно по времени, поэтому
+        с помощью математики ищем интервалы координат, по которым следует пройтись
+
+        Полученные индексы могут быть вне grid.arr, поэтому
+        их нужно прогнать через метод get_corrected_indexes
+        """
+        i, j = self.get_not_corrected_index_of_objects_on_screen(relative_center)
+        i, j = self.get_corrected_indexes((i, j))
+
+        return i, j
+
+    def get_corrected_indexes(self, indexes: Tuple[Dict[str, int], Dict[str, int]]) -> \
+            Tuple[Dict[str, int], Dict[str, int]]:
+        i, j = indexes
         i['min'] = max(i['min'], 0)
         i['max'] = min(i['max'], len(self.grid.arr))
 
@@ -48,8 +60,6 @@ class GridIndexManager:
     def get_index_by_pos_in_grid_origin(self, pos: Point) -> Tuple[int, int]:
         """
         index эл-та на данной позиции в системе координат grid_origin
-        :param pos:
-        :return:
         """
         i = int(pos.y / self.cell_height)
         j = int(pos.x / self.cell_width)
@@ -60,7 +70,10 @@ class GridIndexManager:
         grid origin - система координат (математических) относительно grid.
         Обычно у grid позиция (0, 0), grid_origin поэтому совпадает
         с обычной системо координат.
-        :param pos:
-        :return:
         """
         return Point(pos.x - self.pos.x, pos.y - self.pos.y)
+
+    def get_center_of_cell_by_indexes(self, i: int, j: int) -> Point:
+        y = i * self.cell_height + self.cell_height / 2
+        x = j * self.cell_width + self.cell_width / 2
+        return Point(x, y)

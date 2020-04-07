@@ -2,6 +2,7 @@ from pygame import Rect
 from typing import List
 
 from geometry.point import Point, point_to_tuple
+from geometry.segment import Segment
 
 
 class Rectangle:
@@ -116,10 +117,27 @@ class Rectangle:
         return self._width < 0 or self._height < 0
 
     def get_vertexes(self) -> List[Point]:
+        """
+        Вершины прямоугольника.
+
+        :return: список точек - вершин прямоугольника
+        """
         r1 = self._top_left
         r2 = self._bottom_right
         p = [r1, Point(r2.x, r1.y), r2, Point(r1.x, r2.y)]
         return p
+
+    def get_edges(self) -> List[Segment]:
+        """
+        Стороны прямоугольника.
+
+        :return: список отрезков - сторон прямоугольника
+        """
+        p = self.get_vertexes()
+        edges = []
+        for i in range(4):
+            edges.append(Segment(p[i], p[(i + 1) % 4]))
+        return edges
 
 
 def rect_to_rectangle(rect):
@@ -143,15 +161,27 @@ def rectangle_to_rect(rectangle):
     return Rect(point_to_tuple(rectangle.top_left), (rectangle.width, rectangle.height))
 
 
-def create_rect_with_center(center: Point, w: float, h: float) -> Rectangle:
+def create_rectangle_with_center(center: Point, w: float, h: float) -> Rectangle:
     """
     Создает прямоугольник с заданным центром.
+
     :param center: точка центра
     :param w: ширина
     :param h: высота
     :return: соответствующий прямоугольник
     """
     return Rectangle(center.x - w / 2, center.y - h / 2, center.x + w / 2, center.y + h / 2)
+
+def create_rectangle_with_left_top(left_top: Point, w: float, h: float) -> Rectangle:
+    """
+    Создает прямоугольник с заданным левым верхним углом.
+
+    :param left_top: точка верхнего левого угла
+    :param w: ширина
+    :param h: высота
+    :return: соответствующий прямоугольник
+    """
+    return Rectangle(left_top.x, left_top.y, left_top.x + w, left_top.y + h)
 
 def tuple_to_rectangle(tuple):
     """

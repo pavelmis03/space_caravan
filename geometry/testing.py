@@ -1,16 +1,25 @@
+"""
+Файл, который можно использовать для тестирования геометрических средств (для этого нужно создать отдельную
+конфигурацию запуска).
+"""
+
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.rectangle import Rectangle
 from geometry.circle import Circle
-from geometry.intersections import intersect_seg_circle, intersert_circle_rect
+from geometry.distances import vector_dist_point_rect
+from geometry.intersections import intersect_seg_circle
 
 
 def main():
-    x1, y1, r = map(float, input().split())
-    c = Circle(Point(x1, y1), r)
-    rect = Rectangle(0, 0, 2, 2)
-    q = intersert_circle_rect(c, rect)
-    print(q)
+    circle = Circle(Point(0, 0), 1)
+    while True:
+        x1, y1, x2, y2 = map(float, input().split())
+        p = intersect_seg_circle(Segment(Point(x1, y1), Point(x2, y2)), circle)
+        if p:
+            print(p.x, p.y)
+        else:
+            print('None')
 
 
 if __name__ == '__main__':
