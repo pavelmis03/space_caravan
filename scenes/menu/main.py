@@ -1,4 +1,4 @@
-from scenes.menu import MenuScene
+from scenes.menu.base import MenuScene
 
 
 class Main_MenuScene(MenuScene):

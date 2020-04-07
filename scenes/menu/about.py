@@ -1,12 +1,12 @@
 from constants.color import Color
 from drawable_objects.text import Text
 from geometry.point import Point
-from scenes.menu import MenuScene
+from scenes.menu.base import MenuScene
 
 
 class About_MenuScene(MenuScene):
     """
-    Сцена главной страницы меню.
+    Сцена "О нас" главной страницы меню
 
     :param game: игра, создающая сцену
     """

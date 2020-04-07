@@ -5,9 +5,9 @@ import pygame
 from controller.controller import Controller
 from geometry.rectangle import Rectangle
 from scenes.main import MainScene
-from scenes.menu_about import About_MenuScene
-from scenes.menu_main import Main_MenuScene
-from scenes.menu_settings import Settings_MenuScene
+from scenes.menu.about import About_MenuScene
+from scenes.menu.main import Main_MenuScene
+from scenes.menu.settings import Settings_MenuScene
 from utils.image import ImageManager
 from typing import Tuple
 
