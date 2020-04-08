@@ -63,7 +63,7 @@ class Enemy(MovingHumanoid):
     """
     HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 30 * 25
+    VISION_RADIUS = 50 * 25
     HEARING_RANGE = 30
 
     COOLDOWN_TIME = 50

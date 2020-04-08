@@ -11,7 +11,7 @@ from utils.is_marked_manager import IsMarkedManager
 from collections import deque
 from constants.directions import rect_di, rect_dj
 from geometry.rectangle import rectangle_to_rect
-import pygame
+from pygame import draw
 
 class RectangleRoundBypasserAbstract:
     def __init__(self, grid_rectangle: GridRectangle):
@@ -83,6 +83,8 @@ class GroupOfRectangleNeighbours(RectangleRoundBypasserAbstract):
         """
         if not this_neighbour.count(new_neighbour_color):
             this_neighbour.append(new_neighbour_color)
+
+        return True
 
     def get_neighbours(self, arr: List[List[int]], grid) -> \
                 Tuple[List[int], List[int], List[int], List[int]]:
@@ -166,6 +168,7 @@ class RoomFigureFormCreator(RectangleRoundBypasserAbstract):
         self.bypass(arr, grid)
         return self._collision_rectangles
 
+
 class Room:
     def __init__(self, grid_rectangle: GridRectangle,
                 arr_after_split: List[List[int]],
@@ -173,8 +176,7 @@ class Room:
         """
         :param grid: сетка
         """
-        tmp = ArrAfterSplitCorrecter(grid_rectangle)
-        tmp.correct_arr_after_split(arr_after_split, grid)
+        self._grid = grid
 
 
         self._grid_rectangle = grid_rectangle
@@ -220,20 +222,46 @@ class Room:
         порядок следования сторон совпадает с порядком следования
         neighbours, то есть по данному индексу стороне соответствует neighbour
         """
-        if intersect_seg_rect(seg, self.outer_rectangle) is not None:
-            print('kek')
-
         for i in range(len(edges)):
             if intersect_segments(edges[i], seg) is not None:
                 result += self.neighbours[i]
 
         return get_list_without_equal_elements(result)
 
+    def draw_rect(self, COLOR: Tuple[int, int, int], LINE_WIDTH: int,
+                  rectangle: Rectangle):
+        dx = self._grid.scene.relative_center.x
+        dy = self._grid.scene.relative_center.y
+
+        draw.rect(self._grid.scene.screen, COLOR,
+            (rectangle.left - dx, rectangle.top - dy, rectangle.width, rectangle.height), LINE_WIDTH)
+
+    def draw_outer_rectangle(self):
+        COLOR = (0, 255, 0)
+        LINE_WIDTH = 10
+
+        self.draw_rect(COLOR, LINE_WIDTH, self.outer_rectangle)
+
+    def draw_collision_rectangles(self):
+        COLOR = (255, 255, 255)
+        LINE_WIDTH = 5
+
+        for i in range(len(self._collision_rectangles)):
+            self.draw_rect(COLOR, LINE_WIDTH, self._collision_rectangles[i])
+
+    def process_draw(self):
+        self.draw_outer_rectangle()
+        self.draw_collision_rectangles()
 
 class RoomsGraph:
     def __init__(self, rectangles: List[GridRectangle],
                 arr_after_split: List[List[int]],
                 grid):
+
+        for i in range(len(rectangles)):
+            tmp = ArrAfterSplitCorrecter(rectangles[i])
+            tmp.correct_arr_after_split(arr_after_split, grid)
+
         self._grid = grid
         self._arr_after_split = arr_after_split
         self._used = IsMarkedManager(rectangles)
@@ -244,7 +272,7 @@ class RoomsGraph:
         color = self._arr_after_split[i0][j0]
         if not color:
             raise ValueError('отрезок не должен начинаться в стене')
-        return color
+        return color - 1
 
     def is_seg_intersect_wall(self, seg: Segment) -> bool:
         """
@@ -269,7 +297,7 @@ class RoomsGraph:
 
             neighbours = room.get_neighbours(seg)
             for i in range(len(neighbours)):
-                neighbour_color = neighbours[i]
+                neighbour_color = neighbours[i] - 1
                 if self._used.is_marked(neighbour_color):
                     continue
 
@@ -292,13 +320,8 @@ class RoomsGraph:
     def process_draw(self):
         """
         для debug
-        """
-        return
-        COLORS = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 255)]
-        for i in range(len(self._rooms)):
-            rectangle = self._rooms[i].outer_rectangle
-            dx = self._grid.scene.relative_center.x
-            dy = self._grid.scene.relative_center.y
 
-            pygame.draw.rect(self._grid.scene.screen, COLORS[i % len(COLORS)],
-                             (rectangle.left - dx, rectangle.top - dy, rectangle.width, rectangle.height), 10)
+        отрисовывает внешние границы всех комнат одним из случайных цветов.
+        """
+        for i in range(len(self._rooms)):
+            self._rooms[i].process_draw()
