@@ -3,7 +3,7 @@ from typing import List, Tuple
 
 from constants.directions import side_di, side_dj
 from drawable_objects.enemy import Enemy
-from utils.is_marked_manager import IsMarkedManager
+from utils.is_marked_manager import TwoDimensionalIsMarkedManager
 
 
 class VisionWallsIntersection:
@@ -23,8 +23,8 @@ class VisionWallsIntersection:
 
         self.distance = [[0] * len(grid.arr[0]) for i in range(len(grid.arr))]
 
-        self.used_manager = IsMarkedManager(grid.arr)
-        self.cant_see = IsMarkedManager(grid.arr)
+        self.used_manager = TwoDimensionalIsMarkedManager(grid.arr)
+        self.cant_see = TwoDimensionalIsMarkedManager(grid.arr)
 
     def is_see_player(self, enemy: Enemy) -> bool:
         """

@@ -4,7 +4,7 @@ from typing import List, Tuple
 from constants.directions import rect_di, rect_dj
 from drawable_objects.enemy import Enemy
 from geometry.point import Point
-from utils.is_marked_manager import IsMarkedManager
+from utils.is_marked_manager import TwoDimensionalIsMarkedManager
 
 
 class GridPathFinder:
@@ -19,7 +19,7 @@ class GridPathFinder:
 
         self.distance = [[0] * len(grid.arr[0]) for i in range(len(grid.arr))]
 
-        self.used_manager = IsMarkedManager(grid.arr)
+        self.used_manager = TwoDimensionalIsMarkedManager(grid.arr)
 
         self.parent = [[(0, 0)] * len(grid.arr[0]) for i in range(len(grid.arr))]
 

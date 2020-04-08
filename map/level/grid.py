@@ -8,7 +8,7 @@ from geometry.rectangle import Rectangle, create_rectangle_with_left_top
 from geometry.segment import Segment
 from map.grid import Grid
 from map.level.generator import LevelGenerator, EnemyGenerator
-from map.level.interaction_with_enemy.manager import GridInteractionWithEnemyManager
+from map.level.interaction_with_enemy.manager import InteractionWithEnemyManager
 from map.level.draw_static_manager import GridDrawStaticManager
 from scenes.base import Scene
 from map.level.intersection_manager import GridIntersectionManager
@@ -41,13 +41,15 @@ class LevelGrid(Grid):
         self.transform_ints_to_objects()
         self.static_draw_manager = GridDrawStaticManager(self)
         self.grid_intersection_manager = GridIntersectionManager(self)
-        self.enemy_interaction_manager = GridInteractionWithEnemyManager(self)
+        self.enemy_interaction_manager = InteractionWithEnemyManager(
+            generator.rect_splitter.rectangles, generator.arr_after_split, self)
 
         enemy_generator = EnemyGenerator(self)
         enemy_generator.generate()
 
     def process_draw(self):
         self.static_draw_manager.process_draw()
+        self.enemy_interaction_manager.vision_manager.vision_walls_intersection.process_draw()
 
     def process_logic(self):
         self.enemy_interaction_manager.process_logic()
