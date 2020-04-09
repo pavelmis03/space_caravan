@@ -1,11 +1,11 @@
-from weapons.base import Weapon
+from weapons.base import RangedWeapon
 from drawable_objects.bullet import Bullet
 from geometry.point import Point
 from drawable_objects.bullet import Collision_Point
 from random import randrange
 
 
-class Pistol(Weapon):
+class Pistol(RangedWeapon):
 
     def __init__(self, shooter, ammo, bullets_in_magazine=0):
         super().__init__(shooter, ammo, 12, 40, 12, False, 10, bullets_in_magazine, 'Pistol')
@@ -16,7 +16,7 @@ class Pistol(Weapon):
         self.type = 'Pistol'
 
 
-class Shotgun(Weapon):
+class Shotgun(RangedWeapon):
 
     def __init__(self, shooter, ammo, bullets_in_magazine=0):
         super().__init__(shooter, ammo, 15, 80, 6, False, 0, bullets_in_magazine, 'Shotgun')
