@@ -21,7 +21,7 @@ class Player(Humanoid):
     :param angle: начальный угол поворота игрока
     """
 
-    IMAGE_NAME = 'player'
+    IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
         pygame.K_d,
