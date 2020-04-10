@@ -16,8 +16,8 @@ def create_bullet(shooter: GameSprite):
 class Bullet(GameSprite):
 
     IMAGE_ZOOM = 0.7
-    IMAGE_NAME = 'bullet' # нужно перерисовать
-    SPEED = 70
+    IMAGE_NAME = 'moving_objects.bullet.1' # нужно перерисовать
+    SPEED = 100
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Bullet.IMAGE_NAME, pos, angle, Bullet.IMAGE_ZOOM)
