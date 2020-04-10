@@ -1,31 +1,69 @@
 """
 Все, что связано с логикой отрисовки
 """
+import os
+
 import pygame
 from math import degrees
 from geometry.point import Point
 from geometry.rectangle import intersect, Rectangle
 
+
 class ImageManager:
-    images = {} # получить по ключу pygame картинку
-    IMG_NAMES = ['player', 'floor', 'wall', 'bullet']
+    """
+    Загружает все картинки и осуществляет быстрый доступ к ним а так же работу с ними
+    Возможна рекурсивная загруска всех png картинок
+    """
+    images = {}  # получить по ключу pygame картинку
+    IMAGE_PATH = 'images'
+
     @staticmethod
     def load_all():
         """
-        по умолчанию считает, что все картинки png. Ключ должен
-        совпадать с названием картинки.
+        по умолчанию считает, что все картинки png.
         """
-        for i in range(len(ImageManager.IMG_NAMES)):
-            ImageManager.load_img(ImageManager.IMG_NAMES[i])
+        ImageManager.load_dir(ImageManager.IMAGE_PATH)
 
     @staticmethod
-    def load_img(img_name: str):
-        ImageManager.images[img_name] = \
-            pygame.image.load(ImageManager.img_name_to_path(img_name))
+    def load_dir(directory: str):
+        """
+        Загрузка всех png изображений из директории рекурсивно
+        :param directory: директория
+        """
+        for item in os.listdir(directory):
+            full_item = os.path.join(directory, item)
+            short_dir = directory.replace('images', '').strip('/')
+            if os.path.isdir(full_item):
+                manager_dir = ImageManager.get_image(short_dir, os.sep)
+                manager_dir[item] = {}
+                ImageManager.load_dir(full_item)
+            elif '.png' in item:
+                manager_dir = ImageManager.get_image(short_dir, os.sep)
+                item = item.replace('.png', '')
+                manager_dir[item] = pygame.image.load(full_item)
 
     @staticmethod
-    def img_name_to_path(img_name: str) -> str:
-        return 'images/' + img_name + '.png'
+    def get_image(path: str, delimiter: str = '.'):
+        """
+        Данная функция нужна для удобного получения изображений из
+        ImageManager.images
+        Может так же и возвращать словари с изображениями при указании неполного пути
+
+        :param path: путь до изображения, выглядит примерно как
+            папка.папка.файл (файл без расширения, начало папок из images)
+        :param delimiter: разделитель между папками и изображениями
+            по умолчанию используется точка (aka python style),
+            но можно и делить по другому, слешы крайне НЕ рекомендуются
+        """
+        res = ImageManager.images
+        if not path:
+            return res
+        for item in path.split(delimiter):
+            if item in res:
+                res = res[item]
+            else:
+                raise ValueError(item + ' not found in path ' + path)
+        return res
 
     @staticmethod
     def draw_surface(surface: pygame.Surface, pos_center: Point, screen):
@@ -35,18 +73,21 @@ class ImageManager:
 
     @staticmethod
     def process_draw(img_str: str, pos_center: Point, screen,
-                     resize_percents: float, rotate_angle: float, rotate_offset: list=None):
-        image = ImageManager.images[img_str]
+                     resize_percents: float, rotate_angle: float, rotate_offset: list = None):
+        image = ImageManager.get_image(img_str)
+        if isinstance(image, dict):
+            raise ValueError(img_str + ' is a dir, not a file')
         image = ImageManager.resize(image, resize_percents)
         image = ImageManager.rotate(image, rotate_angle, rotate_offset)
 
         ImageManager.draw_surface(image, pos_center, screen)
 
     @staticmethod
-    def resize(image, percents: float):
+    def resize(image: pygame.Surface, percents: float) -> pygame.Surface:
         """
         Изменить размер текстуры в заданное число раз.
 
+        :param image: текстура, размер которой будет изменен
         :param percents: доля исходного размера (десятичная дробь)
         """
         if percents == 1:
@@ -60,7 +101,7 @@ class ImageManager:
         return pygame.transform.scale(image, size)
 
     @staticmethod
-    def rotate(image, angle: float, rotate_offset=None):
+    def rotate(image: pygame.Surface, angle: float, rotate_offset=None) -> pygame.Surface:
         """
         Задать объекту желаемый угол поворота.
 
@@ -73,7 +114,7 @@ class ImageManager:
         if not rotate_offset:
             rotate_offset = image.get_rect().center
         w, h = image.get_size()
-        img = pygame.Surface((w*2, h*2), pygame.SRCALPHA)
+        img = pygame.Surface((w * 2, h * 2), pygame.SRCALPHA)
         img.blit(image, (w - rotate_offset[0], h - rotate_offset[1]))
         return pygame.transform.rotate(img, degrees(angle))
 
@@ -85,9 +126,10 @@ class ImageManager:
 
         если прямоугольник картинки не пересекается с прямоугольником экрана(и не находится
         внутри), то картинка все экрана.
-        :param image_name:
-        :param zoom:
-        :param relative_pos:
+        :param screen_rectangle: прямоугольник, задающий размеры экрана
+        :param image_name: название картинки (путь до нее)
+        :param zoom: во сколько раз увеличить картинку, если нужно
+        :param relative_pos: позиция относительно окна
         :return:
         """
         w = ImageManager.get_width(image_name, zoom)
@@ -98,10 +140,26 @@ class ImageManager:
 
     @staticmethod
     def get_width(image_str: str, percents: float) -> float:
-        return ImageManager.images[image_str].get_width() * percents
+        """
+        Получить длинну изображения
+        :param image_str: название картинки (путь до нее)
+        :param percents: во сколько раз увеличить картинку, если нужно
+        :return: длинна изображения
+        """
+        image = ImageManager.get_image(image_str)
+        if isinstance(image, dict):
+            raise ValueError(image_str + ' is a dir, not a file')
+        return image.get_width() * percents
 
     @staticmethod
     def get_height(image_str: str, percents: float) -> float:
-        return ImageManager.images[image_str].get_height() * percents
-
-
+        """
+        Получить высоту изображения
+        :param image_str: название картинки (путь до нее)
+        :param percents: во сколько раз увеличить картинку, если нужно
+        :return: высота изображения
+        """
+        image = ImageManager.get_image(image_str)
+        if isinstance(image, dict):
+            raise ValueError(image_str + ' is a dir, not a file')
+        return image.get_height() * percents

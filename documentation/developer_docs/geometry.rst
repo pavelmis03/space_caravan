@@ -5,52 +5,61 @@ circle.py
 ---------
 
 .. automodule:: geometry.circle
-   :members:
+    :members:
+    :undoc-members:
 
 line.py
 -------
 
 .. automodule:: geometry.line
-   :members:
+    :members:
+    :undoc-members:
 
 point.py
 --------
 
 .. automodule:: geometry.point
-   :members:
+    :members:
+    :undoc-members:
 
 rectangle.py
 ------------
 
 .. automodule:: geometry.rectangle
-   :members:
+    :members:
+    :undoc-members:
 
 segment.py
 ----------
 
 .. automodule:: geometry.segment
-   :members:
+    :members:
+    :undoc-members:
 
 vector.py
 ---------
 
 .. automodule:: geometry.vector
-   :members:
+    :members:
+    :undoc-members:
 
 distances.py
 ------------
 
 .. automodule:: geometry.distances
-   :members:
+    :members:
+    :undoc-members:
 
 intersections.py
 ----------------
 
 .. automodule:: geometry.intersections
-   :members:
+    :members:
+    :undoc-members:
 
 testing.py
 ----------
 
 .. automodule:: geometry.testing
-   :members:
+    :members:
+    :undoc-members:

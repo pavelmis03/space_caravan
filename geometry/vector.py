@@ -3,10 +3,10 @@
 функции, работающие с точками как с векторами.
 """
 
-from math import sqrt
+from math import sqrt, sin, cos, atan2
 
 from geometry.point import Point
-from constants import EPS
+from constants.math import EPS
 
 
 def cross_product(v1: Point, v2: Point) -> float:
@@ -46,6 +46,16 @@ def sign(x: float) -> int:
     return -1
 
 
+def length_squared(v: Point) -> float:
+    """
+    Квадрат длины вектора.
+
+    :param v: вектор
+    :return: числовое значение
+    """
+    return v.x * v.x + v.y * v.y
+
+
 def length(v: Point) -> float:
     """
     Длина вектора.
@@ -53,7 +63,17 @@ def length(v: Point) -> float:
     :param v: вектор
     :return: числовое значение
     """
-    return sqrt(v.x * v.x + v.y * v.y)
+    return sqrt(length_squared(v))
+
+
+def polar_angle(v: Point) -> float:
+    """
+    Полярный угол вектора. Координаты кривые, поэтому y с минусом.
+
+    :param v: вектор
+    :return: числовое значение
+    """
+    return atan2(-v.y, v.x)
 
 
 def normalized(v: Point) -> Point:
@@ -65,3 +85,14 @@ def normalized(v: Point) -> Point:
     """
     l = length(v)
     return v / l
+
+
+def vector_from_length_angle(l: float, angle: float) -> Point:
+    """
+    Построение вектора по длине и полярному углу. Координаты кривые, поэтому y с минусом.
+
+    :param l: длина
+    :param angle: полярный угол
+    :return: соответствующий вектор
+    """
+    return Point(l * cos(angle), -l * sin(angle))

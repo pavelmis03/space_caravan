@@ -1,19 +1,16 @@
-import math
 import pygame
-
-from typing import List
 
 from drawable_objects.base import Humanoid
 from geometry.point import Point
-from geometry.vector import sign, length, normalized
+from geometry.vector import sign, length, normalized, polar_angle
 from geometry.distances import vector_dist_point_rect
-from constants import DIRECTIONS
+from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
+from drawable_objects.bullet import create_bullet
+from weapons.weapons import Pistol
+from weapons.weapons import Shotgun
 
-
-from drawable_objects.bullet import Bullet
-from utils.image import ImageManager
 
 
 class Player(Humanoid):
@@ -26,7 +23,7 @@ class Player(Humanoid):
     :param angle: начальный угол поворота игрока
     """
 
-    IMAGE_NAME = 'player'
+    IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
         pygame.K_d,
@@ -34,38 +31,30 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 3
-    ACCURACY = 10
+    SPEED = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+        self.time = 0
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
-        print(ImageManager.get_width(self.image_name, 1), ImageManager.get_height(self.image_name, 1))
         self.rotation_offset = [
             140 * Player.IMAGE_ZOOM,
             126 * Player.IMAGE_ZOOM
         ]
 
+        self.weapon = Shotgun(self, 100, 6)
+        self.scene.interface_objects.append(self.weapon)
+
     def process_logic(self):
         relative_center = self.scene.relative_center
         vector_to_mouse = self.controller.get_mouse_pos() + relative_center - self.pos
-        self.angle = math.atan2(-vector_to_mouse.y, vector_to_mouse.x)
-
-        velocity = Point(0, 0)
-
-        if self.controller.get_click_button ():
-            self.scene.game_objects.append(Bullet(self.scene, self.controller, self.pos, self.angle))
-
+        self.angle = polar_angle(vector_to_mouse)
+        velocity = Point()
         if self in self.controller.input_objects:
             for i in range(4):
                 if self.controller.is_key_pressed(Player.CONTROLS[i]):
                     velocity += DIRECTIONS[i]
-            self.move(self.pos + velocity * Player.SPEED)
-
-        for i in range(4):
-            if self.controller.is_key_pressed(Player.CONTROLS[i]):
-                velocity += DIRECTIONS[i]
-        velocity *= Player.SPEED
+            velocity *= self.SPEED
 
         new_pos = self.go_from_walls(self.pos + velocity)
         if sign(length(new_pos - self.pos - velocity)) != 0:
@@ -90,7 +79,7 @@ class Player(Humanoid):
                 if sign(self.HITBOX_RADIUS - length(current_v)) == 1:
                     v.append(current_v)
             if len(v) == 0:
-                break;
+                break
             for i in range(1, len(v)):
                 if length(v[0]) > length(v[i]):
                     v[0], v[i] = v[i], v[0]

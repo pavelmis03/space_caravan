@@ -5,22 +5,26 @@ disjoint_set.py
 ---------------
 
 .. automodule:: utils.disjoint_set
-   :members:
+    :members:
+    :undoc-members:
 
 game_plane.py
 -------------
 
 .. automodule:: utils.game_plane
-   :members:
+    :members:
+    :undoc-members:
 
 image.py
 --------
 
 .. automodule:: utils.image
-   :members:
+    :members:
+    :undoc-members:
 
 random.py
 ---------
 
 .. automodule:: utils.random
-   :members:
+    :members:
+    :undoc-members:

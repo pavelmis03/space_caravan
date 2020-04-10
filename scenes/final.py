@@ -1,5 +1,5 @@
 # coding=utf-8
-from constants import Color
+from constants.color import Color
 from drawable_objects.text import Text
 from scenes.base import Scene
 

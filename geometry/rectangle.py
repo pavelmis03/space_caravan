@@ -161,15 +161,27 @@ def rectangle_to_rect(rectangle):
     return Rect(point_to_tuple(rectangle.top_left), (rectangle.width, rectangle.height))
 
 
-def create_rect_with_center(center: Point, w: float, h: float) -> Rectangle:
+def create_rectangle_with_center(center: Point, w: float, h: float) -> Rectangle:
     """
     Создает прямоугольник с заданным центром.
+
     :param center: точка центра
     :param w: ширина
     :param h: высота
     :return: соответствующий прямоугольник
     """
     return Rectangle(center.x - w / 2, center.y - h / 2, center.x + w / 2, center.y + h / 2)
+
+def create_rectangle_with_left_top(left_top: Point, w: float, h: float) -> Rectangle:
+    """
+    Создает прямоугольник с заданным левым верхним углом.
+
+    :param left_top: точка верхнего левого угла
+    :param w: ширина
+    :param h: высота
+    :return: соответствующий прямоугольник
+    """
+    return Rectangle(left_top.x, left_top.y, left_top.x + w, left_top.y + h)
 
 def tuple_to_rectangle(tuple):
     """

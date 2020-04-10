@@ -1,4 +1,4 @@
-from map.collision_grid import CollisionGrid
+from map.collision_grid.collision_grid import CollisionGrid
 from geometry.point import Point
 from scenes.base import Scene
 

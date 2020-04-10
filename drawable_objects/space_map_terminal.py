@@ -9,12 +9,14 @@ from geometry.distances import dist
 from scenes.base import Scene
 from controller.controller import Controller
 
+from drawable_objects.player import Player
+
 class SpaceMapTerminal(GameSprite):
 
     IMAGE_ZOOM = 0.3
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__ (scene, controller, 'player', pos, angle, SpaceMapTerminal.IMAGE_ZOOM)
+        super().__init__ (scene, controller, Player.IMAGE_NAME, pos, angle, SpaceMapTerminal.IMAGE_ZOOM)
 
 
     def process_logic(self):
