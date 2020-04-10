@@ -1,10 +1,9 @@
-from drawable_objects.button import Button
-from scenes.menu import MenuScene
+from scenes.menu.base import MenuScene
 
 
 class Settings_MenuScene(MenuScene):
     """
-    Сцена главной страницы меню.
+    Сцена страницы настроек меню.
 
     :param game: игра, создающая сцену
     """

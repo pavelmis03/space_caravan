@@ -11,28 +11,33 @@ button.py
 ---------
 
 .. automodule:: drawable_objects.button
-   :members:
+    :members:
+    :undoc-members:
 
 player.py
 ---------
 
 .. automodule:: drawable_objects.player
-   :members:
+    :members:
+    :undoc-members:
 
 enemy.py
 --------
 
 .. automodule:: drawable_objects.enemy
-   :members:
+    :members:
+    :undoc-members:
 
 bullet.py
 ---------
 
 .. automodule:: drawable_objects.bullet
-   :members:
+    :members:
+    :undoc-members:
 
 text.py
 -------
 
 .. automodule:: drawable_objects.text
-   :members:
+    :members:
+    :undoc-members:
