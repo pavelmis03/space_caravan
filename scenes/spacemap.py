@@ -9,7 +9,7 @@ class SpacemapScene(Scene):
     Сцена звездной карты
 
 
-    :param game: игра, создающая сцену Bullet(self.scene, self.controller, self.pos, self.angle)
+    :param game: игра, создающая сцену (self.scene, self.controller, self.pos, self.angle)
     """
     def __init__(self, game):
         super().__init__(game)
