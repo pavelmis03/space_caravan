@@ -6,6 +6,7 @@ from geometry.intersections import intersect_seg_circle
 from geometry.vector import vector_from_length_angle
 from scenes.base import Scene
 from controller.controller import Controller
+from geometry.distances import dist
 
 
 def create_bullet(shooter: GameSprite):
@@ -31,13 +32,22 @@ class Bullet(GameSprite):
     def collision_manager(self, next_pos: Point):
         trajectory = Segment(self.pos, next_pos)
         intersect_player_point = self.is_colliding_with_player(trajectory)
-        if intersect_player_point is not None:
-            self.collision_with_player(intersect_player_point)
         intersect_walls_point = self.scene.grid.intersect_seg_walls(trajectory)
-        if intersect_walls_point is not None:
-            self.collision_with_wall(intersect_walls_point)
 
-    def collision_with_wall(self, intersection_point):
+        if intersect_player_point is not None:
+            if intersect_walls_point is not None:
+                if dist(intersect_player_point, self.pos )>dist(intersect_walls_point, self.pos ):
+                    self.collision_with_object(intersect_walls_point)
+                else:
+                    self.collision_with_object(intersect_player_point)
+            else:
+                self.collision_with_object(intersect_player_point)
+        else:
+            if intersect_walls_point is not None:
+                self.collision_with_object(intersect_walls_point)
+
+
+    def collision_with_object(self, intersection_point):
         self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
@@ -46,10 +56,6 @@ class Bullet(GameSprite):
         intersection_point = intersect_seg_circle(tragectory, player)
         return intersection_point
 
-    def collision_with_player(self, intersection_point):
-        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
-        self.destroy()
-        pass
 
     def is_colliding_with_enemies(self):
 
