@@ -67,6 +67,19 @@ class GameScene(Scene):
         self.plane = None
         self.game_paused = False
 
+    def delete_destroyed_objects(self):
+        """
+        быстрое удаление уничтоженных эл-тов (который not enabled).
+        так как мы меняем местами удаляемый эл-т и делаем pop, работает за O(n)
+        """
+        i = 0
+        while i < len(self.game_objects):
+            if not self.game_objects[i].enabled:
+                self.game_objects[i], self.game_objects[-1] = self.game_objects[-1], self.game_objects[i]
+                self.game_objects.pop()
+                continue
+            i += 1
+
     def process_all_logic(self):
         """
         Обработка логики в следующем порядке: объекты интерфейса, сетка, игровые объекты, игрок.
@@ -81,10 +94,8 @@ class GameScene(Scene):
             self.player.process_logic()
             self.relative_center = self.player.pos - self.game.screen_rectangle.center
             self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
-        # Удаление уничтоженных игровых объектов
-        for item in self.game_objects:
-            if not item.enabled:
-                self.game_objects.remove(item)
+
+        self.delete_destroyed_objects()
 
     def process_all_draw(self):
         """
