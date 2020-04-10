@@ -5,4 +5,5 @@ button.py
 ---------
 
 .. automodule:: third_party.button.button
-   :members:
+    :members:
+    :undoc-members:

@@ -1,20 +1,14 @@
-import math
 import pygame
-
-from typing import List
 
 from drawable_objects.base import Humanoid
 from geometry.point import Point
-from geometry.vector import sign, length, normalized
+from geometry.vector import sign, length, normalized, polar_angle
 from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
-from drawable_objects.enemy import Enemy
-
 
 from drawable_objects.bullet import create_bullet
-from utils.image import ImageManager
 
 
 class Player(Humanoid):
@@ -35,11 +29,11 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 3
+    SPEED = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         self.time = 0
-        super().__init__(scene, controller, Player.IMAGE_NAME, pos, Player.SPEED, angle, Player.IMAGE_ZOOM)
+        super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
         self.rotation_offset = [
             140 * Player.IMAGE_ZOOM,
@@ -49,23 +43,17 @@ class Player(Humanoid):
     def process_logic(self):
         relative_center = self.scene.relative_center
         vector_to_mouse = self.controller.get_mouse_pos() + relative_center - self.pos
-        self.angle = math.atan2(-vector_to_mouse.y, vector_to_mouse.x)
-
-        velocity = Point(0, 0)
+        self.angle = polar_angle(vector_to_mouse)
 
         if self.controller.get_click_button():
             create_bullet(self)
 
+        velocity = Point()
         if self in self.controller.input_objects:
             for i in range(4):
                 if self.controller.is_key_pressed(Player.CONTROLS[i]):
                     velocity += DIRECTIONS[i]
-            self.move(self.pos + velocity * self.speed)
-
-        for i in range(4):
-            if self.controller.is_key_pressed(Player.CONTROLS[i]):
-                velocity += DIRECTIONS[i]
-        velocity *= self.speed
+            velocity *= self.SPEED
 
         new_pos = self.go_from_walls(self.pos + velocity)
         if sign(length(new_pos - self.pos - velocity)) != 0:
