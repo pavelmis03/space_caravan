@@ -1,5 +1,6 @@
 import pygame
 
+from geometry.circle import Circle
 from geometry.point import Point
 from scenes.base import Scene
 from constants.color import Color
@@ -28,6 +29,7 @@ class Planet(SpriteObject):
     def __init__(self, scene: Scene, controller: Controller, image_name: str,
                  pos: Point, angle: float = 0, zoom: float = 1,function=None, kwargs={}, planet_biom = 'None', planet_name = 'Test'):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
+        self.geometry = Circle(pos, 50)
         self.function = function
         self.kwargs = kwargs
         self.name = planet_name
@@ -41,3 +43,6 @@ class Planet(SpriteObject):
         click_pos = self.controller.get_click_pos()
         if self.controller.is_key_pressed(key=pygame.K_e):
             self.scene.game.set_scene(self.scene.game.MAIN_SCENE_INDEX)
+
+        if click_pos and self.geometry.is_inside(click_pos):
+            self.function(**self.kwargs)
