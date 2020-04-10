@@ -2,7 +2,6 @@ from drawable_objects.button import Button
 from drawable_objects.planet import Planet
 from geometry.point import Point
 from scenes.base import Scene
-from scenes.menu import MenuScene
 
 
 class SpacemapScene(Scene):
