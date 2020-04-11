@@ -9,7 +9,7 @@ class ButtonGroup(AbstractObject):
 
     :param scene: сцена, на которой кнопка находится
     :param controller: контроллер
-    :param offset: оффсет центра в процентах [(0-1), (0-1)] относительно координат окна
+    :param offset: оффсет центра в процентах [(0-1), (0-1)] относительно размеров окна
     :param button_geometry: размеры создаваемых кнопок
     :param button_offset: расстояние между кнопками
     """

@@ -4,7 +4,7 @@ from scenes.base import Scene
 
 class MenuScene(Scene):
     """
-    Сцена главной страницы меню.
+    Базовый класс для сцены меню
 
     :param game: игра, создающая сцену
     """

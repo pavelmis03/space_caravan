@@ -27,7 +27,7 @@ class LevelGrid(Grid):
 
     FILENAMES - имена используемых спрайтов для стен и пола соответственно
     """
-    FILENAMES = ['wall1', 'floor3']
+    FILENAMES = ['level.wall1', 'level.floor3']
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
