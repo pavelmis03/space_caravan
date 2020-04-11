@@ -67,6 +67,21 @@ class GameScene(Scene):
         self.plane = None
         self.game_paused = False
 
+    def interface_logic(self):
+        for item in self.interface_objects:
+            item.process_logic()
+
+    def game_logic(self):
+        """
+        Обработка логики в следующем порядке: сетка, игровые объекты, игрок.
+        """
+        self.grid.process_logic()
+        for item in self.game_objects:
+            item.process_logic()
+        self.player.process_logic()
+        self.relative_center = self.player.pos - self.game.screen_rectangle.center
+        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
+
     def delete_destroyed_objects(self):
         """
         быстрое удаление уничтоженных эл-тов (который not enabled).
@@ -81,19 +96,9 @@ class GameScene(Scene):
             i += 1
 
     def process_all_logic(self):
-        """
-        Обработка логики в следующем порядке: объекты интерфейса, сетка, игровые объекты, игрок.
-        Если флаг game_paused установлен в True, то логика вызывается только для объектов интерфейса
-        """
-        for item in self.interface_objects:
-            item.process_logic()
+        self.interface_logic()
         if not self.game_paused:
-            self.grid.process_logic()
-            for item in self.game_objects:
-                item.process_logic()
-            self.player.process_logic()
-            self.relative_center = self.player.pos - self.game.screen_rectangle.center
-            self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
+            self.game_logic()
 
         self.delete_destroyed_objects()
 
