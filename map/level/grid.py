@@ -1,18 +1,6 @@
-from typing import List
 from map.collision_grid.collision_grid import CollisionGrid
-from map.level.generator import LevelGenerator
-from controller.controller import Controller
-from drawable_objects.base import GameSprite
-from drawable_objects.enemy import Enemy
 from geometry.point import Point
-from geometry.rectangle import Rectangle, create_rectangle_with_left_top
-from geometry.segment import Segment
-from map.grid import Grid
 from map.level.generator import LevelGenerator, EnemyGenerator
-from map.collision_grid.grid_interaction_with_enemy.manager import GridInteractionWithEnemyManager
-from map.collision_grid.draw_static_manager import GridDrawStaticManager
-from scenes.base import Scene
-from map.collision_grid.intersection_manager import GridIntersectionManager
 
 class LevelGrid(CollisionGrid):
     """

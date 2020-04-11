@@ -34,12 +34,12 @@ class CollisionGrid(Grid):
                  min_area: int = 100, min_w: int = 8, min_h: int = 8):
         super ().__init__ (scene, controller, pos, 0, cell_width, cell_height, width, height)
 
-        self.map_construction ()
+        self.map_construction()
 
-        self.transform_ints_to_objects ()
-        self.static_draw_manager = GridDrawStaticManager (self)
-        self.grid_intersection_manager = GridIntersectionManager (self)
-        self.enemy_interaction_manager = GridInteractionWithEnemyManager (self)
+        self.transform_ints_to_objects()
+        self.static_draw_manager = GridDrawStaticManager(self)
+        self.grid_intersection_manager = GridIntersectionManager(self)
+        self.enemy_interaction_manager = GridInteractionWithEnemyManager(self)
 
         self.enemy_generation()
 
@@ -49,17 +49,17 @@ class CollisionGrid(Grid):
         """
         pass
 
-    def map_construction(self, min_area: int = 100, min_w: int = 8, min_h: int = 8):
+    def map_construction(self):
         """
         Построение уровня (стен и пола)
         """
         pass
 
     def process_draw(self):
-        self.static_draw_manager.process_draw ()
+        self.static_draw_manager.process_draw()
 
     def process_logic(self):
-        self.enemy_interaction_manager.process_logic ()
+        self.enemy_interaction_manager.process_logic()
 
     def transform_ints_to_objects(self):
         """
@@ -82,7 +82,7 @@ class CollisionGrid(Grid):
         w = self.cell_width
         y = i * h
         x = j * w
-        return create_rectangle_with_left_top (Point (x, y) + self.pos, w, h)
+        return create_rectangle_with_left_top(Point (x, y) + self.pos, w, h)
 
     def get_collision_rects_nearby(self, pos: Point) -> List[Rectangle]:
         """
@@ -101,17 +101,17 @@ class CollisionGrid(Grid):
         max_j = min (len (self.arr[0]), center_j + INDEX_OFFSET + 1)
 
         res = []
-        for i in range (min_i, max_i):
-            for j in range (min_j, max_j):
-                if not self.is_passable (i, j):
-                    res.append (self.get_collision_rect (i, j))
+        for i in range(min_i, max_i):
+            for j in range(min_j, max_j):
+                if not self.is_passable(i, j):
+                    res.append (self.get_collision_rect(i, j))
         return res
 
     def is_enemy_see_player(self, enemy: Enemy) -> bool:
-        return self.enemy_interaction_manager.is_enemy_see_player (enemy)
+        return self.enemy_interaction_manager.is_enemy_see_player(enemy)
 
     def get_pos_to_move(self, enemy: Enemy) -> Point:
-        return self.enemy_interaction_manager.get_pos_to_move (enemy)
+        return self.enemy_interaction_manager.get_pos_to_move(enemy)
 
     def intersect_seg_walls(self, seg: Segment) -> Point:
-        return self.grid_intersection_manager.intersect_seg_walls (seg)
+        return self.grid_intersection_manager.intersect_seg_walls(seg)
