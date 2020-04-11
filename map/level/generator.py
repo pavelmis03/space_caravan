@@ -44,6 +44,13 @@ class LevelGenerator:
 
     def split(self):
         self.rect_splitter.start_random_split()
+
+        self.arr_after_split = []
+        for i in range(len(self.rect_splitter.arr)):
+            self.arr_after_split.append([])
+            for j in range(len(self.rect_splitter.arr[i])):
+                self.arr_after_split[i].append(self.rect_splitter.arr[i][j])
+
         self.graph_manager = RectGraphManager(self.rect_splitter.arr, self.rect_splitter.rects_count)
 
     def union(self):
@@ -72,7 +79,7 @@ class EnemyGenerator:
         self.grid = grid
 
     def generate(self):
-        CHANCE_SPAWN = 0.1
+        CHANCE_SPAWN = 0.3
         for i in range(len(self.grid.arr)):
             for j in range(len(self.grid.arr[i])):
                 if i < 20 and j < 20:

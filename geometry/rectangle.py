@@ -50,6 +50,22 @@ class Rectangle:
         """
         return self._top_left
 
+    @property
+    def left(self) -> float:
+        return self._top_left.x
+
+    @property
+    def right(self) -> float:
+        return self._bottom_right.x
+
+    @property
+    def top(self) -> float:
+        return self._top_left.y
+
+    @property
+    def bottom(self) -> float:
+        return self._bottom_right.y
+
     @top_left.setter
     def top_left(self, new_top_left):
         movement = new_top_left - self._top_left
@@ -121,6 +137,8 @@ class Rectangle:
         Вершины прямоугольника.
 
         :return: список точек - вершин прямоугольника
+        Порядок вершин: левая верхняя, правая верхняя,
+                        правая нижняя, левая нижняя
         """
         r1 = self._top_left
         r2 = self._bottom_right
@@ -132,6 +150,7 @@ class Rectangle:
         Стороны прямоугольника.
 
         :return: список отрезков - сторон прямоугольника
+        Порядок сторон(отрезков): верхняя, правая, нижняя, левая)
         """
         p = self.get_vertexes()
         edges = []
@@ -183,6 +202,11 @@ def tuple_to_rectangle(tuple):
     :return: соответствующий Rectangle
     """
     return Rectangle(tuple[0], tuple[1], tuple[2], tuple[3])
+
+
+def get_rectangle_copy(rectangle: Rectangle) -> Rectangle:
+    return Rectangle(rectangle.top_left.x, rectangle.top_left.y,
+                     rectangle.bottom_right.x, rectangle.bottom_right.y)
 
 
 def intersect(rectangle1, rectangle2):

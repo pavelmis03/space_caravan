@@ -14,7 +14,7 @@ class MovingHumanoid(Humanoid):
     """
     SPEED = 1
 
-    def get_move_vector(self, pos: Point):
+    def get_move_vector(self, pos: Point) -> Point:
         """
         вообще могут быть проблемы из-за correct_direction_vector, так
         как, делая последний шаг не на максимальный вектор,
@@ -26,7 +26,7 @@ class MovingHumanoid(Humanoid):
         result = self.correct_direction_vector(direction, pos)
         return result
 
-    def correct_direction_vector(self, velocity: Point, pos: Point):
+    def correct_direction_vector(self, velocity: Point, pos: Point) -> Point:
         """
         Humanoid может "перепрыгнуть" точку назначения, поэтому
         последний прыжок должен быть на меньший вектор
@@ -61,12 +61,13 @@ class Enemy(MovingHumanoid):
 
     SPEED = 5
     """
-    VISION_RADIUS не должен быть большим, так
-    как grid.intersect_seg_walls работает медленно  
+    HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 25 * 15
+    VISION_RADIUS = 50 * 25
     HEARING_RANGE = 30
+
     COOLDOWN_TIME = 50
+    DELAY_BEFORE_FIRST_SHOOT = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__ (scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
@@ -105,7 +106,12 @@ class Enemy(MovingHumanoid):
         Возможно, следует переработать, чтобы он
          сначала целился какое-то время, а потом делал первый выстрел.
         """
-        if not self.is_see_player or self.can_shoot_now:
+        if self.can_shoot_now:
+            self.command = EnemyCommand('shoot')
+            self.command_logic()
+            return
+
+        if not self.is_see_player:
             self.is_has_command = False
             self.command_logic()
             return
@@ -120,7 +126,9 @@ class Enemy(MovingHumanoid):
         if self.can_shoot_now:
             self.is_aggred = True
             self.is_has_command = True
-            self.command = EnemyCommand('shoot')
+
+            self.cooldown = Enemy.DELAY_BEFORE_FIRST_SHOOT
+            self.command = EnemyCommand('aim')
         elif self.is_aggred:
             new_pos = self.scene.grid.get_pos_to_move(self)
             if new_pos is None:
