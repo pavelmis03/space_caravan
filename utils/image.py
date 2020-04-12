@@ -32,7 +32,7 @@ class ImageManager:
         """
         for item in os.listdir(directory):
             full_item = os.path.join(directory, item)
-            short_dir = directory.replace('images', '').strip('/')
+            short_dir = directory.replace('images', '').strip(os.sep)
             if os.path.isdir(full_item):
                 manager_dir = ImageManager.get_image(short_dir, os.sep)
                 manager_dir[item] = {}
