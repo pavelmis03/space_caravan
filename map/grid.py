@@ -94,7 +94,7 @@ class Grid(DrawableObject):
         """
         Пуля может вылететь за grid, для этого нужна это функция
         """
-        return not self.grid_rectangle.in_inside(pos)
+        return not self.grid_rectangle.is_inside(pos)
 
     @property
     def cell_width(self):

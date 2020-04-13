@@ -45,9 +45,9 @@ class Button(DrawableObject):
         self.hover_text.pos = self.geometry.center
 
     def process_logic(self):
-        self.hover = self.geometry.in_inside(self.controller.get_mouse_pos())
+        self.hover = self.geometry.is_inside(self.controller.get_mouse_pos())
         click_pos = self.controller.get_click_pos()
-        if click_pos and self.geometry.in_inside(click_pos):
+        if click_pos and self.geometry.is_inside(click_pos):
             self.function(**self.kwargs)
 
     def process_draw(self):

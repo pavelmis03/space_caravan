@@ -111,7 +111,7 @@ class Rectangle:
         self._top_left -= movement
         self._bottom_right += movement
 
-    def in_inside(self, point):
+    def is_inside(self, point):
         """
         Проверка принадлежности точки прямоугольнику.
 
