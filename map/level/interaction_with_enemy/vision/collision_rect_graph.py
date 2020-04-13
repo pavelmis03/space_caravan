@@ -164,8 +164,38 @@ class RoomFigureFormCreator(RectangleRoundBypasserAbstract):
         self.handle_cell(0, self.grid_rectangle._left_top_index[0],
                          self.grid_rectangle._left_top_index[1], arr, grid)
 
+    def delete_useless_rectangles(self):
+        i = len(self._collision_rectangles) - 1
+        while i >= 0 and len(self._collision_rectangles):
+            is_in_other_rect = False
+            vertexes = self._collision_rectangles[i].get_vertexes()
+
+            for j in range(len(self._collision_rectangles)):
+                if i == j:
+                    continue
+
+                checker_rect = self._collision_rectangles[j]
+                full_inside_checker = True
+                for k in range(len(vertexes)):
+                    if not checker_rect.in_inside(vertexes[k]):
+                        full_inside_checker = False
+                        break
+
+                if full_inside_checker:
+                    is_in_other_rect = True
+                    break
+
+            if is_in_other_rect:
+                self._collision_rectangles[i], self._collision_rectangles[-1] = \
+                    self._collision_rectangles[-1], self._collision_rectangles[i]
+                self._collision_rectangles.pop()
+            i -= 1
+
     def get_collision_rectangles(self, arr: List[List[int]], grid) -> List[Rectangle]:
         self.bypass(arr, grid)
+
+        self.delete_useless_rectangles()
+
         return self._collision_rectangles
 
 
@@ -226,7 +256,7 @@ class Room:
             if intersect_segments(edges[i], seg) is not None:
                 result += self.neighbours[i]
 
-        return get_list_without_equal_elements(result)
+        return result
 
     def draw_rect(self, COLOR: Tuple[int, int, int], LINE_WIDTH: int,
                   rectangle: Rectangle):
@@ -270,8 +300,6 @@ class RoomsGraph:
     def _get_room_color_by_pos(self, pos: Point) -> int:
         i0, j0 = self._grid.get_index_by_pos(pos)
         color = self._arr_after_split[i0][j0]
-        if not color:
-            raise ValueError('отрезок не должен начинаться в стене')
         return color - 1
 
     def is_seg_intersect_wall(self, seg: Segment) -> bool:
