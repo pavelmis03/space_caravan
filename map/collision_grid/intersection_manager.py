@@ -6,11 +6,11 @@ from geometry.point import Point
 from geometry.segment import Segment
 from utils.is_marked_manager import TwoDimensionalIsMarkedManager
 
-
 class GridIntersectionManager:
     """
     Работает медленно, но не понятно как ускорить.
     """
+
     def __init__(self, grid):
         self.grid = grid
         self.used_manager = TwoDimensionalIsMarkedManager(grid.arr)
@@ -35,7 +35,7 @@ class GridIntersectionManager:
                 new_j = j + side_dj[k]
 
                 if new_i < 0 or new_j < 0 or \
-                    new_i >= len(self.grid.arr) or new_j >= len(self.grid.arr[new_i]):
+                        new_i >= len(self.grid.arr) or new_j >= len(self.grid.arr[new_i]):
                     continue
 
                 if self.used_manager.is_marked(new_i, new_j):
@@ -53,4 +53,3 @@ class GridIntersectionManager:
                 s.append((new_i, new_j))
 
         return None
-

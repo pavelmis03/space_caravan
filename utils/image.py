@@ -10,6 +10,7 @@ from geometry.rectangle import intersect, Rectangle
 
 
 class ImageManager:
+
     """
     Загружает все картинки и осуществляет быстрый доступ к ним а так же работу с ними
     Возможна рекурсивная загруска всех png картинок
@@ -32,7 +33,8 @@ class ImageManager:
         """
         for item in os.listdir(directory):
             full_item = os.path.join(directory, item)
-            short_dir = directory.replace('images', '').strip('/')
+            short_dir = directory.replace(
+                ImageManager.IMAGE_PATH, '').strip(os.sep)
             if os.path.isdir(full_item):
                 manager_dir = ImageManager.get_image(short_dir, os.sep)
                 manager_dir[item] = {}

@@ -10,25 +10,29 @@ from scenes.base import Scene
 
 from map.grid_index_manager import GridIndexManager
 
+
 class Grid(DrawableObject):
     """
     Прямоугольная сетка.
     """
+
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  default_value: any,
                  cell_width: int, cell_height: int,
-                 width_arr: int=100, height_arr: int=100):
+                 width_arr: int = 100, height_arr: int = 100):
         super().__init__(scene, controller, pos)
 
         self.arr = [[default_value] * width_arr for i in range(height_arr)]
         """
         расчет индексов по позиции делегирован index_manager
         """
-        self.index_manager = GridIndexManager(self, self.pos, cell_width, cell_height)
+        self.index_manager = GridIndexManager(
+            self, self.pos, cell_width, cell_height)
 
         width = cell_width * len(self.arr[0])
         height = cell_height * len(self.arr)
-        self.grid_rectangle = create_rectangle_with_left_top(pos, width, height)
+        self.grid_rectangle = create_rectangle_with_left_top(
+            pos, width, height)
 
     def process_draw(self):
         """
@@ -89,12 +93,6 @@ class Grid(DrawableObject):
     @property
     def bottom(self):
         return self.grid_rectangle.bottom_right.y
-
-    def is_out_of_grid(self, pos: Point) -> bool:
-        """
-        Пуля может вылететь за grid, для этого нужна это функция
-        """
-        return not self.grid_rectangle.is_inside(pos)
 
     @property
     def cell_width(self):

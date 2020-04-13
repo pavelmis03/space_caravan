@@ -1,6 +1,6 @@
 import pygame
 
-from constants.color import Color
+from constants.color import COLOR
 from geometry.point import Point
 
 
@@ -10,6 +10,7 @@ class Scene:
 
     :param game: игра, создающая сцену
     """
+
     def __init__(self, game):
         self.game = game
         self.screen = self.game.screen
@@ -47,16 +48,16 @@ class Scene:
         """
         Обработка отрисовки сцены и ее объектов.
         """
-        self.screen.fill(Color.BLACK)
+        self.screen.fill(COLOR['BLACK'])
         for item in self.interface_objects:
             item.process_draw()
-
 
 class GameScene(Scene):
     """
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
     :param game: игра, создающая сцену
     """
+
     def __init__(self, game):
         super().__init__(game)
         self.game_objects = []
@@ -105,7 +106,7 @@ class GameScene(Scene):
         """
         Отрисовка в следующем порядке: сетка, игровые объекты, игрок, объекты интерфейса.
         """
-        self.screen.fill(Color.BLACK)
+        self.screen.fill(COLOR['BLACK'])
         self.grid.process_draw()
         for item in self.game_objects:
             item.process_draw()
