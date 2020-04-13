@@ -183,4 +183,7 @@ class UsableObject(GameSprite):
         """
         Функция, активирующаяся при взаимодействии с объектом
         """
-        pass
+
+        x_speed = cos(self.angle) * self.speed
+        y_speed = -sin(self.angle) * self.speed
+        return Point(x_speed, y_speed)
