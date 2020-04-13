@@ -1,11 +1,14 @@
+"""
+Класс странички "О нас" меню
+"""
+
 from constants.color import COLOR
 from drawable_objects.multiline_text import MultilineText
-from drawable_objects.text import Text
 from geometry.point import Point
 from scenes.menu.base import MenuScene
 
 
-class About_MenuScene(MenuScene):
+class AboutMenuScene(MenuScene):
     """
     Сцена "О нас" главной страницы меню
 
@@ -24,8 +27,8 @@ class About_MenuScene(MenuScene):
         super().__init__(game)
         self.menu.update_offset([0.5, 0.5])
         x, y = self.menu.pos
-        label = MultilineText(self, Point(x, y-200), About_MenuScene.DESCRIPTION,
+        label = MultilineText(self, Point(x, y-200), AboutMenuScene.DESCRIPTION,
                               COLOR['WHITE'], 'center', 'Consolas', 20)
         self.interface_objects.append(label)
-        self.menu.add_button('Назад', self.game.set_scene, {
-                             'scene_index': self.game.MAIN_MENU_SCENE_INDEX})
+        self.menu.add_button('Назад', self.game.set_scene,
+                             {'scene_index': self.game.MAIN_MENU_SCENE_INDEX})

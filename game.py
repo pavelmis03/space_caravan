@@ -6,7 +6,7 @@ from controller.controller import Controller
 from geometry.rectangle import Rectangle
 from scenes.main import MainScene
 from scenes.spaceship_scene import SpaceshipScene
-from scenes.menu.about import About_MenuScene
+from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import Main_MenuScene
 from scenes.menu.settings import Settings_MenuScene
 from scenes.spacemap import SpacemapScene
@@ -33,7 +33,7 @@ class Game:
         self.controller = Controller(self)
         ImageManager.load_all()
         self.scenes = [Main_MenuScene(self), MainScene(self), Settings_MenuScene(
-            self), About_MenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
+            self), AboutMenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
         self.current_scene = 0
 
     @property
