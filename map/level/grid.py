@@ -49,7 +49,6 @@ class LevelGrid(Grid):
 
     def process_draw(self):
         self.static_draw_manager.process_draw()
-        self.enemy_interaction_manager.vision_manager.vision_walls_intersection.process_draw()
 
     def process_logic(self):
         self.enemy_interaction_manager.process_logic()
