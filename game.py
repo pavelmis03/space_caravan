@@ -5,18 +5,23 @@ import pygame
 from controller.controller import Controller
 from geometry.rectangle import Rectangle
 from scenes.main import MainScene
-from scenes.menu_about import About_MenuScene
-from scenes.menu_main import Main_MenuScene
-from scenes.menu_settings import Settings_MenuScene
+from scenes.spaceship_scene import SpaceshipScene
+from scenes.menu.about import AboutMenuScene
+from scenes.menu.main import Main_MenuScene
+from scenes.menu.settings import Settings_MenuScene
+from scenes.spacemap import SpacemapScene
 from utils.image import ImageManager
 from typing import Tuple
+
 
 class Game:
     MAIN_MENU_SCENE_INDEX = 0
     MAIN_SCENE_INDEX = 1
     SETTINGS_MENU_SCENE_INDEX = 2
     ABOUT_MENU_SCENE_INDEX = 3
-    GAMEOVER_SCENE_INDEX = 4
+    SPACESHIP_SCENE_INDEX = 4
+    SPACEMAP_SCENE_INDEX = 5
+    GAMEOVER_SCENE_INDEX = 6
 
     def __init__(self, width=1300, height=800):
         self.size = (width, height)
@@ -27,8 +32,9 @@ class Game:
         self.running = True
         self.controller = Controller(self)
         ImageManager.load_all()
-        self.scenes = [Main_MenuScene(self), MainScene(self), Settings_MenuScene(self), About_MenuScene(self)]
-        self.current_scene = 0
+        self.scenes = [Main_MenuScene(self), MainScene(self), Settings_MenuScene(
+            self), AboutMenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
+        self.current_scene = 1
 
     @property
     def size(self) -> Tuple[int, int]:

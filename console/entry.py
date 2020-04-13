@@ -3,7 +3,7 @@
 """
 import pygame
 
-from constants.color import Color
+from constants.color import COLOR
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
 from geometry.point import Point
@@ -12,13 +12,14 @@ from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect
 
 class Entry(DrawableObject):
     """ simple text box class for console """
-    BG_COLOR = Color.BLACK
-    BORDER_COLOR = Color.WHITE
-    TEXT_COLOR = Color.WHITE
+    BG_COLOR = COLOR['BLACK']
+    BORDER_COLOR = COLOR['WHITE']
+    TEXT_COLOR = COLOR['WHITE']
     TEXT_SHIFT = Point(3, 3)
     FONT_NAME = "Consolas"
 
-    def __init__(self, scene, controller, geometry, initial_text="", font_size=20, visible=True, width_limit=None):
+    def __init__(self, scene, controller, geometry, initial_text="",
+                 font_size=20, visible=True, width_limit=None):
         self.geometry = tuple_to_rectangle(geometry)
         super().__init__(scene, controller, self.geometry.center)
         self.text = Text(scene, self.geometry.top_left + Entry.TEXT_SHIFT,
@@ -27,9 +28,12 @@ class Entry(DrawableObject):
         self.visible = visible
 
     def process_draw(self):
-        if not self.visible: return;
-        pygame.draw.rect(self.scene.screen, Entry.BG_COLOR, rectangle_to_rect(self.geometry))
-        pygame.draw.rect(self.scene.screen, Entry.BORDER_COLOR, rectangle_to_rect(self.geometry), 1)
+        if not self.visible:
+            return
+        pygame.draw.rect(self.scene.screen, Entry.BG_COLOR,
+                         rectangle_to_rect(self.geometry))
+        pygame.draw.rect(self.scene.screen, Entry.BORDER_COLOR,
+                         rectangle_to_rect(self.geometry), 1)
         self.text.process_draw()
 
     def hide(self):

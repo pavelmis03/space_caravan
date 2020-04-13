@@ -5,6 +5,7 @@ from controller.controller import Controller
 from scenes.base import Scene
 from utils.image import ImageManager
 
+from geometry.distances import dist
 from math import cos
 from math import sin
 
@@ -17,6 +18,7 @@ class AbstractObject:
         :param scene: сцена объекта
         :param controller: ссылка на объект контроллера
         """
+
     def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
         self.controller = controller
@@ -43,6 +45,7 @@ class SurfaceObject(AbstractObject):
     Не нужно использовать объект этого класса для других целей, он хранит
     в себе картинку, а значит, потребляет много памяти.
     """
+
     def __init__(self, surface: pygame.Surface, scene: Scene, controller: Controller, pos: Point):
         super().__init__(scene, controller)
         self.surface = surface
@@ -51,7 +54,8 @@ class SurfaceObject(AbstractObject):
     def process_draw(self):
         relative_center = self.scene.relative_center
         relative_pos = self.pos - relative_center
-        ImageManager.draw_surface(self.surface, relative_pos, self.scene.screen)
+        ImageManager.draw_surface(
+            self.surface, relative_pos, self.scene.screen)
 
 
 class DrawableObject(AbstractObject):
@@ -63,6 +67,7 @@ class DrawableObject(AbstractObject):
     :param controller: ссылка на объект контроллера
     :param pos: координаты объекта
     """
+
     def __init__(self, scene: Scene, controller: Controller, pos: Point):
         super().__init__(scene, controller)
         self.pos = pos
@@ -87,6 +92,7 @@ class SpriteObject(DrawableObject):
     :param angle: угол поворота объекта
     :param zoom: масштаб картинки
     """
+
     def __init__(self, scene: Scene, controller: Controller, image_name: str,
                  pos: Point, angle: float = 0, zoom: float = 1):
         super().__init__(scene, controller, pos)
@@ -95,7 +101,8 @@ class SpriteObject(DrawableObject):
         self.zoom = zoom
 
     def process_draw(self):
-        ImageManager.process_draw(self.image_name, self.pos, self.scene.screen, self.zoom, self.angle)
+        ImageManager.process_draw(
+            self.image_name, self.pos, self.scene.screen, self.zoom, self.angle)
 
     def collides_with(self, other_object):
         """
@@ -119,6 +126,7 @@ class GameSprite(SpriteObject):
     :param angle: угол поворота объекта
     :param zoom: масштаб картинки
     """
+
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
                  zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
@@ -146,7 +154,8 @@ class GameSprite(SpriteObject):
                                          relative_pos, self.scene.game.screen_rectangle):
             return
 
-        ImageManager.process_draw(self.image_name, relative_pos, self.scene.screen, self.zoom, self.angle, self.rotation_offset)
+        ImageManager.process_draw(self.image_name, relative_pos,
+                                  self.scene.screen, self.zoom, self.angle, self.rotation_offset)
 
     def move(self, new_pos):
         self.scene.plane.do_step(self, self.pos, new_pos)
@@ -158,3 +167,32 @@ class Humanoid(GameSprite):
     Базовый класс человекоподобного существа: это объект на уровне с текстурой, у которого круглый хитбокс.
     """
     HITBOX_RADIUS = 25
+
+
+class UsableObject(GameSprite):
+    """
+    Базовый класс объекта, с которым игрок может взаимодействовать на клавишу ACTIVATION_KEY,
+    подойдя на определенное расстояние
+    """
+    ACTIVATION_KEY = pygame.K_e
+
+    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
+                 zoom: float = 1, usage_radius: float = 100):
+        super().__init__(scene, controller, image_name, pos, angle, zoom)
+        # Радиус вокруг объекта, в пределах которого с ним можно взаимодействовать
+        self.usage_radius = usage_radius
+
+    def process_logic(self):
+        super().process_logic()
+        if dist(self.scene.player.pos, self.pos) <= self.usage_radius:  # Проверка активации
+            if self.controller.is_key_pressed(key=UsableObject.ACTIVATION_KEY):
+                self.activate()
+
+    def activate(self):
+        """
+        Функция, активирующаяся при взаимодействии с объектом
+        """
+
+        x_speed = cos(self.angle) * self.speed
+        y_speed = -sin(self.angle) * self.speed
+        return Point(x_speed, y_speed)

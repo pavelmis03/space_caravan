@@ -14,7 +14,8 @@ class Rectangle:
     :param right_x: абсцисса правой границы (большая)
     :param down_y: ордината нижней границы (большая)
     """
-    def __init__(self, left_x: float=0, up_y: float=0, right_x: float=0, down_y: float=0):
+
+    def __init__(self, left_x: float = 0, up_y: float = 0, right_x: float = 0, down_y: float = 0):
         self._top_left = Point(left_x, up_y)
         self._bottom_right = Point(right_x, down_y)
         self._center = (self._top_left + self._bottom_right) * 0.5
@@ -183,6 +184,7 @@ def rectangle_to_rect(rectangle):
 def create_rectangle_with_center(center: Point, w: float, h: float) -> Rectangle:
     """
     Создает прямоугольник с заданным центром.
+
     :param center: точка центра
     :param w: ширина
     :param h: высота
@@ -190,8 +192,18 @@ def create_rectangle_with_center(center: Point, w: float, h: float) -> Rectangle
     """
     return Rectangle(center.x - w / 2, center.y - h / 2, center.x + w / 2, center.y + h / 2)
 
+
 def create_rectangle_with_left_top(left_top: Point, w: float, h: float) -> Rectangle:
+    """
+    Создает прямоугольник с заданным левым верхним углом.
+
+    :param left_top: точка верхнего левого угла
+    :param w: ширина
+    :param h: высота
+    :return: соответствующий прямоугольник
+    """
     return Rectangle(left_top.x, left_top.y, left_top.x + w, left_top.y + h)
+
 
 def tuple_to_rectangle(tuple):
     """

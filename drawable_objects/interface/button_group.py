@@ -9,10 +9,11 @@ class ButtonGroup(AbstractObject):
 
     :param scene: сцена, на которой кнопка находится
     :param controller: контроллер
-    :param offset: оффсет центра в процентах [(0-1), (0-1)] относительно координат окна
+    :param offset: оффсет центра в процентах [(0-1), (0-1)] относительно размеров окна
     :param button_geometry: размеры создаваемых кнопок
     :param button_offset: расстояние между кнопками
     """
+
     def __init__(self, scene, controller, offset, button_geometry, button_offset=0):
         super().__init__(scene, controller)
         self.pos = [
@@ -27,11 +28,14 @@ class ButtonGroup(AbstractObject):
     def add_button(self, text, function, kwargs={}):
         geometry = [
             self.pos[0] - self.button_geometry[0] // 2,
-            self.pos[1] + (len(self.buttons) - 0.5) * self.button_geometry[1] + len(self.buttons) * self.button_offset,
+            self.pos[1] + (len(self.buttons) - 0.5) * self.button_geometry[1] +
+            len(self.buttons) * self.button_offset,
             self.pos[0] + self.button_geometry[0] // 2,
-            self.pos[1] + (len(self.buttons) + 0.5) * self.button_geometry[1] + len(self.buttons) * self.button_offset,
+            self.pos[1] + (len(self.buttons) + 0.5) * self.button_geometry[1] +
+            len(self.buttons) * self.button_offset,
         ]
-        btn = Button(self.scene, self.controller, geometry, text, function, kwargs)
+        btn = Button(self.scene, self.controller,
+                     geometry, text, function, kwargs)
         self.buttons.append(btn)
 
     def recalc_pos(self):
@@ -61,7 +65,6 @@ class ButtonGroup(AbstractObject):
     def update_offset(self, offset):
         self.offset = offset
         self.recalc_pos()
-
 
     def process_logic(self):
         self.recalc_pos()

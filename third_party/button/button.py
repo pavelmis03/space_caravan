@@ -96,11 +96,11 @@ class Button(object):
 
 class Btn(DrawableObject):
     BUTTON_STYLE = {
-        "hover_color": Color.BLUE,
-        "font_color": Color.RED,
-        "clicked_color": Color.GREEN,
-        "clicked_font_color": Color.BLACK,
-        "hover_font_color": Color.ORANGE
+        "hover_color": Color['BLUE'],
+        "font_color": Color['RED'],
+        "clicked_color": Color['GREEN'],
+        "clicked_font_color": Color['BLACK'],
+        "hover_font_color": Color['ORANGE']
     }
 
     def __init__(self, controller, geometry=(10, 10, 100, 40), color=(255, 255, 0), text='Test', function=None):

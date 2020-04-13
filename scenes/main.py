@@ -14,6 +14,7 @@ class MainScene(GameScene):
 
     :param game: игра, создающая сцену
     """
+
     def __init__(self, game):
         super().__init__(game)
         self.plane = GamePlane()

@@ -7,8 +7,9 @@ from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
-
 from drawable_objects.bullet import create_bullet
+from weapons.weapons import Pistol
+from weapons.weapons import Shotgun
 
 
 class Player(Humanoid):
@@ -21,7 +22,7 @@ class Player(Humanoid):
     :param angle: начальный угол поворота игрока
     """
 
-    IMAGE_NAME = 'player'
+    IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
         pygame.K_d,
@@ -40,14 +41,13 @@ class Player(Humanoid):
             126 * Player.IMAGE_ZOOM
         ]
 
+        self.weapon = Shotgun(self, 100, 6)
+        self.scene.interface_objects.append(self.weapon)
+
     def process_logic(self):
         relative_center = self.scene.relative_center
         vector_to_mouse = self.controller.get_mouse_pos() + relative_center - self.pos
         self.angle = polar_angle(vector_to_mouse)
-
-        if self.controller.get_click_button():
-            create_bullet(self)
-
         velocity = Point()
         if self in self.controller.input_objects:
             for i in range(4):
