@@ -1,6 +1,6 @@
 from drawable_objects.enemy import Enemy
 from geometry.segment import Segment
-from map.level.grid_interaction_with_enemy.enemy_hearing_manager import EnemyHearingManager
+from map.collision_grid.grid_interaction_with_enemy.enemy_hearing_manager import EnemyHearingManager
 from geometry.point import Point
 
 class GridInteractionWithEnemyManager:

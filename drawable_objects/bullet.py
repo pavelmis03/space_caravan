@@ -1,5 +1,6 @@
 from drawable_objects.base import GameSprite
 from geometry.point import Point
+from geometry.distances import dist
 from geometry.segment import Segment
 from geometry.circle import Circle
 from geometry.intersections import intersect_seg_circle
@@ -18,7 +19,7 @@ class Bullet(GameSprite):
 
     IMAGE_ZOOM = 0.7
     IMAGE_NAME = 'moving_objects.bullet.1' # нужно перерисовать
-    SPEED = 100
+    SPEED = 70
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Bullet.IMAGE_NAME, pos, angle, Bullet.IMAGE_ZOOM)
@@ -71,7 +72,7 @@ class Collision_Point(Bullet):
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         self.speed = 0
         self.bullet_type = 'bullet'
-        self.lifetime = 200
+        self.lifetime = 20
         angle = angle
         super().__init__(scene, controller, pos, angle)
 

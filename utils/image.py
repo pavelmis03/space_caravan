@@ -10,6 +10,7 @@ from geometry.rectangle import intersect, Rectangle
 
 
 class ImageManager:
+
     """
     Загружает все картинки и осуществляет быстрый доступ к ним а так же работу с ними
     Возможна рекурсивная загруска всех png картинок
