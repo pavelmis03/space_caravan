@@ -69,7 +69,7 @@ class Enemy(MovingHumanoid):
     COOLDOWN_TIME = 50
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__ (scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
+        super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
 
         self.is_has_command = False
         self.command = None
@@ -78,7 +78,7 @@ class Enemy(MovingHumanoid):
 
         self.command_functions = {'move_to': self.command_move_to,
                                   'shoot': self.command_shoot,
-                                  'aim': self.command_aim,}
+                                  'aim': self.command_aim, }
 
     def command_move_to(self, pos: Point):
         if pos == self.pos:

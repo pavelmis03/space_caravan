@@ -9,8 +9,8 @@ import pygame
 
 class Weapon(AbstractObject):
 
-    MAIN_BUTTON = MouseButtonID.LEFT
-    ALTERNATIVE_BUTTON = MouseButtonID.RIGHT
+    MAIN_BUTTON = MouseButtonID['LEFT']
+    ALTERNATIVE_BUTTON = MouseButtonID['RIGHT']
 
     def __init__(self, attacker, cooldown_time, is_automatic, type):
         super().__init__(attacker.scene, attacker.controller)
@@ -26,7 +26,8 @@ class Weapon(AbstractObject):
             self.cooldown -= 1
             if self.cooldown == 0:
                 self.is_working = True
-        self.is_attacking = self.is_automatic and self.controller.is_mouse_pressed(Weapon.MAIN_BUTTON) and self.is_attacking
+        self.is_attacking = self.is_automatic and self.controller.is_mouse_pressed(
+            Weapon.MAIN_BUTTON) and self.is_attacking
         button = self.controller.get_click_button()
         if (button == Weapon.MAIN_BUTTON or self.is_attacking) and self.is_working:
             self.main_button_click()
@@ -82,6 +83,7 @@ class RangedWeapon(Weapon):
         if self.magazine < 0:
             self.reload()
             return
-        end_of_the_barrel = pos + vector_from_length_angle(self.barrel_length, angle)
+        end_of_the_barrel = pos + \
+            vector_from_length_angle(self.barrel_length, angle)
         if self.scene.grid.intersect_seg_walls(Segment(pos, end_of_the_barrel)) is None:
             self.attack(end_of_the_barrel, angle)

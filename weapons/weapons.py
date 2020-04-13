@@ -24,4 +24,5 @@ class Shotgun(RangedWeapon):
 
     def attack(self, pos: Point, angle: float):
         for i in range(self.shells):
-            self.scene.game_objects.append(Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 600)))
+            self.scene.game_objects.append(Bullet(
+                self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 600)))

@@ -5,6 +5,7 @@ from drawable_objects.enemy import Enemy
 from drawable_objects.base import GameSprite
 from geometry.point import Point
 
+
 class IsMarkedManager:
     def __init__(self, arr: List[List[int]]):
         self._marked = [[0] * len(arr[0]) for i in range(len(arr))]
@@ -26,6 +27,7 @@ class GridPathFinder:
     """
     Обход двумерного графа. Поиск пути.
     """
+
     def __init__(self, grid):
         self.grid = grid
 
@@ -33,9 +35,11 @@ class GridPathFinder:
 
         self.used_manager = IsMarkedManager(grid.arr)
 
-        self.parent = [[(0, 0)] * len(grid.arr[0]) for i in range(len(grid.arr))]
+        self.parent = [[(0, 0)] * len(grid.arr[0])
+                       for i in range(len(grid.arr))]
 
-        self.can_stay = [[True] * len(grid.arr[i]) for i in range(len(grid.arr))]
+        self.can_stay = [[True] * len(grid.arr[i])
+                         for i in range(len(grid.arr))]
 
         self.fill_can_stay_array()
 
@@ -72,7 +76,8 @@ class GridPathFinder:
         """
         self.used_manager.next_iteration()
         player_pos = self.grid.scene.player.pos
-        player_i, player_j = self.grid.index_manager.get_index_by_pos(player_pos)
+        player_i, player_j = self.grid.index_manager.get_index_by_pos(
+            player_pos)
         q = deque()
         q.append((player_i, player_j))
         self.distance[player_i][player_j] = 0
@@ -112,6 +117,3 @@ class GridPathFinder:
         new_i, new_j = self.parent[i][j]
 
         return self.grid.get_center_of_cell_by_indexes(new_i, new_j)
-
-
-

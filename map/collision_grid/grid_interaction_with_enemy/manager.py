@@ -3,10 +3,12 @@ from geometry.segment import Segment
 from map.collision_grid.grid_interaction_with_enemy.enemy_hearing_manager import EnemyHearingManager
 from geometry.point import Point
 
+
 class GridInteractionWithEnemyManager:
     """
     Enemy обладает слухом и зрением.
     """
+
     def __init__(self, grid):
         self.grid = grid
         self.enemy_hearing_manager = EnemyHearingManager(grid)

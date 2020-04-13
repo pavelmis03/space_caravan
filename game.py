@@ -13,6 +13,7 @@ from scenes.spacemap import SpacemapScene
 from utils.image import ImageManager
 from typing import Tuple
 
+
 class Game:
     MAIN_MENU_SCENE_INDEX = 0
     MAIN_SCENE_INDEX = 1
@@ -21,7 +22,6 @@ class Game:
     SPACESHIP_SCENE_INDEX = 4
     SPACEMAP_SCENE_INDEX = 5
     GAMEOVER_SCENE_INDEX = 6
-
 
     def __init__(self, width=1300, height=800):
         self.size = (width, height)
@@ -32,7 +32,8 @@ class Game:
         self.running = True
         self.controller = Controller(self)
         ImageManager.load_all()
-        self.scenes = [Main_MenuScene(self), MainScene(self), Settings_MenuScene(self), About_MenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
+        self.scenes = [Main_MenuScene(self), MainScene(self), Settings_MenuScene(
+            self), About_MenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
         self.current_scene = 0
 
     @property

@@ -1,4 +1,4 @@
-from constants.color import Color
+from constants.color import COLOR
 from drawable_objects.multiline_text import MultilineText
 from drawable_objects.text import Text
 from geometry.point import Point
@@ -11,8 +11,7 @@ class About_MenuScene(MenuScene):
 
     :param game: игра, создающая сцену
     """
-    DESCRIPTION = \
-    """
+    DESCRIPTION = """
         Мы - ребята из школы программистов, 
         группа 104, промышленное программирование.
         Мы очень любим программировать, особенно на питоне.
@@ -25,7 +24,8 @@ class About_MenuScene(MenuScene):
         super().__init__(game)
         self.menu.update_offset([0.5, 0.5])
         x, y = self.menu.pos
-        # label = MultilineText(self, Point(x-200, y-200), About_MenuScene.DESCRIPTION, Color.WHITE, 'left', 'Consolas', 20)
-        label = MultilineText(self, Point(x, y-200), About_MenuScene.DESCRIPTION, Color.WHITE, 'center', 'Consolas', 20)
+        label = MultilineText(self, Point(x, y-200), About_MenuScene.DESCRIPTION,
+                              COLOR['WHITE'], 'center', 'Consolas', 20)
         self.interface_objects.append(label)
-        self.menu.add_button('Назад', self.game.set_scene, {'scene_index': self.game.MAIN_MENU_SCENE_INDEX})
+        self.menu.add_button('Назад', self.game.set_scene, {
+                             'scene_index': self.game.MAIN_MENU_SCENE_INDEX})

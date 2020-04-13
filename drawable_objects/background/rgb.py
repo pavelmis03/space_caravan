@@ -3,8 +3,9 @@
 """
 from typing import Tuple
 
+
 class RGB:
-    def __init__(self, r: int, g: int, b: int, a: int=255):
+    def __init__(self, r: int, g: int, b: int, a: int = 255):
         self.r = r
         self.g = g
         self.b = b

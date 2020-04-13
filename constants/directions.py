@@ -1,3 +1,7 @@
+"""
+Direction constants for top-down view
+"""
+
 from geometry.point import Point
 
 DIRECTIONS = [

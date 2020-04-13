@@ -1,6 +1,7 @@
 from math import sqrt
 from constants.math import EPS
 
+
 class Point:
     """
     Геометрическая точка, она же вектор. Я всегда против такого, но тут слабая типизация.
@@ -10,6 +11,7 @@ class Point:
     :param x: абсцисса
     :param y: ордината
     """
+
     def __init__(self, x=0, y=0):
         self.x = x
         self.y = y

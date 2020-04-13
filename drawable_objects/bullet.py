@@ -11,14 +11,15 @@ from geometry.distances import dist
 
 
 def create_bullet(shooter: GameSprite):
-    bullet = Bullet(shooter.scene, shooter.controller, shooter.pos, shooter.angle)
+    bullet = Bullet(shooter.scene, shooter.controller,
+                    shooter.pos, shooter.angle)
     shooter.scene.game_objects.append(bullet)
 
 
 class Bullet(GameSprite):
 
     IMAGE_ZOOM = 0.7
-    IMAGE_NAME = 'moving_objects.bullet.1' # нужно перерисовать
+    IMAGE_NAME = 'moving_objects.bullet.1'  # нужно перерисовать
     SPEED = 70
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
@@ -37,7 +38,7 @@ class Bullet(GameSprite):
 
         if intersect_player_point is not None:
             if intersect_walls_point is not None:
-                if dist(intersect_player_point, self.pos )>dist(intersect_walls_point, self.pos ):
+                if dist(intersect_player_point, self.pos) > dist(intersect_walls_point, self.pos):
                     self.collision_with_object(intersect_walls_point)
                 else:
                     self.collision_with_object(intersect_player_point)
@@ -47,16 +48,15 @@ class Bullet(GameSprite):
             if intersect_walls_point is not None:
                 self.collision_with_object(intersect_walls_point)
 
-
     def collision_with_object(self, intersection_point):
-        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.game_objects.append(Collision_Point(
+            self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
     def is_colliding_with_player(self, tragectory: Segment):
         player = Circle(self.scene.player.pos, self.scene.player.HITBOX_RADIUS)
         intersection_point = intersect_seg_circle(tragectory, player)
         return intersection_point
-
 
     def is_colliding_with_enemies(self):
 

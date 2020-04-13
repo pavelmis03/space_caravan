@@ -1,11 +1,13 @@
 from typing import Dict, Tuple
 from geometry.point import Point
 
+
 class GridIndexManager:
     """
     Вынесена значитльная часть кода из Grid, чтобы класс был не слишком большим.
     Эта часть отвечает за обработку запросов, связанных с индексами, позицией grid
     """
+
     def __init__(self, grid, pos, cell_width, cell_height):
         self.grid = grid
 
@@ -37,7 +39,8 @@ class GridIndexManager:
         Полученные индексы могут быть вне grid.arr, поэтому
         их нужно прогнать через метод get_corrected_indexes
         """
-        i, j = self.get_not_corrected_index_of_objects_on_screen(relative_center)
+        i, j = self.get_not_corrected_index_of_objects_on_screen(
+            relative_center)
         i, j = self.get_corrected_indexes((i, j))
 
         return i, j

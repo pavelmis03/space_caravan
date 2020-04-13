@@ -10,6 +10,7 @@ from pygame import Surface, draw
 from drawable_objects.background.transfusion_background import TransfusionBackground
 from typing import List
 
+
 def calc_radial_gradient(radius: int, center_color: RGB, out_color: RGB) -> Surface:
     """
     Линейно-круговой градиент на квадратной картинке
@@ -26,9 +27,9 @@ def calc_radial_gradient(radius: int, center_color: RGB, out_color: RGB) -> Surf
     for rad in range(radius, 0, -1):
         draw.circle(big_surface,
                     (center_color.r + int(r * rad),
-                      center_color.g + int(g * rad),
-                      center_color.b + int(b * rad),
-                      center_color.a + int(a * rad)),
+                     center_color.g + int(g * rad),
+                     center_color.b + int(b * rad),
+                     center_color.a + int(a * rad)),
                     (radius, radius), rad)
     return big_surface
 
@@ -43,6 +44,7 @@ class GradientTransfusionBackground(DrawableObject):
                             [RGB(120, 0, 0), RGB(0, 120, 0), RGB(0, 0, 120)],
                             RGB(0, 0, 0))
     """
+
     def __init__(self, scene: Scene, controller: Controller, radius: float,
                  center_color: List[RGB], out_color: RGB):
         pos = scene.center
@@ -53,7 +55,7 @@ class GradientTransfusionBackground(DrawableObject):
         self.radius = int(radius)
 
         self.transfusion_background = TransfusionBackground(scene, controller, self.pos,
-                        center_color)
+                                                            center_color)
 
     def process_logic(self):
         self.transfusion_background.process_logic()

@@ -16,6 +16,7 @@ from map.collision_grid.grid_interaction_with_enemy.manager import GridInteracti
 from map.collision_grid.draw_static_manager import GridDrawStaticManager
 from map.collision_grid.intersection_manager import GridIntersectionManager
 
+
 class CollisionGrid(Grid):
     """
     Игровая сетка.
@@ -32,7 +33,7 @@ class CollisionGrid(Grid):
                  cell_width: int, cell_height: int,
                  width: int = 100, height: int = 100,
                  min_area: int = 100, min_w: int = 8, min_h: int = 8):
-        super ().__init__ (scene, controller, pos, 0, cell_width, cell_height, width, height)
+        super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
 
         self.map_construction()
 
@@ -65,14 +66,14 @@ class CollisionGrid(Grid):
         """
         Необходимо применять после генерации.
         """
-        for i in range (len (self.arr)):
-            for j in range (len (self.arr[i])):
+        for i in range(len(self.arr)):
+            for j in range(len(self.arr[i])):
                 pos_x = self.pos.x + j * self.cell_width + self.cell_width / 2
                 pos_y = self.pos.y + i * self.cell_height + self.cell_height / 2
-                filename_index = int (bool (self.arr[i][j]))
+                filename_index = int(bool(self.arr[i][j]))
 
-                self.arr[i][j] = GameSprite (self.scene, self.controller,
-                                             CollisionGrid.FILENAMES[filename_index], Point (pos_x, pos_y))
+                self.arr[i][j] = GameSprite(self.scene, self.controller,
+                                            CollisionGrid.FILENAMES[filename_index], Point(pos_x, pos_y))
 
     def is_passable(self, i: int, j: int) -> bool:
         return self.arr[i][j].image_name != CollisionGrid.FILENAMES[0]
@@ -82,7 +83,7 @@ class CollisionGrid(Grid):
         w = self.cell_width
         y = i * h
         x = j * w
-        return create_rectangle_with_left_top(Point (x, y) + self.pos, w, h)
+        return create_rectangle_with_left_top(Point(x, y) + self.pos, w, h)
 
     def get_collision_rects_nearby(self, pos: Point) -> List[Rectangle]:
         """
@@ -92,19 +93,19 @@ class CollisionGrid(Grid):
         :param pos:
         :return:
         """
-        center_i, center_j = self.index_manager.get_index_by_pos (pos)
+        center_i, center_j = self.index_manager.get_index_by_pos(pos)
         INDEX_OFFSET = 2
 
-        min_i = max (0, center_i - INDEX_OFFSET)
-        min_j = max (0, center_j - INDEX_OFFSET)
-        max_i = min (len (self.arr), center_i + INDEX_OFFSET + 1)
-        max_j = min (len (self.arr[0]), center_j + INDEX_OFFSET + 1)
+        min_i = max(0, center_i - INDEX_OFFSET)
+        min_j = max(0, center_j - INDEX_OFFSET)
+        max_i = min(len(self.arr), center_i + INDEX_OFFSET + 1)
+        max_j = min(len(self.arr[0]), center_j + INDEX_OFFSET + 1)
 
         res = []
         for i in range(min_i, max_i):
             for j in range(min_j, max_j):
                 if not self.is_passable(i, j):
-                    res.append (self.get_collision_rect(i, j))
+                    res.append(self.get_collision_rect(i, j))
         return res
 
     def is_enemy_see_player(self, enemy: Enemy) -> bool:

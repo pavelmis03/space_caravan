@@ -3,7 +3,7 @@ import pygame
 from geometry.circle import Circle
 from geometry.point import Point
 from scenes.base import Scene
-from constants.color import Color
+from constants.color import COLOR
 from controller.controller import Controller
 from drawable_objects.base import DrawableObject, SpriteObject
 from drawable_objects.text import Text
@@ -27,7 +27,7 @@ class Planet(SpriteObject):
     """
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str,
-                 pos: Point, angle: float = 0, zoom: float = 1,function=None, kwargs={}, planet_biom = 'None', planet_name = 'Test'):
+                 pos: Point, angle: float = 0, zoom: float = 1, function=None, kwargs={}, planet_biom='None', planet_name='Test'):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.geometry = Circle(pos, 50)
         self.function = function
@@ -36,8 +36,6 @@ class Planet(SpriteObject):
         self.biom = planet_biom
         self.enabled = True
         self.rotation_offset = [0, 0]
-
-
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()

@@ -9,6 +9,7 @@ class Segment:
     :param p1: первый конец (начало)
     :param p2: второй конец (собственно конец)
     """
+
     def __init__(self, p1: Point = Point(), p2: Point = Point()):
         self.p1 = Point(p1.x, p1.y)
         self.p2 = Point(p2.x, p2.y)

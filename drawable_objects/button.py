@@ -1,6 +1,6 @@
 import pygame
 
-from constants.color import Color
+from constants.color import COLOR
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
 from geometry.rectangle import rectangle_to_rect, tuple_to_rectangle
@@ -18,10 +18,10 @@ class Button(DrawableObject):
     :param kwargs: именованные аргументы процедуры, вызываемой по нажатию
     :param font_size: размер шрифта текста на кнопке
     """
-    BG_COLOR = Color.CYAN
-    BG_HOVER_COLOR = Color.ORANGE
-    TEXT_COLOR = Color.BLACK
-    TEXT_HOVER_COLOR = Color.BLUE
+    BG_COLOR = COLOR['CYAN']
+    BG_HOVER_COLOR = COLOR['ORANGE']
+    TEXT_COLOR = COLOR['BLACK']
+    TEXT_HOVER_COLOR = COLOR['BLUE']
     FONT_NAME = 'Consolas'
 
     def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs={}, font_size=20):
@@ -30,7 +30,8 @@ class Button(DrawableObject):
         self.function = function
         self.kwargs = kwargs
         self.hover = False
-        self.text = Text(scene, self.geometry.center, text, Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
+        self.text = Text(scene, self.geometry.center, text,
+                         Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
         self.hover_text = Text(scene, self.geometry.center, text, Button.TEXT_HOVER_COLOR, 'center', Button.FONT_NAME,
                                font_size)
 
@@ -57,5 +58,6 @@ class Button(DrawableObject):
         else:
             bg_color = Button.BG_COLOR
             text = self.text
-        pygame.draw.rect(self.scene.screen, bg_color, rectangle_to_rect(self.geometry))
+        pygame.draw.rect(self.scene.screen, bg_color,
+                         rectangle_to_rect(self.geometry))
         text.process_draw()

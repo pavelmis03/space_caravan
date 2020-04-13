@@ -22,7 +22,8 @@ class GamePlane:
         :param pos: точка на плоскости
         :return: координаты соответствующего чанка
         """
-        chunk = Point(floor(pos.x / GamePlane.CHUNK_SIZE), floor(pos.y / GamePlane.CHUNK_SIZE))
+        chunk = Point(floor(pos.x / GamePlane.CHUNK_SIZE),
+                      floor(pos.y / GamePlane.CHUNK_SIZE))
         return chunk
 
     def insert(self, game_object: GameSprite, pos: Point):

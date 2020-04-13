@@ -12,7 +12,6 @@ from weapons.weapons import Pistol
 from weapons.weapons import Shotgun
 
 
-
 class Player(Humanoid):
     """
     Игрок на уровне (далек от завершения).
