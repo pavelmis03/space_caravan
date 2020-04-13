@@ -177,7 +177,7 @@ class RoomFigureFormCreator(RectangleRoundBypasserAbstract):
                 checker_rect = self._collision_rectangles[j]
                 full_inside_checker = True
                 for k in range(len(vertexes)):
-                    if not checker_rect.in_inside(vertexes[k]):
+                    if not checker_rect.is_inside(vertexes[k]):
                         full_inside_checker = False
                         break
 
