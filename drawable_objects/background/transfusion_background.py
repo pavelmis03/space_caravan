@@ -3,7 +3,7 @@
 """
 from drawable_objects.base import DrawableObject
 from drawable_objects.background.rgb import RGB
-from utils.sign import sign
+from utils.simple_math import sign
 from pygame import draw
 from typing import Tuple
 from geometry.point import Point

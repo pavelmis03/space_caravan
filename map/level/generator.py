@@ -1,13 +1,11 @@
+from random import random
 from typing import List
 
+from drawable_objects.enemy import Enemy
+from map.level.rect.connecter import RectConnecter
 from map.level.rect.graph.manager import RectGraphManager
-
 from map.level.rect.splitter import RectSplitter
 from map.level.rect.unioner import RectUnioner
-from map.level.rect.connecter import RectConnecter
-
-from random import random
-from drawable_objects.enemy import Enemy
 from utils.random import is_accurate_random_proc
 
 
@@ -44,6 +42,13 @@ class LevelGenerator:
 
     def split(self):
         self.rect_splitter.start_random_split()
+
+        self.arr_after_split = []
+        for i in range(len(self.rect_splitter.arr)):
+            self.arr_after_split.append([])
+            for j in range(len(self.rect_splitter.arr[i])):
+                self.arr_after_split[i].append(self.rect_splitter.arr[i][j])
+
         self.graph_manager = RectGraphManager(self.rect_splitter.arr, self.rect_splitter.rects_count)
 
     def union(self):
@@ -72,7 +77,7 @@ class EnemyGenerator:
         self.grid = grid
 
     def generate(self):
-        CHANCE_SPAWN = 0.1
+        CHANCE_SPAWN = 0.3
         for i in range(len(self.grid.arr)):
             for j in range(len(self.grid.arr[i])):
                 if i < 20 and j < 20:
@@ -82,6 +87,6 @@ class EnemyGenerator:
                     """
                     continue
 
-                if self.grid.enemy_interaction_manager.can_stay(i, j) and \
+                if self.grid.enemy_interaction_manager.is_enemy_can_stay(i, j) and \
                         is_accurate_random_proc(CHANCE_SPAWN):
                     create_enemy(self.grid, i, j)

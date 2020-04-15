@@ -1,20 +1,14 @@
 from typing import List
-from map.grid import Grid
-from map.level.generator import LevelGenerator
+
+from controller.controller import Controller
 from drawable_objects.base import GameSprite
 from geometry.point import Point
 from geometry.rectangle import Rectangle, create_rectangle_with_left_top
 from geometry.segment import Segment
-from controller.controller import Controller
+from map.collision_grid.draw_static_manager import GridDrawStaticManager
+from map.collision_grid.intersection_manager import GridIntersectionManager
+from map.grid import Grid
 from scenes.base import Scene
-from map.collision_grid.draw_static_manager import GridDrawStaticManager
-from drawable_objects.enemy import Enemy
-from map.collision_grid.intersection_manager import GridIntersectionManager
-
-from controller.controller import Controller
-from map.collision_grid.grid_interaction_with_enemy.manager import GridInteractionWithEnemyManager
-from map.collision_grid.draw_static_manager import GridDrawStaticManager
-from map.collision_grid.intersection_manager import GridIntersectionManager
 
 
 class CollisionGrid(Grid):
@@ -31,8 +25,7 @@ class CollisionGrid(Grid):
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
-                 width: int = 100, height: int = 100,
-                 min_area: int = 100, min_w: int = 8, min_h: int = 8):
+                 width: int = 100, height: int = 100):
         super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
 
         self.map_construction()
@@ -40,7 +33,6 @@ class CollisionGrid(Grid):
         self.transform_ints_to_objects()
         self.static_draw_manager = GridDrawStaticManager(self)
         self.grid_intersection_manager = GridIntersectionManager(self)
-        self.enemy_interaction_manager = GridInteractionWithEnemyManager(self)
 
         self.enemy_generation()
 
@@ -58,9 +50,6 @@ class CollisionGrid(Grid):
 
     def process_draw(self):
         self.static_draw_manager.process_draw()
-
-    def process_logic(self):
-        self.enemy_interaction_manager.process_logic()
 
     def transform_ints_to_objects(self):
         """
@@ -107,12 +96,6 @@ class CollisionGrid(Grid):
                 if not self.is_passable(i, j):
                     res.append(self.get_collision_rect(i, j))
         return res
-
-    def is_enemy_see_player(self, enemy: Enemy) -> bool:
-        return self.enemy_interaction_manager.is_enemy_see_player(enemy)
-
-    def get_pos_to_move(self, enemy: Enemy) -> Point:
-        return self.enemy_interaction_manager.get_pos_to_move(enemy)
 
     def intersect_seg_walls(self, seg: Segment) -> Point:
         return self.grid_intersection_manager.intersect_seg_walls(seg)

@@ -14,29 +14,36 @@ class MovingHumanoid(Humanoid):
     """
     SPEED = 1
 
-    def get_move_vector(self, pos: Point):
+    def _get_move_vector(self, pos: Point) -> Point:
         """
-        вообще могут быть проблемы из-за correct_direction_vector, так
-        как, делая последний шаг не на максимальный вектор,
-        теряет время. Может быть, не требуется переработка.
-        Может быть, это решается передачей следующией команды.
+        Получить вектор, на который нужно сдвинуться в этот тик для движения в сторону точки pos.
         """
-        self.recount_angle(pos)
-        direction = vector_from_length_angle(self.SPEED, self.angle)
-        result = self.correct_direction_vector(direction, pos)
+        """
+        Вообще могут быть проблемы из-за correct_direction_vector, так как, делая последний шаг не на максимальный 
+        вектор, теряет время. Может быть, не требуется переработка. Может быть, это решается передачей следующей точки.
+        """
+        self._recount_angle(pos)
+        move_vector = vector_from_length_angle(self.SPEED, self.angle)
+        result = self._get_correct_move_vector(move_vector, pos)
         return result
 
-    def correct_direction_vector(self, velocity: Point, pos: Point):
+    def _get_correct_move_vector(self, velocity: Point, pos: Point) -> Point:
         """
-        Humanoid может "перепрыгнуть" точку назначения, поэтому
-        последний прыжок должен быть на меньший вектор
+        Корректирует вектор velocity, на который должен сдвинуться MovingHumanoid к точке pos.
+
+        MovingHumanoid может "перепрыгнуть" точку назначения, поэтому последний прыжок должен быть на меньший вектор.
+
+        :return: корректный вектор.
         """
         remaining_vector = pos - self.pos
         if length(velocity) > length(remaining_vector):
             return remaining_vector
         return velocity
 
-    def recount_angle(self, new_pos):
+    def _recount_angle(self, new_pos):
+        """
+        Пересчитать угол по точке, в которую должен направиться MovingHumanoid, и присвоить в self.angle
+        """
         vector_to_player = new_pos - self.pos
         self.angle = polar_angle(vector_to_player)
 
@@ -61,12 +68,13 @@ class Enemy(MovingHumanoid):
 
     SPEED = 5
     """
-    VISION_RADIUS не должен быть большим, так
-    как grid.intersect_seg_walls работает медленно  
+    HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 25 * 15
+    VISION_RADIUS = 25 * 25
     HEARING_RANGE = 30
+
     COOLDOWN_TIME = 50
+    DELAY_BEFORE_FIRST_SHOOT = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
@@ -90,10 +98,10 @@ class Enemy(MovingHumanoid):
             self.command_logic()
             return
 
-        self.move(self.pos + self.get_move_vector(pos))
+        self.move(self.pos + self._get_move_vector(pos))
 
     def command_shoot(self):
-        self.recount_angle(self.scene.player.pos)
+        self._recount_angle(self.scene.player.pos)
 
         create_bullet(self)
         self.cooldown = Enemy.COOLDOWN_TIME
@@ -105,12 +113,17 @@ class Enemy(MovingHumanoid):
         Возможно, следует переработать, чтобы он
          сначала целился какое-то время, а потом делал первый выстрел.
         """
-        if not self.is_see_player or self.can_shoot_now:
+        if self.can_shoot_now:
+            self.command = EnemyCommand('shoot')
+            self.command_logic()
+            return
+
+        if not self.is_see_player:
             self.is_has_command = False
             self.command_logic()
             return
 
-        self.recount_angle(self.scene.player.pos)
+        self._recount_angle(self.scene.player.pos)
 
     @property
     def can_shoot_now(self):
@@ -120,7 +133,9 @@ class Enemy(MovingHumanoid):
         if self.can_shoot_now:
             self.is_aggred = True
             self.is_has_command = True
-            self.command = EnemyCommand('shoot')
+
+            self.cooldown = Enemy.DELAY_BEFORE_FIRST_SHOOT
+            self.command = EnemyCommand('aim')
         elif self.is_aggred:
             new_pos = self.scene.grid.get_pos_to_move(self)
             if new_pos is None:

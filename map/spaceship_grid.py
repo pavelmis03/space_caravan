@@ -12,8 +12,7 @@ class SpaceshipGrid(CollisionGrid):
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  cell_width: int, cell_height: int,
                  width: int = 100, height: int = 100,
-                 top_left_corner_bias: int = 24,
-                 min_area: int = 100, min_w: int = 8, min_h: int = 8):
+                 top_left_corner_bias: int = 24):
         self.room_width = width
         self.room_height = height
         # Смещение от угла для однообразного управления

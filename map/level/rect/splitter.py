@@ -1,7 +1,33 @@
-from typing import List
+from typing import List, Tuple
 
 from random import randint
 from utils.random import is_random_proc
+
+class GridRectangle:
+    def __init__(self, left_top_index: Tuple[int, int],
+                 bottom_right_index: Tuple[int, int]):
+        self._left_top_index = left_top_index
+        self._bottom_right_index = bottom_right_index
+
+    def is_index_in_inside(self, i: int, j: int) -> bool:
+        return self._left_top_index[0] <= i <= self._bottom_right_index[0] and \
+               self._left_top_index[1] <= j <= self._bottom_right_index[1]
+
+    @property
+    def top_index(self):
+        return self._left_top_index[0]
+
+    @property
+    def left_index(self):
+        return self._left_top_index[1]
+
+    @property
+    def bottom_index(self):
+        return self._bottom_right_index[0]
+
+    @property
+    def right_index(self):
+        return self._bottom_right_index[1]
 
 class RectSplitter:
     """
@@ -24,6 +50,8 @@ class RectSplitter:
         self.min_area = min_area
         self.min_size = [min_h, min_w]
         self.last_rect_num = 0
+
+        self.rectangles = []
 
     def start_random_split(self):
         self.split_rectangle([0, 0], [len(self.arr) - 1, len(self.arr[0]) - 1])
@@ -98,6 +126,9 @@ class RectSplitter:
         return self.last_rect_num + 1
 
     def fill_rect(self, pos0: List[int], pos1: List[int]):
+        new_rectangle = GridRectangle((pos0[0], pos0[1]),
+                                      (pos1[0], pos1[1]))
+        self.rectangles.append(new_rectangle)
         self.last_rect_num += 1
 
         for i in range(pos0[0] + 1, pos1[0]):
