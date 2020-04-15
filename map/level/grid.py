@@ -1,10 +1,9 @@
-from map.collision_grid.collision_grid import CollisionGrid
-from geometry.point import Point
-from map.level.generator import LevelGenerator, EnemyGenerator
-from map.level.interaction_with_enemy.manager import InteractionWithEnemyManager
 from drawable_objects.enemy import Enemy
-from scenes.base import Scene
-from controller.controller import Controller
+from enemy_interaction_with_grid.manager import GridInteractionWithEnemyManager
+from geometry.point import Point
+from map.collision_grid.collision_grid import CollisionGrid
+from map.level.generator import LevelGenerator, EnemyGenerator
+
 
 class LevelGrid(CollisionGrid):
     """
@@ -17,7 +16,7 @@ class LevelGrid(CollisionGrid):
         InteractionWithEnemyManager использует информацию из LevelGenerator
         (Он создает прямоугольники коллизий на основе комнат)
         """
-        self.enemy_interaction_manager = InteractionWithEnemyManager(
+        self.enemy_interaction_manager = GridInteractionWithEnemyManager(
             self._room_rectangles, self._arr_after_split, self)
 
         # удаляем ненужные переменные, чтобы освободить память:

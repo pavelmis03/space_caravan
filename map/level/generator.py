@@ -1,13 +1,11 @@
+from random import random
 from typing import List
 
+from drawable_objects.enemy import Enemy
+from map.level.rect.connecter import RectConnecter
 from map.level.rect.graph.manager import RectGraphManager
-
 from map.level.rect.splitter import RectSplitter
 from map.level.rect.unioner import RectUnioner
-from map.level.rect.connecter import RectConnecter
-
-from random import random
-from drawable_objects.enemy import Enemy
 from utils.random import is_accurate_random_proc
 
 
@@ -89,6 +87,6 @@ class EnemyGenerator:
                     """
                     continue
 
-                if self.grid.enemy_interaction_manager.can_stay(i, j) and \
+                if self.grid.enemy_interaction_manager.is_enemy_can_stay(i, j) and \
                         is_accurate_random_proc(CHANCE_SPAWN):
                     create_enemy(self.grid, i, j)

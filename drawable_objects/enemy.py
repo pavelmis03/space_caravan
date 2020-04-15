@@ -63,7 +63,7 @@ class Enemy(MovingHumanoid):
     """
     HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 50 * 25
+    VISION_RADIUS = 25 * 25
     HEARING_RANGE = 30
 
     COOLDOWN_TIME = 50
@@ -146,6 +146,7 @@ class Enemy(MovingHumanoid):
 
     def process_logic(self):
         self.is_see_player = self.scene.grid.is_enemy_see_player(self)
+        #return
         self.command_logic()
         if self.cooldown:
             self.cooldown -= 1

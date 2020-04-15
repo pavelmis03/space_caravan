@@ -88,7 +88,7 @@ class IsMarkedManager(IsMarkedManagerAbstract):
 class TwoDimensionalIsMarkedManager(IsMarkedManagerAbstract):
     """
     нужен для того, чтобы отмечать клетки в двумерном массиве.
-    Используется в map.level.interaction_with_enemy
+    Используется в map.level.enemy_interaction_with_grid
 
     TwoDimensionalIsMarkedManager и IsMarkedManager похожи,
     но не знаю как избавиться от дублирования кода

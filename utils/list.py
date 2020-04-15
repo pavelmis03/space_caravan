@@ -24,3 +24,13 @@ def get_list_without_equal_elements(arr: List[any]) -> List[any]:
             i += 1
         result.append(old)
     return result
+
+def delete_element(arr: List[any], i: int):
+    """
+    Удаление элемента (O(1) асимптотика).
+    Порядок в списке не сохраняется (На место i попадает последний эл-т, если i - не последний эл-т).
+    :param arr: список
+    :param i: индекс
+    """
+    arr[i], arr[-1] = arr[-1], arr[i]
+    arr.pop()
