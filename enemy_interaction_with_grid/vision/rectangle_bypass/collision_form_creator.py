@@ -1,6 +1,7 @@
 from typing import List
 from enemy_interaction_with_grid.vision.rectangle_bypass.round_bypasser import RectangleBypasserAbstract
 from geometry.rectangle import Rectangle
+from geometry.optimized.rectangle import StaticRectangle
 from geometry.point import Point
 from map.level.rect.splitter import GridRectangle
 from utils.list import delete_element
@@ -80,7 +81,7 @@ class CollisionFormCreator(RectangleBypasserAbstract):
         """
         return self._old_cycle != this_cycle
 
-    def _get_new_rectangle(self) -> Rectangle:
+    def _get_new_rectangle(self) -> StaticRectangle:
         """
         :return: прямоугольник коллизий на основе self._start_of_rect и self._end_of_rect
         """
@@ -99,9 +100,9 @@ class CollisionFormCreator(RectangleBypasserAbstract):
         vertices_x.sort()
         vertices_y.sort()
 
-        return Rectangle(vertices_x[0], vertices_y[0], vertices_x[-1], vertices_y[-1])
+        return StaticRectangle(vertices_x[0], vertices_y[0], vertices_x[-1], vertices_y[-1])
 
-    def get_collision_rectangles(self, arr: List[List[int]], grid) -> List[Rectangle]:
+    def get_collision_rectangles(self, arr: List[List[int]], grid) -> List[StaticRectangle]:
         """
         :return: Прямоугольники коллизий комнаты.
         """

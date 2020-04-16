@@ -2,7 +2,7 @@ from typing import List
 
 from drawable_objects.enemy import Enemy
 from enemy_interaction_with_grid.vision.room.graph import RoomsGraph
-from geometry.segment import Segment
+from geometry.optimized.segment import StaticSegment
 from map.level.rect.splitter import GridRectangle
 
 
@@ -26,7 +26,7 @@ class EnemyVisionManager:
         """
         Видит ли enemy player'а
         """
-        segment = Segment(enemy.pos, self._grid.scene.player.pos) #важен порядок точек
+        segment = StaticSegment(enemy.pos, self._grid.scene.player.pos) #важен порядок точек
 
         if segment.length >= Enemy.VISION_RADIUS:
             return False

@@ -4,9 +4,10 @@ from pygame import draw
 
 from enemy_interaction_with_grid.vision.rectangle_bypass.collision_form_creator import CollisionFormCreator
 from enemy_interaction_with_grid.vision.rectangle_bypass.rectangle_neighbours import RectangleNeighbours
-from geometry.intersections import intersect_seg_rect, intersect_segments
+from geometry.optimized.segment import StaticSegment
 from geometry.rectangle import Rectangle
-from geometry.segment import Segment
+from geometry.optimized.rectangle import StaticRectangle
+from geometry.optimized.intersections import is_segments_intersect, is_seg_rect_intersect
 from map.level.rect.splitter import GridRectangle
 
 
@@ -28,17 +29,17 @@ class Room:
 
         self._drawer = RoomDrawer(self._grid, self._outer_rectangle, self._collision_rectangles)
 
-    def is_intersect(self, seg: Segment) -> bool:
+    def is_intersect(self, seg: StaticSegment) -> bool:
         """
         Пересекает ли отрезок внутренние прямоугольники комнаты (то есть стены).
         """
         for i in range(len(self._collision_rectangles)):
-            rectangle = self._collision_rectangles[i]
-            if intersect_seg_rect(seg, rectangle) is not None:
+            rect = self._collision_rectangles[i]
+            if is_seg_rect_intersect(seg, rect):
                 return True
         return False
 
-    def get_neighbours(self, seg: Segment) -> List[int]:
+    def get_neighbours(self, seg: StaticSegment) -> List[int]:
         """
         Получение соседних комнат, которых пересекат seg
         """
@@ -49,7 +50,7 @@ class Room:
         neighbours, то есть по данному индексу стороне соответствует neighbour
         """
         for i in range(len(edges)):
-            if intersect_segments(edges[i], seg) is not None:
+            if is_segments_intersect(seg, edges[i]):
                 result += self._neighbours[i]
 
         return result
@@ -63,7 +64,7 @@ class Room:
         result = group_of_neighour_rectangles.get_neighbours(arr_after_split, grid)
         return result
 
-    def _get_collision_rectangles(self, grid) -> List[Rectangle]:
+    def _get_collision_rectangles(self, grid) -> List[StaticRectangle]:
         """
         Создание и получение прямоугольников коллизий
         """
@@ -71,7 +72,7 @@ class Room:
         result = room_form.get_collision_rectangles(grid.arr, grid)
         return result
 
-    def _get_outer_rectangle(self, grid) -> Rectangle:
+    def _get_outer_rectangle(self, grid) -> StaticRectangle:
         """
         Создание и получение прямоугольника внешних границ.
         """
@@ -82,7 +83,7 @@ class Room:
         right_bottom_cell = grid.get_collision_rect(grid_rectangle.bottom_index,
                                                     grid_rectangle.right_index)
 
-        return Rectangle(left_top_cell.left, left_top_cell.top,
+        return StaticRectangle(left_top_cell.left, left_top_cell.top,
             right_bottom_cell.right, right_bottom_cell.bottom)
 
     def process_draw(self):

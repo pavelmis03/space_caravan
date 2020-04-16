@@ -4,7 +4,7 @@ from typing import List
 from enemy_interaction_with_grid.vision.rectangle_bypass.arr_correcter import ArrCorrecter
 
 from geometry.point import Point
-from geometry.segment import Segment
+from geometry.optimized.segment import StaticSegment
 from enemy_interaction_with_grid.vision.room.room import Room
 from map.level.rect.splitter import GridRectangle
 from utils.is_marked_manager import IsMarkedManager
@@ -22,7 +22,7 @@ class RoomsGraph:
         self._used = IsMarkedManager(rectangles)
         self._rooms = self._get_all_rooms(rectangles)
 
-    def is_seg_intersect_wall(self, seg: Segment) -> bool:
+    def is_seg_intersect_wall(self, seg: StaticSegment) -> bool:
         """
         Пересекает ли Segment стены. Работает быстрее GridIntersectionManager для больших Segment (сопоставимых с
         размером комнат).
