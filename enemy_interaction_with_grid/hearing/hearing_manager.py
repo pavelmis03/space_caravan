@@ -23,10 +23,10 @@ class EnemyHearingManager:
         """
         Может ли Enemy стоять на клетке с индексами i, j
         """
-        return self._path_finder._can_stay[i][j]
+        return self._path_finder.can_stay[i][j]
 
     def process_logic(self):
         """
         Логика менеджера
         """
-        self._path_finder._update_path_to_enemies(Enemy.HEARING_RANGE)
+        self._path_finder.update_path_to_enemies(Enemy.HEARING_RANGE)

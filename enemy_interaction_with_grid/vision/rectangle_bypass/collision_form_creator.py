@@ -147,6 +147,6 @@ class UselessRectanglesDeleter:
         Находятся ли все вершины внутри прямоугольника.
         """
         for k in range(len(vertexes)):
-            if not checker.in_inside(vertexes[k]):
+            if not checker.is_inside(vertexes[k]):
                 return False
         return True

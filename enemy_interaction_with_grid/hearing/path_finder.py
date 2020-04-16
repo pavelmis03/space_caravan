@@ -23,7 +23,7 @@ class GridPathFinder:
 
         self._parent = [[(0, 0)] * len(grid.arr[0]) for i in range(len(grid.arr))]
 
-        self._can_stay = [[True] * len(grid.arr[i]) for i in range(len(grid.arr))]
+        self.can_stay = [[True] * len(grid.arr[i]) for i in range(len(grid.arr))]
 
         self._fill_can_stay_list()
 
@@ -38,13 +38,13 @@ class GridPathFinder:
         for i in range(len(self._grid.arr)):
             for j in range(len(self._grid.arr[i])):
                 if not self._grid.is_passable(i, j):
-                    self._can_stay[i][j] = False
+                    self.can_stay[i][j] = False
                     continue
                 for k in range(len(rect_di)):
                     new_i = i + rect_di[k]
                     new_j = j + rect_dj[k]
                     if not self._grid.is_passable(new_i, new_j):
-                        self._can_stay[i][j] = False
+                        self.can_stay[i][j] = False
                         break
 
     def _get_standable_cells(self, i0: int, j0: int) -> List[Tuple[int, int]]:
@@ -58,12 +58,12 @@ class GridPathFinder:
             new_i = i0 + rect_di[k]
             new_j = j0 + rect_dj[k]
 
-            if self._can_stay[new_i][new_j]:
+            if self.can_stay[new_i][new_j]:
                 result.append((new_i, new_j))
 
         return result
 
-    def _update_path_to_enemies(self, max_distance: int):
+    def update_path_to_enemies(self, max_distance: int):
         """
         Обновляет путь от игрока до всех клеток, в рендже max_distance
 
@@ -75,7 +75,6 @@ class GridPathFinder:
         q = deque()
         q.append((player_i, player_j))
         self._distance[player_i][player_j] = 0
-        self._used_manager.mark(player_i, player_j)
 
         while len(q):
             i, j = q.popleft()
@@ -113,6 +112,13 @@ class GridPathFinder:
             return None
 
         new_i, new_j = self._parent[i][j]
+
+        """
+        Отсутствие этого if'а может привести к багам. Например, enemy попадет в клетку, которая не can_stay и 
+        останется там навсегда.
+        """
+        if not self.can_stay[new_i][new_j]:
+            return None
 
         return self._grid.get_center_of_cell_by_indexes(new_i, new_j)
 
