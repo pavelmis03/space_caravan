@@ -1,8 +1,10 @@
+from typing import List
+from geometry.point import Point
 import pygame
-
 from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import sign, length, normalized, polar_angle
+from geometry.rectangle import Rectangle
 from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
 from scenes.base import Scene
@@ -60,28 +62,50 @@ class Player(Humanoid):
             new_pos = self.go_from_walls(self.pos + velocity)
         self.move(new_pos)
 
-    def go_from_walls(self, p: Point) -> Point:
+    def go_from_walls(self, player_pos: Point) -> Point:
         """
-        Вытаскивание игрока из стен. Проверяет расстояния от центра хитбокса до блоков стен, и если какое-то из них
-        меньше радиуса, то происходит выталкивание по вектору этого расстояния. Это повторяется, пока игрок не выйдет
-        из стены.
+        Вытаскивание игрока из стен.
 
-        :param p: позиция игрока
+        :param player_pos: позиция игрока
         :return: позиция игрока после выталкивания из стен
         """
-        pos = Point(p.x, p.y)
-        rects = self.scene.grid.get_collision_rects_nearby(pos)
+        result_pos = Point(player_pos.x, player_pos.y)
+        collision_rects = self.scene.grid.get_collision_rects_nearby(player_pos)
         while True:
-            v = []
-            for rect in rects:
-                current_v = vector_dist_point_rect(pos, rect)
-                if sign(self.HITBOX_RADIUS - length(current_v)) == 1:
-                    v.append(current_v)
-            if len(v) == 0:
+            vectors = self._get_vectors_to_intersected_rects(result_pos, collision_rects)
+            if len(vectors) == 0:
                 break
-            for i in range(1, len(v)):
-                if length(v[0]) > length(v[i]):
-                    v[0], v[i] = v[i], v[0]
-            push_v = normalized(v[0]) * (self.HITBOX_RADIUS - length(v[0]))
-            pos += push_v
-        return pos
+            min_vector = self._get_min_vector(vectors)
+            push_vector = self._get_push_vector(min_vector)
+            result_pos += push_vector
+        return result_pos
+
+    def _get_push_vector(self, vector_to_wall: Point) -> Point:
+        """
+        Получить вектор выталкивания
+        """
+        intersection_distance = self.HITBOX_RADIUS - length(vector_to_wall)
+        direction_vector = normalized(vector_to_wall)
+        return direction_vector * intersection_distance
+
+    def _get_min_vector(self, vectors: List[Point]) -> Point:
+        """
+        Получить минимальный по длине вектор
+        """
+        result = vectors[0]
+        for i in range(1, len(vectors)):
+            if length(vectors[i]) < length(result):
+                result = vectors[i]
+        return result
+
+    def _get_vectors_to_intersected_rects(self, pos: Point, rects: List[Rectangle]) -> List[Point]:
+        """
+        Проверяет расстояния от центра хитбокса до блоков стен, и если какое-то из них меньше радиуса, добавляет
+        в список.
+        """
+        result = []
+        for rect in rects:
+            vector_to_rect = vector_dist_point_rect(pos, rect)
+            if sign(self.HITBOX_RADIUS - length(vector_to_rect)) == 1:
+                result.append(vector_to_rect)
+        return result
