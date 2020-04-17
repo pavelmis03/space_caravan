@@ -2,7 +2,8 @@ from drawable_objects.enemy import Enemy
 from enemy_interaction_with_grid.manager import GridInteractionWithEnemyManager
 from geometry.point import Point
 from map.collision_grid.collision_grid import CollisionGrid
-from map.level.generator import LevelGenerator, EnemyGenerator
+from map.level.level_generator import LevelGenerator
+from map.level.enemies_generator import EnemyGenerator
 
 
 class LevelGrid(CollisionGrid):
@@ -19,18 +20,18 @@ class LevelGrid(CollisionGrid):
         self.enemy_interaction_manager = GridInteractionWithEnemyManager(
             self.__room_rectangles, self.__arr_after_split, self)
 
-        # удаляем ненужные переменные, чтобы освободить память:
-        del self.__arr_after_split
-        del self.__room_rectangles
-
     def enemy_generation(self):
         """
         Генерация врагов с помощью EnemyGenerator
         """
         self._create_interaction_with_enemy_manager()
 
-        enemy_generator = EnemyGenerator(self)
+        enemy_generator = EnemyGenerator(self, self.__room_rectangles)
         enemy_generator.generate()
+
+        # удаляем ненужные переменные, чтобы освободить память:
+        del self.__arr_after_split
+        del self.__room_rectangles
 
     def map_construction(self, min_area: int = 100, min_w: int = 8, min_h: int = 8):
         """
@@ -59,6 +60,12 @@ class LevelGrid(CollisionGrid):
         Отмечает, что на этой позиции есть enemy. Нужно для path finding'а.
         """
         self.enemy_interaction_manager.save_enemy_pos(pos)
+
+    def is_enemy_can_stay(self, i: int, j: int) -> bool:
+        """
+        Может ли в этой клетке стоять Enemy
+        """
+        return self.enemy_interaction_manager.is_enemy_can_stay(i, j)
 
     def get_pos_to_move(self, enemy: Enemy) -> Point:
         """

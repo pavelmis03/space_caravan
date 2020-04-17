@@ -79,11 +79,11 @@ class Enemy(MovingHumanoid):
     HEARING_RANGE - единица измерения - клетки
     """
     VISION_RADIUS = 25 * 25
-    HEARING_RANGE = 40
-    AGGRE_RADIUS = 40 * 25
+    HEARING_RANGE = 35
+    AGGRE_RADIUS = 35 * 25
 
     COOLDOWN_TIME = 50
-    DELAY_BEFORE_FIRST_SHOOT = 10
+    DELAY_BEFORE_FIRST_SHOOT = 11
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
