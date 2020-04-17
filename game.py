@@ -34,7 +34,7 @@ class Game:
         ImageManager.load_all()
         self.scenes = [Main_MenuScene(self), MainScene(self), Settings_MenuScene(
             self), AboutMenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
-        self.current_scene = 1
+        self.current_scene = 0
 
     @property
     def size(self) -> Tuple[int, int]:
