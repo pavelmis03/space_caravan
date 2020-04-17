@@ -63,3 +63,24 @@ testing.py
 .. automodule:: geometry.testing
     :members:
     :undoc-members:
+
+static_segment
+--------------
+
+.. automodule:: geometry.optimized.segment
+    :members:
+    :undoc-members:
+
+static_rectangle
+----------------
+
+.. automodule:: geometry.optimized.rectangle
+    :members:
+    :undoc-members:
+
+optimized_intersections
+-----------------------
+
+.. automodule:: geometry.optimized.intersections
+    :members:
+    :undoc-members:
