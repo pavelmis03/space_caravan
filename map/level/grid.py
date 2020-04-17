@@ -17,11 +17,11 @@ class LevelGrid(CollisionGrid):
         (Он создает прямоугольники коллизий на основе комнат)
         """
         self.enemy_interaction_manager = GridInteractionWithEnemyManager(
-            self._room_rectangles, self._arr_after_split, self)
+            self.__room_rectangles, self.__arr_after_split, self)
 
         # удаляем ненужные переменные, чтобы освободить память:
-        del self._arr_after_split
-        del self._room_rectangles
+        del self.__arr_after_split
+        del self.__room_rectangles
 
     def enemy_generation(self):
         """
@@ -39,14 +39,30 @@ class LevelGrid(CollisionGrid):
         generator = LevelGenerator(self.arr, min_area, min_w, min_h)
         generator.generate()
 
-        self._room_rectangles = generator.rect_splitter.rectangles
-        self._arr_after_split = generator.arr_after_split
+        self.__room_rectangles = generator.rect_splitter.rectangles
+        self.__arr_after_split = generator.arr_after_split
 
     def process_logic(self):
+        """
+        логика связана с взаимодействием grid'а и Enemy
+        """
         self.enemy_interaction_manager.process_logic()
 
     def is_enemy_see_player(self, enemy: Enemy) -> bool:
+        """
+        Видит ли enemy player'а
+        """
         return self.enemy_interaction_manager.is_enemy_see_player(enemy)
 
+    def save_enemy_pos(self, pos: Point):
+        """
+        Отмечает, что на этой позиции есть enemy. Нужно для path finding'а.
+        """
+        self.enemy_interaction_manager.save_enemy_pos(pos)
+
     def get_pos_to_move(self, enemy: Enemy) -> Point:
+        """
+        получить точку для движения к игроку или None, если пройти нельзя (игрок слишком далеко или другие противники
+        закрывают путь).
+        """
         return self.enemy_interaction_manager.get_pos_to_move(enemy)

@@ -7,6 +7,8 @@ from geometry.point import Point
 from geometry.vector import length, polar_angle, vector_from_length_angle
 from scenes.base import Scene
 from drawable_objects.bullet import create_bullet
+from geometry.segment import Segment
+from geometry.vector import length
 
 
 class MovingHumanoid(Humanoid):
@@ -77,7 +79,8 @@ class Enemy(MovingHumanoid):
     HEARING_RANGE - единица измерения - клетки
     """
     VISION_RADIUS = 25 * 25
-    HEARING_RANGE = 30
+    HEARING_RANGE = 40
+    AGGRE_RADIUS = 40 * 25
 
     COOLDOWN_TIME = 50
     DELAY_BEFORE_FIRST_SHOOT = 10
@@ -115,7 +118,7 @@ class Enemy(MovingHumanoid):
 
     def __get_new_command(self) -> Optional[EnemyCommand]:
         """
-        Получить следующую команду.
+        Получить следующую команду. Обновить self.__is_aggred
         """
         if self.__is_see_player:
             self.__is_aggred = True
@@ -125,7 +128,10 @@ class Enemy(MovingHumanoid):
         if self.__is_aggred:
             new_pos = self.scene.grid.get_pos_to_move(self)
             if new_pos is not None:
+                self.scene.grid.save_enemy_pos(new_pos) #на случай, если несколько enemy решат пойти в одну клетку
                 return EnemyCommand('move_to', new_pos)
+
+        if self.__is_aggred and not self.__is_player_in_aggre_radius:
             self.__is_aggred = False
 
         return None
@@ -150,6 +156,7 @@ class Enemy(MovingHumanoid):
             self.__command_logic()
             return
 
+        self.scene.grid.save_enemy_pos(pos)  # на случай, если несколько enemy решат пойти в одну клетку
         self.move(self.pos + self._get_move_vector(pos))
 
     def __command_shoot(self):
@@ -186,6 +193,9 @@ class Enemy(MovingHumanoid):
         """
         return self.__is_see_player and not self.__cooldown
 
-
+    @property
+    def __is_player_in_aggre_radius(self) -> bool:
+        seg = Segment(self.pos, self.scene.player.pos)
+        return seg.length < Enemy.AGGRE_RADIUS
 
 

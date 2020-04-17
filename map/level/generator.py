@@ -75,7 +75,7 @@ def create_enemy(grid, i: int, j: int):
     ни на что не влияет.
     """
     enemy = Enemy(grid.scene, grid.controller, grid.get_center_of_cell_by_indexes(i, j), random())
-    grid.scene.game_objects.append(enemy)
+    grid.scene.enemies.append(enemy)
 
 class EnemyGenerator:
     """

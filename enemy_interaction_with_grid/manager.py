@@ -17,29 +17,35 @@ class GridInteractionWithEnemyManager:
     def __init__(self, rectangles: List[GridRectangle],
                 arr_after_split: List[List[int]],
                 grid):
-        self._hearing_manager = EnemyHearingManager(grid)
-        self._vision_manager = EnemyVisionManager(rectangles, arr_after_split, grid)
+        self.__hearing_manager = EnemyHearingManager(grid)
+        self.__vision_manager = EnemyVisionManager(rectangles, arr_after_split, grid)
 
     def is_enemy_see_player(self, enemy: Enemy) -> bool:
         """
         Видит ли enemy player'а
         """
-        return self._vision_manager.is_enemy_see_player(enemy)
+        return self.__vision_manager.is_enemy_see_player(enemy)
+
+    def save_enemy_pos(self, pos: Point):
+        """
+        отмечает, что на этой позиции есть enemy
+        """
+        self.__hearing_manager.save_enemy_pos(pos)
 
     def get_pos_to_move(self, enemy: Enemy) -> Point:
         """
         Получить следующую точку для движения.
         """
-        return self._hearing_manager.get_pos_to_move(enemy)
+        return self.__hearing_manager.get_pos_to_move(enemy)
 
     def is_enemy_can_stay(self, i: int, j: int) -> bool:
         """
         Может ли enemy стоять в клетке с индексами i, j
         """
-        return self._hearing_manager.can_stay(i, j)
+        return self.__hearing_manager.can_stay(i, j)
 
     def process_logic(self):
         """
         логика менеджера
         """
-        self._hearing_manager.process_logic()
+        self.__hearing_manager.process_logic()

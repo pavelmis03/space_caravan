@@ -1,3 +1,4 @@
+from typing import List
 import pygame
 
 from constants.color import COLOR
@@ -52,6 +53,21 @@ class Scene:
         for item in self.interface_objects:
             item.process_draw()
 
+def delete_destroyed(objects: List[any]):
+    """
+    быстрое удаление уничтоженных эл-тов (который not enabled).
+    так как мы меняем местами удаляемый эл-т и делаем pop, работает за O(n)
+
+    :param objects: список объектов
+    """
+    i = 0
+    while i < len(objects):
+        if not objects[i].enabled:
+            objects[i], objects[-1] = objects[-1], objects[i]
+            objects.pop()
+            continue
+        i += 1
+
 class GameScene(Scene):
     """
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
@@ -61,6 +77,7 @@ class GameScene(Scene):
     def __init__(self, game):
         super().__init__(game)
         self.game_objects = []
+        self.enemies = []
         self.relative_center = Point(0, 0)
         self.grid = None
         self.player = None
@@ -68,6 +85,9 @@ class GameScene(Scene):
         self.game_paused = False
 
     def interface_logic(self):
+        """
+        Логика недвижущихся на экране объектов
+        """
         for item in self.interface_objects:
             item.process_logic()
 
@@ -78,6 +98,12 @@ class GameScene(Scene):
         self.grid.process_logic()
         for item in self.game_objects:
             item.process_logic()
+
+        for item in self.enemies:
+            self.grid.save_enemy_pos(item.pos)
+        for item in self.enemies:
+            item.process_logic()
+
         self.player.process_logic()
         self.relative_center = self.player.pos - self.game.screen_rectangle.center
         self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
@@ -87,15 +113,13 @@ class GameScene(Scene):
         быстрое удаление уничтоженных эл-тов (который not enabled).
         так как мы меняем местами удаляемый эл-т и делаем pop, работает за O(n)
         """
-        i = 0
-        while i < len(self.game_objects):
-            if not self.game_objects[i].enabled:
-                self.game_objects[i], self.game_objects[-1] = self.game_objects[-1], self.game_objects[i]
-                self.game_objects.pop()
-                continue
-            i += 1
+        delete_destroyed(self.game_objects)
+        delete_destroyed(self.enemies)
 
     def process_all_logic(self):
+        """
+        Логика всех объектов.
+        """
         self.interface_logic()
         if not self.game_paused:
             self.game_logic()
@@ -108,8 +132,12 @@ class GameScene(Scene):
         """
         self.screen.fill(COLOR['BLACK'])
         self.grid.process_draw()
+
         for item in self.game_objects:
             item.process_draw()
+        for item in self.enemies:
+            item.process_draw()
+
         self.player.process_draw()
         for item in self.interface_objects:
             item.process_draw()
