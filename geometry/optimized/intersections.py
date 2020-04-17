@@ -21,9 +21,9 @@ def is_segments_intersect(a: StaticSegment, b: StaticSegment) -> bool:
     Проверка через косые произведения. Работает быстрее поиска пересечения прямых.
     """
     return (cross_product(a.vector, get_vector(a.p1, b.p1)) *
-        cross_product(a.vector, get_vector(a.p1, b.p2)) <= 0) and \
+        cross_product(a.vector, get_vector(a.p1, b.p2)) <= 0.0) and \
         (cross_product(b.vector, get_vector(b.p1, a.p1)) *
-        cross_product(b.vector, get_vector(b.p1, a.p2)) <= 0)
+        cross_product(b.vector, get_vector(b.p1, a.p2)) <= 0.0)
 
 
 def is_seg_rect_intersect(seg: StaticSegment, rect: StaticRectangle) -> bool:
