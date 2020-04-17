@@ -2,9 +2,16 @@ from geometry.point import Point
 from geometry.segment import Segment
 
 def get_vector(first: Point, second: Point) -> Point:
+    """
+    Получить вектор, начинающийся в first и заканчивающийся в second
+    """
     return Point(second.x - first.x, second.y - first.y)
 
 class StaticSegment(Segment):
+    """
+    Статический отрезок. Его точки нельзя менять. За счет этого можно получить некоторый бонус в производительности,
+    т.к. некоторые значения можно предподсчитать.
+    """
     def __init__(self, p1: Point, p2: Point):
         super().__init__(p1, p2)
         self._length = super().length
@@ -18,5 +25,8 @@ class StaticSegment(Segment):
         self.vector = get_vector(self.p1, self.p2)
 
     @property
-    def length(self):
+    def length(self) -> float:
+        """
+        :return: получить длину отрезка
+        """
         return self._length
