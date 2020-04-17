@@ -30,8 +30,8 @@ class CollisionFormCreator(RectangleBypasserAbstract):
         Нужно вызвать еще раз handle_cell
         """
         super()._bypass(arr, grid)
-        self._handle_cell(0, self._grid_rectangle._left_top_index[0],
-                          self._grid_rectangle._left_top_index[1], arr, grid)
+        self._handle_cell(0, self._grid_rectangle.left_top_index[0],
+                          self._grid_rectangle.left_top_index[1], arr, grid)
 
     def _handle_cell(self, cycle: int, i: int, j: int,
                      arr: List[List[int]], grid) -> bool:

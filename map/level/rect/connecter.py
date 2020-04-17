@@ -25,7 +25,6 @@ class RectConnecter:
         Если от одного прямоугольника до другого добраться нельзя,
         соединяет их, удаляя стену, между клетками ребра.
         Если можно, то соединяет с некоторой вероятностью.
-        :return:
         """
         shuffle(self.edges)
         self.dis_set = DisjointSet(self.rects_count)

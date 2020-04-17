@@ -34,33 +34,42 @@ class LevelGenerator:
 
         Граф связный, но не обязательно является деревом.
         """
-        self.split()
+        self.__split()
 
-        self.union()
+        self.__union()
 
-        self.connect()
+        self.__connect()
 
-    def split(self):
+    def __split(self):
+        """
+        Разбить сетку на прямоугольники
+        """
         self.rect_splitter.start_random_split()
 
-        self.arr_after_split = []
-        for i in range(len(self.rect_splitter.arr)):
-            self.arr_after_split.append([])
-            for j in range(len(self.rect_splitter.arr[i])):
-                self.arr_after_split[i].append(self.rect_splitter.arr[i][j])
+        # Необходимо сохранить список для дальнейших нужд:
+        self.arr_after_split = self.rect_splitter.get_arr_after_split()
 
-        self.graph_manager = RectGraphManager(self.rect_splitter.arr, self.rect_splitter.rects_count)
+        self.graph_manager = RectGraphManager(self.rect_splitter.arr, self.rect_splitter.rects_colors_count)
 
-    def union(self):
+    def __union(self):
+        """
+        Объединить некоторые прямоугольники
+        """
         self.rect_unioner = RectUnioner(self.graph_manager)
         self.rect_unioner.start_random_union()
         self.rect_unioner.delete_edges()
 
-    def connect(self):
+    def __connect(self):
+        """
+        Добавить проходы
+        """
         self.rect_connecter = RectConnecter(self.graph_manager)
         self.rect_connecter.start_random_connection()
 
 def create_enemy(grid, i: int, j: int):
+    """
+    Создать врага под данным индексом с рандомным поворотом.
+    """
     """
     Возможно, не должен быть повернут рандомно. Но пока угол поворота Enemy
     ни на что не влияет.

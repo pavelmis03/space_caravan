@@ -15,7 +15,6 @@ class Grid(DrawableObject):
     """
     Прямоугольная сетка.
     """
-
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
                  default_value: any,
                  cell_width: int, cell_height: int,

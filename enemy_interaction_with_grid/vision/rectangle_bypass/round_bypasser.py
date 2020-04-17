@@ -19,8 +19,8 @@ class RectangleBypasserAbstract:
         """
         self._grid_rectangle = grid_rectangle
 
-        self._start_pos = [grid_rectangle._left_top_index, grid_rectangle._bottom_right_index,
-                           grid_rectangle._bottom_right_index, grid_rectangle._left_top_index]
+        self._start_pos = [grid_rectangle.left_top_index, grid_rectangle.bottom_right_index,
+                           grid_rectangle.bottom_right_index, grid_rectangle.left_top_index]
 
     def _handle_cell(self, cycle: int, i: int, j: int,
                      arr: List[List[int]], grid) -> bool:
@@ -42,7 +42,7 @@ class RectangleBypasserAbstract:
         for cycle in range(len(self.bypass_di)):
             i = self._start_pos[cycle][0]
             j = self._start_pos[cycle][1]
-            while self._grid_rectangle.is_index_in_inside(i, j):
+            while self._grid_rectangle.is_index_inside(i, j):
                 should_break = not self._handle_cell(cycle, i, j, arr, grid)
                 if should_break:
                     break
