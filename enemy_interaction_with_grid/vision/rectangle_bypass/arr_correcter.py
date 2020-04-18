@@ -1,6 +1,6 @@
 from typing import List
 
-from enemy_interaction_with_grid.vision.rectangle_bypass.round_bypasser import RectangleBypasserAbstract
+from enemy_interaction_with_grid.vision.rectangle_bypass.rectangle_bypasser import RectangleBypasserAbstract
 
 
 class ArrCorrecter(RectangleBypasserAbstract):

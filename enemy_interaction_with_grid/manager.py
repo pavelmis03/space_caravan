@@ -1,8 +1,8 @@
 from typing import List
 
 from drawable_objects.enemy import Enemy
-from enemy_interaction_with_grid.hearing.hearing_manager import EnemyHearingManager
-from enemy_interaction_with_grid.vision.vision_manager import EnemyVisionManager
+from enemy_interaction_with_grid.hearing.manager import EnemyHearingManager
+from enemy_interaction_with_grid.vision.manager import EnemyVisionManager
 from geometry.point import Point
 from map.level.rect.splitter import GridRectangle
 
