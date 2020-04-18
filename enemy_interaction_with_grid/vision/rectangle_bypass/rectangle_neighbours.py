@@ -1,6 +1,6 @@
 from typing import List, Tuple
 from constants.directions import side_di, side_dj
-from enemy_interaction_with_grid.vision.rectangle_bypass.round_bypasser import RectangleBypasserAbstract
+from enemy_interaction_with_grid.vision.rectangle_bypass.rectangle_bypasser import RectangleBypasserAbstract
 from map.level.rect.splitter import GridRectangle
 from utils.list import is_indexes_correct
 
