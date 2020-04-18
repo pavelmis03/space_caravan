@@ -78,7 +78,7 @@ class Enemy(MovingHumanoid):
     """
     HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 25 * 25
+    VISION_RADIUS = 5 * 25
     HEARING_RANGE = 35
     AGGRE_RADIUS = 35 * 25
 
