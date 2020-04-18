@@ -10,6 +10,7 @@
     drawable_objects
     geometry
     map
+    enemy_interaction_with_grid
     scenes
     third_party
     utils

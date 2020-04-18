@@ -4,6 +4,7 @@
 """
 
 from math import sqrt, sin, cos, atan2
+from typing import List
 
 from geometry.point import Point
 from constants.math import EPS
@@ -96,3 +97,14 @@ def vector_from_length_angle(l: float, angle: float) -> Point:
     :return: соответствующий вектор
     """
     return Point(l * cos(angle), -l * sin(angle))
+
+
+def get_min_vector(vectors: List[Point]) -> Point:
+    """
+    Получить минимальный по длине вектор из данного набора.
+    """
+    result = vectors[0]
+    for i in range(1, len(vectors)):
+        if length(vectors[i]) < length(result):
+            result = vectors[i]
+    return result
