@@ -161,7 +161,7 @@ class RectSplitter:
     @property
     def rects_colors_count(self) -> int:
         """
-        Количество цветов. Добавляется единица, цвет 0 (цвет стены) учитывался.
+        Количество цветов. Добавляется единица, чтобы цвет 0 (цвет стены) учитывался.
         """
         return len(self.rectangles) + 1
 

@@ -5,6 +5,12 @@ from constants.math import EPS
 
 
 def sign(x: int) -> int:
+    """
+    Получить знак целого числа.
+
+    :param x: число
+    :return: 1, -1 или 0
+    """
     if x > 0:
         return 1
     if x < 0:

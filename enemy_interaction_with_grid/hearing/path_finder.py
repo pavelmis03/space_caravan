@@ -110,6 +110,7 @@ class GridPathFinder:
     def can_stay(self, i: int, j: int) -> bool:
         """
         Может ли enemy стоять здесь.
+
         :return: True, если нет рядом стен и здесь не стоит уже другой enemy. Иначе False
         """
         return self.__is_standable[i][j] and not self.__is_has_enemy.is_marked(i, j)

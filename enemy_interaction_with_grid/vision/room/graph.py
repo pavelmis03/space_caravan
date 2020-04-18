@@ -28,6 +28,7 @@ class RoomsGraph:
         размером комнат).
 
         Обход графа bfs'ом.
+
         :param seg: отрезок, который проверяем
         :return: bool
         """

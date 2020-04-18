@@ -1,7 +1,7 @@
 import pygame as pg
 
 from drawable_objects.base import DrawableObject
-from constants.color import Color
+from constants.color import COLOR
 
 
 class Button(object):
@@ -96,11 +96,11 @@ class Button(object):
 
 class Btn(DrawableObject):
     BUTTON_STYLE = {
-        "hover_color": Color['BLUE'],
-        "font_color": Color['RED'],
-        "clicked_color": Color['GREEN'],
-        "clicked_font_color": Color['BLACK'],
-        "hover_font_color": Color['ORANGE']
+        "hover_color": COLOR['BLUE'],
+        "font_color": COLOR['RED'],
+        "clicked_color": COLOR['GREEN'],
+        "clicked_font_color": COLOR['BLACK'],
+        "hover_font_color": COLOR['ORANGE']
     }
 
     def __init__(self, controller, geometry=(10, 10, 100, 40), color=(255, 255, 0), text='Test', function=None):
