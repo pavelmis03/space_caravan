@@ -78,7 +78,7 @@ class Enemy(MovingHumanoid):
     """
     HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 5 * 25
+    VISION_RADIUS = 20 * 25
     HEARING_RANGE = 35
     AGGRE_RADIUS = 35 * 25
 
@@ -197,5 +197,3 @@ class Enemy(MovingHumanoid):
     def __is_player_in_aggre_radius(self) -> bool:
         seg = Segment(self.pos, self.scene.player.pos)
         return seg.length < Enemy.AGGRE_RADIUS
-
-

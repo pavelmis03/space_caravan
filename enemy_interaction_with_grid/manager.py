@@ -27,7 +27,8 @@ class GridInteractionWithEnemyManager:
         """
         Видит ли enemy player'а
         """
-        return self.__vision_manager.is_enemy_see_player(enemy)
+        # return self.__vision_manager.is_enemy_see_player(enemy)
+        return self.__vision_wizard.enemy_sees_player(enemy)
 
     def save_enemy_pos(self, pos: Point):
         """
@@ -51,6 +52,5 @@ class GridInteractionWithEnemyManager:
         """
         логика менеджера
         """
-        self.__hearing_manager.process_logic()
-
+        # self.__hearing_manager.process_logic()
         self.__vision_wizard.process_logic()
