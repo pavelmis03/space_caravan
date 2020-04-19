@@ -17,10 +17,12 @@ class AbstractObject:
 
         :param scene: сцена объекта
         :param controller: ссылка на объект контроллера
+        :param type: тип объекта
         """
     def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
         self.controller = controller
+        self.type = ''
 
     def process_logic(self):
         """

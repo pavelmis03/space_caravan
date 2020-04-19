@@ -13,7 +13,6 @@ class Pistol(RangedWeapon):
     def attack(self, pos: Point, angle: float):
         bullet = Bullet(self.scene, self.controller, pos, angle)
         self.scene.game_objects.append(bullet)
-        self.type = 'Pistol'
 
 
 class Shotgun(RangedWeapon):

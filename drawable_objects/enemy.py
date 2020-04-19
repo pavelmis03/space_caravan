@@ -6,6 +6,7 @@ from geometry.point import Point
 from geometry.vector import length, polar_angle, vector_from_length_angle
 from scenes.base import Scene
 from drawable_objects.bullet import create_bullet
+from weapons.weapons import Pistol
 
 
 class MovingHumanoid(Humanoid):
@@ -76,6 +77,8 @@ class Enemy(MovingHumanoid):
         self.is_aggred = False
         self.cooldown = 0
 
+        self.type = 'Enemy'
+
         self.command_functions = {'move_to': self.command_move_to,
                                   'shoot': self.command_shoot,
                                   'aim': self.command_aim,}
@@ -95,7 +98,9 @@ class Enemy(MovingHumanoid):
     def command_shoot(self):
         self.recount_angle(self.scene.player.pos)
 
-        create_bullet(self)
+        end_of_barrel = vector_from_length_angle(self.HITBOX_RADIUS + 3, self.angle) + self.pos
+        Pistol.attack(self, end_of_barrel, self.angle)
+
         self.cooldown = Enemy.COOLDOWN_TIME
 
         self.command = EnemyCommand('aim')
