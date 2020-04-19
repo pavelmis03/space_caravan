@@ -58,7 +58,7 @@ class GridPathFinder:
         self.__used_manager.next_iteration()
         player_pos = self.__grid.scene.player.pos
         player_i, player_j = self.__grid.index_manager.get_index_by_pos(player_pos)
-        q = deque()
+        q = deque() # collections.deque работает быстрее, чем queue.Queue
         q.append((player_i, player_j))
         self.__distance[player_i][player_j] = 0
 
@@ -69,13 +69,10 @@ class GridPathFinder:
             if new_distance > max_distance:
                 continue
 
-            transition_cells = self.__get_standable_cells(i, j)
+            transition_cells = self.__get_transition_cells(i, j)
             for k in range(len(transition_cells)):
                 new_i = transition_cells[k][0]
                 new_j = transition_cells[k][1]
-
-                if self.__used_manager.is_marked(new_i, new_j):
-                    continue
 
                 self.__used_manager.mark(new_i, new_j)
                 self.__parent[new_i][new_j] = (i, j)
@@ -91,7 +88,7 @@ class GridPathFinder:
 
         self.__is_has_enemy.next_iteration()
 
-    def __get_standable_cells(self, i0: int, j0: int) -> List[Tuple[int, int]]:
+    def __get_transition_cells(self, i0: int, j0: int) -> List[Tuple[int, int]]:
         """
         Получить клетки, на которые Enemy может вставать.
 
@@ -102,7 +99,7 @@ class GridPathFinder:
             new_i = i0 + rect_di[k]
             new_j = j0 + rect_dj[k]
 
-            if self.__is_standable[new_i][new_j]:
+            if self.__is_standable[new_i][new_j] and not self.__used_manager.is_marked(new_i, new_j):
                 result.append((new_i, new_j))
 
         return result
