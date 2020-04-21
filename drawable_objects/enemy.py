@@ -5,7 +5,6 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import length, polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from drawable_objects.bullet import create_bullet
 from weapons.weapons import Pistol
 
 
@@ -76,6 +75,7 @@ class Enemy(MovingHumanoid):
         self.command = None
         self.is_aggred = False
         self.cooldown = 0
+        self.health = 1
 
         self.type = 'Enemy'
 
@@ -140,6 +140,27 @@ class Enemy(MovingHumanoid):
 
         if self.is_has_command:
             self.command_functions[self.command.type](*self.command.params)
+
+    def get_damage(self, damage=0, angle_of_attack=0):
+        """
+        Получение урона
+
+        :param damage: урон
+        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
+        """
+        self.health -= damage
+        if self.health <= 0:
+            self.die()
+
+    def die(self, angle_of_attack=0):
+        """
+        Смээээрть
+
+        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
+        """
+        self.scene.plane.erase(self, self.pos)
+        self.destroy()
+
 
     def process_logic(self):
         self.is_see_player = self.scene.grid.is_enemy_see_player(self)

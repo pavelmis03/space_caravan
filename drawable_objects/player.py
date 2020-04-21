@@ -7,10 +7,10 @@ from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
-from drawable_objects.bullet import create_bullet
 from weapons.weapons import Pistol
 from weapons.weapons import Shotgun
 
+from utils.game_plane import GamePlane
 
 
 class Player(Humanoid):
@@ -46,6 +46,19 @@ class Player(Humanoid):
         self.scene.interface_objects.append(self.weapon)
 
     def process_logic(self):
+        #Тут печатается количество противников,
+        # получаемых методом get_neighbours,
+        # если никого рядом нет, будет просто напечатан '!'
+        ########################################
+        neighbours = self.scene.plane.get_neighbours(self.pos)
+        ind = 0
+        for neighbour in neighbours:
+            if neighbour.type == 'Enemy':
+                ind += 1
+                print(ind, end=' ')
+        print('!')
+        ########################################
+
         relative_center = self.scene.relative_center
         vector_to_mouse = self.controller.get_mouse_pos() + relative_center - self.pos
         self.angle = polar_angle(vector_to_mouse)
