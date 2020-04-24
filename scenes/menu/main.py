@@ -1,7 +1,11 @@
+"""
+Класс главной страницы меню меню
+"""
+
 from scenes.menu.base import MenuScene
 
 
-class Main_MenuScene(MenuScene):
+class MainMenuScene(MenuScene):
     """
     Сцена главной страницы меню.
 

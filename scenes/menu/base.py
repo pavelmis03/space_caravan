@@ -1,3 +1,7 @@
+"""
+Основа для создания сцен меню
+"""
+
 from drawable_objects.interface.button_group import ButtonGroup
 from scenes.base import Scene
 

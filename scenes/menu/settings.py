@@ -1,7 +1,10 @@
+"""
+Класс страницы настроек меню
+"""
 from scenes.menu.base import MenuScene
 
 
-class Settings_MenuScene(MenuScene):
+class SettingsMenuScene(MenuScene):
     """
     Сцена страницы настроек меню.
 
