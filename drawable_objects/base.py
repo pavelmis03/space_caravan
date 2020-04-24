@@ -167,6 +167,12 @@ class Humanoid(GameSprite):
     Базовый класс человекоподобного существа: это объект на уровне с текстурой, у которого круглый хитбокс.
     """
     HITBOX_RADIUS = 25
+    MAXHP = 100
+
+    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
+                 zoom: float = 1):
+        super().__init__(scene, controller, image_name, pos, angle, zoom)
+        self.hp = Humanoid.MAXHP
 
 
 class UsableObject(GameSprite):
