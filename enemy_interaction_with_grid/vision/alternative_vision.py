@@ -112,31 +112,25 @@ class EnemyVisionWizard:
     def __set_cell_used(self, i: int, j: int, new_value: bool):
         self.__cell_used[i + self.__index_range][j + self.__index_range] = new_value
 
-    def __get_wall_rect(self, i: int, j: int, player_index: Tuple[int, int]) -> Rectangle:
+    def __wall_rect_exist(self, i: int, j: int, player_index: Tuple[int, int]) -> Rectangle:
         if self.__get_cell_used(i, j):
-            return None
+            return False
         self.__set_cell_used(i, j, True)
         absolute_i = player_index[0] + i
         absolute_j = player_index[1] + j
         if not is_indexes_correct(self.__grid.arr, absolute_i, absolute_j):
-            return None
+            return False
         if self.__grid.is_passable(absolute_i, absolute_j):
-            return None
-        return self.__grid.get_collision_rect(absolute_i, absolute_j)
+            return False
+        return True
 
     def __make_long_rect(self, i: int, j: int, dir: Tuple[int, int], player_index: Tuple[int, int]) -> Rectangle:
-        result_rect = self.__get_wall_rect(i, j, player_index)
-        if not result_rect:
+        if not self.__wall_rect_exist(i, j, player_index):
             return None
-        while True:
+        while self.__wall_rect_exist(i + dir[0], j + dir[1], player_index):
             i += dir[0]
             j += dir[1]
-            next_rect = self.__get_wall_rect(i, j, player_index)
-            if not next_rect:
-                break
-            result_rect = self.__unite_rects(result_rect, next_rect)
-        return result_rect
-
+        return self.__grid.get_collision_rect(i + player_index[0], j + player_index[1])
 
     def __get_united_rects(self) -> List[Rectangle]:
         walls_rects = []
@@ -147,9 +141,9 @@ class EnemyVisionWizard:
 
         for i in range(-self.__index_range, self.__index_range + 1):
             for j in range(-self.__index_range, self.__index_range + 1):
-                wall_rect = self.__get_wall_rect(i, j, player_index)
-                if not wall_rect:
+                if not self.__wall_rect_exist(i, j, player_index):
                     continue
+                wall_rect = self.__grid.get_collision_rect(i + player_index[0], j + player_index[1])
                 long_rect = self.__make_long_rect(i, j + 1, [0, 1], player_index)
                 if not long_rect:
                     long_rect = self.__make_long_rect(i + 1, j, [1, 0], player_index)
