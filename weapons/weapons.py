@@ -9,7 +9,7 @@ class Pistol(RangedWeapon):
     DAMAGE = 100
 
     def __init__(self, shooter, ammo, bullets_in_magazine=0):
-        super().__init__(shooter, ammo, 12, 40, 12, False, 10, bullets_in_magazine, 100, 'Pistol')
+        super().__init__(shooter, ammo, 12, 40, 12, False, 10, bullets_in_magazine, 'Pistol')
 
     def attack(self, pos: Point, angle: float):
         bullet = Bullet(self.scene, self.controller, pos, angle, Pistol.DAMAGE)
@@ -21,7 +21,7 @@ class Shotgun(RangedWeapon):
     DAMAGE = 100
 
     def __init__(self, shooter, ammo, bullets_in_magazine=0):
-        super().__init__(shooter, ammo, 15, 80, 6, False, 0, bullets_in_magazine, 100, 'Shotgun')
+        super().__init__(shooter, ammo, 15, 80, 6, False, 0, bullets_in_magazine, 'Shotgun')
         self.shells = 5
 
     def attack(self, pos: Point, angle: float):
