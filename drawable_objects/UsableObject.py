@@ -23,27 +23,19 @@ class UsableObject(GameSprite):
                  zoom: float = 1, usage_radius: float = 100):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
 
-        self.usage_radius = usage_radius # Радиус вокруг объекта, в пределах которого с ним можно взаимодействовать
-        self.e_is_shown = False # Отображена ли всплывающая 'E'
-        self.image_name = image_name
-        self.zoom = zoom
+        # Радиус вокруг объекта, в пределах которого с ним можно взаимодействовать
+        self.usage_radius = usage_radius
+
+        self.popping_e = PoppingE(
+            self.scene, self.controller, self.pos, image_name, zoom, 0, usage_radius)
+        # У каждого UsableObject есть своя PoppingE над ним
+        self.scene.game_objects.append(self.popping_e)
 
     def process_logic(self):
         super().process_logic()
         if dist(self.scene.player.pos, self.pos) <= self.usage_radius:  # Проверка активации
-            if not self.e_is_shown:
-                """
-                Создает всплывающую 'E', если она не создана.
-                Сделано в process_logic, чтобы 'E' рисовалось поверх UsableObject-а
-                """
-                self.e_is_shown = True
-                popping_e = PoppingE(self.scene, self.controller, self.pos, self.image_name, self.zoom, 0,
-                                     self.usage_radius)
-                self.scene.game_objects.append (popping_e)
             if self.controller.is_key_pressed(key=UsableObject.ACTIVATION_KEY):
                 self.activate()
-        else:
-            self.e_is_shown = False
 
     def activate(self):
         """

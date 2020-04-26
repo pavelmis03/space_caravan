@@ -18,12 +18,13 @@ class PoppingE(GameSprite):
     def __init__(self, scene: Scene, controller: Controller, pos: Point, parent_image: str, zoom: float = 1,
                  angle: float = 0, parent_radius: float = 0):
         self.parent_pos = pos  # позиция объекта, который может быть использован
-        self.parent_radius = parent_radius  # радиус объекта, который может быть использован
+        # радиус объекта, который может быть использован
+        self.parent_radius = parent_radius
 
         pos += Point(0, -ImageManager.get_height(parent_image, zoom / 1.25))
         super().__init__(scene, controller, 'other.poppingE',
                          pos, angle, PoppingE.IMAGE_ZOOM)
 
-    def process_logic(self):
-        if dist (self.scene.player.pos, self.parent_pos) > self.parent_radius:
-            self.destroy() #если игрок далеко, 'Е" уничтожается
+    def process_draw(self):
+        if dist(self.scene.player.pos, self.parent_pos) <= self.parent_radius:
+            super().process_draw()
