@@ -1,3 +1,7 @@
+"""
+Direction constants for top-down view
+"""
+
 from geometry.point import Point
 
 DIRECTIONS = [
@@ -6,6 +10,10 @@ DIRECTIONS = [
     Point(-1, 0),
     Point(0, 1),
 ]
+"""
+порядок индексов важен (не менять!).
+на нем основаны многие алгоритмы.
+"""
 side_di = [-1, 0, 1, 0]
 side_dj = [0, 1, 0, -1]
 diagonal_di = [-1, 1, 1, -1]

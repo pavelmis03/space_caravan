@@ -21,9 +21,12 @@ class Shotgun(RangedWeapon):
     DAMAGE = 100
 
     def __init__(self, shooter, ammo, bullets_in_magazine=0):
-        super().__init__(shooter, ammo, 15, 80, 6, False, 0, bullets_in_magazine, 'Shotgun')
-        self.shells = 5
+        ammo = 1000000
+        bullets_in_magazine = 100000
+        super().__init__(shooter, ammo, 1, 80, 6, True, 0, bullets_in_magazine, 'Shotgun')
+        self.shells = 1
 
     def attack(self, pos: Point, angle: float):
         for i in range(self.shells):
-            self.scene.game_objects.append(Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 600), Shotgun.DAMAGE))
+            self.scene.game_objects.append(Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 60000), Shotgun.DAMAGE))
+

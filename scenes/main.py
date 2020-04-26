@@ -1,6 +1,7 @@
 from console.console import Console
 from console.entry import Entry
 from drawable_objects.interface.pause_manager import PauseManager
+from drawable_objects.interface.player_icon import PlayerIcon
 from drawable_objects.player import Player
 from scenes.base import GameScene
 from geometry.point import Point
@@ -14,6 +15,7 @@ class MainScene(GameScene):
 
     :param game: игра, создающая сцену
     """
+
     def __init__(self, game):
         super().__init__(game)
         self.plane = GamePlane()
@@ -24,6 +26,8 @@ class MainScene(GameScene):
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
         self.game.controller.input_objects.append(self.pause_manager)
+        player_icon = PlayerIcon(self, self.game.controller, self.player)
+        self.interface_objects.append(player_icon)
         # cmd = Console(self, self.game.controller, (0, self.game.height-20, 200, self.game.height))
         # self.interface_objects.append(cmd)
 

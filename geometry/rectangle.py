@@ -14,7 +14,8 @@ class Rectangle:
     :param right_x: абсцисса правой границы (большая)
     :param down_y: ордината нижней границы (большая)
     """
-    def __init__(self, left_x: float=0, up_y: float=0, right_x: float=0, down_y: float=0):
+
+    def __init__(self, left_x: float = 0, up_y: float = 0, right_x: float = 0, down_y: float = 0):
         self._top_left = Point(left_x, up_y)
         self._bottom_right = Point(right_x, down_y)
         self._center = (self._top_left + self._bottom_right) * 0.5
@@ -49,6 +50,22 @@ class Rectangle:
         Верхний левый угол прямоугольника.
         """
         return self._top_left
+
+    @property
+    def left(self) -> float:
+        return self._top_left.x
+
+    @property
+    def right(self) -> float:
+        return self._bottom_right.x
+
+    @property
+    def top(self) -> float:
+        return self._top_left.y
+
+    @property
+    def bottom(self) -> float:
+        return self._bottom_right.y
 
     @top_left.setter
     def top_left(self, new_top_left):
@@ -95,7 +112,7 @@ class Rectangle:
         self._top_left -= movement
         self._bottom_right += movement
 
-    def in_inside(self, point):
+    def is_inside(self, point):
         """
         Проверка принадлежности точки прямоугольнику.
 
@@ -118,7 +135,8 @@ class Rectangle:
 
     def get_vertexes(self) -> List[Point]:
         """
-        Вершины прямоугольника.
+        Вершины прямоугольника. Порядок вершин: верхняя левая, верхняя правая, нижняя правая, нижняя левая.
+        Это их реальное положение в кривых координатах pygame'а.
 
         :return: список точек - вершин прямоугольника
         """
@@ -129,7 +147,8 @@ class Rectangle:
 
     def get_edges(self) -> List[Segment]:
         """
-        Стороны прямоугольника.
+        Стороны прямоугольника. Порядок сторон(отрезков): верхняя, правая, нижняя, левая. Это их реальное положение
+        в кривых координатах pygame'а.
 
         :return: список отрезков - сторон прямоугольника
         """
@@ -172,6 +191,7 @@ def create_rectangle_with_center(center: Point, w: float, h: float) -> Rectangle
     """
     return Rectangle(center.x - w / 2, center.y - h / 2, center.x + w / 2, center.y + h / 2)
 
+
 def create_rectangle_with_left_top(left_top: Point, w: float, h: float) -> Rectangle:
     """
     Создает прямоугольник с заданным левым верхним углом.
@@ -183,6 +203,7 @@ def create_rectangle_with_left_top(left_top: Point, w: float, h: float) -> Recta
     """
     return Rectangle(left_top.x, left_top.y, left_top.x + w, left_top.y + h)
 
+
 def tuple_to_rectangle(tuple):
     """
     Приводит кортеж из координат левого верхнего и правого нижнего углов прямоугольника соответственно к формату
@@ -192,6 +213,11 @@ def tuple_to_rectangle(tuple):
     :return: соответствующий Rectangle
     """
     return Rectangle(tuple[0], tuple[1], tuple[2], tuple[3])
+
+
+def get_rectangle_copy(rectangle: Rectangle) -> Rectangle:
+    return Rectangle(rectangle.top_left.x, rectangle.top_left.y,
+                     rectangle.bottom_right.x, rectangle.bottom_right.y)
 
 
 def intersect(rectangle1, rectangle2):

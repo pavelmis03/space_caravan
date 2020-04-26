@@ -3,7 +3,7 @@
 """
 from drawable_objects.base import DrawableObject
 from drawable_objects.background.rgb import RGB
-from utils.sign import sign
+from utils.simple_math import sign
 from pygame import draw
 from typing import Tuple
 from geometry.point import Point
@@ -15,8 +15,9 @@ class TransfusionBackground(DrawableObject):
     """
     Фон, который переливается со временем.
     """
+
     def __init__(self, scene: Scene, controller: Controller, pos: Point,
-                 colors = Tuple[RGB]):
+                 colors=Tuple[RGB]):
         super().__init__(scene, controller, pos)
         self.colors = colors
         self.this_color = self.colors[0]

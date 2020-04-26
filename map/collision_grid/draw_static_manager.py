@@ -4,6 +4,7 @@ from utils.image import ImageManager
 from drawable_objects.base import SurfaceObject
 from geometry.point import Point
 
+
 class GridDrawStaticManager(Grid):
     """
     Класс для оптимизации отрисовки статической графики.
@@ -16,6 +17,7 @@ class GridDrawStaticManager(Grid):
     Более отрисовка вызывается всего 9 раз (так как полученных квадратов на экране
     не больше 9).
     """
+
     def __init__(self, grid: Grid):
         cell_width = int(grid.scene.width / 2)
         cell_height = int(grid.scene.height / 2)
@@ -46,7 +48,7 @@ class GridDrawStaticManager(Grid):
             for j in range(len(grid.arr[i])):
                 sprite = grid.arr[i][j]
                 ImageManager.process_draw(sprite.image_name, sprite.pos - self.pos,
-                    res, sprite.zoom, sprite.angle)
+                                          res, sprite.zoom, sprite.angle)
         return res
 
     def split_on_frames(self, surface: Surface):
@@ -70,5 +72,5 @@ class GridDrawStaticManager(Grid):
                 frame_rect.y = i * self.cell_height
 
                 self.arr[i][j] = SurfaceObject(surface.subsurface(frame_rect),
-                    self.scene, self.controller,
-                            self.pos + Point(frame_rect.x, frame_rect.y) + pos_offset)
+                                               self.scene, self.controller,
+                                               self.pos + Point(frame_rect.x, frame_rect.y) + pos_offset)

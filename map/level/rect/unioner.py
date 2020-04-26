@@ -7,8 +7,6 @@ class RectUnioner:
     """
     делает из прямоугольников фигуры с углами 270 и 90 градусов,
     объединяя некоторые прямоугольники
-
-    :return:
     """
     def __init__(self, graph_manager: RectGraphManager):
         self.arr = graph_manager.arr
@@ -25,15 +23,17 @@ class RectUnioner:
         Проходится по всем ребрам графа (ребро есть, если прямоугольники граничат).
 
         с некоторой вероятностью UNION_CHANCE объединяет прямоугольники.
-        :return:
         """
         for i in range(len(self.rect_graph)):
             for j in self.rect_graph[i]:
-                chance = self.get_union_chance(i, j)
+                chance = self.__get_union_chance(i, j)
                 if is_random_proc(chance):
-                    self.union_rects(i, j)
+                    self.__union_figures(i, j)
 
-    def union_rects(self, rect_num1, rect_num2):
+    def __union_figures(self, rect_num1, rect_num2):
+        """
+        Объединение фигур (которые могут быть уже не прямоугольниками)
+        """
         self.dis_set.union(rect_num1, rect_num2)
         new_figure_count = self.figures_count[rect_num1] + \
                            self.figures_count[rect_num2]
@@ -41,7 +41,10 @@ class RectUnioner:
         self.figures_count[rect_num1] = new_figure_count
         self.figures_count[rect_num2] = new_figure_count
 
-    def get_union_chance(self, rect_num1: int, rect_num2: int) -> int:
+    def __get_union_chance(self, rect_num1: int, rect_num2: int) -> int:
+        """
+        Получить вероятность объединения фигур. Если они представляют собой уже объединенные прямоугольники, шанс ниже.
+        """
         if self.dis_set.check(rect_num1, rect_num2):
             return 0
 
@@ -56,7 +59,7 @@ class RectUnioner:
         прямоугольники одной фигуры.
         :return:
         """
-        self.change_colors_of_same_figures()
+        self.__change_colors_of_same_figures()
         dy = [-1, -1, 0, 1, 1, 1, 0, -1]
         dx = [0, 1, 1, 1, 0, -1, -1, -1]
         for i in range(1, len(self.arr) - 1):
@@ -83,7 +86,10 @@ class RectUnioner:
                 if not has_other_cells:
                     self.arr[i][j] = cell_color
 
-    def change_colors_of_same_figures(self):
+    def __change_colors_of_same_figures(self):
+        """
+        Делает внутри одной фигуры, состоящей из какого-то количества прямоугольников), одинаковый цвет.
+        """
         for i in range(1, len(self.arr) - 1):
             for j in range(1, len(self.arr[i]) - 1):
                 if self.arr[i][j]:

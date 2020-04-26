@@ -8,6 +8,7 @@ class AlignmentStrategy:
     """
     Базовый класс стратегии выравнивания текста.
     """
+
     def execute(self, rectangle, pos):
         """
         Исполнить стратегию.
@@ -22,6 +23,7 @@ class StrategyLeft(AlignmentStrategy):
     """
     Выравнивание по левому верхнему углу.
     """
+
     def execute(self, rectangle, pos):
         rectangle.top_left = pos
 
@@ -30,6 +32,7 @@ class StrategyCenter(AlignmentStrategy):
     """
     Выравнивание по центру.
     """
+
     def execute(self, rectangle, pos):
         rectangle.center = pos
 
@@ -64,7 +67,8 @@ class Text(DrawableObject):
             self.align = align
         else:
             self.align = 'left'
-        self.font = pygame.font.SysFont(font_name, font_size, is_bold, is_italic)
+        self.font = pygame.font.SysFont(
+            font_name, font_size, is_bold, is_italic)
         self.text = None
         self.text_surface = None
         self.width_limit = width_limit
@@ -82,7 +86,8 @@ class Text(DrawableObject):
             rect = self.text_surface.get_rect()
             if rect.width > self.width_limit:
                 x = rect.width - self.width_limit
-                self.text_surface = self.text_surface.subsurface((x, rect.y, rect.width - x, rect.height))
+                self.text_surface = self.text_surface.subsurface(
+                    (x, rect.y, rect.width - x, rect.height))
 
     def process_draw(self):
         rectangle = rect_to_rectangle(self.text_surface.get_rect())

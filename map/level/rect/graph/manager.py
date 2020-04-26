@@ -3,6 +3,9 @@ from typing import List, Dict
 from map.level.rect.graph.edge import Edge, EdgeManager
 
 class RectGraphSaver:
+    """
+    Класс, формирующий граф между прямоугольниками
+    """
     def __init__(self, rects_count: int, res: List[List[int]]):
         self.res = res
         for i in range(rects_count):
@@ -11,6 +14,9 @@ class RectGraphSaver:
 
     def manage_edge(self, edge_manager: EdgeManager, connects: List[List[Dict[str, int]]],
                     direction: List[int], arr: List[List[int]]):
+        """
+        Добавить ребро между прямоугольниками, если его еще нет.
+        """
         new1 = connects[0][0]
         new2 = connects[1][0]
         color1 = arr[new1['i']][new1['j']]
@@ -22,10 +28,16 @@ class RectGraphSaver:
         self.res[color2].append(color1)
 
 class EdgeSaver:
+    """
+    Класс, сохраняющий ребра (проходы).
+    """
     def __init__(self, res: List[Edge]):
         self.res = res
     def manage_edge(self, edge_manager: EdgeManager, connects: List[List[Dict[str, int]]],
                     direction: List[int], arr: List[List[int]]):
+        """
+        Создает ребро (по связям и направлению) и добавляет.
+        """
         edge_manager.create_edge(connects, direction, self.res)
 
 class RectGraphManager:
@@ -40,13 +52,17 @@ class RectGraphManager:
         self.rects_count = rects_count
     def save_rect_graph(self, res: List[List[int]]):
         """
-        Если прямоугольники граничат, то между ними есть ребро
-        :return:
+        Сохранить граф прямоугольников.
+
+        Если прямоугольники граничат, то между ними есть ребро.
         """
         rect_graph_saver = RectGraphSaver(self.rects_count, res)
         self.manage_all_edges(rect_graph_saver)
 
     def save_edges_between_rects(self, res):
+        """
+        Сохранить все ребра
+        """
         edges_saver = EdgeSaver(res)
         self.manage_all_edges(edges_saver)
 

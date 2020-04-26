@@ -9,11 +9,12 @@ from drawable_objects.base import AbstractObject
 
 
 class Console(AbstractObject):
-    ENTRY_WIDTH_LIMIT=190
+    ENTRY_WIDTH_LIMIT = 190
 
     def __init__(self, scene, controller, entry_rect):
         super().__init__(scene, controller)
-        self.console_entry = Entry(scene, controller, entry_rect, initial_text="/", visible=False, width_limit=Console.ENTRY_WIDTH_LIMIT)
+        self.console_entry = Entry(scene, controller, entry_rect, initial_text="/",
+                                   visible=False, width_limit=Console.ENTRY_WIDTH_LIMIT)
         self.console_controller = ConsoleController(scene, controller)
         self.console_controller.clear()
 
@@ -35,7 +36,7 @@ class Console(AbstractObject):
     def console_off(self):
         self.controller.input_objects = [self.scene.player]
         self.console_entry.hide()
-        # TODO here's check on enter or escape and command run
+        # here's check on enter or escape and command run
         cmd = self.console_controller.text
         print("Attempting to run command '{}'".format(cmd))
         self.console_controller.clear()
@@ -51,7 +52,8 @@ class ConsoleController(AbstractObject):
     INPUTDICT = string.ascii_letters + string.digits + " "
     CONTROLS = {
         'on': [pygame.K_SLASH],
-        'off': [pygame.K_RETURN, pygame.K_ESCAPE],  # first to enter, second to exit
+        # first to enter, second to exit
+        'off': [pygame.K_RETURN, pygame.K_ESCAPE],
         'erase': [pygame.K_BACKSPACE]
     }
 

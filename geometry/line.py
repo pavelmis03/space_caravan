@@ -12,6 +12,7 @@ class Line:
     :param b: коэффициент b
     :param c: коэффициент c
     """
+
     def __init__(self, a: float = 1, b: float = 1, c: float = 0):
         self.a = a
         self.b = b
