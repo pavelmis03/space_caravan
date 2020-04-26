@@ -45,18 +45,6 @@ class Player(Humanoid):
         self.scene.interface_objects.append(self.weapon)
 
     def process_logic(self):
-        #Тут печатается количество противников,
-        # получаемых методом get_neighbours,
-        # если никого рядом нет, будет просто напечатан '!'
-        ########################################
-        neighbours = self.scene.plane.get_neighbours(self.pos)
-        ind = 0
-        for neighbour in neighbours:
-            if neighbour.type == 'Enemy':
-                ind += 1
-                print(ind, end=' ')
-        print('!')
-        ########################################
         self._turn_to_mouse()
         self._movement_controls()
 
