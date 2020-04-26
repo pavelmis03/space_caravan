@@ -25,6 +25,8 @@ class UsableObject(GameSprite):
 
         self.usage_radius = usage_radius # Радиус вокруг объекта, в пределах которого с ним можно взаимодействовать
         self.e_is_shown = False # Отображена ли всплывающая 'E'
+        self.image_name = image_name
+        self.zoom = zoom
 
     def process_logic(self):
         super().process_logic()
@@ -35,8 +37,9 @@ class UsableObject(GameSprite):
                 Сделано в process_logic, чтобы 'E' рисовалось поверх UsableObject-а
                 """
                 self.e_is_shown = True
-                popping_e = PoppingE(self.scene, self.controller, self.pos, 0, self.pos, self.usage_radius)
-                self.scene.game_objects.append(popping_e)
+                popping_e = PoppingE(self.scene, self.controller, self.pos, self.image_name, self.zoom, 0,
+                                     self.usage_radius)
+                self.scene.game_objects.append (popping_e)
             if self.controller.is_key_pressed(key=UsableObject.ACTIVATION_KEY):
                 self.activate()
         else:

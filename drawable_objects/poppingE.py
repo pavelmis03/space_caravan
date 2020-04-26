@@ -15,13 +15,14 @@ class PoppingE(GameSprite):
     """
     IMAGE_ZOOM = 0.05
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0, parent_pos: Point = Point(0, 0), parent_radius: float = 0):
-        pos += Point(0, -45)
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, parent_image: str, zoom: float = 1,
+                 angle: float = 0, parent_radius: float = 0):
+        self.parent_pos = pos  # позиция объекта, который может быть использован
+        self.parent_radius = parent_radius  # радиус объекта, который может быть использован
+
+        pos += Point(0, -ImageManager.get_height(parent_image, zoom / 1.25))
         super().__init__(scene, controller, 'other.poppingE',
                          pos, angle, PoppingE.IMAGE_ZOOM)
-
-        self.parent_pos = parent_pos #позиция объекта, который может быть использован
-        self.parent_radius = parent_radius #радиус объекта, который может быть использован
 
     def process_logic(self):
         if dist (self.scene.player.pos, self.parent_pos) > self.parent_radius:
