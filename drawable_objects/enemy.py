@@ -10,6 +10,8 @@ from geometry.segment import Segment
 from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
+from math import pi
+
 
 class MovingHumanoid(Humanoid):
     """
@@ -62,6 +64,9 @@ class EnemyCommand:
 
 class CommandHumanoid(MovingHumanoid):
     """
+    Humanoid, которые следует командам. Скорее всего, нужен только для того, чтобы от него наследовался Enemy.
+    Переносить код отсюда в Enemy не стоит, т.к. класс и так огромный.
+
     Сейчас он ведет себя следующим образом:
     Стоит на месте. Когда игрок попадает в радиус видимости и их не разделяет стена, начинает стрелять.
     Если выстрелить становится нельзя, преследует игрока, пока он находится в радиусе слышимости.
@@ -75,7 +80,9 @@ class CommandHumanoid(MovingHumanoid):
     """
     HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 25 * 25
+    VISION_RADIUS = 30 * 25
+    VISION_ANGLE = pi * (2 / 3)
+
     HEARING_RANGE = 35
     AGGRE_RADIUS = 35 * 25
 
@@ -99,10 +106,16 @@ class CommandHumanoid(MovingHumanoid):
         """
         Логика enemy. Во многом зависит от того, видит он player'а или нет.
         """
-        self.__is_see_player = self.scene.grid.is_enemy_see_player(self)
+        self.__vision_logic()
         self.__command_logic()
         if self.__cooldown:
             self.__cooldown -= 1
+
+    def __vision_logic(self):
+        """
+        Логика зрения Enemy
+        """
+        self.__is_see_player = self.scene.grid.is_enemy_see_player(self)
 
     def __command_logic(self):
         """
@@ -198,15 +211,19 @@ class CommandHumanoid(MovingHumanoid):
 
 
 class Enemy(CommandHumanoid):
+    """
+    Основной противник в Dungeon.
+    """
+
     IMAGE_ZOOM = 0.3
     IMAGE_NAME = 'moving_objects.enemy2'
 
-    # важно, чтобы было не в точности pi / const, иначе повороты будут слишком предсказуемые
-    ANGULAR_VELOCITY = 4 / 65
+    # важно, чтобы было не в точности pi / const_int, иначе повороты будут слишком предсказуемые
+    ANGULAR_VELOCITY = 6 / 65
 
     ROTATION_TIME = 50 #количество циклов поворота
-    ROTATION_MIN_COOLDOWN = 250
-    ROTATION_MAX_COOLDOWN = 400
+    ROTATION_MIN_COOLDOWN = 150
+    ROTATION_MAX_COOLDOWN = 300
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
@@ -214,30 +231,68 @@ class Enemy(CommandHumanoid):
         self.__rotation_direction = 1 if is_random_proc() else -1
         self.__rotating_cycles = 0
 
-    def __rotation_logic(self):
-        if not self.__is_rotating:
-            self.__rotate_cooldown -= 1
-            return
-
-        if self.__is_just_start_rotation and is_random_proc(Enemy.ROTATION_CHANGE_DIRECTION_CHANCE):
-            self.__rotation_direction *= -1
-
-        self.angle += Enemy.ANGULAR_VELOCITY * self.__rotation_direction
-        self.__rotating_cycles += 1
-
-        if self.__rotating_cycles == Enemy.ROTATION_TIME:
-            self.__rotating_cycles = 0
-            self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
-
     def process_logic(self):
+        """
+        Добавлена логика поворота
+        """
         super().process_logic()
         if self._is_idle and not self._is_aggred:
             self.__rotation_logic()
 
+    def __rotation_logic(self):
+        """
+        Логика поворота.
+        """
+        if not self.__is_rotating:
+            self.__rotate_cooldown -= 1
+            return
+
+        if self.__is_just_start_rotation:
+            self.__choose_direction()
+
+        self.__rotation_tic()
+
+        if self.__is_should_end_rotation:
+            self.__end_rotation()
+
+    def __choose_direction(self):
+        """
+        Меняет направление поворота с вероятностью Enemy.ROTATION_CHANGE_DIRECTION_CHANCE
+        """
+        if is_random_proc(Enemy.ROTATION_CHANGE_DIRECTION_CHANCE):
+            self.__rotation_direction *= -1
+
+    def __rotation_tic(self):
+        """
+        Тик поворота.
+        """
+        self.angle += Enemy.ANGULAR_VELOCITY * self.__rotation_direction
+        self.__rotating_cycles += 1
+
+    @property
+    def __is_should_end_rotation(self):
+        """
+        Нужно ли прекратить поворачиваться
+        """
+        return self.__rotating_cycles == Enemy.ROTATION_TIME
+
+    def __end_rotation(self):
+        """
+        Закончить поворот
+        """
+        self.__rotating_cycles = 0
+        self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
+
     @property
     def __is_rotating(self):
+        """
+        Поворачивается ли сейчас
+        """
         return self.__rotate_cooldown == 0
 
     @property
     def __is_just_start_rotation(self):
+        """
+        Только ли начал поворачиваться
+        """
         return self.__rotating_cycles == 0
