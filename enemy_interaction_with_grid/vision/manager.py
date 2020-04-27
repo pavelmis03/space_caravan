@@ -4,9 +4,8 @@ from drawable_objects.enemy import Enemy
 from enemy_interaction_with_grid.vision.room.graph import RoomsGraph
 from geometry.optimized.segment import StaticSegment
 from map.level.rect.splitter import GridRectangle
+from geometry.sector import Sector
 from math import pi
-from geometry.triangle import is_point_in_triangle
-from geometry.vector import vector_from_length_angle
 
 
 class EnemyVisionManager:
@@ -31,23 +30,14 @@ class EnemyVisionManager:
         """
         segment = StaticSegment(enemy.pos, self._grid.scene.player.pos) #важен порядок точек
 
-        if not self.__is_player_in_vision_triangle(enemy):
+        if not self.__is_player_in_vision_sector(enemy):
             return False
 
         return not self.rooms_graph.is_seg_intersect_wall(segment)
 
-    def __is_player_in_vision_triangle(self, enemy: Enemy) -> bool:
+    def __is_player_in_vision_sector(self, enemy: Enemy) -> bool:
         """
-        Находится ли Player в треугольнике обзора enemy
-
-        Треугольник обзора - равнобедренный треугольник с вершиной в enemy.pos, боковыми сторонами Enemy.VISION_RADIUS
-        и с углом между боковыми сторонами Enemy.VISION_ANGLE.
+        Находится ли Player в секторе обзора enemy
         """
-        side_length = Enemy.VISION_RADIUS
-        half_vision_angle = Enemy.VISION_ANGLE / 2
-
-        direction_vector1 = vector_from_length_angle(side_length, enemy.angle + half_vision_angle)
-        direction_vector2 = vector_from_length_angle(side_length, enemy.angle - half_vision_angle)
-
-        return is_point_in_triangle(self._grid.scene.player.pos, enemy.pos, enemy.pos + direction_vector1,
-                                                                            enemy.pos + direction_vector2)
+        sector = Sector(Enemy.VISION_RADIUS, enemy.pos, enemy.angle, enemy.VIEW_ANGLE)
+        return sector.is_inside(self._grid.scene.player.pos)

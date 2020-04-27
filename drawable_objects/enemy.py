@@ -11,6 +11,7 @@ from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
 from math import pi
+from geometry.sector import Sector
 
 
 class MovingHumanoid(Humanoid):
@@ -80,8 +81,8 @@ class CommandHumanoid(MovingHumanoid):
     """
     HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 30 * 25
-    VISION_ANGLE = pi * (2 / 3)
+    VISION_RADIUS = 25 * 25
+    VIEW_ANGLE = pi
 
     HEARING_RANGE = 35
     AGGRE_RADIUS = 35 * 25
@@ -218,12 +219,11 @@ class Enemy(CommandHumanoid):
     IMAGE_ZOOM = 0.3
     IMAGE_NAME = 'moving_objects.enemy2'
 
-    # важно, чтобы было не в точности pi / const_int, иначе повороты будут слишком предсказуемые
     ANGULAR_VELOCITY = 6 / 65
 
-    ROTATION_TIME = 50 #количество циклов поворота
-    ROTATION_MIN_COOLDOWN = 150
-    ROTATION_MAX_COOLDOWN = 300
+    ROTATION_TIME = 40 #количество циклов поворота
+    ROTATION_MIN_COOLDOWN = 100
+    ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
