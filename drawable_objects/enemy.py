@@ -1,15 +1,15 @@
 from typing import Optional
-import math
 
 from controller.controller import Controller
 from drawable_objects.base import Humanoid
 from geometry.point import Point
-from geometry.vector import length, polar_angle, vector_from_length_angle
+from geometry.vector import polar_angle, vector_from_length_angle
 from scenes.base import Scene
 from drawable_objects.bullet import create_bullet
 from geometry.segment import Segment
 from geometry.vector import length
-
+from random import randint
+from utils.random import is_random_proc
 
 class MovingHumanoid(Humanoid):
     """
@@ -60,7 +60,7 @@ class EnemyCommand:
         self.params = params
 
 
-class Enemy(MovingHumanoid):
+class CommandHumanoid(MovingHumanoid):
     """
     Сейчас он ведет себя следующим образом:
     Стоит на месте. Когда игрок попадает в радиус видимости и их не разделяет стена, начинает стрелять.
@@ -71,9 +71,6 @@ class Enemy(MovingHumanoid):
 
     Рефакторить этот код с паттерном состояние - плохая идея. Проверено на практике.
     """
-    IMAGE_ZOOM = 0.3
-    IMAGE_NAME = 'moving_objects.enemy2'
-
     SPEED = 5
     """
     HEARING_RANGE - единица измерения - клетки
@@ -85,12 +82,13 @@ class Enemy(MovingHumanoid):
     COOLDOWN_TIME = 50
     DELAY_BEFORE_FIRST_SHOOT = 11
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
+    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float,
+                 image_zoom: float):
+        super().__init__(scene, controller, image_name, pos, angle, image_zoom)
 
         self.__command = None # None означает команду бездействия
         self.__is_see_player = False
-        self.__is_aggred = False
+        self._is_aggred = False
         self.__cooldown = 0
 
         self.__command_functions = {'move_to': self.__command_move_to,
@@ -110,10 +108,10 @@ class Enemy(MovingHumanoid):
         """
         Логика выполнения той или иной команды, а также получение следующей
         """
-        if self.__is_idle:
+        if self._is_idle:
             self.__command = self.__get_new_command()
 
-        if not self.__is_idle:
+        if not self._is_idle:
             self.__command_functions[self.__command.type](*self.__command.params)
 
     def __get_new_command(self) -> Optional[EnemyCommand]:
@@ -121,23 +119,23 @@ class Enemy(MovingHumanoid):
         Получить следующую команду. Обновить self.__is_aggred
         """
         if self.__is_see_player:
-            self.__is_aggred = True
-            self.__cooldown = max(self.__cooldown, Enemy.DELAY_BEFORE_FIRST_SHOOT)
+            self._is_aggred = True
+            self.__cooldown = max(self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
             return EnemyCommand('aim')
 
-        if self.__is_aggred:
+        if self._is_aggred:
             new_pos = self.scene.grid.get_pos_to_move(self)
             if new_pos is not None:
                 self.scene.grid.save_enemy_pos(new_pos) #на случай, если несколько enemy решат пойти в одну клетку
                 return EnemyCommand('move_to', new_pos)
 
-        if self.__is_aggred and not self.__is_player_in_aggre_radius:
-            self.__is_aggred = False
+        if self._is_aggred and not self.__is_player_in_aggre_radius:
+            self._is_aggred = False
 
         return None
 
     @property
-    def __is_idle(self):
+    def _is_idle(self):
         """
         Имеет ли команду или просто бездействует
         """
@@ -166,7 +164,7 @@ class Enemy(MovingHumanoid):
         self._recount_angle(self.scene.player.pos)
 
         create_bullet(self)
-        self.__cooldown = Enemy.COOLDOWN_TIME
+        self.__cooldown = CommandHumanoid.COOLDOWN_TIME
 
         self.__command = EnemyCommand('aim')
 
@@ -196,6 +194,50 @@ class Enemy(MovingHumanoid):
     @property
     def __is_player_in_aggre_radius(self) -> bool:
         seg = Segment(self.pos, self.scene.player.pos)
-        return seg.length < Enemy.AGGRE_RADIUS
+        return seg.length < CommandHumanoid.AGGRE_RADIUS
 
 
+class Enemy(CommandHumanoid):
+    IMAGE_ZOOM = 0.3
+    IMAGE_NAME = 'moving_objects.enemy2'
+
+    # важно, чтобы было не в точности pi / const, иначе повороты будут слишком предсказуемые
+    ANGULAR_VELOCITY = 4 / 65
+
+    ROTATION_TIME = 50 #количество циклов поворота
+    ROTATION_MIN_COOLDOWN = 250
+    ROTATION_MAX_COOLDOWN = 400
+    ROTATION_CHANGE_DIRECTION_CHANCE = 30
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+        super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
+        self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
+        self.__rotation_direction = 1 if is_random_proc() else -1
+        self.__rotating_cycles = 0
+
+    def __rotation_logic(self):
+        if not self.__is_rotating:
+            self.__rotate_cooldown -= 1
+            return
+
+        if self.__is_just_start_rotation and is_random_proc(Enemy.ROTATION_CHANGE_DIRECTION_CHANCE):
+            self.__rotation_direction *= -1
+
+        self.angle += Enemy.ANGULAR_VELOCITY * self.__rotation_direction
+        self.__rotating_cycles += 1
+
+        if self.__rotating_cycles == Enemy.ROTATION_TIME:
+            self.__rotating_cycles = 0
+            self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
+
+    def process_logic(self):
+        super().process_logic()
+        if self._is_idle and not self._is_aggred:
+            self.__rotation_logic()
+
+    @property
+    def __is_rotating(self):
+        return self.__rotate_cooldown == 0
+
+    @property
+    def __is_just_start_rotation(self):
+        return self.__rotating_cycles == 0
