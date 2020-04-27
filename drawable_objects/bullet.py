@@ -1,5 +1,6 @@
 from math import sqrt
 from drawable_objects.base import GameSprite
+from drawable_objects.enemy import Enemy
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.circle import Circle
@@ -96,15 +97,14 @@ class Bullet(GameSprite):
         intersection_point = None
         shooted_enemy = None
         middle = (tragectory.p2 + tragectory.p1) / 2
-        neighbours = self.scene.plane.get_neighbours(middle)
+        neighbours = self.scene.plane.get_neighbours(middle, Enemy)
         for neighbour in neighbours:
-            if neighbour.type == 'Enemy':
-                enemy_circle = Circle(neighbour.pos, neighbour.HITBOX_RADIUS)
-                neighbour_intersection_point = intersect_seg_circle(tragectory, enemy_circle)
-                distance = dist(self.pos, neighbour_intersection_point)
-                if distance < dist(self.pos, intersection_point):
-                    shooted_enemy = neighbour
-                    intersection_point = neighbour_intersection_point
+            enemy_circle = Circle(neighbour.pos, neighbour.HITBOX_RADIUS)
+            neighbour_intersection_point = intersect_seg_circle(tragectory, enemy_circle)
+            distance = dist(self.pos, neighbour_intersection_point)
+            if distance < dist(self.pos, intersection_point):
+                shooted_enemy = neighbour
+                intersection_point = neighbour_intersection_point
         return intersection_point, shooted_enemy
 
     def collision_with_enemy(self, intersection_point, enemy):
@@ -124,7 +124,7 @@ class Bullet(GameSprite):
 
         :param intersection_point: точка пересечения с Player
         """
-        self.scene.player.destroy()
+        # self.scene.player.destroy()
         self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 

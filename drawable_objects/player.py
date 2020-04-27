@@ -23,6 +23,7 @@ class Player(Humanoid):
     :param angle: начальный угол поворота игрока
     """
 
+    ADD_TO_GAME_PLANE = True
     IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 0.25
     CONTROLS = [

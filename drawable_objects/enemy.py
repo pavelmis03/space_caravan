@@ -1,3 +1,5 @@
+import weapons.weapons
+
 from typing import Optional
 import math
 
@@ -6,7 +8,6 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import length, polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from weapons.weapons import Pistol
 from geometry.segment import Segment
 from geometry.vector import length
 
@@ -71,6 +72,7 @@ class Enemy(MovingHumanoid):
 
     Рефакторить этот код с паттерном состояние - плохая идея. Проверено на практике.
     """
+    ADD_TO_GAME_PLANE = True
     IMAGE_ZOOM = 0.3
     IMAGE_NAME = 'moving_objects.enemy2'
 
@@ -169,7 +171,7 @@ class Enemy(MovingHumanoid):
         self._recount_angle(self.scene.player.pos)
 
         end_of_barrel = vector_from_length_angle(self.HITBOX_RADIUS + 3, self.angle) + self.pos
-        Pistol.attack(self, end_of_barrel, self.angle)
+        weapons.weapons.Pistol.attack(self, end_of_barrel, self.angle)
 
         self.__cooldown = Enemy.COOLDOWN_TIME
 
@@ -221,6 +223,4 @@ class Enemy(MovingHumanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        self.scene.plane.erase(self, self.pos)
         self.destroy()
-

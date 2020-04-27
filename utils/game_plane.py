@@ -1,5 +1,5 @@
 from math import floor
-from typing import Tuple
+from typing import Tuple, ClassVar
 
 from geometry.point import Point
 from drawable_objects.base import GameSprite
@@ -65,15 +65,17 @@ class GamePlane:
         if old_chunk != new_chunk:
             self.erase(game_object, pos)
             self.insert(game_object, new_pos)
-            # print("New chunk is {}".format(new_chunk))
 
-    def get_neighbours(self, pos: Point):
+    def get_neighbours(self, pos: Point, neighbours_class: ClassVar):
         """
-        Получение списка ссылок на объекты поблизости - в чанке точки и восьми соседних.
+        Получение списка ссылок на объекты определенного класса поблизости -
+        в чанке точки и восьми соседних.
 
-        Внимание! При запросе по центру некоторого игрового объекта в списке ближайших будет и сам объект!
+        Внимание! При запросе по центру некоторого игрового объекта в списке ближайших
+        его же класса будет в том числе сам объект!
 
         :param pos: точка на плоскости
+        :param neighbours_class: класс
         :return: список объектов в ближайших чанках
         """
         chunk = self.get_chunk(pos)
@@ -83,5 +85,7 @@ class GamePlane:
                 neighbour_chunk = (chunk[0] + delta_x, chunk[1] + delta_y)
                 if neighbour_chunk in self.objects:
                     for item in self.objects[neighbour_chunk]:
-                        neighbours.append(item)
+                        if isinstance(item, neighbours_class):
+                            neighbours.append(item)
+        print(len(neighbours))
         return neighbours
