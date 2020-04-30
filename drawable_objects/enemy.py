@@ -11,8 +11,7 @@ from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
 from math import pi
-from geometry.sector import Sector
-
+from utils.timer import Timer, EMPTY_TIMER
 
 class MovingHumanoid(Humanoid):
     """
@@ -88,7 +87,8 @@ class CommandHumanoid(MovingHumanoid):
     AGGRE_RADIUS = 35 * 25
 
     COOLDOWN_TIME = 50
-    DELAY_BEFORE_FIRST_SHOOT = 11
+    DELAY_BEFORE_FIRST_SHOOT = 7
+    DELAY_BEFORE_HEARING = 8
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float,
                  image_zoom: float):
@@ -98,6 +98,8 @@ class CommandHumanoid(MovingHumanoid):
         self.__is_see_player = False
         self._is_aggred = False
         self.__cooldown = 0
+        self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
+
 
         self.__command_functions = {'move_to': self.__command_move_to,
                                   'shoot': self.__command_shoot,
@@ -123,9 +125,21 @@ class CommandHumanoid(MovingHumanoid):
         """
         Логика слуха Enemy
         """
+        self.__hearing_timer_logic()
+
         if not self.scene.player.is_fired_this_tick:
             return
-        self._is_aggred = self._is_aggred or self.scene.grid.is_hearing_player(self)
+
+        # если timer не started, то это значит, что сейчас используется пустой таймер и можно начать новый.
+        if not self.__hearing_timer_delay.is_started and self.scene.grid.is_hearing_player(self):
+            self.__hearing_timer_delay = Timer(Enemy.DELAY_BEFORE_HEARING)
+            self.__hearing_timer_delay.start()
+
+    def __hearing_timer_logic(self):
+        self.__hearing_timer_delay.process_logic()
+        if self.__hearing_timer_delay.is_alarm:
+            self._is_aggred = True
+            self.__hearing_timer_delay = EMPTY_TIMER
 
     def __command_logic(self):
         """
