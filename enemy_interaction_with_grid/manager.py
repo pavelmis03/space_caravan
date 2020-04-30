@@ -38,6 +38,12 @@ class GridInteractionWithEnemyManager:
         """
         return self.__hearing_manager.get_pos_to_move(enemy)
 
+    def is_hearing_player(self, enemy: Enemy) -> bool:
+        """
+        Может ли услышать Enemy Player'а
+        """
+        return self.__hearing_manager.is_hearing_player(enemy)
+
     def is_enemy_can_stay(self, i: int, j: int) -> bool:
         """
         Может ли enemy стоять в клетке с индексами i, j

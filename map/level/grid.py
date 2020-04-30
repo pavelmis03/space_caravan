@@ -73,3 +73,9 @@ class LevelGrid(CollisionGrid):
         закрывают путь).
         """
         return self.enemy_interaction_manager.get_pos_to_move(enemy)
+
+    def is_hearing_player(self, enemy: Enemy) -> bool:
+        """
+        Может ли услышать Enemy Player'а
+        """
+        return self.enemy_interaction_manager.is_hearing_player(enemy)

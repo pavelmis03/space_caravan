@@ -4,6 +4,8 @@ from drawable_objects.enemy import Enemy
 from enemy_interaction_with_grid.vision.room.graph import RoomsGraph
 from geometry.optimized.segment import StaticSegment
 from map.level.rect.splitter import GridRectangle
+from geometry.sector import Sector
+from math import pi
 
 
 class EnemyVisionManager:
@@ -28,7 +30,14 @@ class EnemyVisionManager:
         """
         segment = StaticSegment(enemy.pos, self._grid.scene.player.pos) #важен порядок точек
 
-        if segment.length >= Enemy.VISION_RADIUS:
+        if not self.__is_player_in_vision_sector(enemy):
             return False
 
         return not self.rooms_graph.is_seg_intersect_wall(segment)
+
+    def __is_player_in_vision_sector(self, enemy: Enemy) -> bool:
+        """
+        Находится ли Player в секторе обзора enemy
+        """
+        sector = Sector(Enemy.VISION_RADIUS, enemy.pos, enemy.angle, enemy.VIEW_ANGLE)
+        return sector.is_inside(self._grid.scene.player.pos)

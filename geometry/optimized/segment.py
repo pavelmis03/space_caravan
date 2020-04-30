@@ -1,11 +1,13 @@
 from geometry.point import Point
 from geometry.segment import Segment
 
+
 def get_vector(first: Point, second: Point) -> Point:
     """
     Получить вектор, начинающийся в first и заканчивающийся в second
     """
     return Point(second.x - first.x, second.y - first.y)
+
 
 class StaticSegment(Segment):
     """
