@@ -49,3 +49,10 @@ simple_math
 .. automodule:: utils.simple_math
     :members:
     :undoc-members:
+
+timer
+-----
+
+.. automodule:: utils.timer
+    :members:
+    :undoc-members:

@@ -14,6 +14,9 @@ class Timer:
 
     @property
     def is_started(self):
+        """
+        начался ли отсчет
+        """
         return self.__is_started
 
     @property
