@@ -135,4 +135,4 @@ class RangedWeapon(Weapon):
         """
         Издало ли оружие звук в этот тик(чтобы Enemy слышали)
         """
-        return self.fired_this_tick
+        return self.fired_this_tick and not self.is_reloading
