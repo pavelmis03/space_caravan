@@ -82,7 +82,7 @@ class CommandHumanoid(MovingHumanoid):
     HEARING_RANGE - единица измерения - клетки
     """
     VISION_RADIUS = 25 * 25
-    VIEW_ANGLE = pi
+    VIEW_ANGLE = pi #с углом > pi работать не будет
 
     HEARING_RANGE = 35
     AGGRE_RADIUS = 35 * 25
