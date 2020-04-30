@@ -1,5 +1,6 @@
 from math import sqrt
 from drawable_objects.base import GameSprite
+from drawable_objects.base import SpriteObject
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.circle import Circle
@@ -11,6 +12,7 @@ from controller.controller import Controller
 from utils.game_plane import GamePlane
 from geometry.distances import vector_dist_point_seg
 from geometry.line import Line
+from utils.image import ImageManager
 
 
 def dist(p1: Point, p2: Point) -> float:
@@ -44,6 +46,27 @@ class Bullet(GameSprite):
         super().__init__(scene, controller, Bullet.IMAGE_NAME, pos, angle, Bullet.IMAGE_ZOOM)
         self.direction = vector_from_length_angle(Bullet.SPEED, self.angle)
         self.damage = damage
+        ImageManager.process_draw(
+            'moving_objects.bullet.1', self.pos, self.scene.screen, 1, self.angle)
+
+    def process_draw(self):
+        """
+        Отрисовка объекта в относительных координатах
+
+        Перегружен, чтобы пуля рисовалась чуть заднее своего pos, так как
+        при близости к стенам её кончик будто находится внутри
+
+        Если объект вне экрана, он не отрисовывается
+        relative_center: центр относительных координат
+        """
+        pos = self.pos - vector_from_length_angle(10, self.angle)
+        relative_center = self.scene.relative_center
+        relative_pos = pos - relative_center
+        if ImageManager.is_out_of_screen(self.image_name, self.zoom,
+                                          relative_pos, self.scene.game.screen_rectangle):
+            return
+        ImageManager.process_draw(self.image_name, relative_pos,
+                                   self.scene.screen, self.zoom, self.angle, self.rotation_offset)
 
     def process_logic(self):
         next_pos = self.pos + self.direction
@@ -115,7 +138,7 @@ class Bullet(GameSprite):
         :param enemy: Enemy, в которого попала пуля
         """
         enemy.get_damage(self.damage)
-        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
+        #self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
     def collision_with_player(self, intersection_point):
@@ -125,7 +148,7 @@ class Bullet(GameSprite):
         :param intersection_point: точка пересечения с Player
         """
         self.scene.player.destroy()
-        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
+        #self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
     def collision_with_wall(self, intersection_point):
@@ -134,19 +157,27 @@ class Bullet(GameSprite):
 
         :param intersection_point: точка пересечения со стеной
         """
-        self.scene.game_objects.append(Collision_Point(self.scene, self.controller, intersection_point, self.angle))
+
+        self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
 
-class Collision_Point(Bullet):
-    IMAGE_ZOOM = 0.5
+class Collision_Animation(GameSprite):
+
+    IMAGE_NAMES = [
+        'moving_objects.bullet.2',
+        'moving_objects.bullet.6',
+    ]
+    IMAGE_ZOOMS = [0.7, 1.5]
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        self.lifetime = 20
-        super().__init__(scene, controller, pos, angle, 0)
+        pos = pos - vector_from_length_angle(8, angle)
+        super().__init__(scene, controller,  Collision_Animation.IMAGE_NAMES[0], pos, angle, Collision_Animation.IMAGE_ZOOMS[0])
+        self.image_ind = 0
 
     def process_logic(self):
-        self.lifetime -= 1
-        if self.lifetime <= 0:
+        self.image_name = Collision_Animation.IMAGE_NAMES[self.image_ind // 2]
+        self.zoom = Collision_Animation.IMAGE_ZOOMS[self.image_ind // 2]
+        self.image_ind += 1
+        if self.image_ind >= len(Collision_Animation.IMAGE_NAMES) * 2:
             self.destroy()
-        pass

@@ -1,7 +1,6 @@
 from weapons.base import RangedWeapon
 from drawable_objects.bullet import Bullet
 from geometry.point import Point
-from drawable_objects.bullet import Collision_Point
 from random import randrange
 
 
