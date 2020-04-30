@@ -46,6 +46,13 @@ class Player(Humanoid):
         self._turn_to_mouse()
         self._movement_controls()
 
+    @property
+    def is_fired_this_tick(self):
+        """
+        выстрелил ли Player в этот тик process_logic
+        """
+        return self.weapon.is_fired_this_tick
+
     def _turn_to_mouse(self):
         """
         Высичление позиции в относительных координатах и поворот к мыши (которая по умолчанию

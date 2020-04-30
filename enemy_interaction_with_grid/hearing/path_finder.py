@@ -119,6 +119,13 @@ class GridPathFinder:
         i, j = self.__grid.index_manager.get_index_by_pos(pos)
         self.__is_has_enemy.mark(i, j)
 
+    def is_hearing_player(self, enemy: Enemy) -> bool:
+        """
+        Может ли услышать Enemy Player'а
+        """
+        i, j = self.__grid.index_manager.get_index_by_pos(enemy.pos)
+        return self.__used_manager.is_marked(i, j)
+
     def get_pos_to_move(self, enemy: Enemy) -> Optional[Point]:
         """
         Получить точку для движения.

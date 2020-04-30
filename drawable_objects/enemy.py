@@ -108,6 +108,7 @@ class CommandHumanoid(MovingHumanoid):
         Логика enemy. Во многом зависит от того, видит он player'а или нет.
         """
         self.__vision_logic()
+        self.__hearing_logic()
         self.__command_logic()
         if self.__cooldown:
             self.__cooldown -= 1
@@ -117,6 +118,14 @@ class CommandHumanoid(MovingHumanoid):
         Логика зрения Enemy
         """
         self.__is_see_player = self.scene.grid.is_enemy_see_player(self)
+
+    def __hearing_logic(self):
+        """
+        Логика слуха Enemy
+        """
+        if not self.scene.player.is_fired_this_tick:
+            return
+        self._is_aggred = self._is_aggred or self.scene.grid.is_hearing_player(self)
 
     def __command_logic(self):
         """
