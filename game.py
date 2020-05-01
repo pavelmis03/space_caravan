@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from controller.controller import Controller
+from space.space import Space
 from geometry.rectangle import Rectangle
 from scenes.main import MainScene
 from scenes.spaceship_scene import SpaceshipScene
@@ -23,17 +24,24 @@ class Game:
     SPACEMAP_SCENE_INDEX = 5
     GAMEOVER_SCENE_INDEX = 6
 
-    def __init__(self, width=1300, height=800):
+    def __init__(self, width=1000, height=700):
         self.size = (width, height)
-
         self.screen = None
         pygame.init()
         self.create_window()
         self.running = True
+
         self.controller = Controller(self)
+        self.space = Space(self, self.controller)
         ImageManager.load_all()
-        self.scenes = [MainMenuScene(self), MainScene(self), SettingsMenuScene(
-            self), AboutMenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
+        self.scenes = [
+            MainMenuScene(self),
+            MainScene(self),
+            SettingsMenuScene(self),
+            AboutMenuScene(self),
+            SpaceshipScene(self),
+            self.space.get_spacemap_scene(),
+        ]
         self.current_scene = 0
 
     @property

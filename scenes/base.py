@@ -53,6 +53,7 @@ class Scene:
         for item in self.interface_objects:
             item.process_draw()
 
+
 def delete_destroyed(objects: List[any]):
     """
     быстрое удаление уничтоженных эл-тов (который not enabled).
@@ -67,6 +68,7 @@ def delete_destroyed(objects: List[any]):
             objects.pop()
             continue
         i += 1
+
 
 class GameScene(Scene):
     """
