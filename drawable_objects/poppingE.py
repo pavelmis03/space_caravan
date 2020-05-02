@@ -22,7 +22,7 @@ class PoppingE(GameSprite):
         self.parent_radius = parent_radius
 
         pos += Point(0, -ImageManager.get_height(parent_image, zoom / 1.25))
-        super().__init__(scene, controller, 'other.poppingE',
+        super().__init__(scene, controller, 'interface.poppingE',
                          pos, angle, PoppingE.IMAGE_ZOOM)
 
     def process_draw(self):
