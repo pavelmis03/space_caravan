@@ -73,6 +73,7 @@ class GameScene(Scene):
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
     :param game: игра, создающая сцену
     """
+    SHIFT_SENSIVITY = 1 / 16
 
     def __init__(self, game):
         super().__init__(game)
@@ -106,10 +107,12 @@ class GameScene(Scene):
 
         self.player.process_logic()
         self.relative_center = self.player.pos - self.game.screen_rectangle.center
-        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
         # смешение камеры к курсору мыши
         mouse_pos = self.game.controller.get_mouse_pos()
-        self.relative_center += mouse_pos - Point(self.game.width / 2, self.game.height / 2)
+        mouse_pos -= Point(self.game.width / 2, self.game.height / 2)
+        self.relative_center += mouse_pos * self.SHIFT_SENSIVITY
+
+        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
 
     def delete_destroyed_objects(self):
         """
