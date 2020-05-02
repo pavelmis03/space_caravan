@@ -39,30 +39,43 @@ class PlanetsGenerator:
             planets_centers.append(current_center)
         return planets_centers
 
-    def __spread_centers(self, planets_centers: List[Point]):
+    def __push_till_dist(self, planets_centers: List[Point], distance: int, delta: int) -> bool:
+        flag = True
         velocity = [Point() for _ in range(len(planets_centers))]
-        D = 60
-        K = 0.005
-        for k in range(200):
+        for k in range(len(planets_centers) * len(planets_centers)):
             for i in range(len(planets_centers)):
                 velocity[i] = Point(0, 0)
             for i in range(len(planets_centers)):
-                if planets_centers[i].x < self.__space_rectangle.left + D:
-                    velocity[i].x += 6
-                if planets_centers[i].x > self.__space_rectangle.right - D:
-                    velocity[i].x += -6
-                if planets_centers[i].y < self.__space_rectangle.top + D:
-                    velocity[i].y += 6
-                if planets_centers[i].y > self.__space_rectangle.bottom - D:
-                    velocity[i].y += -6
-                # velocity[i] += (self.__space_rectangle.center - planets_centers[i]) * K
+                if planets_centers[i].x < self.__space_rectangle.left + distance:
+                    velocity[i].x += delta
+                if planets_centers[i].x > self.__space_rectangle.right - distance:
+                    velocity[i].x += -delta
+                if planets_centers[i].y < self.__space_rectangle.top + distance:
+                    velocity[i].y += delta
+                if planets_centers[i].y > self.__space_rectangle.bottom - distance:
+                    velocity[i].y += -delta
                 for j in range(len(planets_centers)):
                     if i != j:
                         v = planets_centers[i] - planets_centers[j]
-                        if length(v) < 2 * D:
-                            velocity[i] += normalized(v) * 3
+                        if length(v) < 2 * distance:
+                            velocity[i] += normalized(v) * delta
             for i in range(len(planets_centers)):
                 planets_centers[i] += velocity[i]
+
+            flag = False
+            for i in range(len(planets_centers)):
+                if sign(length(velocity[i])) != 0:
+                    flag = True
+            if not flag:
+                break
+
+        return not flag
+
+    def __spread_centers(self, planets_centers: List[Point]):
+        distance = 0
+        delta = 5
+        while self.__push_till_dist(planets_centers, distance, delta):
+            distance += delta
 
     def __arrange_planets_centers(self) -> List[Point]:
         planets_centers = self.__generate_random_centers()
