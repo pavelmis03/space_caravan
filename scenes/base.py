@@ -107,6 +107,9 @@ class GameScene(Scene):
         self.player.process_logic()
         self.relative_center = self.player.pos - self.game.screen_rectangle.center
         self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
+        # смешение камеры к курсору мыши
+        mouse_pos = self.game.controller.get_mouse_pos()
+        self.relative_center += mouse_pos - Point(self.game.width / 2, self.game.height / 2)
 
     def delete_destroyed_objects(self):
         """
