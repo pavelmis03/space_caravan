@@ -5,7 +5,7 @@ from geometry.rectangle import Rectangle
 
 
 class Space:
-    PLANETS_NUMBER = 13
+    PLANETS_NUMBER = 12
 
     def __init__(self, game, controller: Controller):
         self.__game = game

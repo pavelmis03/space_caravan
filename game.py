@@ -42,7 +42,7 @@ class Game:
             SpaceshipScene(self),
             self.space.get_spacemap_scene(),
         ]
-        self.current_scene = 5
+        self.current_scene = 0
 
     @property
     def size(self) -> Tuple[int, int]:
