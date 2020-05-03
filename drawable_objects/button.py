@@ -19,10 +19,10 @@ class Button(DrawableObject):
     :param kwargs: именованные аргументы процедуры, вызываемой по нажатию
     :param font_size: размер шрифта текста на кнопке
     """
-    BG_COLOR = COLOR['CYAN']
-    BG_HOVER_COLOR = COLOR['ORANGE']
+    BG_COLOR = (120, 120, 120)
+    BG_HOVER_COLOR = (220, 220, 220)
     TEXT_COLOR = COLOR['BLACK']
-    TEXT_HOVER_COLOR = COLOR['BLUE']
+    TEXT_HOVER_COLOR = COLOR['BLACK']
     FONT_NAME = 'Consolas'
     HOVER_SOUND = 'menu.menu_select'
 
@@ -51,6 +51,9 @@ class Button(DrawableObject):
         hover = self.geometry.is_inside(self.controller.get_mouse_pos())
         if not self.hover and hover:
             SoundManager.play_sound(Button.HOVER_SOUND)
+            self.geometry.width *= 1.05
+        elif self.hover and not hover:
+            self.geometry.width /= 1.05
         self.hover = hover
         click_pos = self.controller.get_click_pos()
         if click_pos and self.geometry.is_inside(click_pos):
