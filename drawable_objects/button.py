@@ -4,6 +4,7 @@ from constants.color import COLOR
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
 from geometry.rectangle import rectangle_to_rect, tuple_to_rectangle
+from utils.sound import SoundManager
 
 
 class Button(DrawableObject):
@@ -23,6 +24,7 @@ class Button(DrawableObject):
     TEXT_COLOR = COLOR['BLACK']
     TEXT_HOVER_COLOR = COLOR['BLUE']
     FONT_NAME = 'Consolas'
+    HOVER_SOUND = 'menu.menu_select'
 
     def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs={}, font_size=20):
         self.geometry = tuple_to_rectangle(geometry)
@@ -46,7 +48,10 @@ class Button(DrawableObject):
         self.hover_text.pos = self.geometry.center
 
     def process_logic(self):
-        self.hover = self.geometry.is_inside(self.controller.get_mouse_pos())
+        hover = self.geometry.is_inside(self.controller.get_mouse_pos())
+        if not self.hover and hover:
+            SoundManager.play_sound(Button.HOVER_SOUND)
+        self.hover = hover
         click_pos = self.controller.get_click_pos()
         if click_pos and self.geometry.is_inside(click_pos):
             self.function(**self.kwargs)
