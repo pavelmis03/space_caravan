@@ -25,6 +25,7 @@ class Button(DrawableObject):
     TEXT_HOVER_COLOR = COLOR['BLACK']
     FONT_NAME = 'Consolas'
     HOVER_SOUND = 'menu.menu_select'
+    HOVER_RESIZE = 1.05
 
     def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs={}, font_size=20):
         self.geometry = tuple_to_rectangle(geometry)
@@ -51,9 +52,11 @@ class Button(DrawableObject):
         hover = self.geometry.is_inside(self.controller.get_mouse_pos())
         if not self.hover and hover:
             SoundManager.play_sound(Button.HOVER_SOUND)
-            self.geometry.width *= 1.05
+            self.geometry.width *= Button.HOVER_RESIZE
+            self.geometry.height *= Button.HOVER_RESIZE
         elif self.hover and not hover:
-            self.geometry.width /= 1.05
+            self.geometry.width /= Button.HOVER_RESIZE
+            self.geometry.height /= Button.HOVER_RESIZE
         self.hover = hover
         click_pos = self.controller.get_click_pos()
         if click_pos and self.geometry.is_inside(click_pos):
