@@ -24,8 +24,8 @@ class Button(DrawableObject):
     TEXT_COLOR = COLOR['BLACK']
     TEXT_HOVER_COLOR = COLOR['BLACK']
     FONT_NAME = 'Consolas'
-    HOVER_SOUND = 'menu.menu_select'
-    PRESS_SOUND = 'menu.menu_press'
+    HOVER_SOUND = 'button.select'
+    PRESS_SOUND = 'button.press'
     HOVER_RESIZE = 1.05
 
     def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs={}, font_size=20):
