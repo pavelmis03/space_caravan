@@ -72,3 +72,10 @@ class SoundManager:
         if isinstance(sound, dict):
             raise ValueError(sound + ' is a dir, not a file')
         sound.play()
+
+    @staticmethod
+    def set_volume(sound_path: str, value: float=1):
+        sound = SoundManager.get_sound(sound_path)
+        if isinstance(sound, dict):
+            raise ValueError(sound + ' is a dir, not a file')
+        sound.set_volume(value)

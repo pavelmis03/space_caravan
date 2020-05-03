@@ -25,6 +25,7 @@ class Button(DrawableObject):
     TEXT_HOVER_COLOR = COLOR['BLACK']
     FONT_NAME = 'Consolas'
     HOVER_SOUND = 'menu.menu_select'
+    PRESS_SOUND = 'menu.menu_press'
     HOVER_RESIZE = 1.05
 
     def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs={}, font_size=20):
@@ -37,6 +38,8 @@ class Button(DrawableObject):
                          Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
         self.hover_text = Text(scene, self.geometry.center, text, Button.TEXT_HOVER_COLOR, 'center', Button.FONT_NAME,
                                font_size)
+        SoundManager.set_volume(Button.HOVER_SOUND, 0.1)
+        # SoundManager.set_volume(Button.PRESS_SOUND)
 
     def move(self, movement):
         """
@@ -60,6 +63,7 @@ class Button(DrawableObject):
         self.hover = hover
         click_pos = self.controller.get_click_pos()
         if click_pos and self.geometry.is_inside(click_pos):
+            SoundManager.play_sound(Button.PRESS_SOUND)
             self.function(**self.kwargs)
 
     def process_draw(self):
