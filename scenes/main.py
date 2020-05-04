@@ -1,5 +1,6 @@
 from console.console import Console
 from console.entry import Entry
+from drawable_objects.Ladder import Ladder
 from drawable_objects.interface.pause_manager import PauseManager
 from drawable_objects.interface.player_icon import PlayerIcon
 from drawable_objects.player import Player
@@ -22,6 +23,9 @@ class MainScene(GameScene):
         self.player = Player(self, self.game.controller, Point(100, 100), 0)
         self.game.controller.input_objects.append(self.player)
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
+
+        self.game_objects.append(Ladder(
+            self, self.game.controller, Point(100, 100), 0))
 
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
