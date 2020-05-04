@@ -25,6 +25,13 @@ class EnemyHearingManager:
         """
         return self.__path_finder.can_stay(i, j)
 
+    def is_hearing_player(self, enemy: Enemy) -> bool:
+        """
+        Может ли услышать Enemy Player'а
+        """
+        return self.__path_finder.is_hearing_player(enemy)
+
+
     def save_enemy_pos(self, pos: Point):
         """
         отмечает, что на этой позиции есть enemy

@@ -51,7 +51,7 @@ class Room:
         """
         for i in range(len(edges)):
             if is_segments_intersect(seg, edges[i]):
-                result += self._neighbours[i]
+                result.extend(self._neighbours[i])
 
         return result
 
