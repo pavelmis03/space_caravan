@@ -2,6 +2,7 @@ image: "python:3.7"
 
 stages:
   - test
+  - build
 
 pylint:
   stage: test
@@ -10,3 +11,10 @@ pylint:
     - pip install pylint
     - ci/pylint_runner.sh
   allow_failure: true
+
+pyinstaller:
+  stage: build
+  script:
+    - pip install -r requirements.txt
+    - pip install pyinstaller
+    - pyinstaller game.py -p . -F
