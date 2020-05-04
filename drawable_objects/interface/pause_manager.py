@@ -45,6 +45,7 @@ class PauseManager(AbstractObject):
             if self.controller.is_key_pressed(PauseManager.CONTROLS['CLOSE']) and self.active:
                 self.resume()
         if self.active:
+            self.surface = pygame.transform.scale(self.surface, (self.scene.game.width, self.scene.game.height))
             self.buttons.process_logic()
 
     def pause(self):
