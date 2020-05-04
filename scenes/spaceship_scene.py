@@ -1,5 +1,6 @@
 from console.console import Console
 from console.entry import Entry
+from drawable_objects.CloneCapsule import CloneCapsule
 from drawable_objects.interface.pause_manager import PauseManager
 from drawable_objects.player import Player
 from scenes.base import GameScene
@@ -8,6 +9,8 @@ from map.spaceship_grid import SpaceshipGrid
 from utils.game_plane import GamePlane
 
 from drawable_objects.space_map_terminal import SpaceMapTerminal
+
+
 
 
 class SpaceshipScene(GameScene):
@@ -22,13 +25,19 @@ class SpaceshipScene(GameScene):
         terminal_spawn_point = player_spawn_point + \
             Point((room_width / 2 - 2) * 25, (room_height - 3) * 25)
 
+        """clonecapsule_spawn_point = player_spawn_point + \
+                               Point((room_width / 2 - 2) * 25, (room_height - 3) * 25)"""
+
         self.plane = GamePlane()
         self.player = Player(self, self.game.controller, player_spawn_point, 0)
         self.game.controller.input_objects.append(self.player)
         self.grid = SpaceshipGrid(self, self.game.controller, Point(
             0, 0), 25, 25, room_width, room_height, top_left_cornor_bias)
+
         self.game_objects.append(SpaceMapTerminal(
             self, self.game.controller, terminal_spawn_point, 0))
+        """self.game_objects.append(CloneCapsule(
+            self, self.game.controller, clonecapsule_spawn_point, 0))"""
 
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
