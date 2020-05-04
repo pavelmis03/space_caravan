@@ -6,6 +6,10 @@ from controller.controller import Controller
 
 
 class Ladder(UsableObject):
+    """
+        Класс лестницы, с которой игрок может взаимодействовать,
+        при взаимодействии отправляет игрока на сцену SCENE_INDEX
+        """
     IMAGE_ZOOM = 0.8
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
