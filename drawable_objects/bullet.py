@@ -40,7 +40,7 @@ class Bullet(GameSprite):
 
     IMAGE_ZOOM = 0.7
     IMAGE_NAME = 'moving_objects.bullet.1'
-    SPEED = 100
+    SPEED = 200
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float, damage):
         super().__init__(scene, controller, Bullet.IMAGE_NAME, pos, angle, Bullet.IMAGE_ZOOM)
@@ -168,7 +168,7 @@ class Collision_Animation(GameSprite):
         'moving_objects.bullet.2',
         'moving_objects.bullet.6',
     ]
-    IMAGE_ZOOMS = [0.7, 1.5]
+    IMAGE_ZOOMS = [0.7, 1.8]
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         pos = pos - vector_from_length_angle(8, angle)
@@ -176,8 +176,8 @@ class Collision_Animation(GameSprite):
         self.image_ind = 0
 
     def process_logic(self):
-        self.image_name = Collision_Animation.IMAGE_NAMES[self.image_ind // 2]
-        self.zoom = Collision_Animation.IMAGE_ZOOMS[self.image_ind // 2]
+        self.image_name = Collision_Animation.IMAGE_NAMES[self.image_ind // 3]
+        self.zoom = Collision_Animation.IMAGE_ZOOMS[self.image_ind // 3]
         self.image_ind += 1
-        if self.image_ind >= len(Collision_Animation.IMAGE_NAMES) * 2:
+        if self.image_ind >= len(Collision_Animation.IMAGE_NAMES) * 3:
             self.destroy()

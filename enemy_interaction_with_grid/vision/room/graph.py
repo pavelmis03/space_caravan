@@ -38,7 +38,7 @@ class RoomsGraph:
         color0 = self._get_room_color_by_pos(seg.p1)
         self._used.mark(color0 - 1)
 
-        queue = deque()
+        queue = deque() # collections.deque работает быстрее, чем queue.Queue
         queue.append(color0)
 
         while len(queue):
