@@ -14,13 +14,9 @@ class Planet(SpriteObject):
 
     :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
-    :param image_name: имя картинки в базе менеджера
     :param pos: координаты объекта
-    :param angle: угол поворота объекта
-    :param zoom: масштаб картинки
-
-    :param planet_biom: запуск карты определенного биома планеты (не реализовано)
-    :param planet_name: название планеты (не реализовано)
+    :param biom: биом - вид планеты
+    :param name: название планеты
     """
     BUTTON_RADIUS = 50
     IMAGE_ZOOM = 0.07
@@ -29,14 +25,12 @@ class Planet(SpriteObject):
         'Simple': 'level_objects.planet'
     }
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point,
-                 planet_biom=BIOMS[0], planet_name='Test'):
-        super().__init__(scene, controller, Planet.IMAGE_NAMES[planet_biom], pos,
-                         random() * 2 * pi, Planet.IMAGE_ZOOM)
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, biom=BIOMS[0], name='Test'):
+        super().__init__(scene, controller, Planet.IMAGE_NAMES[biom], pos, random() * 2 * pi, Planet.IMAGE_ZOOM)
         self.geometry = Circle(pos, Planet.BUTTON_RADIUS)
         self.rotation_offset = [0, 0]
-        self.name = planet_name
-        self.biom = planet_biom
+        self.name = name
+        self.biom = biom
         self.enabled = True
 
     def process_logic(self):

@@ -10,7 +10,6 @@ from scenes.spaceship_scene import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
-from scenes.spacemap import SpacemapScene
 from utils.image import ImageManager
 from typing import Tuple
 
