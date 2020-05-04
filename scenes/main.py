@@ -1,6 +1,7 @@
 from console.console import Console
 from console.entry import Entry
 from drawable_objects.Ladder import Ladder
+from drawable_objects.interface.display_count import DisplayCount
 from drawable_objects.interface.pause_manager import PauseManager
 from drawable_objects.interface.player_icon import PlayerIcon
 from drawable_objects.player import Player
@@ -30,8 +31,12 @@ class MainScene(GameScene):
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
         self.game.controller.input_objects.append(self.pause_manager)
+
         player_icon = PlayerIcon(self, self.game.controller, self.player)
         self.interface_objects.append(player_icon)
+
+        ammo_display = DisplayCount(self, self.game.controller, Point(0, 0), self.player.weapon, ['magazine', 'ammo'])
+        self.interface_objects.append(ammo_display)
         # cmd = Console(self, self.game.controller, (0, self.game.height-20, 200, self.game.height))
         # self.interface_objects.append(cmd)
 
