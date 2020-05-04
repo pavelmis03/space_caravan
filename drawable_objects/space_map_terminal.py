@@ -1,4 +1,4 @@
-from drawable_objects.base import UsableObject
+from drawable_objects.UsableObject import UsableObject
 from geometry.point import Point
 
 from scenes.base import Scene
