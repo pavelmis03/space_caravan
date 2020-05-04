@@ -6,6 +6,6 @@ stages:
 pylint:
   stage: test
   script:
-    - pip install -r requirements
+    - pip install -r requirements.txt
     - pip install pylint
     - ci/pylint_runner.sh
