@@ -1,6 +1,7 @@
 from console.console import Console
 from console.entry import Entry
 from drawable_objects.Ladder import Ladder
+from drawable_objects.interface.ammo_display import AmmoDisplay
 from drawable_objects.interface.display_count import DisplayCount
 from drawable_objects.interface.pause_manager import PauseManager
 from drawable_objects.interface.player_icon import PlayerIcon
@@ -35,7 +36,7 @@ class MainScene(GameScene):
         player_icon = PlayerIcon(self, self.game.controller, self.player)
         self.interface_objects.append(player_icon)
 
-        ammo_display = DisplayCount(self, self.game.controller, Point(100, 20), self.player.weapon, ['magazine', 'ammo'])
+        ammo_display = AmmoDisplay(self, self.game.controller, Point(100, 20), self.player.weapon)
         self.interface_objects.append(ammo_display)
         # cmd = Console(self, self.game.controller, (0, self.game.height-20, 200, self.game.height))
         # self.interface_objects.append(cmd)

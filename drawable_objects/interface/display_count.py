@@ -19,11 +19,27 @@ class DisplayCount(AbstractObject):
         self.render_string = None
 
     def process_logic(self):
+        render = self.get_render_data()
+        render_string = ' '.join(render)
+        self.render_text(render_string)
+
+    def get_render_data(self) -> list:
+        """
+        Получить все данные, необходимые для рендеринга
+        :return: список строк
+        """
         render = []
         for attr in self.fields:
             render.append(str(self.subject.__getattribute__(attr)))
-        render_string = '/'.join(render)
+        return render
+
+    def render_text(self, render_string):
+        """
+        Отрендерить строку
+        :param render_string: строка
+        """
         if self.render_string != render_string:
+            # little optimization
             self.render_string = render_string
             self.text.update_text(render_string)
 
