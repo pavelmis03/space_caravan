@@ -9,11 +9,13 @@ class DisplayCount(AbstractObject):
     subject - объект, поля которого ослеживаются
     fields  - отслеживаемые поля объекта
     """
+    COLOR = (220, 220, 220)
+
     def __init__(self, scene, controller, pos, subject, fields=[]):
         super().__init__(scene, controller)
         self.subject = subject
         self.fields = fields
-        self.text = Text(scene, pos, '')
+        self.text = Text(scene, pos, '', DisplayCount.COLOR, 'left', 'Consolas', 50, False, False)
         self.render_string = None
 
     def process_logic(self):

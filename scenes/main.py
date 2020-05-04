@@ -35,7 +35,7 @@ class MainScene(GameScene):
         player_icon = PlayerIcon(self, self.game.controller, self.player)
         self.interface_objects.append(player_icon)
 
-        ammo_display = DisplayCount(self, self.game.controller, Point(0, 0), self.player.weapon, ['magazine', 'ammo'])
+        ammo_display = DisplayCount(self, self.game.controller, Point(100, 20), self.player.weapon, ['magazine', 'ammo'])
         self.interface_objects.append(ammo_display)
         # cmd = Console(self, self.game.controller, (0, self.game.height-20, 200, self.game.height))
         # self.interface_objects.append(cmd)
