@@ -25,7 +25,7 @@ class MainScene(GameScene):
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
 
         self.game_objects.append(Ladder(
-            self, self.game.controller, Point(100, 100), 0))
+            self, self.game.controller, Point(85, 150), 0))
 
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
