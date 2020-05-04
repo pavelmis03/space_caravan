@@ -1,16 +1,14 @@
+import pygame
+
+from constants.mouse_buttons import MouseButtonID
 from drawable_objects.base import AbstractObject
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
-from constants.mouse_buttons import MouseButtonID
-from drawable_objects.bullet import Bullet
-import pygame
-
 from utils.sound import SoundManager
 
 
 class Weapon(AbstractObject):
-
     MAIN_BUTTON = MouseButtonID.LEFT
     ALTERNATIVE_BUTTON = MouseButtonID.RIGHT
 
@@ -34,7 +32,8 @@ class Weapon(AbstractObject):
             self.cooldown -= 1
             if self.cooldown == 0:
                 self.is_working = True
-        self.is_attacking = self.is_automatic and self.controller.is_mouse_pressed(Weapon.MAIN_BUTTON) and self.is_attacking
+        self.is_attacking = self.is_automatic and self.controller.is_mouse_pressed(
+            Weapon.MAIN_BUTTON) and self.is_attacking
         button = self.controller.get_click_button()
         if (button == Weapon.MAIN_BUTTON or self.is_attacking) and self.is_working:
             self.main_button_click()
@@ -73,7 +72,6 @@ class Weapon(AbstractObject):
 
 
 class RangedWeapon(Weapon):
-
     RELOAD_KEY = pygame.K_r
 
     def __init__(self, attacker, ammo, cooldown_time, reload_time, magazine_size, is_automatic, length,
@@ -103,8 +101,9 @@ class RangedWeapon(Weapon):
         """
         Функция перезарядки
         """
+        self.remains = self.magazine
         self.magazine = min(self.magazine_size, self.ammo)
-        self.ammo -= self.magazine
+        self.ammo -= (self.magazine - self.remains)
         self.is_working = False
         self.cooldown = self.reload_time
         self.is_reloading = self.reload_time
@@ -114,7 +113,8 @@ class RangedWeapon(Weapon):
         self._is_fired_this_tick = False
         if self.is_reloading:
             self.is_reloading -= 1
-        if self.controller.is_key_pressed(RangedWeapon.RELOAD_KEY) and not self.is_reloading and self.magazine < self.magazine_size:
+        if self.controller.is_key_pressed(
+                RangedWeapon.RELOAD_KEY) and not self.is_reloading and self.magazine < self.magazine_size:
             self.reload()
         super().process_logic()
 
@@ -126,12 +126,12 @@ class RangedWeapon(Weapon):
         self._is_fired_this_tick = True
         pos = self.scene.player.pos
         angle = self.scene.player.angle
-        self.magazine -= 1
-        if self.magazine < 0:
+        end_of_the_barrel = pos + vector_from_length_angle(self.barrel_length, angle)
+        if self.magazine == 0:
             self.reload()
             return
+        self.magazine -= 1
         SoundManager.play_sound('weapon.shoot')
-        end_of_the_barrel = pos + vector_from_length_angle(self.barrel_length, angle)
         if self.scene.grid.intersect_seg_walls(Segment(pos, end_of_the_barrel)) is None:
             self.attack(end_of_the_barrel, angle)
 
