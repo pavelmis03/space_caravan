@@ -17,11 +17,13 @@ class AbstractObject:
 
         :param scene: сцена объекта
         :param controller: ссылка на объект контроллера
+        :param type: тип объекта
         """
 
     def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
         self.controller = controller
+        self.type = ''
 
     def process_logic(self):
         """
@@ -173,32 +175,3 @@ class Humanoid(GameSprite):
                  zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.hp = Humanoid.MAXHP
-
-
-class UsableObject(GameSprite):
-    """
-    Базовый класс объекта, с которым игрок может взаимодействовать на клавишу ACTIVATION_KEY,
-    подойдя на определенное расстояние
-    """
-    ACTIVATION_KEY = pygame.K_e
-
-    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
-                 zoom: float = 1, usage_radius: float = 100):
-        super().__init__(scene, controller, image_name, pos, angle, zoom)
-        # Радиус вокруг объекта, в пределах которого с ним можно взаимодействовать
-        self.usage_radius = usage_radius
-
-    def process_logic(self):
-        super().process_logic()
-        if dist(self.scene.player.pos, self.pos) <= self.usage_radius:  # Проверка активации
-            if self.controller.is_key_pressed(key=UsableObject.ACTIVATION_KEY):
-                self.activate()
-
-    def activate(self):
-        """
-        Функция, активирующаяся при взаимодействии с объектом
-        """
-
-        x_speed = cos(self.angle) * self.speed
-        y_speed = -sin(self.angle) * self.speed
-        return Point(x_speed, y_speed)

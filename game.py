@@ -13,6 +13,8 @@ from scenes.spacemap import SpacemapScene
 from utils.image import ImageManager
 from typing import Tuple
 
+from utils.sound import SoundManager
+
 
 class Game:
     MAIN_MENU_SCENE_INDEX = 0
@@ -32,6 +34,7 @@ class Game:
         self.running = True
         self.controller = Controller(self)
         ImageManager.load_all()
+        SoundManager.load_all()
         self.scenes = [MainMenuScene(self), MainScene(self), SettingsMenuScene(
             self), AboutMenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
         self.current_scene = 0

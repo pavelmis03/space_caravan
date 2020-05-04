@@ -8,8 +8,10 @@ from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
+from weapons.weapons import Pistol
 from weapons.weapons import Shotgun
 
+from utils.game_plane import GamePlane
 
 class Player(Humanoid):
     """
