@@ -1,16 +1,11 @@
 image: "python:3.7"
 
 stages:
-  - setup
   - test
-
-py-pip:
-  stage: setup
-  script:
-    - pip install -r requirements.txt
-    - pip install pylint
 
 pylint:
   stage: test
   script:
+    - pip install -r requirements
+    - pip install pylint
     - ci/pylint_runner.sh
