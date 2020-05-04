@@ -8,7 +8,7 @@ py-pip:
   stage: setup
   script:
     - python -m pip install -r requirements.txt
-    - apt install pylint
+    - python -m pip install pylint
 
 pylint:
   stage: test
