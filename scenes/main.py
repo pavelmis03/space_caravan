@@ -1,6 +1,6 @@
 from console.console import Console
 from console.entry import Entry
-from drawable_objects.Ladder import Ladder
+from drawable_objects.ladder import Ladder
 from drawable_objects.interface.display_count import DisplayCount
 from drawable_objects.interface.pause_manager import PauseManager
 from drawable_objects.interface.player_icon import PlayerIcon
