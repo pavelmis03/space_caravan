@@ -1,7 +1,13 @@
 image: "python:3.7"
 
 stages:
+  - setup
   - test
+
+py-pip:
+  stage: setup
+  script:
+    - python -m pip install -r
 
 pylint:
   stage: test
