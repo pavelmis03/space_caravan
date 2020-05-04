@@ -9,3 +9,4 @@ pylint:
     - pip install -r requirements.txt
     - pip install pylint
     - ci/pylint_runner.sh
+  allow_failure: true
