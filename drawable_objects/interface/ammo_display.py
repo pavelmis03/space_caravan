@@ -1,11 +1,11 @@
 from drawable_objects.interface.display_count import DisplayCount
-
+from constants.color import COLOR
 
 class AmmoDisplay(DisplayCount):
     """
     Класс для отображения количества патронов
     """
-    COLOR = (120, 120, 120)
+    COLOR = COLOR['WHITE']
     FIELDS = ['magazine', 'ammo']
 
     def __init__(self, scene, controller, pos, weapon):
@@ -13,7 +13,7 @@ class AmmoDisplay(DisplayCount):
 
     def process_logic(self):
         if self.subject.is_reloading:
-            render_string = 'Перезарядка...'
+            render_string = 'Перезарядка: ' + str(self.subject.is_reloading)
         else:
             render_string = '/'.join(self.get_render_data())
         self.render_text(render_string)
