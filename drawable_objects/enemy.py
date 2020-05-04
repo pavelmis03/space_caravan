@@ -1,3 +1,5 @@
+import weapons.weapons
+
 from typing import Optional
 
 from controller.controller import Controller
@@ -5,7 +7,6 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from weapons.weapons import Pistol
 from geometry.segment import Segment
 from geometry.vector import length
 from random import randint
@@ -76,7 +77,10 @@ class CommandHumanoid(MovingHumanoid):
 
     Рефакторить этот код с паттерном состояние - плохая идея. Проверено на практике.
     """
+
+    ADD_TO_GAME_PLANE = True
     SPEED = 8
+
     """
     HEARING_RANGE - единица измерения - клетки
     """
@@ -204,7 +208,7 @@ class CommandHumanoid(MovingHumanoid):
         self._recount_angle(self.scene.player.pos)
 
         end_of_barrel = vector_from_length_angle(self.HITBOX_RADIUS + 3, self.angle) + self.pos
-        Pistol.attack(self, end_of_barrel, self.angle)
+        weapons.weapons.Pistol.attack(self, end_of_barrel, self.angle)
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
 
@@ -345,5 +349,4 @@ class Enemy(CommandHumanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        #self.scene.plane.erase(self, self.pos)
         self.destroy()

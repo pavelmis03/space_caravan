@@ -1,17 +1,13 @@
-from math import sqrt
 from drawable_objects.base import GameSprite
-from drawable_objects.base import SpriteObject
+from drawable_objects.enemy import Enemy
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.circle import Circle
 from geometry.intersections import intersect_seg_circle
 from geometry.vector import vector_from_length_angle, length
-from geometry.line import line_from_points
 from scenes.base import Scene
 from controller.controller import Controller
 from utils.game_plane import GamePlane
-from geometry.distances import vector_dist_point_seg
-from geometry.line import Line
 from utils.image import ImageManager
 
 
@@ -119,15 +115,14 @@ class Bullet(GameSprite):
         intersection_point = None
         shooted_enemy = None
         middle = (tragectory.p2 + tragectory.p1) / 2
-        neighbours = self.scene.plane.get_neighbours(middle)
+        neighbours = self.scene.plane.get_neighbours(middle, Enemy)
         for neighbour in neighbours:
-            if neighbour.type == 'Enemy':
-                enemy_circle = Circle(neighbour.pos, neighbour.HITBOX_RADIUS)
-                neighbour_intersection_point = intersect_seg_circle(tragectory, enemy_circle)
-                distance = dist(self.pos, neighbour_intersection_point)
-                if distance < dist(self.pos, intersection_point):
-                    shooted_enemy = neighbour
-                    intersection_point = neighbour_intersection_point
+            enemy_circle = Circle(neighbour.pos, neighbour.HITBOX_RADIUS)
+            neighbour_intersection_point = intersect_seg_circle(tragectory, enemy_circle)
+            distance = dist(self.pos, neighbour_intersection_point)
+            if distance < dist(self.pos, intersection_point):
+                shooted_enemy = neighbour
+                intersection_point = neighbour_intersection_point
         return intersection_point, shooted_enemy
 
     def collision_with_enemy(self, intersection_point, enemy):
@@ -147,8 +142,7 @@ class Bullet(GameSprite):
 
         :param intersection_point: точка пересечения с Player
         """
-        self.scene.player.destroy()
-        #self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
     def collision_with_wall(self, intersection_point):
