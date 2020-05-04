@@ -6,6 +6,8 @@ from constants.mouse_buttons import MouseButtonID
 from drawable_objects.bullet import Bullet
 import pygame
 
+from utils.sound import SoundManager
+
 
 class Weapon(AbstractObject):
 
@@ -128,6 +130,7 @@ class RangedWeapon(Weapon):
         if self.magazine < 0:
             self.reload()
             return
+        SoundManager.play_sound('weapon.shoot')
         end_of_the_barrel = pos + vector_from_length_angle(self.barrel_length, angle)
         if self.scene.grid.intersect_seg_walls(Segment(pos, end_of_the_barrel)) is None:
             self.attack(end_of_the_barrel, angle)
