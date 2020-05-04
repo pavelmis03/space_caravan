@@ -7,10 +7,9 @@ from scenes.base import GameScene
 from geometry.point import Point
 from map.spaceship_grid import SpaceshipGrid
 from utils.game_plane import GamePlane
+from utils.image import ImageManager
 
 from drawable_objects.space_map_terminal import SpaceMapTerminal
-
-
 
 
 class SpaceshipScene(GameScene):
@@ -18,12 +17,15 @@ class SpaceshipScene(GameScene):
         super().__init__(game)
 
         top_left_cornor_bias = 25  # Смещение грида от угла для однообразного управления
-        player_spawn_point = Point(
-            (top_left_cornor_bias + 2) * 25, (top_left_cornor_bias + 2) * 25)
+        bias_point = Point(top_left_cornor_bias, top_left_cornor_bias) * 25 # Левый верхний угол корабля
         room_width = 30
         room_height = 20
-        terminal_spawn_point = player_spawn_point + \
-            Point((room_width / 2 - 2) * 25, (room_height - 3) * 25)
+        tile_size = 25  # Размер клетки в ширину и длину, заменить на константу, когда появится
+        player_spawn_point = bias_point + Point(room_width / 2, room_height / 2) * tile_size
+
+        # Терминал спавнится относительно размера его картинки на нижней стороне корабля в середине
+        terminal_spawn_point = bias_point + Point((room_width / 2) * tile_size, room_height * tile_size -
+            ImageManager.get_height('level_objects.terminal_up', SpaceMapTerminal.IMAGE_ZOOM) / 2)
 
         """clonecapsule_spawn_point = player_spawn_point + \
                                Point((room_width / 2 - 2) * 25, (room_height - 3) * 25)"""
