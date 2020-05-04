@@ -9,7 +9,7 @@ from geometry.distances import dist
 from math import cos
 from math import sin
 
-from drawable_objects.poppingE import PoppingE
+from drawable_objects.popping_e import PoppingE
 
 
 class UsableObject(GameSprite):
