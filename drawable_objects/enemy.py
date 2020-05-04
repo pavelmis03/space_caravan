@@ -76,7 +76,7 @@ class CommandHumanoid(MovingHumanoid):
 
     Рефакторить этот код с паттерном состояние - плохая идея. Проверено на практике.
     """
-    SPEED = 5
+    SPEED = 8
     """
     HEARING_RANGE - единица измерения - клетки
     """
@@ -87,7 +87,7 @@ class CommandHumanoid(MovingHumanoid):
     AGGRE_RADIUS = 35 * 25
 
     COOLDOWN_TIME = 50
-    DELAY_BEFORE_FIRST_SHOOT = 7
+    DELAY_BEFORE_FIRST_SHOOT = 4
     DELAY_BEFORE_HEARING = 8
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float,
@@ -345,5 +345,5 @@ class Enemy(CommandHumanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        self.scene.plane.erase(self, self.pos)
+        #self.scene.plane.erase(self, self.pos)
         self.destroy()
