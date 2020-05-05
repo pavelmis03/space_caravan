@@ -13,6 +13,7 @@ from weapons.weapons import Shotgun
 
 from utils.game_plane import GamePlane
 
+
 class Player(Humanoid):
     """
     Игрок на уровне (далек от завершения).
@@ -21,6 +22,12 @@ class Player(Humanoid):
     :param controller: контроллер
     :param pos: начальная позиция игрока
     :param angle: начальный угол поворота игрока
+
+    :IMAGE_NAME: путь до изображения персонажа
+    :IMAGE_ZOOM: размер изображения
+    :CONTROLS: клавиши управления
+    :WEAPON_TYPE: тип оружия, 1 - Ближнего боя, 2 - дальнего боя
+    :SPEED: скорость игрока
     """
 
     IMAGE_NAME = 'moving_objects.player'
@@ -31,7 +38,8 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    SPEED = 10
+    WEAPON_TYPE = 1
+    SPEED = 15
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
@@ -40,8 +48,11 @@ class Player(Humanoid):
             140 * Player.IMAGE_ZOOM,
             126 * Player.IMAGE_ZOOM
         ]
-
-        #self.weapon = Shotgun(self, 100, 6)
+        if Player.WEAPON_TYPE == 1:
+            Player.SPEED = 15
+        else:
+            Player.SPEED = 10
+        # self.weapon = Shotgun(self, 100, 6)
         self.weapon = Blade(self)
         self.scene.interface_objects.append(self.weapon)
 
