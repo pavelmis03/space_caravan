@@ -1,6 +1,7 @@
+from typing import List
 import pygame
 
-from constants.color import Color
+from constants.color import COLOR
 from geometry.point import Point
 
 
@@ -10,6 +11,7 @@ class Scene:
 
     :param game: игра, создающая сцену
     """
+
     def __init__(self, game):
         self.game = game
         self.screen = self.game.screen
@@ -47,62 +49,101 @@ class Scene:
         """
         Обработка отрисовки сцены и ее объектов.
         """
-        self.screen.fill(Color.BLACK)
+        self.screen.fill(COLOR['BLACK'])
         for item in self.interface_objects:
             item.process_draw()
 
+def delete_destroyed(objects: List[any]):
+    """
+    быстрое удаление уничтоженных эл-тов (который not enabled).
+    так как мы меняем местами удаляемый эл-т и делаем pop, работает за O(n)
+
+    :param objects: список объектов
+    """
+    i = 0
+    while i < len(objects):
+        if not objects[i].enabled:
+            objects[i], objects[-1] = objects[-1], objects[i]
+            objects.pop()
+            continue
+        i += 1
 
 class GameScene(Scene):
     """
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
-
     :param game: игра, создающая сцену
     """
+    SHIFT_SENSIVITY = 1 / 16
+
     def __init__(self, game):
         super().__init__(game)
         self.game_objects = []
+        self.enemies = []
         self.relative_center = Point(0, 0)
         self.grid = None
         self.player = None
         self.plane = None
         self.game_paused = False
 
-    def delete_destroyed_game_objects(self):
+    def interface_logic(self):
         """
-        game_object destroyed, если он не enabled
-        """
-        i = 0
-        while i < len(self.game_objects):
-            if not self.game_objects[i].enabled:
-                del self.game_objects[i]
-                continue
-            i += 1
-
-    def process_all_logic(self):
-        """
-        Обработка логики в следующем порядке: объекты интерфейса, сетка, игровые объекты, игрок.
-        Если флаг game_paused установлен в True, то логика вызывается только для объектов интерфейса
+        Логика недвижущихся на экране объектов
         """
         for item in self.interface_objects:
             item.process_logic()
-        if not self.game_paused:
-            self.grid.process_logic()
-            for item in self.game_objects:
-                item.process_logic()
-            self.player.process_logic()
-            self.relative_center = self.player.pos - self.game.screen_rectangle.center
-            self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
 
-        self.delete_destroyed_game_objects()
+    def game_logic(self):
+        """
+        Обработка логики в следующем порядке: сетка, игровые объекты, игрок.
+        """
+        self.grid.process_logic()
+        for item in self.game_objects:
+            item.process_logic()
+
+        for item in self.enemies:
+            self.grid.save_enemy_pos(item.pos)
+        for item in self.enemies:
+            item.process_logic()
+
+        self.player.process_logic()
+        self.relative_center = self.player.pos - self.game.screen_rectangle.center
+        # смешение камеры к курсору мыши
+        mouse_pos = self.game.controller.get_mouse_pos()
+        mouse_pos -= Point(self.game.width / 2, self.game.height / 2)
+        self.relative_center += mouse_pos * self.SHIFT_SENSIVITY
+
+        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
+
+    def delete_destroyed_objects(self):
+        """
+        быстрое удаление уничтоженных эл-тов (который not enabled).
+        так как мы меняем местами удаляемый эл-т и делаем pop, работает за O(n)
+        """
+        delete_destroyed(self.game_objects)
+        delete_destroyed(self.enemies)
+
+    def process_all_logic(self):
+        """
+        Логика всех объектов.
+        """
+        self.interface_logic()
+        if not self.game_paused:
+            self.game_logic()
+
+        self.delete_destroyed_objects()
 
     def process_all_draw(self):
         """
         Отрисовка в следующем порядке: сетка, игровые объекты, игрок, объекты интерфейса.
         """
-        self.screen.fill(Color.BLACK)
+        self.screen.fill(COLOR['BLACK'])
         self.grid.process_draw()
+
         for item in self.game_objects:
             item.process_draw()
+        for item in self.enemies:
+            item.process_draw()
+
         self.player.process_draw()
         for item in self.interface_objects:
             item.process_draw()

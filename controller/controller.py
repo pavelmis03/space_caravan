@@ -7,6 +7,7 @@ class ControllerStrategy:
     """
     Базовый класс стратегии контроллера по обработке события.
     """
+
     def execute(self, controller, event):
         """
         Исполнить стратегию.
@@ -21,6 +22,7 @@ class StrategyQuit(ControllerStrategy):
     """
     Обработка закрытия окна игры.
     """
+
     def execute(self, controller, event):
         print('Пользователь нажал крестик')
         controller.game.end()
@@ -30,7 +32,8 @@ class StrategyMouseMotion(ControllerStrategy):
     """
     Обработка движения мыши.
     """
-    def execute(self,controller, event):
+
+    def execute(self, controller, event):
         controller.mouse_pos = tuple_to_point(event.pos)
 
 
@@ -38,6 +41,7 @@ class StrategyMouseDown(ControllerStrategy):
     """
     Обработка щелчка мышью.
     """
+
     def execute(self, controller, event):
         controller.click_pos = tuple_to_point(event.pos)
         controller.click_button = event.button
@@ -47,6 +51,7 @@ class StrategyKeyDown(ControllerStrategy):
     """
     Обработка нажатия клавиши.
     """
+
     def execute(self, controller, event):
         if event.key not in controller.pressed_keys:
             controller.pressed_keys.add(event.key)
@@ -56,6 +61,7 @@ class StrategyKeyUp(ControllerStrategy):
     """
     Обработка отпускания клавиши.
     """
+
     def execute(self, controller, event):
         if event.key in controller.pressed_keys:
             controller.pressed_keys.remove(event.key)
@@ -66,6 +72,7 @@ class StrategyWindowResize(ControllerStrategy):
     При изменении размера окна меняется game.width и game.height,
     при этом размер спрайтов остается тем же (за исключением меню).
     """
+
     def execute(self, controller, event):
         controller.game.size = event.size
 

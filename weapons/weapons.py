@@ -1,22 +1,23 @@
 from weapons.base import RangedWeapon
 from drawable_objects.bullet import Bullet
 from geometry.point import Point
-from drawable_objects.bullet import Collision_Point
 from random import randrange
 
 
 class Pistol(RangedWeapon):
+    DAMAGE = 100
 
     def __init__(self, shooter, ammo, bullets_in_magazine=0):
         super().__init__(shooter, ammo, 12, 40, 12, False, 10, bullets_in_magazine, 'Pistol')
 
     def attack(self, pos: Point, angle: float):
-        bullet = Bullet(self.scene, self.controller, pos, angle)
+        bullet = Bullet(self.scene, self.controller, pos, angle, Pistol.DAMAGE)
         self.scene.game_objects.append(bullet)
-        self.type = 'Pistol'
 
 
 class Shotgun(RangedWeapon):
+
+    DAMAGE = 100
 
     def __init__(self, shooter, ammo, bullets_in_magazine=0):
         super().__init__(shooter, ammo, 15, 80, 6, False, 0, bullets_in_magazine, 'Shotgun')
@@ -24,4 +25,5 @@ class Shotgun(RangedWeapon):
 
     def attack(self, pos: Point, angle: float):
         for i in range(self.shells):
-            self.scene.game_objects.append(Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 600)))
+            self.scene.game_objects.append(Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 600), Shotgun.DAMAGE))
+

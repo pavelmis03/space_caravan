@@ -5,7 +5,7 @@
 
 import pygame
 
-from constants.color import Color
+from constants.color import COLOR
 from drawable_objects.base import AbstractObject
 from drawable_objects.interface.button_group import ButtonGroup
 
@@ -22,15 +22,17 @@ class PauseManager(AbstractObject):
         'CLOSE': pygame.K_RETURN
     }
     SURFACE_ALPHA = 160
-    SURFACE_COLOR = Color.BLACK
+    SURFACE_COLOR = COLOR['BLACK']
 
     def __init__(self, scene, controller):
         super().__init__(scene, controller)
-        self.surface = pygame.Surface((self.scene.game.width, self.scene.game.height))
+        self.surface = pygame.Surface(
+            (self.scene.game.width, self.scene.game.height))
         self.surface.set_alpha(PauseManager.SURFACE_ALPHA)
         self.surface.fill(PauseManager.SURFACE_COLOR)
 
-        self.buttons = ButtonGroup(self.scene, self.controller, [0.5, 0.3], [150, 60], 6)
+        self.buttons = ButtonGroup(self.scene, self.controller, [
+                                   0.5, 0.3], [150, 60], 6)
         self.buttons.add_button('Продолжить', self.resume)
         self.buttons.add_button('Главное меню', self.main_menu)
 
@@ -43,6 +45,7 @@ class PauseManager(AbstractObject):
             if self.controller.is_key_pressed(PauseManager.CONTROLS['CLOSE']) and self.active:
                 self.resume()
         if self.active:
+            self.surface = pygame.transform.scale(self.surface, (self.scene.game.width, self.scene.game.height))
             self.buttons.process_logic()
 
     def pause(self):

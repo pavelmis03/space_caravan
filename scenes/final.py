@@ -1,5 +1,5 @@
 # coding=utf-8
-from constants.color import Color
+from constants.color import COLOR
 from drawable_objects.text import Text
 from scenes.base import Scene
 
@@ -16,7 +16,8 @@ class FinalScene(Scene):
         return self.GAMEOVER_FMT.format(self.seconds_left)
 
     def create_objects(self):
-        self.text_gameover = Text(self.game, text=self.get_gameover_str(), color=Color.RED, x=310, y=290)
+        self.text_gameover = Text(
+            self.game, text=self.get_gameover_str(), color=COLOR['RED'], x=310, y=290)
         self.objects = [self.text_gameover]
 
     def additional_logic(self):
@@ -24,6 +25,7 @@ class FinalScene(Scene):
         seconds_left = self.MAX_TICKS // 100 - self.game.ticks // 100
         if seconds_left < self.seconds_left:  # Оптимизация производительности:
             self.seconds_left = seconds_left  # вызываем font.render только тогда,
-            self.text_gameover.update_text(self.get_gameover_str())  # когда текст изменился
+            self.text_gameover.update_text(
+                self.get_gameover_str())  # когда текст изменился
         if self.seconds_left == 0:
             self.game.game_over = True

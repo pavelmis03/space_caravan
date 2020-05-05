@@ -21,8 +21,6 @@ math.py
 .. automodule:: constants.math
     :members:
     :undoc-members:
-<<<<<<< HEAD
-=======
 
 mouse_buttons.py
 ----------------
@@ -30,4 +28,3 @@ mouse_buttons.py
 .. automodule:: constants.mouse_buttons
     :members:
     :undoc-members:
->>>>>>> feature/Architecture
