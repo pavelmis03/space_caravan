@@ -8,7 +8,7 @@ from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
-from weapons.weapons import Pistol
+from weapons.weapons import Pistol, Blade
 from weapons.weapons import Shotgun
 
 from utils.game_plane import GamePlane
@@ -41,7 +41,8 @@ class Player(Humanoid):
             126 * Player.IMAGE_ZOOM
         ]
 
-        self.weapon = Shotgun(self, 100, 6)
+        #self.weapon = Shotgun(self, 100, 6)
+        self.weapon = Blade(self)
         self.scene.interface_objects.append(self.weapon)
 
     def process_logic(self):

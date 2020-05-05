@@ -1,4 +1,4 @@
-from weapons.base import RangedWeapon
+from weapons.base import RangedWeapon, MeleeWeapon
 from drawable_objects.bullet import Bullet
 from geometry.point import Point
 from random import randrange
@@ -21,6 +21,18 @@ class Shotgun(RangedWeapon):
 
     def __init__(self, shooter, ammo, bullets_in_magazine=0):
         super().__init__(shooter, ammo, 15, 80, 6, False, 0, bullets_in_magazine, 'Shotgun')
+        self.shells = 5
+
+    def attack(self, pos: Point, angle: float):
+        for i in range(self.shells):
+            self.scene.game_objects.append(Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 600), Shotgun.DAMAGE))
+
+class Blade(MeleeWeapon):
+
+    DAMAGE = 200
+
+    def __init__(self, shooter):
+        super().__init__(shooter, 15, 20,'Shotgun')
         self.shells = 5
 
     def attack(self, pos: Point, angle: float):
