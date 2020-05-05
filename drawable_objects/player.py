@@ -52,7 +52,7 @@ class Player(Humanoid):
             Player.SPEED = 15
         else:
             Player.SPEED = 10
-        # self.weapon = Shotgun(self, 100, 6)
+        #self.weapon = Shotgun(self, 100, 6)
         self.weapon = Blade(self)
         self.scene.interface_objects.append(self.weapon)
 

@@ -1,3 +1,4 @@
+from drawable_objects.slash import Slash
 from weapons.base import RangedWeapon, MeleeWeapon
 from drawable_objects.bullet import Bullet
 from geometry.point import Point
@@ -33,9 +34,7 @@ class Blade(MeleeWeapon):
 
     def __init__(self, shooter):
         super().__init__(shooter, 15, 20,'Shotgun')
-        self.shells = 5
 
     def attack(self, pos: Point, angle: float):
-        for i in range(self.shells):
-            self.scene.game_objects.append(Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / 600), Shotgun.DAMAGE))
+        self.scene.game_objects.append(Slash(self.scene, self.controller, pos, angle, Blade.DAMAGE))
 
