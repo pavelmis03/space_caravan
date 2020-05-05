@@ -87,5 +87,4 @@ class GamePlane:
                     for item in self.objects[neighbour_chunk]:
                         if isinstance(item, neighbours_class):
                             neighbours.append(item)
-        print(len(neighbours))
         return neighbours

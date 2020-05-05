@@ -270,6 +270,8 @@ class Enemy(CommandHumanoid):
         """
         Добавлена логика поворота
         """
+        if not self.enabled:
+            return
         super().process_logic()
         if self._is_idle and not self._is_aggred:
             self.__rotation_logic()
