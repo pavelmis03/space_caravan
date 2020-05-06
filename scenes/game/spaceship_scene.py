@@ -2,7 +2,7 @@ from console.console import Console
 from console.entry import Entry
 from drawable_objects.interface.pause_manager import PauseManager
 from drawable_objects.player import Player
-from scenes.base import GameScene
+from scenes.game.base import GameScene
 from geometry.point import Point
 from map.spaceship_grid import SpaceshipGrid
 from utils.game_plane import GamePlane

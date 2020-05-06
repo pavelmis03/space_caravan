@@ -5,8 +5,8 @@ import pygame
 from controller.controller import Controller
 from space.space import Space
 from geometry.rectangle import Rectangle
-from scenes.main import MainScene
-from scenes.spaceship_scene import SpaceshipScene
+from scenes.game.main import MainScene
+from scenes.game.spaceship_scene import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
