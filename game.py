@@ -1,6 +1,7 @@
 import sys
-
 import pygame
+
+from typing import Tuple
 
 from controller.controller import Controller
 from space.space import Space
@@ -12,8 +13,7 @@ from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
 from utils.image import ImageManager
-from typing import Tuple
-
+from utils.file_manager import FileManager
 from utils.sound import SoundManager
 
 
@@ -32,6 +32,7 @@ class Game:
         self.__running = True
         ImageManager.load_all()
         SoundManager.load_all()
+        self.__file_manager = FileManager()
 
         self.__controller = Controller(self)
         self.__space = Space(self, self.__controller)
@@ -82,6 +83,10 @@ class Game:
     @property
     def controller(self) -> Controller:
         return self.__controller
+
+    @property
+    def file_manager(self) -> FileManager:
+        return self.__file_manager
 
     def toggle_scene(self, scene_index):
         self.__current_scene = scene_index
