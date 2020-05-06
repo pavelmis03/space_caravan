@@ -1,3 +1,5 @@
+import weapons.weapons
+
 from typing import Optional
 
 from controller.controller import Controller
@@ -5,7 +7,6 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from drawable_objects.bullet import create_bullet
 from geometry.segment import Segment
 from geometry.vector import length
 from random import randint
@@ -76,7 +77,10 @@ class CommandHumanoid(MovingHumanoid):
 
     Рефакторить этот код с паттерном состояние - плохая идея. Проверено на практике.
     """
-    SPEED = 5
+
+    ADD_TO_GAME_PLANE = True
+    SPEED = 8
+
     """
     HEARING_RANGE - единица измерения - клетки
     """
@@ -87,7 +91,7 @@ class CommandHumanoid(MovingHumanoid):
     AGGRE_RADIUS = 35 * 25
 
     COOLDOWN_TIME = 50
-    DELAY_BEFORE_FIRST_SHOOT = 7
+    DELAY_BEFORE_FIRST_SHOOT = 4
     DELAY_BEFORE_HEARING = 8
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float,
@@ -100,6 +104,9 @@ class CommandHumanoid(MovingHumanoid):
         self.__cooldown = 0
         self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
 
+
+        self.health = 1
+        self.type = 'Enemy'
 
         self.__command_functions = {'move_to': self.__command_move_to,
                                   'shoot': self.__command_shoot,
@@ -200,8 +207,13 @@ class CommandHumanoid(MovingHumanoid):
         """
         self._recount_angle(self.scene.player.pos)
 
-        create_bullet(self)
+        end_of_barrel = vector_from_length_angle(self.HITBOX_RADIUS + 3, self.angle) + self.pos
+        weapons.weapons.Pistol.attack(self, end_of_barrel, self.angle)
+
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
+
+        #create_bullet(self)
+        #self.__cooldown = CommandHumanoid.COOLDOWN_TIME
 
         self.__command = EnemyCommand('aim')
 
@@ -258,6 +270,8 @@ class Enemy(CommandHumanoid):
         """
         Добавлена логика поворота
         """
+        if not self.enabled:
+            return
         super().process_logic()
         if self._is_idle and not self._is_aggred:
             self.__rotation_logic()
@@ -319,3 +333,22 @@ class Enemy(CommandHumanoid):
         Только ли начал поворачиваться
         """
         return self.__rotating_cycles == 0
+
+    def get_damage(self, damage=0, angle_of_attack=0):
+        """
+        Получение урона
+
+        :param damage: урон
+        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
+        """
+        self.health -= damage
+        if self.health <= 0:
+            self.die()
+
+    def die(self, angle_of_attack=0):
+        """
+        Смээээрть
+
+        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
+        """
+        self.destroy()

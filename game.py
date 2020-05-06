@@ -14,6 +14,8 @@ from scenes.menu.settings import SettingsMenuScene
 from utils.image import ImageManager
 from typing import Tuple
 
+from utils.sound import SoundManager
+
 
 class Game:
     MAIN_MENU_SCENE_INDEX = 0
@@ -29,6 +31,7 @@ class Game:
         self.size = (width, height)
         self.__running = True
         ImageManager.load_all()
+        SoundManager.load_all()
 
         self.__controller = Controller(self)
         self.__space = Space(self, self.__controller)

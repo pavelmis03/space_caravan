@@ -8,8 +8,10 @@ from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
+from weapons.weapons import Pistol
 from weapons.weapons import Shotgun
 
+from utils.game_plane import GamePlane
 
 class Player(Humanoid):
     """
@@ -21,6 +23,7 @@ class Player(Humanoid):
     :param angle: начальный угол поворота игрока
     """
 
+    ADD_TO_GAME_PLANE = True
     IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
