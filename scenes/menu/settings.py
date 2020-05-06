@@ -13,5 +13,5 @@ class SettingsMenuScene(MenuScene):
 
     def __init__(self, game):
         super().__init__(game)
-        self.menu.add_button('Назад', self.game.set_scene, {
+        self.menu.add_button('Назад', self.game.toggle_scene, {
                              'scene_index': self.game.MAIN_MENU_SCENE_INDEX})

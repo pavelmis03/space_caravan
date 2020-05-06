@@ -1,7 +1,10 @@
-from typing import List
+from typing import List, Dict
 
 from scenes.base import Scene
+from drawable_objects.interface.pause_manager import PauseManager
+from utils.game_plane import GamePlane
 from geometry.point import Point
+from drawable_objects.player import Player
 
 
 def delete_destroyed(objects: List[any]):
@@ -31,10 +34,32 @@ class GameScene(Scene):
         self.game_objects = []
         self.enemies = []
         self.relative_center = Point(0, 0)
+        self.game_paused = False
+        self.plane = GamePlane()
+        self.pause_manager = PauseManager(self, self.game.controller)
         self.grid = None
         self.player = None
-        self.plane = None
-        self.game_paused = False
+
+        self.load_player()
+        self.interface_objects.append(self.pause_manager)
+        self.game.controller.input_objects.append(self.player)
+        self.game.controller.input_objects.append(self.pause_manager)
+
+    def initialize(self):
+        pass
+
+    def from_dict(self):
+        pass
+
+    def to_dict(self) -> Dict:
+        self.save_player()
+        return dict()
+
+    def load_player(self):
+        self.player = Player(self, self.game.controller, Point(100, 100), 0)
+
+    def save_player(self):
+        pass
 
     def game_logic(self):
         """

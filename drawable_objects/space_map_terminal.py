@@ -16,4 +16,4 @@ class SpaceMapTerminal(UsableObject):
                          pos, angle, SpaceMapTerminal.IMAGE_ZOOM)
 
     def activate(self):
-        self.scene.game.set_scene(self.scene.game.SPACEMAP_SCENE_INDEX)
+        self.scene.game.toggle_scene(self.scene.game.SPACEMAP_SCENE_INDEX)

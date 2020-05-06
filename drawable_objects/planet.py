@@ -4,6 +4,7 @@ from random import random
 from geometry.circle import Circle
 from geometry.point import Point
 from scenes.base import Scene
+from scenes.game.main import MainScene
 from controller.controller import Controller
 from drawable_objects.base import SpriteObject
 
@@ -31,10 +32,15 @@ class Planet(SpriteObject):
         self.rotation_offset = [0, 0]
         self.name = name
         self.biom = biom
+        self.level_created = False
+        self.level_scene = None
         self.enabled = True
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()
-
         if click_pos and self.geometry.is_inside(click_pos):
-            pass
+            self.level_scene = MainScene(self.scene.game)
+            if not self.level_created:
+                self.level_scene.initialize()
+            self.scene.game.set_scene_slot(self.scene.game.MAIN_SCENE_INDEX, self.level_scene)
+            self.scene.game.toggle_scene(self.scene.game.MAIN_SCENE_INDEX)

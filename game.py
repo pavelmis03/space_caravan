@@ -5,6 +5,7 @@ import pygame
 from controller.controller import Controller
 from space.space import Space
 from geometry.rectangle import Rectangle
+from scenes.base import Scene
 from scenes.game.main import MainScene
 from scenes.game.spaceship_scene import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
@@ -79,8 +80,13 @@ class Game:
     def controller(self) -> Controller:
         return self.__controller
 
-    def set_scene(self, scene_index):
+    def toggle_scene(self, scene_index):
         self.__current_scene = scene_index
+
+    def set_scene_slot(self, scene_index, new_scene: Scene):
+        if self.__scenes[scene_index]:
+            del self.__scenes[scene_index]
+        self.__scenes[scene_index] = new_scene
 
     def end(self):
         self.__running = False
