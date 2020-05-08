@@ -30,6 +30,7 @@ class Player(Humanoid):
         pygame.K_w,
         pygame.K_a,
         pygame.K_s,
+        pygame.K_r, # recharge weapon
     ]
     SPEED = 10
 
@@ -46,6 +47,7 @@ class Player(Humanoid):
 
     def process_logic(self):
         self._turn_to_mouse()
+        self._weapon_reload()
         self._movement_controls()
 
     @property
@@ -64,6 +66,15 @@ class Player(Humanoid):
         relative_pos = self.pos - relative_center
         vector_to_mouse = self.controller.get_mouse_pos() - relative_pos
         self.angle = polar_angle(vector_to_mouse)
+
+    def _weapon_reload(self):
+        """
+        Перезарядка оружия, если нажата клавиша перезарядки
+        """
+        if self in self.controller.input_objects:
+            if self.controller.is_key_pressed(Player.CONTROLS[4]):
+                self.weapon.reload()
+
 
     def _movement_controls(self):
         """
