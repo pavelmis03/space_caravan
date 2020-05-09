@@ -40,7 +40,7 @@ class Bullet(GameSprite):
 
     IMAGE_ZOOM = 0.7
     IMAGE_NAME = 'moving_objects.bullet.1'
-    SPEED = 200
+    SPEED = 150
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float, damage):
         super().__init__(scene, controller, Bullet.IMAGE_NAME, pos, angle, Bullet.IMAGE_ZOOM)
@@ -121,7 +121,7 @@ class Bullet(GameSprite):
         middle = (tragectory.p2 + tragectory.p1) / 2
         neighbours = self.scene.plane.get_neighbours(middle)
         for neighbour in neighbours:
-            if neighbour.type == 'Enemy':
+            if neighbour.__class__.__name__ == 'Enemy':
                 enemy_circle = Circle(neighbour.pos, neighbour.HITBOX_RADIUS)
                 neighbour_intersection_point = intersect_seg_circle(tragectory, enemy_circle)
                 distance = dist(self.pos, neighbour_intersection_point)
@@ -138,7 +138,6 @@ class Bullet(GameSprite):
         :param enemy: Enemy, в которого попала пуля
         """
         enemy.get_damage(self.damage)
-        #self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
     def collision_with_player(self, intersection_point):
@@ -148,7 +147,6 @@ class Bullet(GameSprite):
         :param intersection_point: точка пересечения с Player
         """
         self.scene.player.destroy()
-        #self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
     def collision_with_wall(self, intersection_point):
@@ -157,7 +155,6 @@ class Bullet(GameSprite):
 
         :param intersection_point: точка пересечения со стеной
         """
-
         self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 

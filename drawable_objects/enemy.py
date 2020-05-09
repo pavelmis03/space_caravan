@@ -5,7 +5,7 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from weapons.weapons import Pistol
+from weapons.weapons import BurstFiringPistol
 from geometry.segment import Segment
 from geometry.vector import length
 from random import randint
@@ -100,9 +100,9 @@ class CommandHumanoid(MovingHumanoid):
         self.__cooldown = 0
         self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
 
-
+        self.weapon = BurstFiringPistol(self, 100000)
+        self.scene.interface_objects.append(self.weapon)
         self.health = 1
-        self.type = 'Enemy'
 
         self.__command_functions = {'move_to': self.__command_move_to,
                                   'shoot': self.__command_shoot,
@@ -203,8 +203,9 @@ class CommandHumanoid(MovingHumanoid):
         """
         self._recount_angle(self.scene.player.pos)
 
-        end_of_barrel = vector_from_length_angle(self.HITBOX_RADIUS + 3, self.angle) + self.pos
-        Pistol.attack(self, end_of_barrel, self.angle)
+        self.weapon.main_attack ()
+        if self.weapon.magazine == 0:
+            self.weapon.reload()
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
 

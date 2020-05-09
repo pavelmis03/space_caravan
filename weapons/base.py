@@ -1,57 +1,55 @@
 import pygame
 
+from drawable_objects.bullet import Bullet
 from constants.mouse_buttons import MouseButtonID
 from drawable_objects.base import AbstractObject
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
 from utils.sound import SoundManager
+from random import randrange
 
 
 class Weapon(AbstractObject):
     MAIN_BUTTON = MouseButtonID.LEFT
     ALTERNATIVE_BUTTON = MouseButtonID.RIGHT
 
-    def __init__(self, attacker, cooldown_time, is_automatic, type):
+    def __init__(self, owner, main_attack_interval, is_automatic=False, combo_attack_interval=0, combo_size=1):
         """
-        :param attacker: DrawableObject, имеющий оружие -> DrawableObject
-        :param cooldown_time: Время между выстрелами -> int
+        :param owner: DrawableObject, имеющий оружие -> DrawableObject
+        :param main_attack_interval: Время между выстрелами -> int
         :param is_automatic: Автоматическое ли оружие -> bool
-        :param type: Вид оружия(на всякий случай, может что-то с этим придумаем) -> string
+        :param combo_attack_interval: Интервал между выстрелами в очереди(0, если не стреляет очередями) -> int
+        :param combo_size: Длина очереди(если не атакует очередями == 1)
         """
-        super().__init__(attacker.scene, attacker.controller)
-        self.is_working = True
+        super().__init__(owner.scene, owner.controller)
+        self.owner = owner
+        self.angle = owner.angle
         self.is_automatic = is_automatic
-        self.is_attacking = False
-        self.cooldown_time = cooldown_time
+        self.main_attack_interval = main_attack_interval
+        self.combo_attack_interval = combo_attack_interval
+        self.combo = 0
+        self.combo_size = combo_size
         self.cooldown = 0
-        self.type = type
 
     def process_logic(self):
+        self.angle = self.owner.angle
+        self.pos = self.owner.pos
         if self.cooldown:
             self.cooldown -= 1
-            if self.cooldown == 0:
-                self.is_working = True
-        self.is_attacking = self.is_automatic and self.controller.is_mouse_pressed(
-            Weapon.MAIN_BUTTON) and self.is_attacking
-        button = self.controller.get_click_button()
-        if (button == Weapon.MAIN_BUTTON or self.is_attacking) and self.is_working:
-            self.main_button_click()
-        if button == Weapon.ALTERNATIVE_BUTTON:
-            self.alternative_button_click()
+        if self.combo != 0 and self.cooldown == 0:
+            self.combo -= 1
+            if self.combo == 0:
+                self.cooldown = self.main_attack_interval
+            else:
+                self.cooldown = self.combo_attack_interval
+            self.attack(self.pos, self.angle)
 
-    def main_button_click(self):
-        """
-        Что происходит при нажатии кнопки главной атаки(лев. кнопки мыши)
-        """
-        self.cooldown = self.cooldown_time
-        self.is_attacking = self.is_automatic
-        self.is_working = False
+    def main_attack(self):
+        if self.cooldown == 0 and self.combo == 0:
+            self.combo = self.combo_size
 
-    def alternative_button_click(self):
-        """
-        Что происходит при нажатии кнопки дополнительной атаки(прав. кнопки мыши)
-        """
+    def alternative_attack(self):
         pass
 
     def attack(self, pos: Point, angle: float):
@@ -74,66 +72,86 @@ class Weapon(AbstractObject):
 class RangedWeapon(Weapon):
     RELOAD_KEY = pygame.K_r
 
-    def __init__(self, attacker, ammo, cooldown_time, reload_time, magazine_size, is_automatic, length,
-                 bullets_in_magazine, type):
+    def __init__(self, owner, ammo, bullets_in_magazine, magazine_size, main_attack_interval,
+                 reload_time, bullet_type, is_automatic=False, combo_attack_interval=0, combo_size=1):
         """
-        :param attacker: DrawableObject, имеющий оружие -> DrawableObject
-        :param cooldown_time: Время между выстрелами -> int
+        :param owner: DrawableObject, имеющий оружие -> DrawableObject
+        :param main_attack_interval: Время между атаками(очередями) -> int
         :param ammo: Количесвто пуль
         :param cooldown_time: Время между выстрелами -> int
         :param reload_time: Время перезарядки
         :param magazine_size: Размер магазина
         :param is_automatic: Автоматическое ли оружие -> bool
-        :param length: Длина ствола
+        :param combo_size: Длина очереди(если не атакует очередями == 1)
+        :param combo_attack_interval: Интервал между выстрелами в очереди(0, если не стреляет очередями) -> int
         :param bullets_in_magazine: Сколько пуль в магазине на момент получения оружия
-        :param type: Вид оружия(на всякий случай, может что-то с этим придумаем) -> string
+        :param bullet_type: Вид оружия(на всякий случай, может что-то с этим придумаем) -> string
         """
-        super().__init__(attacker, cooldown_time, is_automatic, type)
+        super().__init__(owner, main_attack_interval, is_automatic, combo_attack_interval, combo_size)
         self.reload_time = reload_time
         self.is_reloading = 0
-        self.barrel_length = attacker.HITBOX_RADIUS + 1 + length
+        self.reload_request = False
+        self.barrel_length = owner.HITBOX_RADIUS + 1
         self.magazine_size = magazine_size
         self.magazine = bullets_in_magazine
         self.ammo = ammo
+        self.bullet_type = bullet_type
         self._is_fired_this_tick = False
+
+    def control(self):
+        is_attacking = self.is_automatic and self.controller.is_mouse_pressed(Weapon.MAIN_BUTTON)
+        button = self.controller.get_click_button()
+        if (button == Weapon.MAIN_BUTTON or is_attacking) and self.cooldown == 0:
+            self.main_attack()
+        if self.controller.is_key_pressed(pygame.K_r):
+            self.reload_request = True
+        if button == Weapon.ALTERNATIVE_BUTTON:
+            self.alternative_attack()
 
     def reload(self):
         """
         Функция перезарядки
         """
-        self.remains = self.magazine
-        self.magazine = min(self.magazine_size, self.ammo)
-        self.ammo -= (self.magazine - self.remains)
-        self.is_working = False
-        self.cooldown = self.reload_time
-        self.is_reloading = self.reload_time
-        pass
+        self.combo = 0
+        if self.magazine == self.magazine_size or self.ammo == 0:
+            self.reload_request = False
+            return
+        if not self.is_reloading:
+            ammo_to_add = min(self.ammo, self.magazine_size - self.magazine)
+            self.magazine += ammo_to_add
+            self.ammo -= ammo_to_add
+            self.cooldown = self.reload_time
+            self.is_reloading = self.reload_time
 
     def process_logic(self):
-        self._is_fired_this_tick = False
+        if self.owner.__class__.__name__ == 'Player':
+            self.control()
         if self.is_reloading:
             self.is_reloading -= 1
-        if self.controller.is_key_pressed(
-                RangedWeapon.RELOAD_KEY) and not self.is_reloading and self.magazine < self.magazine_size:
-            self.reload()
+            if not self.is_reloading:
+                self.reload_request = False
+        self._is_fired_this_tick = False
         super().process_logic()
+        if self.reload_request and not self.is_reloading and self.combo == 0:
+            self.reload()
 
-    def main_button_click(self):
-        """
-        Что происходит при нажатии кнопки главной атаки(лев. кнопки мыши)
-        """
-        super().main_button_click()
-        self._is_fired_this_tick = True
-        pos = self.scene.player.pos
-        angle = self.scene.player.angle
-        end_of_the_barrel = pos + vector_from_length_angle(self.barrel_length, angle)
+    def attack(self, pos: Point, angle: float):
+        if self.owner.__class__.__name__ == 'Player':
+            self._is_fired_this_tick = True
         if self.magazine == 0:
+            self.cooldown = 0
             self.reload()
             return
         self.magazine -= 1
         SoundManager.play_sound('weapon.shoot')
-        if self.scene.grid.intersect_seg_walls(Segment(pos, end_of_the_barrel)) is None:
-            self.attack(end_of_the_barrel, angle)
+        end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.angle)
+        if self.scene.grid.intersect_seg_walls(Segment(self.owner.pos, end_of_the_barrel)) is None:
+            self.shot(end_of_the_barrel, self.angle)
+
+    def shot(self, pos: Point, angle: float):
+        pass
+        #bullet = Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / self.accuracy), Pistol.DAMAGE)
+        #self.scene.game_objects.append(bullet)
 
     @property
     def is_fired_this_tick(self):
