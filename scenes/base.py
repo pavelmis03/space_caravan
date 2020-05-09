@@ -73,7 +73,7 @@ class GameScene(Scene):
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
     :param game: игра, создающая сцену
     """
-    SHIFT_SENSIVITY = 1 / 16
+    SHIFT_SENSIVITY = 1 / 40
 
     def __init__(self, game):
         super().__init__(game)
