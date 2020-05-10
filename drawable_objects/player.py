@@ -8,8 +8,11 @@ from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
 from scenes.base import Scene
 from controller.controller import Controller
+
 from weapons.weapons import BurstFiringPistol
 from weapons.weapons import Shotgun
+from weapons.weapons import Pistol
+from weapons.weapons import AutomaticRifle
 
 from utils.game_plane import GamePlane
 

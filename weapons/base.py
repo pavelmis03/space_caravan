@@ -73,7 +73,7 @@ class RangedWeapon(Weapon):
     RELOAD_KEY = pygame.K_r
 
     def __init__(self, owner, ammo, bullets_in_magazine, magazine_size, main_attack_interval,
-                 reload_time, bullet_type, is_automatic=False, combo_attack_interval=0, combo_size=1):
+                 reload_time, bullet_type, accuracy, is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
         :param main_attack_interval: Время между атаками(очередями) -> int
@@ -86,6 +86,8 @@ class RangedWeapon(Weapon):
         :param combo_attack_interval: Интервал между выстрелами в очереди(0, если не стреляет очередями) -> int
         :param bullets_in_magazine: Сколько пуль в магазине на момент получения оружия
         :param bullet_type: Вид оружия(на всякий случай, может что-то с этим придумаем) -> string
+        :param accuracy: Точность оружия
+        :param shells: Количество Bullet, вылетающих из оружия при одном выстреле
         """
         super().__init__(owner, main_attack_interval, is_automatic, combo_attack_interval, combo_size)
         self.reload_time = reload_time
@@ -96,6 +98,8 @@ class RangedWeapon(Weapon):
         self.magazine = bullets_in_magazine
         self.ammo = ammo
         self.bullet_type = bullet_type
+        self.accuracy = accuracy
+        self.shells = shells
         self._is_fired_this_tick = False
 
     def control(self):
@@ -149,9 +153,9 @@ class RangedWeapon(Weapon):
             self.shot(end_of_the_barrel, self.angle)
 
     def shot(self, pos: Point, angle: float):
-        pass
-        #bullet = Bullet(self.scene, self.controller, pos, angle + float(randrange(-100, 100) / self.accuracy), Pistol.DAMAGE)
-        #self.scene.game_objects.append(bullet)
+        for i in range(self.shells):
+            bullet = Bullet(self.scene, self.controller, pos, angle + randrange(-100, 100) / (self.accuracy**2 - self.accuracy * 20 + 100), 100)
+            self.scene.game_objects.append(bullet)
 
     @property
     def is_fired_this_tick(self):
