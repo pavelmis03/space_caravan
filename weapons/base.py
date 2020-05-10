@@ -25,12 +25,15 @@ class Weapon(AbstractObject):
         super().__init__(owner.scene, owner.controller)
         self.owner = owner
         self.angle = owner.angle
+        self.pos = owner.pos
         self.is_automatic = is_automatic
         self.main_attack_interval = main_attack_interval
         self.combo_attack_interval = combo_attack_interval
         self.combo = 0
         self.combo_size = combo_size
         self.cooldown = 0
+
+        self.reload_request = False #используется только в RangedWeapon, нужна тут для работы Player._weapon_controls
 
     def process_logic(self):
         self.angle = self.owner.angle
@@ -70,7 +73,6 @@ class Weapon(AbstractObject):
 
 
 class RangedWeapon(Weapon):
-    RELOAD_KEY = pygame.K_r
 
     def __init__(self, owner, ammo, bullets_in_magazine, magazine_size, main_attack_interval,
                  reload_time, bullet_type, accuracy, is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
@@ -102,16 +104,6 @@ class RangedWeapon(Weapon):
         self.shells = shells
         self._is_fired_this_tick = False
 
-    def control(self):
-        is_attacking = self.is_automatic and self.controller.is_mouse_pressed(Weapon.MAIN_BUTTON)
-        button = self.controller.get_click_button()
-        if (button == Weapon.MAIN_BUTTON or is_attacking) and self.cooldown == 0:
-            self.main_attack()
-        if self.controller.is_key_pressed(pygame.K_r):
-            self.reload_request = True
-        if button == Weapon.ALTERNATIVE_BUTTON:
-            self.alternative_attack()
-
     def reload(self):
         """
         Функция перезарядки
@@ -128,8 +120,6 @@ class RangedWeapon(Weapon):
             self.is_reloading = self.reload_time
 
     def process_logic(self):
-        if self.owner.__class__.__name__ == 'Player':
-            self.control()
         if self.is_reloading:
             self.is_reloading -= 1
             if not self.is_reloading:
@@ -154,7 +144,8 @@ class RangedWeapon(Weapon):
 
     def shot(self, pos: Point, angle: float):
         for i in range(self.shells):
-            bullet = Bullet(self.scene, self.controller, pos, angle + randrange(-100, 100) / (self.accuracy**2 - self.accuracy * 20 + 100), 100)
+            bullet = Bullet(self.scene, self.controller, pos,
+                            angle + randrange(-100, 100) / (self.accuracy**2 - self.accuracy * 20 + 100), damage=100)
             self.scene.game_objects.append(bullet)
 
     @property

@@ -6,6 +6,7 @@ from geometry.vector import sign, length, normalized, polar_angle, get_min_vecto
 from geometry.rectangle import Rectangle
 from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
+from constants.mouse_buttons import MouseButtonID
 from scenes.base import Scene
 from controller.controller import Controller
 
@@ -35,6 +36,7 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
+    WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
@@ -51,6 +53,7 @@ class Player(Humanoid):
     def process_logic(self):
         self._turn_to_mouse()
         self._movement_controls()
+        self._weapon_controls()
 
     @property
     def is_fired_this_tick(self):
@@ -81,6 +84,19 @@ class Player(Humanoid):
             velocity *= self.SPEED
         new_player_pos = self._pos_after_pull_from_walls(self.pos + velocity)
         self.move(new_player_pos)
+
+    def _weapon_controls(self):
+        """
+        Управление оружием игрока по команде пользователя
+        """
+        is_attacking = self.weapon.is_automatic and self.controller.is_mouse_pressed(Player.WEAPON_MAIN_BUTTON)
+        button = self.controller.get_click_button()
+        if (button == MouseButtonID.LEFT or is_attacking) and self.weapon.cooldown == 0:
+            self.weapon.main_attack()
+        if button == MouseButtonID.RIGHT:
+            self.weapon.alternative_attack()
+        if self.controller.is_key_pressed(Player.WEAPON_RELOAD_KEY):
+            self.weapon.reload_request = True
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """
