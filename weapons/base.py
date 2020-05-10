@@ -72,7 +72,7 @@ class Weapon(GameSprite):
         return False
 
 
-class RangedWeapon (Weapon):
+class RangedWeapon(Weapon):
 
     def __init__(self, owner, ammo, bullets_in_magazine, magazine_size, main_attack_interval,
                  reload_time, bullet_type, accuracy,
@@ -91,7 +91,7 @@ class RangedWeapon (Weapon):
         :param combo_attack_interval: Интервал между выстрелами в очереди -> int
         :param combo_size: Длина очереди(1, не стреляет очередями)
         """
-        super ().__init__ (owner, main_attack_interval, is_automatic, combo_attack_interval, combo_size)
+        super().__init__(owner, main_attack_interval, is_automatic, combo_attack_interval, combo_size)
         self.reload_time = reload_time
         self.is_reloading = 0
         self.reload_request = False
@@ -113,7 +113,7 @@ class RangedWeapon (Weapon):
             self.reload_request = False
             return
         if not self.is_reloading:
-            ammo_to_add = min (self.ammo, self.magazine_size - self.magazine)
+            ammo_to_add = min(self.ammo, self.magazine_size - self.magazine)
             self.magazine += ammo_to_add
             self.ammo -= ammo_to_add
             self.cooldown = self.reload_time
@@ -125,9 +125,9 @@ class RangedWeapon (Weapon):
             if not self.is_reloading:
                 self.reload_request = False
         self._is_fired_this_tick = False
-        super ().process_logic ()
+        super().process_logic()
         if self.reload_request and not self.is_reloading and self.combo == 0:
-            self.reload ()
+            self.reload()
 
     def attack(self, pos: Point, angle: float):
         """
@@ -140,13 +140,13 @@ class RangedWeapon (Weapon):
             self._is_fired_this_tick = True
         if self.magazine == 0:
             self.cooldown = 0
-            self.reload ()
+            self.reload()
             return
         self.magazine -= 1
-        SoundManager.play_sound ('weapon.shoot')
-        end_of_the_barrel = self.owner.pos + vector_from_length_angle (self.barrel_length, self.angle)
-        if self.scene.grid.intersect_seg_walls (Segment (self.owner.pos, end_of_the_barrel)) is None:
-            self.shot (end_of_the_barrel, self.angle)
+        SoundManager.play_sound('weapon.shoot')
+        end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.angle)
+        if self.scene.grid.intersect_seg_walls(Segment(self.owner.pos, end_of_the_barrel)) is None:
+            self.shot(end_of_the_barrel, self.angle)
 
     def shot(self, pos: Point, angle: float):
         """
@@ -155,11 +155,11 @@ class RangedWeapon (Weapon):
         :param pos: откуда производится выстрел -> Point
         :param angle: под каким углом производится выстрел -> float
         """
-        for i in range (self.shells):
-            bullet = Bullet (self.scene, self.controller, pos,
-                             angle + randrange (-100, 100) / (self.accuracy ** 2 - self.accuracy * 20 + 100),
-                             damage=100)
-            self.scene.game_objects.append (bullet)
+        for i in range(self.shells):
+            bullet = Bullet(self.scene, self.controller, pos,
+                            angle + randrange(-100, 100) / (self.accuracy ** 2 - self.accuracy * 20 + 100),
+                            damage=100)
+            self.scene.game_objects.append(bullet)
 
     @property
     def is_fired_this_tick(self):

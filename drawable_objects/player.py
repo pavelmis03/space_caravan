@@ -54,8 +54,8 @@ class Player(Humanoid):
         self._turn_to_mouse()
         self._movement_controls()
         self._weapon_controls()
-        self.weapon.process_logic()
-        self.weapon.cooldown += 1
+        self.weapon.pos = self.pos
+        self.weapon.angle = self.angle
 
     @property
     def is_fired_this_tick(self):
