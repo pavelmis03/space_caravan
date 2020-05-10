@@ -7,7 +7,6 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from weapons.weapons import BurstFiringPistol
 from geometry.segment import Segment
 from geometry.vector import length
 from random import randint
@@ -105,7 +104,7 @@ class CommandHumanoid(MovingHumanoid):
         self.__cooldown = 0
         self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
 
-        self.weapon = BurstFiringPistol(self, 100000)
+        self.weapon = weapons.weapons.BurstFiringPistol(self, 100000)
         self.scene.interface_objects.append(self.weapon)
         self.health = 1
 
@@ -363,5 +362,5 @@ class Enemy(CommandHumanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        self.weapon.destroy()
+        #self.weapon.destroy()
         self.destroy()
