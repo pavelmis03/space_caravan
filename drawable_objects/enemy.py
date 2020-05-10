@@ -1,3 +1,5 @@
+import weapons.weapons
+
 from typing import Optional
 
 from controller.controller import Controller
@@ -76,7 +78,10 @@ class CommandHumanoid(MovingHumanoid):
 
     Рефакторить этот код с паттерном состояние - плохая идея. Проверено на практике.
     """
-    SPEED = 5
+
+    ADD_TO_GAME_PLANE = True
+    SPEED = 9
+
     """
     HEARING_RANGE - единица измерения - клетки
     """
@@ -87,7 +92,7 @@ class CommandHumanoid(MovingHumanoid):
     AGGRE_RADIUS = 35 * 25
 
     COOLDOWN_TIME = 50
-    DELAY_BEFORE_FIRST_SHOOT = 7
+    DELAY_BEFORE_FIRST_SHOOT = 12
     DELAY_BEFORE_HEARING = 8
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float,
@@ -185,6 +190,8 @@ class CommandHumanoid(MovingHumanoid):
         """
         Команда движения к точке.
         """
+        self.scene.grid.save_enemy_pos(pos)  # на случай, если несколько enemy решат пойти в одну клетку
+
         if pos == self.pos:
             self.__command = None
             """
@@ -194,7 +201,6 @@ class CommandHumanoid(MovingHumanoid):
             self.__command_logic()
             return
 
-        self.scene.grid.save_enemy_pos(pos)  # на случай, если несколько enemy решат пойти в одну клетку
         self.move(self.pos + self._get_move_vector(pos))
 
     def __command_shoot(self):
@@ -208,10 +214,6 @@ class CommandHumanoid(MovingHumanoid):
             self.weapon.reload()
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
-
-        #create_bullet(self)
-        #self.__cooldown = CommandHumanoid.COOLDOWN_TIME
-
         self.__command = EnemyCommand('aim')
 
     def __command_aim(self):
@@ -239,8 +241,21 @@ class CommandHumanoid(MovingHumanoid):
 
     @property
     def __is_player_in_aggre_radius(self) -> bool:
-        seg = Segment(self.pos, self.scene.player.pos)
-        return seg.length < CommandHumanoid.AGGRE_RADIUS
+        """
+        Находится ли игрок в радиусе слышимости.
+
+        Проверяет, находится ли игрок в квадрате со стороной AGGRE_RADIUS и
+        центром в enemy.pos.
+        """
+        """
+        Проверка через евклидово расстояние не подходит, т.к. aggre_radius должен совпадать с
+        радиусом слышимости, а он рассчитывается bfs'ом, в результате которого получается квадрат, 
+        а не круг (если игнорировать стены).
+        """
+        distance_x = abs(self.pos.x - self.scene.player.pos.x)
+        distance_y = abs(self.pos.y - self.scene.player.pos.y)
+        return distance_x < CommandHumanoid.AGGRE_RADIUS and \
+               distance_y < CommandHumanoid.AGGRE_RADIUS
 
 
 class Enemy(CommandHumanoid):
@@ -267,6 +282,8 @@ class Enemy(CommandHumanoid):
         """
         Добавлена логика поворота
         """
+        if not self.enabled:
+            return
         super().process_logic()
         if self._is_idle and not self._is_aggred:
             self.__rotation_logic()
@@ -338,7 +355,7 @@ class Enemy(CommandHumanoid):
         """
         self.health -= damage
         if self.health <= 0:
-            self.die()
+            self.die(angle_of_attack)
 
     def die(self, angle_of_attack=0):
         """
@@ -346,5 +363,5 @@ class Enemy(CommandHumanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        self.scene.plane.erase(self, self.pos)
+        self.weapon.destroy()
         self.destroy()
