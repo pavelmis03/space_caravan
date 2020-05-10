@@ -105,7 +105,7 @@ class CommandHumanoid(MovingHumanoid):
         self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
 
         self.weapon = weapons.weapons.BurstFiringPistol(self, 100000)
-        self.scene.interface_objects.append(self.weapon)
+        self.scene.game_objects.append(self.weapon)
         self.health = 1
 
         self.__command_functions = {'move_to': self.__command_move_to,
@@ -208,7 +208,7 @@ class CommandHumanoid(MovingHumanoid):
         """
         self._recount_angle(self.scene.player.pos)
 
-        self.weapon.main_attack ()
+        self.weapon.main_attack()
         if self.weapon.magazine == 0:
             self.weapon.reload()
 
@@ -362,5 +362,5 @@ class Enemy(CommandHumanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        #self.weapon.destroy()
+        self.weapon.destroy()
         self.destroy()

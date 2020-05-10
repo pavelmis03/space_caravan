@@ -47,8 +47,8 @@ class Player(Humanoid):
             126 * Player.IMAGE_ZOOM
         ]
 
-        self.weapon = BurstFiringPistol(self, 120)
-        self.scene.interface_objects.append(self.weapon)
+        self.weapon = Pistol(self, 120)
+        self.scene.game_objects.append(self.weapon)
 
     def process_logic(self):
         self._turn_to_mouse()
