@@ -47,13 +47,15 @@ class Player(Humanoid):
             126 * Player.IMAGE_ZOOM
         ]
 
-        self.weapon = Pistol(self, 120)
+        self.weapon = Shotgun(self, 120)
         self.scene.game_objects.append(self.weapon)
 
     def process_logic(self):
         self._turn_to_mouse()
         self._movement_controls()
         self._weapon_controls()
+        self.weapon.process_logic()
+        self.weapon.cooldown += 1
 
     @property
     def is_fired_this_tick(self):
@@ -89,7 +91,7 @@ class Player(Humanoid):
         """
         Управление оружием игрока по команде пользователя
         """
-        is_attacking = self.weapon.is_automatic and self.controller.is_mouse_pressed(Player.WEAPON_MAIN_BUTTON)
+        is_attacking = self.weapon.is_automatic and self.controller.is_mouse_pressed(MouseButtonID.LEFT)
         button = self.controller.get_click_button()
         if (button == MouseButtonID.LEFT or is_attacking) and self.weapon.cooldown == 0:
             self.weapon.main_attack()

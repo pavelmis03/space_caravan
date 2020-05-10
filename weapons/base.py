@@ -1,7 +1,5 @@
 from drawable_objects.base import GameSprite
 from drawable_objects.bullet import Bullet
-from constants.mouse_buttons import MouseButtonID
-from drawable_objects.base import AbstractObject
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
@@ -10,8 +8,6 @@ from random import randrange
 
 
 class Weapon(GameSprite):
-    MAIN_BUTTON = MouseButtonID.LEFT
-    ALTERNATIVE_BUTTON = MouseButtonID.RIGHT
 
     def __init__(self, owner, main_attack_interval,
                  is_automatic=False, combo_attack_interval=0, combo_size=1):
@@ -46,7 +42,7 @@ class Weapon(GameSprite):
                 self.cooldown = self.main_attack_interval
             else:
                 self.cooldown = self.combo_attack_interval
-            self.attack (self.pos, self.angle)
+            self.attack(self.pos, self.angle)
 
     def main_attack(self):
         """
