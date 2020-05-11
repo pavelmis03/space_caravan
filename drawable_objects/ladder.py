@@ -17,4 +17,4 @@ class Ladder(UsableObject):
                          pos, angle, Ladder.IMAGE_ZOOM)
 
     def activate(self):
-        self.scene.game.toggle_scene(self.scene.game.SPACESHIP_SCENE_INDEX)
+        self.scene.game.set_scene_with_index(self.scene.game.SPACESHIP_SCENE_INDEX)

@@ -1,5 +1,7 @@
 import pygame
 
+from typing import Dict
+
 from constants.color import COLOR
 from geometry.point import Point
 
@@ -63,3 +65,24 @@ class Scene:
         """
         self.clear_screen()
         self.interface_draw()
+
+
+class ConservableScene(Scene):
+    def __init__(self, game, data_filename: str):
+        super().__init__(game)
+        self.data_filename = data_filename
+
+    def initialize(self):
+        pass
+
+    def from_dict(self, data_dict: Dict):
+        pass
+
+    def to_dict(self) -> Dict:
+        return dict()
+
+    def load(self):
+        self.from_dict(self.game.file_manager.read_data(self.data_filename))
+
+    def save(self):
+        self.game.file_manager.write_data(self.data_filename, self.to_dict())

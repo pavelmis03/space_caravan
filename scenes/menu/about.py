@@ -32,5 +32,5 @@ class AboutMenuScene(MenuScene):
         label = MultilineText(self, Point(x, y-200), AboutMenuScene.DESCRIPTION,
                               COLOR['WHITE'], 'center', 'Consolas', 20)
         self.interface_objects.append(label)
-        self.menu.add_button('Назад', self.game.toggle_scene,
+        self.menu.add_button('Назад', self.game.set_scene_with_index,
                              {'scene_index': self.game.MAIN_MENU_SCENE_INDEX})

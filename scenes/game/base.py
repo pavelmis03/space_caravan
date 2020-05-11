@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from scenes.base import Scene
+from scenes.base import ConservableScene
 from drawable_objects.interface.pause_manager import PauseManager
 from utils.game_plane import GamePlane
 from geometry.point import Point
@@ -23,44 +23,36 @@ def delete_destroyed(objects: List[any]):
         i += 1
 
 
-class GameScene(Scene):
+class GameScene(ConservableScene):
     """
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
     :param game: игра, создающая сцену
     """
     SHIFT_SENSIVITY = 1 / 16
+    PLAYER_SPAWN_POINT = Point(100, 100)
 
-    def __init__(self, game):
-        super().__init__(game)
+    def __init__(self, game, data_filename: str):
+        super().__init__(game, data_filename)
         self.game_objects = []
         self.enemies = []
         self.relative_center = Point(0, 0)
         self.game_paused = False
         self.plane = GamePlane()
-        self.pause_manager = PauseManager(self, self.game.controller)
         self.grid = None
         self.player = None
-
-        self.load_player()
+        self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
-        self.game.controller.input_objects.append(self.player)
         self.game.controller.input_objects.append(self.pause_manager)
 
-    def initialize(self):
-        pass
-
-    def from_dict(self):
-        pass
-
-    def to_dict(self) -> Dict:
-        self.save_player()
-        return dict()
-
     def load_player(self):
-        self.player = Player(self, self.game.controller, Point(100, 100), 0)
+        self.player = Player(self, self.game.controller, Point(0, 0))
+        self.player.load()
+        self.player.move(self.PLAYER_SPAWN_POINT)
+        self.game.controller.input_objects.append(self.player)
 
-    def save_player(self):
-        pass
+    def save(self):
+        super().save()
+        self.player.save()
 
     def get_mouse_center_offset(self) -> Point:
         mouse_pos = self.game.controller.get_mouse_pos()

@@ -25,6 +25,7 @@ class Planet(SpriteObject):
     IMAGE_NAMES = {
         'Simple': 'level_objects.planet'
     }
+    COUNTER = 0
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, biom=BIOMS[0], name='Test'):
         super().__init__(scene, controller, Planet.IMAGE_NAMES[biom], pos, random() * 2 * pi, Planet.IMAGE_ZOOM)
@@ -35,12 +36,13 @@ class Planet(SpriteObject):
         self.level_created = False
         self.level_scene = None
         self.enabled = True
+        self.data_filename = 'planet' + str(self.COUNTER) + 'txt'
+        self.COUNTER += 1
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()
         if click_pos and self.geometry.is_inside(click_pos):
-            self.level_scene = MainScene(self.scene.game)
+            self.level_scene = MainScene(self.scene.game, self.data_filename)
             if not self.level_created:
                 self.level_scene.initialize()
-            self.scene.game.set_scene_slot(self.scene.game.MAIN_SCENE_INDEX, self.level_scene)
-            self.scene.game.toggle_scene(self.scene.game.MAIN_SCENE_INDEX)
+            self.scene.game.set_scene(self.level_scene)

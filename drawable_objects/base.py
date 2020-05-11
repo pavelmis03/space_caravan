@@ -1,5 +1,7 @@
 import pygame
 
+from typing import Dict
+
 from geometry.point import Point
 from controller.controller import Controller
 from scenes.base import Scene
@@ -137,6 +139,18 @@ class GameSprite(SpriteObject):
         self.rotation_offset = None
         if self.ADD_TO_GAME_PLANE:
             self.scene.plane.insert(self, self.pos)
+
+    def from_dict(self, data_dict: Dict):
+        new_pos = Point()
+        new_pos.from_dict(data_dict['pos'])
+        self.move(new_pos)
+        self.angle = data_dict['angle']
+
+    def to_dict(self) -> Dict:
+        return {
+            'pos': self.pos.to_dict(),
+            'angle': self.angle,
+        }
 
     def destroy(self):
         """

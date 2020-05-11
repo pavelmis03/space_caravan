@@ -4,11 +4,10 @@ import pygame
 from typing import Tuple
 
 from controller.controller import Controller
-from space.space import Space
 from geometry.rectangle import Rectangle
-from scenes.base import Scene
-from scenes.game.main import MainScene
-from scenes.game.spaceship_scene import SpaceshipScene
+from scenes.base import Scene, ConservableScene
+from scenes.game.spaceship import SpaceshipScene
+from scenes.game.base import GameScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
@@ -19,12 +18,8 @@ from utils.sound import SoundManager
 
 class Game:
     MAIN_MENU_SCENE_INDEX = 0
-    MAIN_SCENE_INDEX = 1
-    SETTINGS_MENU_SCENE_INDEX = 2
-    ABOUT_MENU_SCENE_INDEX = 3
-    SPACESHIP_SCENE_INDEX = 4
-    SPACEMAP_SCENE_INDEX = 5
-    GAMEOVER_SCENE_INDEX = 6
+    SETTINGS_MENU_SCENE_INDEX = 1
+    ABOUT_MENU_SCENE_INDEX = 2
 
     def __init__(self, width: int = 1000, height: int = 700):
         pygame.init()
@@ -35,16 +30,12 @@ class Game:
         self.__file_manager = FileManager()
 
         self.__controller = Controller(self)
-        self.__space = Space(self, self.__controller)
         self.__scenes = [
             MainMenuScene(self),
-            MainScene(self),
             SettingsMenuScene(self),
             AboutMenuScene(self),
-            SpaceshipScene(self),
-            self.__space.get_spacemap_scene(),
         ]
-        self.__current_scene = 0
+        self.__current_scene = self.__scenes[0]
 
     @property
     def size(self) -> Tuple[int, int]:
@@ -88,13 +79,22 @@ class Game:
     def file_manager(self) -> FileManager:
         return self.__file_manager
 
-    def toggle_scene(self, scene_index):
-        self.__current_scene = scene_index
+    def set_scene(self, scene: Scene, player_loading_needed: bool = True):
+        if isinstance(self.__current_scene, ConservableScene):
+            self.__current_scene.save()
+        if player_loading_needed and isinstance(scene, GameScene):
+            scene.load_player()
+        self.__current_scene = scene
 
-    def set_scene_slot(self, scene_index, new_scene: Scene):
-        if self.__scenes[scene_index]:
-            del self.__scenes[scene_index]
-        self.__scenes[scene_index] = new_scene
+    def set_scene_with_index(self, scene_index: int):
+        self.set_scene(self.__scenes[scene_index])
+
+    def start_new_game(self):
+        self.file_manager.reset()
+        self.file_manager.create_space_storage('world')
+        spaceship_scene = SpaceshipScene(self)
+        spaceship_scene.initialize()
+        self.set_scene(spaceship_scene, False)
 
     def end(self):
         self.__running = False
@@ -102,5 +102,5 @@ class Game:
     def main_loop(self):
         while self.__running:
             self.__controller.iteration()
-            self.__scenes[self.__current_scene].iteration()
+            self.__current_scene.iteration()
         sys.exit(0)

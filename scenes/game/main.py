@@ -16,12 +16,8 @@ class MainScene(GameScene):
     :param game: игра, создающая сцену
     """
 
-    def __init__(self, game):
-        super().__init__(game)
-        player_icon = PlayerIcon(self, self.game.controller, self.player)
-        self.interface_objects.append(player_icon)
-        ammo_display = AmmoDisplay(self, self.game.controller, Point(100, 20), self.player.weapon)
-        self.interface_objects.append(ammo_display)
+    def __init__(self, game, data_filename: str):
+        super().__init__(game, data_filename)
 
     def initialize(self):
         super().initialize()
@@ -29,18 +25,16 @@ class MainScene(GameScene):
         self.game_objects.append(Ladder(
             self, self.game.controller, Point(85, 150), 0))
 
-    def from_dict(self):
-        super().from_dict()
+    def from_dict(self, data_dict: Dict):
+        super().from_dict(data_dict)
 
     def to_dict(self) -> Dict:
         result = super().to_dict()
         return result
 
-    def process_all_logic(self):
-        super().process_all_logic()
-        pass
-
-    def process_all_draw(self):
-        super().process_all_draw()
-        return
-        pass
+    def load_player(self):
+        super().load_player()
+        player_icon = PlayerIcon(self, self.game.controller, self.player)
+        self.interface_objects.append(player_icon)
+        ammo_display = AmmoDisplay(self, self.game.controller, Point(100, 20), self.player.weapon)
+        self.interface_objects.append(ammo_display)
