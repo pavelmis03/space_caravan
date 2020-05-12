@@ -36,6 +36,10 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
+    ARSENAL_CONTROLS = [
+        pygame.K_1,
+        pygame.K_2,
+    ]
     WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
 
@@ -50,10 +54,14 @@ class Player(Humanoid):
         self.ammo = {
             'Pistol': 200,
             'Shotgun': 60,
-            'Rifle': 100,
+            'Rifle': 20,
         }
-        self.weapon = Shotgun(self)
-        self.weapon.cooldown += 5
+        self.arsenal = [
+            Shotgun(self),
+            AutomaticRifle(self),
+        ]
+        self.arsenal_ind = 0
+        self.weapon = self.arsenal[self.arsenal_ind]
         self.scene.game_objects.append(self.weapon)
 
     def process_logic(self):
@@ -105,6 +113,23 @@ class Player(Humanoid):
             self.weapon.alternative_attack()
         if self.controller.is_key_pressed(Player.WEAPON_RELOAD_KEY):
             self.weapon.reload_request = True
+        if not self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[self.arsenal_ind]):
+            for ind in range(len(self.ARSENAL_CONTROLS)):
+                if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
+                    self.change_weapon(ind)
+
+    def change_weapon(self, ind):
+        if self.weapon.type == 'Ranged':
+            self.weapon.is_reloading = 0
+            self.weapon.reload_request = False
+        self.weapon.cooldown = 0
+        self.arsenal[self.arsenal_ind] = self.weapon
+        self.weapon.destroy()
+        self.arsenal_ind = ind
+        self.weapon = self.arsenal[ind]
+        self.weapon.enabled = True
+        self.scene.game_objects.append(self.weapon)
+        self.weapon.cooldown = 20
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """

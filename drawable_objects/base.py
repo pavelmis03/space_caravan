@@ -23,7 +23,6 @@ class AbstractObject:
     def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
         self.controller = controller
-        self.type = ''
 
     def process_logic(self):
         """

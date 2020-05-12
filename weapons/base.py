@@ -29,8 +29,6 @@ class Weapon(GameSprite):
         self.combo_size = combo_size
         self.cooldown = 0
 
-        self.reload_request = False  # нужна тут для работы перезарядки в Player._weapon_controls
-
     def process_logic(self):
         self.angle = self.owner.angle
         self.pos = self.owner.pos
@@ -75,7 +73,7 @@ class Weapon(GameSprite):
 class RangedWeapon(Weapon):
 
     def __init__(self, owner, bullets_in_magazine, magazine_size, main_attack_interval,
-                 reload_time, bullet_type, accuracy,
+                 reload_time, ammo_type, accuracy,
                  is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
@@ -83,7 +81,7 @@ class RangedWeapon(Weapon):
         :param magazine_size: Размер магазина
         :param main_attack_interval: Время между атаками -> int
         :param reload_time: Время перезарядки
-        :param bullet_type: Вид пули -> string
+        :param ammo_type: Вид пули -> string
         :param accuracy: Точноcть -> int
         :param is_automatic: Автоматическое ли оружие -> bool
         :param shells: Количество Bullet, вылетающих из оружия при одном выстреле
@@ -97,10 +95,11 @@ class RangedWeapon(Weapon):
         self.barrel_length = owner.HITBOX_RADIUS + 1
         self.magazine_size = magazine_size
         self.magazine = bullets_in_magazine
-        self.ammo = owner.ammo[bullet_type]
-        self.bullet_type = bullet_type
+        self.ammo = owner.ammo[ammo_type]
+        self.ammo_type = ammo_type
         self.accuracy = accuracy
         self.shells = shells
+        self.type = 'Ranged'
         self._is_fired_this_tick = False
 
     def reload(self):
@@ -112,19 +111,19 @@ class RangedWeapon(Weapon):
             self.reload_request = False
             return
         if not self.is_reloading:
-            ammo_to_add = min(self.ammo, self.magazine_size - self.magazine)
-            self.magazine += ammo_to_add
-            self.ammo -= ammo_to_add
-            self.owner.ammo[self.bullet_type] -= ammo_to_add
-            self.cooldown = self.reload_time
             self.is_reloading = self.reload_time
+            self.cooldown = self.reload_time
 
     def process_logic(self):
-        self.ammo = self.owner.ammo[self.bullet_type]
+        self.ammo = self.owner.ammo[self.ammo_type]
         if self.is_reloading:
             self.is_reloading -= 1
             if not self.is_reloading:
                 self.reload_request = False
+                ammo_to_add = min(self.ammo, self.magazine_size - self.magazine)
+                self.magazine += ammo_to_add
+                self.ammo -= ammo_to_add
+                self.owner.ammo[self.ammo_type] -= ammo_to_add
         self._is_fired_this_tick = False
         super().process_logic()
         if self.reload_request and not self.is_reloading and self.combo == 0:
@@ -157,7 +156,8 @@ class RangedWeapon(Weapon):
         :param angle: под каким углом производится выстрел -> float
         """
         for i in range(self.shells):
-            bullet = BULLET_CLASS[self.bullet_type](self, pos, angle + randrange(-100, 100) / (self.accuracy ** 2 - self.accuracy * 20 + 100))
+            bullet = BULLET_CLASS[self.ammo_type](self, pos, angle + randrange(-100, 100) /
+                                                    (self.accuracy ** 2 - self.accuracy * 20 + 100))
             self.scene.game_objects.append(bullet)
 
     @property

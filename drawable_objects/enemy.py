@@ -214,7 +214,7 @@ class CommandHumanoid(MovingHumanoid):
         self._recount_angle(self.scene.player.pos)
 
         self.weapon.main_attack()
-        if self.weapon.magazine == 0:
+        if self.weapon.type == 'Ranged' and self.weapon.magazine == 0:
             self.weapon.reload()
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
