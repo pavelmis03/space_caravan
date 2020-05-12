@@ -4,7 +4,7 @@ from constants.color import COLOR
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
 from geometry.point import Point
-from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect
+from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect, get_rectangle_copy
 
 
 class CheckBox(DrawableObject):
@@ -21,7 +21,7 @@ class CheckBox(DrawableObject):
     BG_ENABLED_COLOR = (220, 220, 220)
     TEXT_COLOR = COLOR['WHITE']
     FONT_NAME = 'Consolas'
-    SIZE = 1/2
+    SIZE = 5 / 8
 
     def __init__(self, scene, cotroller, geometry, label='Test', font_size=16, enabled=False):
         self.geometry = tuple_to_rectangle(geometry)
@@ -31,6 +31,10 @@ class CheckBox(DrawableObject):
         # move label to left edge of checkbox:
         self.label.pos.x += self.geometry.width / 2
         self.label.pos.y -= self.label.text_surface.get_height() / 2
+        # set up second geometry for enabled square(check):
+        self.c_geometry = get_rectangle_copy(self.geometry)
+        self.c_geometry.size *= CheckBox.SIZE
+
         self.check = enabled
 
     def move(self, movement):
@@ -48,12 +52,7 @@ class CheckBox(DrawableObject):
             self.check = not self.check
 
     def process_draw(self):
-        geom = rectangle_to_rect(self.geometry)
-        pygame.draw.rect(self.scene.screen, CheckBox.BG_COLOR, geom)
-        geom.width /= 2
-        geom.height /= 2
-        geom.left += geom.width/2
-        geom.top += geom.height/2
+        pygame.draw.rect(self.scene.screen, CheckBox.BG_COLOR, rectangle_to_rect(self.geometry))
         if self.check:
-            pygame.draw.rect(self.scene.screen, CheckBox.BG_ENABLED_COLOR, geom)
+            pygame.draw.rect(self.scene.screen, CheckBox.BG_ENABLED_COLOR, rectangle_to_rect(self.c_geometry))
         self.label.process_draw()
