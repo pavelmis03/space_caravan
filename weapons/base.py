@@ -15,8 +15,8 @@ class Weapon(GameSprite):
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
         :param main_attack_interval: Время между выстрелами -> int
         :param is_automatic: Автоматическое ли оружие -> bool
-        :param combo_attack_interval: Интервал между атаками в комбо-атаке -> int
-        :param combo_size: Длина комбо-атаки(1, если не атакует комбо-атаками)
+        :param combo_attack_interval: Интервал между ударами/выстрелами в 1 атаке -> int
+        :param combo_size: Количество ударов/выстрелов в 1 атаке -> int
         """
         self.owner = owner
         self.pos = owner.pos
@@ -28,6 +28,7 @@ class Weapon(GameSprite):
         self.combo = 0
         self.combo_size = combo_size
         self.cooldown = 0
+        self.type = ''
 
     def process_logic(self):
         self.angle = self.owner.angle
@@ -44,14 +45,14 @@ class Weapon(GameSprite):
 
     def main_attack(self):
         """
-        Функция - команда оружию атаковать
+        Команда оружию атаковать
         """
         if self.cooldown == 0 and self.combo == 0:
             self.combo = self.combo_size
 
     def alternative_attack(self):
         """
-        Функция - команда оружию атаковать альтернативно
+        Команда оружию атаковать альтернативно
         """
 
     def attack(self, pos: Point, angle: float):
@@ -77,16 +78,16 @@ class RangedWeapon(Weapon):
                  is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
-        :param bullets_in_magazine: Сколько пуль в магазине на момент получения оружия
-        :param magazine_size: Размер магазина
+        :param bullets_in_magazine: Сколько пуль в магазине на момент получения оружия -> int
+        :param magazine_size: Размер магазина -> int
         :param main_attack_interval: Время между атаками -> int
-        :param reload_time: Время перезарядки
+        :param reload_time: Время перезарядки -> int
         :param ammo_type: Вид пули -> string
         :param accuracy: Точноcть -> int
         :param is_automatic: Автоматическое ли оружие -> bool
-        :param shells: Количество Bullet, вылетающих из оружия при одном выстреле
+        :param shells: Количество Bullet, вылетающих из оружия при одном выстреле -> int
         :param combo_attack_interval: Интервал между выстрелами в очереди -> int
-        :param combo_size: Длина очереди(1, не стреляет очередями)
+        :param combo_size: Длина очереди -> int
         """
         super().__init__(owner, main_attack_interval, is_automatic, combo_attack_interval, combo_size)
         self.reload_time = reload_time
@@ -155,7 +156,7 @@ class RangedWeapon(Weapon):
         :param pos: откуда производится выстрел -> Point
         :param angle: под каким углом производится выстрел -> float
         """
-        for i in range(self.shells):
+        for _ in range(self.shells):
             bullet = BULLET_CLASS[self.ammo_type](self, pos, angle + randrange(-100, 100) /
                                                     (self.accuracy ** 2 - self.accuracy * 20 + 100))
             self.scene.game_objects.append(bullet)

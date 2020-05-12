@@ -155,7 +155,7 @@ class ShotgunBullet(Bullet):
 
     def __init__(self, weapon, pos, angle):
         damage = 50
-        speed = 100
+        speed = 120
         image_name = 'moving_objects.bullet.shotgun_bullet'
         zoom = 0.6
         super().__init__(weapon, pos, angle, damage, speed,
@@ -166,7 +166,7 @@ class PistolBullet(Bullet):
 
     def __init__(self, weapon, pos, angle):
         damage = 70
-        speed = 120
+        speed = 150
         image_name = 'moving_objects.bullet.pistol_bullet'
         zoom = 0.55
         super().__init__(weapon, pos, angle, damage, speed,
@@ -177,7 +177,7 @@ class RifleBullet(Bullet):
 
     def __init__(self, weapon, pos, angle):
         damage = 90
-        speed = 150
+        speed = 170
         image_name = 'moving_objects.bullet.rifle_bullet'
         zoom = 0.6
         super().__init__(weapon, pos, angle, damage, speed,

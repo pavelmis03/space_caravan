@@ -10,10 +10,7 @@ from constants.mouse_buttons import MouseButtonID
 from scenes.base import Scene
 from controller.controller import Controller
 
-from weapons.weapons import BurstFiringPistol
-from weapons.weapons import Shotgun
-from weapons.weapons import Pistol
-from weapons.weapons import AutomaticRifle
+from weapons.weapons import BurstFiringPistol, Shotgun, Pistol, AutomaticRifle
 
 from utils.game_plane import GamePlane
 
@@ -39,6 +36,7 @@ class Player(Humanoid):
     ARSENAL_CONTROLS = [
         pygame.K_1,
         pygame.K_2,
+        pygame.K_3,
     ]
     WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
@@ -54,10 +52,11 @@ class Player(Humanoid):
         self.ammo = {
             'Pistol': 200,
             'Shotgun': 60,
-            'Rifle': 20,
+            'Rifle': 100,
         }
         self.arsenal = [
             Shotgun(self),
+            BurstFiringPistol(self),
             AutomaticRifle(self),
         ]
         self.arsenal_ind = 0
@@ -116,9 +115,9 @@ class Player(Humanoid):
         if not self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[self.arsenal_ind]):
             for ind in range(len(self.ARSENAL_CONTROLS)):
                 if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
-                    self.change_weapon(ind)
+                    self.change_arsenal_weapon(ind)
 
-    def change_weapon(self, ind):
+    def change_arsenal_weapon(self, ind):
         if self.weapon.type == 'Ranged':
             self.weapon.is_reloading = 0
             self.weapon.reload_request = False
