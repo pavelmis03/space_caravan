@@ -67,6 +67,7 @@ class Player(Humanoid):
             AutomaticRifle(self),
         ]
         self.arsenal_ind = 0
+        self.change_arsenal_weapon_request = -1
         self.weapon = self.arsenal[self.arsenal_ind]
         self.scene.game_objects.append(self.weapon)
 
@@ -119,10 +120,14 @@ class Player(Humanoid):
             self.weapon.alternative_attack()
         if self.controller.is_key_pressed(Player.WEAPON_RELOAD_KEY):
             self.weapon.reload_request = True
-        if not self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[self.arsenal_ind]):
-            for ind in range(len(self.ARSENAL_CONTROLS)):
-                if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
-                    self.change_arsenal_weapon(ind)
+        if self.change_arsenal_weapon_request == -1:
+            if not self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[self.arsenal_ind]):
+                for ind in range(len(self.ARSENAL_CONTROLS)):
+                    if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
+                        self.change_arsenal_weapon_request = ind
+        if self.change_arsenal_weapon_request != -1 and self.weapon.combo == 0:
+            self.change_arsenal_weapon(self.change_arsenal_weapon_request)
+            self.change_arsenal_weapon_request = -1
 
     def change_arsenal_weapon(self, ind):
         if self.weapon.type == 'Ranged':
@@ -135,7 +140,7 @@ class Player(Humanoid):
         self.weapon = self.arsenal[ind]
         self.weapon.enabled = True
         self.scene.game_objects.append(self.weapon)
-        self.weapon.cooldown = 20
+        self.weapon.cooldown = 30
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """
