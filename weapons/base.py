@@ -1,5 +1,5 @@
 from drawable_objects.base import GameSprite
-from drawable_objects.bullet import Bullet
+from drawable_objects.bullet import BULLET_CLASS
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
@@ -156,9 +156,7 @@ class RangedWeapon(Weapon):
         :param angle: под каким углом производится выстрел -> float
         """
         for i in range(self.shells):
-            bullet = Bullet(self.scene, self.controller, pos,
-                            angle + randrange(-100, 100) / (self.accuracy ** 2 - self.accuracy * 20 + 100),
-                            damage=100)
+            bullet = BULLET_CLASS[self.bullet_type](self, pos, angle + randrange(-100, 100) / (self.accuracy ** 2 - self.accuracy * 20 + 100))
             self.scene.game_objects.append(bullet)
 
     @property

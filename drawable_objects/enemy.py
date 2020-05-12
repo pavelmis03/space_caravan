@@ -106,7 +106,7 @@ class CommandHumanoid(MovingHumanoid):
 
         self.weapon = weapons.weapons.BurstFiringPistol(self, 100000)
         self.scene.game_objects.append(self.weapon)
-        self.health = 1
+        self.hp = 100
 
         self.__command_functions = {'move_to': self.__command_move_to,
                                   'shoot': self.__command_shoot,
@@ -352,8 +352,8 @@ class Enemy(CommandHumanoid):
         :param damage: урон
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        self.health -= damage
-        if self.health <= 0:
+        self.hp -= damage
+        if self.hp <= 0:
             self.die(angle_of_attack)
 
     def die(self, angle_of_attack=0):

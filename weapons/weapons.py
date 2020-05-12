@@ -7,8 +7,8 @@ class Pistol(RangedWeapon):
     """
     def __init__(self, owner, ammo, bullets_in_magazine=12):
         super().__init__(owner, ammo, bullets_in_magazine, magazine_size=12,
-                         main_attack_interval=12, reload_time=40, bullet_type='Pistol',
-                         accuracy=70)
+                         main_attack_interval=9, reload_time=40, bullet_type='Pistol',
+                         accuracy=80)
 
 
 class Shotgun(RangedWeapon):
@@ -37,5 +37,5 @@ class AutomaticRifle(RangedWeapon):
     """
     def __init__(self, owner, ammo, bullets_in_magazine=25):
         super().__init__(owner, ammo, bullets_in_magazine, magazine_size=25,
-                         main_attack_interval=5, reload_time=60, bullet_type='Rifle',
-                         accuracy=60, is_automatic=True)
+                         main_attack_interval=4, reload_time=60, bullet_type='Rifle',
+                         accuracy=65, is_automatic=True)

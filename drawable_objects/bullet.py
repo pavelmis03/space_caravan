@@ -7,7 +7,6 @@ from geometry.intersections import intersect_seg_circle
 from geometry.vector import vector_from_length_angle, length
 from scenes.base import Scene
 from controller.controller import Controller
-from utils.game_plane import GamePlane
 from utils.image import ImageManager
 
 
@@ -28,22 +27,17 @@ class Bullet(GameSprite):
     """
     Базовая пуля (далека от завершения).
 
-    :param scene: сцена, на которой находится пуля
-    :param controller: контроллер
+    :param weapon: оружие, создавшее пулю
     :param pos: начальная позиция пули
     :param angle: начальный угол направления пули
     """
 
-    IMAGE_ZOOM = 0.7
-    IMAGE_NAME = 'moving_objects.bullet.1'
-    SPEED = 150
-
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float, damage):
-        super().__init__(scene, controller, Bullet.IMAGE_NAME, pos, angle, Bullet.IMAGE_ZOOM)
-        self.direction = vector_from_length_angle(Bullet.SPEED, self.angle)
+    def __init__(self, weapon, pos: Point, angle: float, damage, speed, image_name, image_zoom=1):
+        super().__init__(weapon.scene, weapon.controller, image_name, pos, angle, image_zoom)
+        self.direction = vector_from_length_angle(speed, self.angle)
         self.damage = damage
-        ImageManager.process_draw(
-            'moving_objects.bullet.1', self.pos, self.scene.screen, 1, self.angle)
+        self.is_hurting_enemies = weapon.owner.__class__.__name__ != 'Enemy'
+
 
     def process_draw(self):
         """
@@ -55,7 +49,7 @@ class Bullet(GameSprite):
         Если объект вне экрана, он не отрисовывается
         relative_center: центр относительных координат
         """
-        pos = self.pos - vector_from_length_angle(10, self.angle)
+        pos = self.pos - vector_from_length_angle(ImageManager.get_width(self.image_name, self.zoom) // 2, self.angle)
         relative_center = self.scene.relative_center
         relative_pos = pos - relative_center
         if ImageManager.is_out_of_screen(self.image_name, self.zoom,
@@ -112,6 +106,8 @@ class Bullet(GameSprite):
         :param tragectory: отрезок из текущей и следующей позиции пули
         :return: (Point близжайшей коллизии(None, если коллизии нет), Enemy, с которым произошла коллиия)
         """
+        if not self.is_hurting_enemies:
+            return None, None
         intersection_point = None
         shooted_enemy = None
         middle = (tragectory.p2 + tragectory.p1) / 2
@@ -155,6 +151,39 @@ class Bullet(GameSprite):
         self.destroy()
 
 
+class ShotgunBullet(Bullet):
+
+    def __init__(self, weapon, pos, angle):
+        damage = 50
+        speed = 100
+        image_name = 'moving_objects.bullet.shotgun_bullet'
+        zoom = 0.6
+        super().__init__(weapon, pos, angle, damage, speed,
+                         image_name,  zoom)
+
+
+class PistolBullet(Bullet):
+
+    def __init__(self, weapon, pos, angle):
+        damage = 70
+        speed = 120
+        image_name = 'moving_objects.bullet.pistol_bullet'
+        zoom = 0.55
+        super().__init__(weapon, pos, angle, damage, speed,
+                           image_name, zoom)
+
+
+class RifleBullet(Bullet):
+
+    def __init__(self, weapon, pos, angle):
+        damage = 90
+        speed = 150
+        image_name = 'moving_objects.bullet.rifle_bullet'
+        zoom = 0.6
+        super().__init__(weapon, pos, angle, damage, speed,
+                           image_name, zoom)
+
+
 class Collision_Animation(GameSprite):
 
     IMAGE_NAMES = [
@@ -174,3 +203,10 @@ class Collision_Animation(GameSprite):
         self.image_ind += 1
         if self.image_ind >= len(Collision_Animation.IMAGE_NAMES) * 3:
             self.destroy()
+
+
+BULLET_CLASS = {
+    'Shotgun': ShotgunBullet,
+    'Pistol': PistolBullet,
+    'Rifle': RifleBullet,
+}
