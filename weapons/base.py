@@ -182,8 +182,6 @@ class MeleeWeapon(Weapon):
         self.length = owner.HITBOX_RADIUS + 1 + length
         self.damage = damage
         self.type = 'Melee'
-        self.magazine = '-'
-        self.ammo = '-'
 
     def attack(self, pos: Point, angle: float):
         self.scene.game_objects.append(Slash(self.scene, self.controller, pos, angle, self.damage))
