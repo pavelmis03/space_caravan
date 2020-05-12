@@ -74,12 +74,11 @@ class Weapon(GameSprite):
 
 class RangedWeapon(Weapon):
 
-    def __init__(self, owner, ammo, bullets_in_magazine, magazine_size, main_attack_interval,
+    def __init__(self, owner, bullets_in_magazine, magazine_size, main_attack_interval,
                  reload_time, bullet_type, accuracy,
                  is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
-        :param ammo: Количесвто пуль
         :param bullets_in_magazine: Сколько пуль в магазине на момент получения оружия
         :param magazine_size: Размер магазина
         :param main_attack_interval: Время между атаками -> int
@@ -98,7 +97,7 @@ class RangedWeapon(Weapon):
         self.barrel_length = owner.HITBOX_RADIUS + 1
         self.magazine_size = magazine_size
         self.magazine = bullets_in_magazine
-        self.ammo = ammo
+        self.ammo = owner.ammo[bullet_type]
         self.bullet_type = bullet_type
         self.accuracy = accuracy
         self.shells = shells
@@ -116,10 +115,12 @@ class RangedWeapon(Weapon):
             ammo_to_add = min(self.ammo, self.magazine_size - self.magazine)
             self.magazine += ammo_to_add
             self.ammo -= ammo_to_add
+            self.owner.ammo[self.bullet_type] -= ammo_to_add
             self.cooldown = self.reload_time
             self.is_reloading = self.reload_time
 
     def process_logic(self):
+        self.ammo = self.owner.ammo[self.bullet_type]
         if self.is_reloading:
             self.is_reloading -= 1
             if not self.is_reloading:

@@ -104,7 +104,12 @@ class CommandHumanoid(MovingHumanoid):
         self.__cooldown = 0
         self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
 
-        self.weapon = weapons.weapons.BurstFiringPistol(self, 100000)
+        self.ammo = {
+            'Pistol': 1000000,
+            'Shotgun': 1000000,
+            'Rifle': 1000000,
+        }
+        self.weapon = weapons.weapons.BurstFiringPistol(self)
         self.scene.game_objects.append(self.weapon)
         self.hp = 100
 

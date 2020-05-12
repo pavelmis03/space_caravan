@@ -63,6 +63,8 @@ class Button(DrawableObject):
         self.hover = hover
         click_pos = self.controller.get_click_pos()
         if click_pos and self.geometry.is_inside(click_pos):
+            if self.scene.__class__.__name__ != 'MainMenuScene':
+                self.scene.player.weapon.cooldown += 2
             SoundManager.play_sound(Button.PRESS_SOUND)
             self.function(**self.kwargs)
 

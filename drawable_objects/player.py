@@ -47,7 +47,13 @@ class Player(Humanoid):
             126 * Player.IMAGE_ZOOM
         ]
 
-        self.weapon = Shotgun(self, 120)
+        self.ammo = {
+            'Pistol': 200,
+            'Shotgun': 60,
+            'Rifle': 100,
+        }
+        self.weapon = Shotgun(self)
+        self.weapon.cooldown += 5
         self.scene.game_objects.append(self.weapon)
 
     def process_logic(self):
