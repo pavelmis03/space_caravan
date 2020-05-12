@@ -6,10 +6,11 @@ from geometry.vector import sign, length, normalized, polar_angle, get_min_vecto
 from geometry.rectangle import Rectangle
 from geometry.distances import vector_dist_point_rect
 from constants.directions import DIRECTIONS
+from constants.mouse_buttons import MouseButtonID
 from scenes.base import Scene
 from controller.controller import Controller
-from weapons.weapons import Pistol, Blade
-from weapons.weapons import Shotgun
+
+from weapons.weapons import BurstFiringPistol, Shotgun, Pistol, AutomaticRifle, Blade
 
 from utils.game_plane import GamePlane
 
@@ -30,6 +31,7 @@ class Player(Humanoid):
     :SPEED: скорость игрока
     """
 
+    ADD_TO_GAME_PLANE = True
     IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
@@ -38,8 +40,13 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    WEAPON_TYPE = 1
-    SPEED = 15
+    ARSENAL_CONTROLS = [
+        pygame.K_1,
+        pygame.K_2,
+        pygame.K_3,
+    ]
+    WEAPON_RELOAD_KEY = pygame.K_r
+    SPEED = 10
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
@@ -48,17 +55,27 @@ class Player(Humanoid):
             140 * Player.IMAGE_ZOOM,
             126 * Player.IMAGE_ZOOM
         ]
-        if Player.WEAPON_TYPE == 1:
-            Player.SPEED = 15
-        else:
-            Player.SPEED = 10
-        #self.weapon = Shotgun(self, 100, 6)
-        self.weapon = Blade(self)
-        self.scene.interface_objects.append(self.weapon)
+
+        self.ammo = {
+            'Pistol': 200,
+            'Shotgun': 60,
+            'Rifle': 100,
+        }
+        self.arsenal = [
+            Blade(self),
+            BurstFiringPistol(self),
+            AutomaticRifle(self),
+        ]
+        self.arsenal_ind = 0
+        self.weapon = self.arsenal[self.arsenal_ind]
+        self.scene.game_objects.append(self.weapon)
 
     def process_logic(self):
         self._turn_to_mouse()
         self._movement_controls()
+        self._weapon_controls()
+        self.weapon.pos = self.pos
+        self.weapon.angle = self.angle
 
     @property
     def is_fired_this_tick(self):
@@ -89,6 +106,36 @@ class Player(Humanoid):
             velocity *= self.SPEED
         new_player_pos = self._pos_after_pull_from_walls(self.pos + velocity)
         self.move(new_player_pos)
+
+    def _weapon_controls(self):
+        """
+        Управление оружием игрока по команде пользователя
+        """
+        is_attacking = self.weapon.is_automatic and self.controller.is_mouse_pressed(MouseButtonID.LEFT)
+        button = self.controller.get_click_button()
+        if (button == MouseButtonID.LEFT or is_attacking) and self.weapon.cooldown == 0:
+            self.weapon.main_attack()
+        if button == MouseButtonID.RIGHT:
+            self.weapon.alternative_attack()
+        if self.controller.is_key_pressed(Player.WEAPON_RELOAD_KEY):
+            self.weapon.reload_request = True
+        if not self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[self.arsenal_ind]):
+            for ind in range(len(self.ARSENAL_CONTROLS)):
+                if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
+                    self.change_arsenal_weapon(ind)
+
+    def change_arsenal_weapon(self, ind):
+        if self.weapon.type == 'Ranged':
+            self.weapon.is_reloading = 0
+            self.weapon.reload_request = False
+        self.weapon.cooldown = 0
+        self.arsenal[self.arsenal_ind] = self.weapon
+        self.weapon.destroy()
+        self.arsenal_ind = ind
+        self.weapon = self.arsenal[ind]
+        self.weapon.enabled = True
+        self.scene.game_objects.append(self.weapon)
+        self.weapon.cooldown = 20
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """

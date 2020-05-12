@@ -23,7 +23,6 @@ class AbstractObject:
     def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
         self.controller = controller
-        self.type = ''
 
     def process_logic(self):
         """
@@ -128,19 +127,23 @@ class GameSprite(SpriteObject):
     :param angle: угол поворота объекта
     :param zoom: масштаб картинки
     """
+    ADD_TO_GAME_PLANE = False
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
                  zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
-        self.scene.plane.insert(self, self.pos)
         self.enabled = True
         self.rotation_offset = None
+        if self.ADD_TO_GAME_PLANE:
+            self.scene.plane.insert(self, self.pos)
 
     def destroy(self):
         """
         Уничтожение игрового объекта. Будет уничтожен на ближайшей итерации своей сценой.
         """
         self.enabled = False
+        if self.ADD_TO_GAME_PLANE:
+            self.scene.plane.erase(self, self.pos)
 
     def process_draw(self):
         """
@@ -160,7 +163,8 @@ class GameSprite(SpriteObject):
                                   self.scene.screen, self.zoom, self.angle, self.rotation_offset)
 
     def move(self, new_pos):
-        self.scene.plane.do_step(self, self.pos, new_pos)
+        if self.ADD_TO_GAME_PLANE:
+            self.scene.plane.do_step(self, self.pos, new_pos)
         self.pos = new_pos
 
 
