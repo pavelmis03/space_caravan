@@ -104,6 +104,19 @@ class SpriteObject(DrawableObject):
         self.angle = angle
         self.zoom = zoom
 
+    def from_dict(self, data_dict: Dict):
+        new_pos = Point()
+        new_pos.from_dict(data_dict['pos'])
+        self.move(new_pos)
+        self.angle = data_dict['angle']
+
+    def to_dict(self) -> Dict:
+        return {
+            'pos': self.pos.to_dict(),
+            'angle': self.angle,
+            'classname': self.__class__.__name__
+        }
+
     def process_draw(self):
         ImageManager.process_draw(
             self.image_name, self.pos, self.scene.screen, self.zoom, self.angle)
@@ -139,18 +152,6 @@ class GameSprite(SpriteObject):
         self.rotation_offset = None
         if self.ADD_TO_GAME_PLANE:
             self.scene.plane.insert(self, self.pos)
-
-    def from_dict(self, data_dict: Dict):
-        new_pos = Point()
-        new_pos.from_dict(data_dict['pos'])
-        self.move(new_pos)
-        self.angle = data_dict['angle']
-
-    def to_dict(self) -> Dict:
-        return {
-            'pos': self.pos.to_dict(),
-            'angle': self.angle,
-        }
 
     def destroy(self):
         """

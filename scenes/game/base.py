@@ -1,6 +1,5 @@
 from typing import List, Dict
 
-from scenes.base import ConservableScene
 from drawable_objects.interface.pause_manager import PauseManager
 from utils.game_plane import GamePlane
 from geometry.point import Point
@@ -43,6 +42,18 @@ class GameScene(ConservableScene):
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
         self.game.controller.input_objects.append(self.pause_manager)
+
+    def to_dict(self):
+        result = super().to_dict()
+        result.update({
+            'game_objects': self.to_list_of_dicts(self.game_objects),
+            'enemies': self.to_list_of_dicts(self.enemies),
+        })
+
+    def from_dict(self, data_dict: Dict):
+        super().from_dict(data_dict)
+        self.game_objects = self.from_list_of_dicts(data_dict['game_objects'])
+        self.enemies = self.from_list_of_dicts(data_dict['enemies'])
 
     def load_player(self):
         self.player = Player(self, self.game.controller, Point(0, 0))

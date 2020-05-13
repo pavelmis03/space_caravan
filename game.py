@@ -5,9 +5,10 @@ from typing import Tuple
 
 from controller.controller import Controller
 from geometry.rectangle import Rectangle
-from scenes.base import Scene, ConservableScene
-from scenes.game.spaceship import SpaceshipScene
+from scenes.base import Scene
+from scenes.conservable_scene import ConservableScene
 from scenes.game.base import GameScene
+from scenes.game.spaceship import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
