@@ -3,7 +3,6 @@ from geometry.point import Point
 
 from scenes.base import Scene
 from controller.controller import Controller
-from scenes.game.spaceship import SpaceshipScene
 
 class Ladder(UsableObject):
     """
@@ -17,6 +16,7 @@ class Ladder(UsableObject):
                          pos, angle, Ladder.IMAGE_ZOOM)
 
     def activate(self):
+        from scenes.game.spaceship import SpaceshipScene
         spaceship_scene = SpaceshipScene(self.scene.game)
         spaceship_scene.load()
         self.scene.game.set_scene(spaceship_scene)

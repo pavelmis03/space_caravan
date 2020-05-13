@@ -12,7 +12,7 @@ class SpaceshipScene(GameScene):
     ROOM_WIDTH = 30
     ROOM_HEIGHT = 20
     PLAYER_SPAWN_POINT = Point(27 * 25, 27 * 25)
-    DATA_FILENAME = 'spaceship.txt'
+    DATA_FILENAME = 'spaceship'
 
     def __init__(self, game):
         super().__init__(game, self.DATA_FILENAME)
@@ -29,6 +29,8 @@ class SpaceshipScene(GameScene):
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
+        self.grid = SpaceshipGrid(self, self.game.controller, Point(0, 0), 25, 25,
+                                  self.ROOM_WIDTH, self.ROOM_HEIGHT, self.TOP_LEFT_CORNER_BIAS)
 
     def to_dict(self) -> Dict:
         return super().to_dict()

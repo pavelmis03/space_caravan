@@ -5,7 +5,6 @@ from typing import Dict
 from geometry.circle import Circle
 from geometry.point import Point
 from scenes.base import Scene
-from scenes.game.main import MainScene
 from controller.controller import Controller
 from drawable_objects.base import SpriteObject
 
@@ -36,8 +35,8 @@ class Planet(SpriteObject):
         self.biom = biom
         self.level_created = False
         self.enabled = True
-        self.data_filename = 'planet' + str(self.COUNTER) + 'txt'
-        self.COUNTER += 1
+        self.data_filename = 'planet' + str(Planet.COUNTER)
+        Planet.COUNTER += 1
 
     def to_dict(self) -> Dict:
         result = super().to_dict()
@@ -45,8 +44,9 @@ class Planet(SpriteObject):
             'name': self.name,
             'biom': self.biom,
             'level_created': self.level_created,
-            'data_filename:': self.data_filename,
+            'data_filename': self.data_filename,
         })
+        return result
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
@@ -54,8 +54,10 @@ class Planet(SpriteObject):
         self.biom = data_dict['biom']
         self.level_created = data_dict['level_created']
         self.data_filename = data_dict['data_filename']
+        self.geometry = Circle(self.pos, Planet.BUTTON_RADIUS)
 
     def run_level(self):
+        from scenes.game.main import MainScene
         level_scene = MainScene(self.scene.game, self.data_filename)
         if not self.level_created:
             level_scene.initialize()

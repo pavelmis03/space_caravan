@@ -5,13 +5,13 @@ import json
 from typing import Dict
 
 
-class FileManager:
+class GameDataManager:
     STORAGE_NAME = 'game_data'
 
     def __init__(self):
-        if not os.path.exists(FileManager.STORAGE_NAME):
-            os.mkdir(FileManager.STORAGE_NAME)
-        os.chdir(FileManager.STORAGE_NAME)
+        if not os.path.exists(GameDataManager.STORAGE_NAME):
+            os.mkdir(GameDataManager.STORAGE_NAME)
+        os.chdir(GameDataManager.STORAGE_NAME)
         self.__root = os.path.abspath(os.path.curdir)
 
     def reset(self):
@@ -30,7 +30,7 @@ class FileManager:
             shutil.rmtree(space_name)
 
     def read_data(self, file_name: str) -> Dict:
-        file = open(file_name, 'r')
+        file = open(file_name + '.json', 'r')
         data_str = file.read()
         file.close()
         data_dict = json.loads(data_str)
@@ -38,6 +38,6 @@ class FileManager:
 
     def write_data(self, file_name: str, data_dict: Dict):
         data_str = json.dumps(data_dict, sort_keys=True, indent=2)
-        file = open(file_name, 'w')
+        file = open(file_name + '.json', 'w')
         file.write(data_str)
         file.close()

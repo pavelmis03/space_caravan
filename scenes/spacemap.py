@@ -1,4 +1,4 @@
-from scenes.base import ConservableScene
+from scenes.conservable import ConservableScene
 from space.planets_generator import PlanetsGenerator
 from geometry.rectangle import Rectangle
 
@@ -9,7 +9,7 @@ class SpacemapScene(ConservableScene):
 
     :param game: игра, создающая сцену
     """
-    DATA_FILENAME = 'spacemap.txt'
+    DATA_FILENAME = 'spacemap'
 
     def __init__(self, game):
         super().__init__(game, self.DATA_FILENAME)

@@ -6,14 +6,14 @@ from typing import Tuple
 from controller.controller import Controller
 from geometry.rectangle import Rectangle
 from scenes.base import Scene
-from scenes.conservable_scene import ConservableScene
+from scenes.conservable import ConservableScene
 from scenes.game.base import GameScene
 from scenes.game.spaceship import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
 from utils.image import ImageManager
-from utils.file_manager import FileManager
+from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
 
 
@@ -28,7 +28,7 @@ class Game:
         self.__running = True
         ImageManager.load_all()
         SoundManager.load_all()
-        self.__file_manager = FileManager()
+        self.__file_manager = GameDataManager()
 
         self.__controller = Controller(self)
         self.__scenes = [
@@ -77,7 +77,7 @@ class Game:
         return self.__controller
 
     @property
-    def file_manager(self) -> FileManager:
+    def file_manager(self) -> GameDataManager:
         return self.__file_manager
 
     def set_scene(self, scene: Scene, player_loading_needed: bool = True):

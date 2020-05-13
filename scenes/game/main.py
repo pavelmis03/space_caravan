@@ -26,6 +26,7 @@ class MainScene(GameScene):
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
+        self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
 
     def to_dict(self) -> Dict:
         result = super().to_dict()

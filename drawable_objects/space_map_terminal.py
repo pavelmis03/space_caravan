@@ -4,7 +4,6 @@ from controller.controller import Controller
 from drawable_objects.usable_object import UsableObject
 from geometry.point import Point
 from scenes.base import Scene
-from scenes.spacemap import SpacemapScene
 
 
 class SpaceMapTerminal(UsableObject):
@@ -20,12 +19,14 @@ class SpaceMapTerminal(UsableObject):
         result.update({
             'spacemap_created': self.spacemap_created,
         })
+        return result
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
         self.spacemap_created = data_dict['spacemap_created']
 
     def activate(self):
+        from scenes.spacemap import SpacemapScene
         spacemap_scene = SpacemapScene(self.scene.game)
         if not self.spacemap_created:
             spacemap_scene.initialize()

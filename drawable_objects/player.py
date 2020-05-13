@@ -36,7 +36,7 @@ class Player(Humanoid):
     ]
     SPEED = 10
 
-    DATA_FILENAME = 'player.txt'
+    DATA_FILENAME = 'player'
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
