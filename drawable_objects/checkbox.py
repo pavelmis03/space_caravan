@@ -21,30 +21,50 @@ class CheckBox(DrawableObject):
     BG_ENABLED_COLOR = (220, 220, 220)
     TEXT_COLOR = COLOR['WHITE']
     FONT_NAME = 'Consolas'
-    SIZE = 5 / 8
+    SIZE = 3/5
 
-    def __init__(self, scene, cotroller, geometry, label='Test', font_size=16, enabled=False):
+
+    def __init__(self, scene, cotroller, geometry, label='Test', font_size=16, align='left', enabled=False):
         self.geometry = tuple_to_rectangle(geometry)
         super().__init__(scene, cotroller, self.geometry.center)
         self.label = Text(scene, self.geometry.center, label,
-                         CheckBox.TEXT_COLOR, 'left', CheckBox.FONT_NAME, font_size, False)
+                          CheckBox.TEXT_COLOR, 'left', CheckBox.FONT_NAME, font_size, False)
+        self.move(self.geometry.center, align=align)
+        self.check = enabled
+
+    def move(self, movement, align='left'):
+        """
+        Передвигает чекбокс параллельным переносом на заданный вектор.
+        Учитывает при переносе align
+
+        :param movement: вектор переноса
+        """
+        movement = Point(movement.x, movement.y)
+        if align == 'center':
+            half_w = (self.geometry.width + self.label.text_surface.get_width()) / 2
+            movement.x -= half_w
+        self.move_to(movement)
+
+
+    def move_to(self, movement):
+        """
+        Передвигает чекбокс параллельным переносом на заданный вектор.
+        movement указывает на левый верхний угол позиции чекбокса
+
+        :param movement: вектор переноса
+        """
+        print(movement.x, movement.y)
+        self.geometry.top_left = movement
+        self.label.pos = self.geometry.center * 1
+        self.label.pos.x += 3  # little space between box and text
         # move label to left edge of checkbox:
+        print(self.geometry.center.x)
+        # print(self.label.pos.x, self.geometry.width / 2)
         self.label.pos.x += self.geometry.width / 2
         self.label.pos.y -= self.label.text_surface.get_height() / 2
         # set up second geometry for enabled square(check):
         self.c_geometry = get_rectangle_copy(self.geometry)
         self.c_geometry.size *= CheckBox.SIZE
-
-        self.check = enabled
-
-    def move(self, movement):
-        """
-        Передвигает чекбокс параллельным переносом на заданный вектор.
-
-        :param movement: вектор переноса
-        """
-        self.geometry.move(movement)
-        self.label.pos = self.geometry.center
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()

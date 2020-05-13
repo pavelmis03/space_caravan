@@ -14,7 +14,8 @@ class SettingsMenuScene(MenuScene):
 
     def __init__(self, game):
         super().__init__(game)
-        test_check = CheckBox(self, self.game.controller, (0, 0, 100, 100))
+        test_check = CheckBox(self, self.game.controller, (200, 200, 300, 300),
+                              'Подвижная камера', enabled=True)
         self.interface_objects.append(test_check)
         self.menu.add_button('Назад', self.game.set_scene, {
                              'scene_index': self.game.MAIN_MENU_SCENE_INDEX})
