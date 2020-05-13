@@ -21,15 +21,14 @@ class CheckBox(DrawableObject):
     BG_ENABLED_COLOR = (220, 220, 220)
     TEXT_COLOR = COLOR['WHITE']
     FONT_NAME = 'Consolas'
-    SIZE = 3/5
+    SIZE = 3 / 5
 
-
-    def __init__(self, scene, cotroller, geometry, label='Test', font_size=16, align='left', enabled=False):
-        self.geometry = tuple_to_rectangle(geometry)
+    def __init__(self, scene, cotroller, pos, size=10, label='Test', font_size=16, align='left', enabled=False):
+        self.geometry = tuple_to_rectangle((0, 0, size, size))
         super().__init__(scene, cotroller, self.geometry.center)
         self.label = Text(scene, self.geometry.center, label,
                           CheckBox.TEXT_COLOR, 'left', CheckBox.FONT_NAME, font_size, False)
-        self.move(self.geometry.center, align=align)
+        self.move(pos, align=align)
         self.check = enabled
 
     def move(self, movement, align='left'):
@@ -44,7 +43,6 @@ class CheckBox(DrawableObject):
             half_w = (self.geometry.width + self.label.text_surface.get_width()) / 2
             movement.x -= half_w
         self.move_to(movement)
-
 
     def move_to(self, movement):
         """
