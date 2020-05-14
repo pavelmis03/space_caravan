@@ -4,7 +4,6 @@ import pygame
 from constants.color import COLOR
 from geometry.point import Point
 
-
 class Scene:
     """
     Базовый класс сцены.
@@ -73,8 +72,6 @@ class GameScene(Scene):
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
     :param game: игра, создающая сцену
     """
-    SHIFT_SENSIVITY = 1 / 16
-
     def __init__(self, game):
         super().__init__(game)
         self.game_objects = []
@@ -84,6 +81,7 @@ class GameScene(Scene):
         self.player = None
         self.plane = None
         self.game_paused = False
+        self.camera = None
 
     def interface_logic(self):
         """
@@ -106,13 +104,7 @@ class GameScene(Scene):
             item.process_logic()
 
         self.player.process_logic()
-        self.relative_center = self.player.pos - self.game.screen_rectangle.center
-        # смешение камеры к курсору мыши
-        mouse_pos = self.game.controller.get_mouse_pos()
-        mouse_pos -= Point(self.game.width / 2, self.game.height / 2)
-        self.relative_center += mouse_pos * self.SHIFT_SENSIVITY
-
-        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
+        self.relative_center = self.camera.get_relative_center()
 
     def delete_destroyed_objects(self):
         """

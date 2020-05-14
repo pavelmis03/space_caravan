@@ -6,7 +6,7 @@ from scenes.base import GameScene
 from geometry.point import Point
 from map.spaceship_grid import SpaceshipGrid
 from utils.game_plane import GamePlane
-
+from utils.camera import Camera
 from drawable_objects.space_map_terminal import SpaceMapTerminal
 
 
@@ -27,6 +27,7 @@ class SpaceshipScene(GameScene):
         self.game.controller.input_objects.append(self.player)
         self.grid = SpaceshipGrid(self, self.game.controller, Point(
             0, 0), 25, 25, room_width, room_height, top_left_cornor_bias)
+        self.camera = Camera(self.game, self.grid, self.player)
         self.game_objects.append(SpaceMapTerminal(
             self, self.game.controller, terminal_spawn_point, 0))
 

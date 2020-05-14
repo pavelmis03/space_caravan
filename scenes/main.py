@@ -10,6 +10,7 @@ from scenes.base import GameScene
 from geometry.point import Point
 from map.level.grid import LevelGrid
 from utils.game_plane import GamePlane
+from utils.camera import Camera
 
 
 class MainScene(GameScene):
@@ -25,6 +26,7 @@ class MainScene(GameScene):
         self.player = Player(self, self.game.controller, Point(100, 100), 0)
         self.game.controller.input_objects.append(self.player)
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
+        self.camera = Camera(self.game, self.grid, self.player)
 
         self.game_objects.append(Ladder(
             self, self.game.controller, Point(85, 150), 0))
