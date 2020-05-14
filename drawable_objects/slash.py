@@ -41,7 +41,8 @@ class Slash(GameSprite):
         self.damage = damage
         ImageManager.process_draw(
             'moving_objects.melee_weapon.attack.heavy_splash.1', self.pos, self.scene.screen, 1, self.angle)
-
+        self.scene.game_objects.append(Slash_Animation(self.scene, self.controller, self.pos, self.angle))
+        self.destroy()
 
     def collision_manager(self, next_pos: Point):
         """
@@ -50,10 +51,6 @@ class Slash(GameSprite):
 
         """
         trajectory = Segment(self.pos, next_pos)
-
-        intersect_player_point = self.is_colliding_with_player(trajectory)
-        intersect_player = [intersect_player_point, self.collision_with_player]
-        intersection = intersect_player
 
         intersect_walls_point = self.scene.grid.intersect_seg_walls(trajectory)
         intersect_walls = [intersect_walls_point, self.collision_with_wall]
@@ -66,17 +63,6 @@ class Slash(GameSprite):
             intersect_enemies[1](intersect_enemies[0], shooted_enemy)
         elif intersection[0] is not None:
             intersection[1](intersection[0])
-
-    def is_colliding_with_player(self, trajectory: Segment):
-        """
-        Метод обработки коллизий с Player
-
-        :param trajectory: отрезок из текущей и следующей позиции пули
-        :return: Point коллизии или None, если коллизии нет
-        """
-        player = Circle(self.scene.player.pos, self.scene.player.HITBOX_RADIUS)
-        intersection_point = intersect_seg_circle(trajectory, player)
-        return intersection_point
 
     def is_colliding_with_enemies(self, trajectory):
         """
@@ -91,15 +77,13 @@ class Slash(GameSprite):
         neighbours = self.scene.plane.get_neighbours(middle)
         for neighbour in neighbours:
             if neighbour.type == 'Enemy':
-                enemy_circle = Circle(neighbour.pos, neighbour.HITBOX_RADIUS)
-                neighbour_intersection_point = intersect_seg_circle(trajectory, enemy_circle)
-                distance = dist(self.pos, neighbour_intersection_point)
-                if distance < dist(self.pos, intersection_point):
+                distance = dist(neighbour.pos, self.pos)
+                slash_distance = neighbour.HITBOX_RADIUS + 5
+                if distance < slash_distance:
                     shooted_enemy = neighbour
-                    intersection_point = neighbour_intersection_point
         return intersection_point, shooted_enemy
 
-    def collision_with_enemy(self, intersection_point, enemy):
+    def collision_with_enemy(self, enemy):
         """
         Метод, выполняемый в случае коллизии с Enemy
 
@@ -107,17 +91,7 @@ class Slash(GameSprite):
         :param enemy: Enemy, в которого попала пуля
         """
         enemy.get_damage(self.damage)
-        #self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
-        self.destroy()
-
-    def collision_with_player(self, intersection_point):
-        """
-        Метод, выполняемый в случае коллизии с Player
-
-        :param intersection_point: точка пересечения с Player
-        """
-        self.scene.player.destroy()
-        #self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.game_objects.append(Slash_Animation(self.scene, self.controller, self.pos, self.angle))
         self.destroy()
 
     def collision_with_wall(self, intersection_point):
@@ -127,26 +101,26 @@ class Slash(GameSprite):
         :param intersection_point: точка пересечения со стеной
         """
 
-        self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.game_objects.append(Slash_Animation(self.scene, self.controller, self.pos, self.angle))
         self.destroy()
 
 
-class Collision_Animation(GameSprite):
-
+class Slash_Animation(GameSprite):
     IMAGE_NAMES = [
+        'moving_objects.melee_weapon.attack.heavy_splash.1',
         'moving_objects.melee_weapon.attack.heavy_splash.2',
         'moving_objects.melee_weapon.attack.heavy_splash.3',
     ]
-    IMAGE_ZOOMS = [0.7, 1.8]
+    IMAGE_ZOOMS = [0.4, 0.4, 0.4]
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         pos = pos - vector_from_length_angle(8, angle)
-        super().__init__(scene, controller,  Collision_Animation.IMAGE_NAMES[0], pos, angle, Collision_Animation.IMAGE_ZOOMS[0])
+        super().__init__(scene, controller, Slash_Animation.IMAGE_NAMES[0], pos, angle, Slash_Animation.IMAGE_ZOOMS[0])
         self.image_ind = 0
 
     def process_logic(self):
-        self.image_name = Collision_Animation.IMAGE_NAMES[self.image_ind // 3]
-        self.zoom = Collision_Animation.IMAGE_ZOOMS[self.image_ind // 3]
+        self.image_name = Slash_Animation.IMAGE_NAMES[self.image_ind // 4]
+        self.zoom = Slash_Animation.IMAGE_ZOOMS[self.image_ind // 4]
         self.image_ind += 1
-        if self.image_ind >= len(Collision_Animation.IMAGE_NAMES) * 3:
+        if self.image_ind >= len(Slash_Animation.IMAGE_NAMES) * 4:
             self.destroy()

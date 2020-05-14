@@ -171,6 +171,17 @@ class RangedWeapon(Weapon):
 
 class MeleeWeapon(Weapon):
 
+
+    def attack(self, pos: Point, angle: float):
+        """
+        Функция атаки
+
+        :param pos: откуда производится атака -> Point
+        :param angle: под каким углом производится атака -> float
+        """
+        SoundManager.play_sound('weapon.shoot')
+        self.scene.game_objects.append(Slash(self.scene, self.controller, pos, angle, self.damage))
+
     def __init__(self, owner, main_attack_interval, length, damage):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
@@ -182,6 +193,3 @@ class MeleeWeapon(Weapon):
         self.length = owner.HITBOX_RADIUS + 1 + length
         self.damage = damage
         self.type = 'Melee'
-
-    def attack(self, pos: Point, angle: float):
-        self.scene.game_objects.append(Slash(self.scene, self.controller, pos, angle, self.damage))

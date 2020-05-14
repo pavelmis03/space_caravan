@@ -45,4 +45,4 @@ class Blade(MeleeWeapon):
     DAMAGE = 200
 
     def __init__(self, owner):
-        super().__init__(owner, main_attack_interval=15, length=20, damage=100)
+        super().__init__(owner, main_attack_interval=15, length=10, damage=Blade.DAMAGE)
