@@ -4,7 +4,7 @@ from constants.color import COLOR
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
 from geometry.point import Point
-from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect, get_rectangle_copy
+from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect, get_rectangle_copy, rect_to_rectangle, Rectangle
 
 
 class CheckBox(DrawableObject):
@@ -38,7 +38,6 @@ class CheckBox(DrawableObject):
 
         :param movement: вектор переноса
         """
-        movement = Point(movement.x, movement.y)
         if align == 'center':
             half_w = (self.geometry.width + self.label.text_surface.get_width()) / 2
             movement.x -= half_w
@@ -63,10 +62,14 @@ class CheckBox(DrawableObject):
         # set up second geometry for enabled square(check):
         self.c_geometry = get_rectangle_copy(self.geometry)
         self.c_geometry.size *= CheckBox.SIZE
+        # set up hitbox geometry
+        self.hitbox = Rectangle(self.geometry.left, self.geometry.top,
+                                self.label.pos.x + self.label.rect.right, self.geometry.bottom)
+
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()
-        if click_pos and self.geometry.is_inside(click_pos):
+        if click_pos and self.hitbox.is_inside(click_pos):
             self.check = not self.check
 
     def process_draw(self):
