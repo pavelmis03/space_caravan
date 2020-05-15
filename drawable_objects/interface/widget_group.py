@@ -1,8 +1,10 @@
 import pygame
 
+from constants.color import COLOR
 from drawable_objects.base import AbstractObject
 from drawable_objects.button import Button
 from drawable_objects.checkbox import CheckBox
+from drawable_objects.multiline_text import MultilineText
 from geometry.point import Point
 from geometry.rectangle import tuple_to_rectangle
 
@@ -97,6 +99,17 @@ class WidgetGroup(AbstractObject):
         box = CheckBox(self.scene, self.controller,
                        pos, size, text, align='center')
         self.widgets.append(box)
+
+    def add_multilinetext(self, text, **text_kwargs):
+        """
+        Добавляет многострочный текст в отображаемые виджеты
+        :param text: многострочный текст
+        :param text_kwargs: аргументы многострочного текста
+        """
+        pos = self.get_actual_pos()
+        label = MultilineText(self.scene, Point(0, 0), text, **text_kwargs)
+        label.move(pos)
+        self.widgets.append(label)
 
     def update_offset(self, offset):
         """

@@ -1,6 +1,9 @@
+import pygame
+
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
 from geometry.point import Point
+from geometry.rectangle import Rectangle, rectangle_to_rect
 
 
 class MultilineText(DrawableObject):
@@ -11,8 +14,9 @@ class MultilineText(DrawableObject):
 
     Хранение осуществляется списком из Text
 
-    Класс имеет скудный функционал, но большего нам пока и не нужно
+    LINE_OFFSET - дополнительный промежуток между строчками
     """
+    LINE_OFFSET = 3
 
     def __init__(self, scene, pos, text='Define\nme!', color=(255, 255, 255), align='left', font_name='Comic Sans',
                  font_size=35, is_bold=True, is_italic=False, width_limit=None):
@@ -33,12 +37,48 @@ class MultilineText(DrawableObject):
         Задает отображаемый многострочный текст
         :param text: текст
         """
-        self.text = []
-        for i, line in enumerate(text.split('\n')):
-            newtxt = Text(self.scene, self.pos + Point(0, i *
-                                                       self.text_params['font_size']), line, **self.text_params)
+        if not text:
+            return
+        splited = text.split('\n')
+        self.text = [
+            Text(self.scene, self.pos, splited[0], **self.text_params)
+        ]
+        offset = self.text[0].text_surface.get_height() + MultilineText.LINE_OFFSET
+        for i, line in list(enumerate(splited))[1:]:
+            newtxt = Text(self.scene, self.pos +
+                          Point(0, i * offset),
+                          line, **self.text_params)
             self.text.append(newtxt)
 
+    @property
+    def geometry(self):
+        rect = Rectangle(0, 0, self.width, self.height)
+        rect.top_left = Point(self.pos.x - self.width / 2, self.pos.y)
+        return rect
+
+    @property
+    def width(self):
+        mx = 0
+        for text in self.text:
+            new_w = text.text_surface.get_width()
+            if new_w > mx:
+                mx = new_w
+        return mx
+
+    @property
+    def height(self):
+        return (self.text[0].text_surface.get_height() + MultilineText.LINE_OFFSET) * len(self.text)
+
+    def move(self, movement):
+        """
+        Передвигает текст параллельным переносом на заданный вектор.
+        :param movement: вектор переноса
+        """
+        for text in self.text:
+            text.pos += movement
+        self.pos += movement
+
     def process_draw(self):
+        pygame.draw.rect(self.scene.screen, (255, 0, 0), rectangle_to_rect(self.geometry), 2)
         for txt in self.text:
             txt.process_draw()
