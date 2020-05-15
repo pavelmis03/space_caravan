@@ -79,6 +79,5 @@ class MultilineText(DrawableObject):
         self.pos += movement
 
     def process_draw(self):
-        pygame.draw.rect(self.scene.screen, (255, 0, 0), rectangle_to_rect(self.geometry), 2)
         for txt in self.text:
             txt.process_draw()
