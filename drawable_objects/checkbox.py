@@ -28,34 +28,33 @@ class CheckBox(DrawableObject):
         super().__init__(scene, cotroller, self.geometry.center)
         self.label = Text(scene, self.geometry.center, label,
                           CheckBox.TEXT_COLOR, 'left', CheckBox.FONT_NAME, font_size, False)
-        self.move(pos, align=align)
+        self.align = align
+        self.move(pos)
         self.check = enabled
 
-    def move(self, movement, align='left'):
+    def move(self, movement):
         """
         Передвигает чекбокс параллельным переносом на заданный вектор.
         Учитывает при переносе align
 
         :param movement: вектор переноса
         """
-        if align == 'center':
+        if self.align == 'center':
             half_w = (self.geometry.width + self.label.text_surface.get_width()) / 2
             movement.x -= half_w
         self.move_to(movement)
 
     def move_to(self, movement):
         """
-        Передвигает чекбокс параллельным переносом на заданный вектор.
+        Передвигает чекбокс параллельным переносом на заданные координаты.
         movement указывает на левый верхний угол позиции чекбокса
 
         :param movement: вектор переноса
         """
-        print(movement.x, movement.y)
         self.geometry.top_left = movement
         self.label.pos = self.geometry.center * 1
         self.label.pos.x += 3  # little space between box and text
         # move label to left edge of checkbox:
-        print(self.geometry.center.x)
         # print(self.label.pos.x, self.geometry.width / 2)
         self.label.pos.x += self.geometry.width / 2
         self.label.pos.y -= self.label.text_surface.get_height() / 2

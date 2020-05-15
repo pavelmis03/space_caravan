@@ -15,6 +15,6 @@ class SettingsMenuScene(MenuScene):
 
     def __init__(self, game):
         super().__init__(game)
-        self.menu.add_checkbox(20, 'Фиксированная камера')
+        self.menu.add_checkbox('Фиксированная камера')
         self.menu.add_button('Назад', self.game.set_scene, {
                              'scene_index': self.game.MAIN_MENU_SCENE_INDEX})

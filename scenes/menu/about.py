@@ -28,8 +28,7 @@ class AboutMenuScene(MenuScene):
     def __init__(self, game):
         super().__init__(game)
         self.menu.update_offset([0.5, 0.5])
-        x, y = self.menu.pos
-        label = MultilineText(self, Point(x, y-200), AboutMenuScene.DESCRIPTION,
+        label = MultilineText(self, Point(self.menu.pos.x, self.menu.pos.y-200), AboutMenuScene.DESCRIPTION,
                               COLOR['WHITE'], 'center', 'Consolas', 20)
         self.interface_objects.append(label)
         self.menu.add_button('Назад', self.game.set_scene,
