@@ -1,6 +1,8 @@
 from drawable_objects.base import AbstractObject
 from drawable_objects.button import Button
+from drawable_objects.checkbox import CheckBox
 from geometry.point import Point
+from geometry.rectangle import tuple_to_rectangle
 
 
 class ButtonGroup(AbstractObject):
@@ -25,8 +27,11 @@ class ButtonGroup(AbstractObject):
         self.button_offset = button_offset
         self.buttons = []
 
-    def add_button(self, text, function, kwargs={}):
-        geometry = [
+    def get_actual_geometry(self):
+        """
+        Вычисление актуальной позиции для создаваемого элемента
+        """
+        return [
             self.pos[0] - self.button_geometry[0] // 2,
             self.pos[1] + (len(self.buttons) - 0.5) * self.button_geometry[1] +
             len(self.buttons) * self.button_offset,
@@ -34,9 +39,20 @@ class ButtonGroup(AbstractObject):
             self.pos[1] + (len(self.buttons) + 0.5) * self.button_geometry[1] +
             len(self.buttons) * self.button_offset,
         ]
+
+    def add_button(self, text, function, kwargs={}):
+        geometry = self.get_actual_geometry()
         btn = Button(self.scene, self.controller,
                      geometry, text, function, kwargs)
         self.buttons.append(btn)
+
+    def add_checkbox(self, size, text):
+        geometry = self.get_actual_geometry()
+        print(geometry)
+        rect = tuple_to_rectangle(geometry)
+        print(rect.center.x, rect.center.y)
+        box = CheckBox(self.scene, self.controller, rect.center, size, text, align='center')
+        self.buttons.append(box)
 
     def recalc_pos(self):
         """
