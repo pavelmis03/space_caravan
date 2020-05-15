@@ -16,6 +16,10 @@ class CheckBox(DrawableObject):
     FONT_NAME - шрифт, используемый для отображения цвета
     SIZE - коэфиицент, отвечающий за то, насколько должен
     заполнять внутренний квадрат внешний (1/2 - половина)
+
+    self.select - квадратик
+    self.selected - внутреннее выделение квадратика
+    self.geometry - все вмете (текст тоже)
     """
     BG_COLOR = (120, 120, 120)
     BG_ENABLED_COLOR = (220, 220, 220)
@@ -24,9 +28,9 @@ class CheckBox(DrawableObject):
     SIZE = 3 / 5
 
     def __init__(self, scene, cotroller, pos, size=10, label='Test', font_size=16, align='left', enabled=False):
-        self.geometry = tuple_to_rectangle((0, 0, size, size))
-        super().__init__(scene, cotroller, self.geometry.center)
-        self.label = Text(scene, self.geometry.center, label,
+        self.select = tuple_to_rectangle((0, 0, size, size))
+        super().__init__(scene, cotroller, self.select.center)
+        self.label = Text(scene, self.select.center, label,
                           CheckBox.TEXT_COLOR, 'left', CheckBox.FONT_NAME, font_size, False)
         self.align = align
         self.move(pos)
@@ -40,7 +44,7 @@ class CheckBox(DrawableObject):
         :param movement: вектор переноса
         """
         if self.align == 'center':
-            half_w = (self.geometry.width + self.label.text_surface.get_width()) / 2
+            half_w = (self.select.width + self.label.text_surface.get_width()) / 2
             movement.x -= half_w
         self.move_to(movement)
 
@@ -51,28 +55,29 @@ class CheckBox(DrawableObject):
 
         :param movement: вектор переноса
         """
-        self.geometry.top_left = movement
-        self.label.pos = self.geometry.center * 1
+        self.select.top_left = movement
+        self.label.pos = self.select.center * 1
         self.label.pos.x += 3  # little space between box and text
         # move label to left edge of checkbox:
         # print(self.label.pos.x, self.geometry.width / 2)
-        self.label.pos.x += self.geometry.width / 2
+        self.label.pos.x += self.select.width / 2
         self.label.pos.y -= self.label.text_surface.get_height() / 2
         # set up second geometry for enabled square(check):
-        self.c_geometry = get_rectangle_copy(self.geometry)
-        self.c_geometry.size *= CheckBox.SIZE
+        self.selected = get_rectangle_copy(self.select)
+        self.selected.size *= CheckBox.SIZE
         # set up hitbox geometry
-        self.hitbox = Rectangle(self.geometry.left, self.geometry.top,
-                                self.label.pos.x + self.label.rect.right, self.geometry.bottom)
+        self.geometry = Rectangle(self.select.left, self.select.top,
+                                  self.label.pos.x + self.label.rect.right, self.select.bottom)
 
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()
-        if click_pos and self.hitbox.is_inside(click_pos):
+        if click_pos and self.geometry.is_inside(click_pos):
             self.check = not self.check
 
     def process_draw(self):
-        pygame.draw.rect(self.scene.screen, CheckBox.BG_COLOR, rectangle_to_rect(self.geometry))
+        pygame.draw.rect(self.scene.screen, CheckBox.BG_COLOR, rectangle_to_rect(self.select))
         if self.check:
-            pygame.draw.rect(self.scene.screen, CheckBox.BG_ENABLED_COLOR, rectangle_to_rect(self.c_geometry))
+            pygame.draw.rect(self.scene.screen, CheckBox.BG_ENABLED_COLOR, rectangle_to_rect(self.selected))
         self.label.process_draw()
+        # pygame.draw.rect(self.scene.screen, (255, 0, 0), rectangle_to_rect(self.geometry), 2)

@@ -1,3 +1,5 @@
+import pygame
+
 from drawable_objects.base import AbstractObject
 from drawable_objects.button import Button
 from drawable_objects.checkbox import CheckBox
@@ -19,6 +21,7 @@ class WidgetGroup(AbstractObject):
     """
 
     BUTTON_DEF_SIZE = [150, 60]
+    CHECKBOX_DEF_SIZE = 20
 
     def __init__(self, scene, controller, offset, widget_offset=0):
         super().__init__(scene, controller)
@@ -43,7 +46,7 @@ class WidgetGroup(AbstractObject):
         newpos = self.get_base_pos()
         if newpos != self.pos:
             # TODO: move all objects to the new location (newpos)
-            self.move(newpos - self.pos)
+            # self.move(newpos - self.pos)
             self.pos = newpos
 
     def move(self, movement):
@@ -81,17 +84,20 @@ class WidgetGroup(AbstractObject):
                      geometry, text, function, kwargs)
         self.widgets.append(btn)
 
-    def add_checkbox(self, text):
+    def add_checkbox(self, text, size=None):
         """
         Добавляет чекбокс в отображаемые виджеты
-        :param text: Тескт для чекбокса
+        :param text: Текст для чекбокса
+        :param size: Размеры чекбокса (самого квадрата)
         """
-        pass
-        """
-        rect = tuple_to_rectangle(self.get_actual_geometry())
+        if not size:
+            size = WidgetGroup.CHECKBOX_DEF_SIZE
+        pos = self.get_actual_pos()
+        pos.y += size / 2
+        p = self.get_actual_pos()
         box = CheckBox(self.scene, self.controller,
-                       rect.center, self.widget_geometry.y, text, align='center')
-        self.widgets.append(box)"""
+                       pos, size, text, align='center')
+        self.widgets.append(box)
 
     def update_offset(self, offset):
         """
