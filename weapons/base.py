@@ -3,6 +3,7 @@ from drawable_objects.bullet import BULLET_CLASS
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
+from utils.image import ImageManager
 from utils.sound import SoundManager
 from random import randrange
 
@@ -21,7 +22,7 @@ class Weapon(GameSprite):
         self.owner = owner
         self.pos = owner.pos
         self.angle = owner.angle
-        super().__init__(owner.scene, owner.controller, 'moving_objects.bullet.1', self.pos, self.angle)
+        super().__init__(owner.scene, owner.controller, 'other.gun', self.pos, self.angle, owner.IMAGE_ZOOM * 2)
         self.is_automatic = is_automatic
         self.main_attack_interval = main_attack_interval
         self.combo_attack_interval = combo_attack_interval
@@ -160,6 +161,26 @@ class RangedWeapon(Weapon):
             bullet = BULLET_CLASS[self.ammo_type](self, pos, angle + randrange(-100, 100) /
                                                     (self.accuracy ** 2 - self.accuracy * 20 + 100))
             self.scene.game_objects.append(bullet)
+
+    def process_draw(self):
+        """
+        Отрисовка объекта в относительных координатах
+
+        Если объект вне экрана, он не отрисовывается
+        relative_center: центр относительных координат
+        """
+        if self.owner.__class__.__name__ == 'Enemy':
+            return
+        pos = self.owner.pos + vector_from_length_angle(20, self.owner.angle)
+        relative_center = self.scene.relative_center
+        relative_pos = pos - relative_center
+
+        if ImageManager.is_out_of_screen(self.image_name, self.zoom,
+                                         relative_pos, self.scene.game.screen_rectangle):
+            return
+
+        ImageManager.process_draw(self.image_name, relative_pos,
+                                  self.scene.screen, self.zoom, self.angle, self.rotation_offset)
 
     @property
     def is_fired_this_tick(self):

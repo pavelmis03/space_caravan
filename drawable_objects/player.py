@@ -25,7 +25,8 @@ class Player(Humanoid):
     """
 
     ADD_TO_GAME_PLANE = True
-    IMAGE_NAME = 'moving_objects.player'
+    #IMAGE_NAME = 'moving_objects.player'
+    IMAGE_NAME = 'other.person-up_without_weapon'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
         pygame.K_d,
@@ -133,7 +134,7 @@ class Player(Humanoid):
         self.weapon = self.arsenal[ind]
         self.weapon.enabled = True
         self.scene.game_objects.append(self.weapon)
-        self.weapon.cooldown = 30
+        self.weapon.cooldown = 20
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """
