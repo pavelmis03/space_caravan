@@ -10,7 +10,7 @@ from constants.mouse_buttons import MouseButtonID
 from scenes.base import Scene
 from controller.controller import Controller
 
-from weapons.weapons import BurstFiringPistol, Shotgun, Pistol, AutomaticRifle
+from weapons.weapons import WEAPON_VOCABULARY
 
 from utils.game_plane import GamePlane
 
@@ -56,9 +56,9 @@ class Player(Humanoid):
             'Rifle': 100,
         }
         self.arsenal = [
-            Shotgun(self),
-            BurstFiringPistol(self),
-            AutomaticRifle(self),
+            WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
+            WEAPON_VOCABULARY['Pistol'](self),
+            WEAPON_VOCABULARY['SniperRifle'](self),
         ]
         self.arsenal_ind = 0
         self.change_arsenal_weapon_request = -1
@@ -120,10 +120,10 @@ class Player(Humanoid):
                     if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
                         self.change_arsenal_weapon_request = ind
         if self.change_arsenal_weapon_request != -1 and self.weapon.combo == 0:
-            self.change_arsenal_weapon(self.change_arsenal_weapon_request)
+            self._change_arsenal_weapon(self.change_arsenal_weapon_request)
             self.change_arsenal_weapon_request = -1
 
-    def change_arsenal_weapon(self, ind):
+    def _change_arsenal_weapon(self, ind):
         if self.weapon.type == 'Ranged':
             self.weapon.is_reloading = 0
             self.weapon.reload_request = False
@@ -134,7 +134,7 @@ class Player(Humanoid):
         self.weapon = self.arsenal[ind]
         self.weapon.enabled = True
         self.scene.game_objects.append(self.weapon)
-        self.weapon.cooldown = 20
+        self.weapon.cooldown = 15
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """

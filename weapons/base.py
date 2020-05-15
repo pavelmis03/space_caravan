@@ -1,8 +1,8 @@
 from drawable_objects.base import GameSprite
 from drawable_objects.bullet import BULLET_CLASS
-from geometry.point import Point
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
+from geometry.point import Point
 from utils.image import ImageManager
 from utils.sound import SoundManager
 from random import randrange
@@ -60,8 +60,8 @@ class Weapon(GameSprite):
         """
         Функция атаки
 
-        :param pos: откуда производится атака
-        :param angle: под каким углом производится атака
+        :param pos: откуда производится атака -> Point
+        :param angle: под каким углом производится атака -> angle
         """
 
     @property
@@ -75,7 +75,7 @@ class Weapon(GameSprite):
 class RangedWeapon(Weapon):
 
     def __init__(self, owner, bullets_in_magazine, magazine_size, main_attack_interval,
-                 reload_time, ammo_type, accuracy,
+                 reload_time, ammo_type, accuracy, damage,
                  is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
@@ -85,6 +85,7 @@ class RangedWeapon(Weapon):
         :param reload_time: Время перезарядки -> int
         :param ammo_type: Вид пули -> string
         :param accuracy: Точноcть -> int
+        :param damage: Урон -> int
         :param is_automatic: Автоматическое ли оружие -> bool
         :param shells: Количество Bullet, вылетающих из оружия при одном выстреле -> int
         :param combo_attack_interval: Интервал между выстрелами в очереди -> int
@@ -100,6 +101,7 @@ class RangedWeapon(Weapon):
         self.ammo = owner.ammo[ammo_type]
         self.ammo_type = ammo_type
         self.accuracy = accuracy
+        self.damage = damage
         self.shells = shells
         self.type = 'Ranged'
         self._is_fired_this_tick = False
@@ -159,7 +161,7 @@ class RangedWeapon(Weapon):
         """
         for _ in range(self.shells):
             bullet = BULLET_CLASS[self.ammo_type](self, pos, angle + randrange(-100, 100) /
-                                                    (self.accuracy ** 2 - self.accuracy * 20 + 100))
+                                                    (self.accuracy ** 2 - self.accuracy * 20 + 100), self.damage)
             self.scene.game_objects.append(bullet)
 
     def process_draw(self):

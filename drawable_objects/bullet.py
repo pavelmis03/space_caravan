@@ -5,8 +5,6 @@ from geometry.segment import Segment
 from geometry.circle import Circle
 from geometry.intersections import intersect_seg_circle
 from geometry.vector import vector_from_length_angle, length
-from scenes.base import Scene
-from controller.controller import Controller
 from utils.image import ImageManager
 
 
@@ -113,7 +111,6 @@ class Bullet(GameSprite):
         middle = (tragectory.p2 + tragectory.p1) / 2
         neighbours = self.scene.plane.get_neighbours(middle, Enemy)
         for neighbour in neighbours:
-            #if neighbour.__class__.__name__ == 'Enemy':
             enemy_circle = Circle(neighbour.pos, neighbour.HITBOX_RADIUS)
             neighbour_intersection_point = intersect_seg_circle(tragectory, enemy_circle)
             distance = dist(self.pos, neighbour_intersection_point)
@@ -153,8 +150,7 @@ class Bullet(GameSprite):
 
 class ShotgunBullet(Bullet):
 
-    def __init__(self, weapon, pos, angle):
-        damage = 50
+    def __init__(self, weapon, pos, angle, damage):
         speed = 120
         image_name = 'moving_objects.bullet.shotgun_bullet'
         zoom = 0.6
@@ -164,8 +160,7 @@ class ShotgunBullet(Bullet):
 
 class PistolBullet(Bullet):
 
-    def __init__(self, weapon, pos, angle):
-        damage = 70
+    def __init__(self, weapon, pos, angle, damage):
         speed = 150
         image_name = 'moving_objects.bullet.pistol_bullet'
         zoom = 0.55
@@ -175,8 +170,7 @@ class PistolBullet(Bullet):
 
 class RifleBullet(Bullet):
 
-    def __init__(self, weapon, pos, angle):
-        damage = 90
+    def __init__(self, weapon, pos, angle, damage):
         speed = 170
         image_name = 'moving_objects.bullet.rifle_bullet'
         zoom = 0.6
@@ -192,7 +186,7 @@ class Collision_Animation(GameSprite):
     ]
     IMAGE_ZOOMS = [0.7, 1.8]
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene, controller, pos: Point, angle: float = 0):
         pos = pos - vector_from_length_angle(8, angle)
         super().__init__(scene, controller,  Collision_Animation.IMAGE_NAMES[0], pos, angle, Collision_Animation.IMAGE_ZOOMS[0])
         self.image_ind = 0

@@ -1,4 +1,5 @@
 import weapons.weapons
+#from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
 
 from typing import Optional
 
@@ -109,7 +110,7 @@ class CommandHumanoid(MovingHumanoid):
             'Shotgun': 1000000,
             'Rifle': 1000000,
         }
-        self.weapon = weapons.weapons.BurstFiringPistol(self)
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](self)
         self.scene.game_objects.append(self.weapon)
         self.hp = 100
 
