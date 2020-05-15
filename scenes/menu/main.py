@@ -1,7 +1,7 @@
 """
 Класс главной страницы меню меню
 """
-
+from geometry.point import Point
 from scenes.menu.base import MenuScene
 
 

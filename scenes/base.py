@@ -73,6 +73,7 @@ class GameScene(Scene):
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
     :param game: игра, создающая сцену
     """
+    FIXED_CAMERA = False
     SHIFT_SENSIVITY = 1 / 40
 
     def __init__(self, game):
@@ -108,9 +109,10 @@ class GameScene(Scene):
         self.player.process_logic()
         self.relative_center = self.player.pos - self.game.screen_rectangle.center
         # смешение камеры к курсору мыши
-        mouse_pos = self.game.controller.get_mouse_pos()
-        mouse_pos -= Point(self.game.width / 2, self.game.height / 2)
-        self.relative_center += mouse_pos * self.SHIFT_SENSIVITY
+        if not GameScene.FIXED_CAMERA:
+            mouse_pos = self.game.controller.get_mouse_pos()
+            mouse_pos -= Point(self.game.width / 2, self.game.height / 2)
+            self.relative_center += mouse_pos * self.SHIFT_SENSIVITY
 
         self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
 
