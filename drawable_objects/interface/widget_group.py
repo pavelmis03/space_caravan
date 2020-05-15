@@ -45,8 +45,7 @@ class WidgetGroup(AbstractObject):
         """
         newpos = self.get_base_pos()
         if newpos != self.pos:
-            # TODO: move all objects to the new location (newpos)
-            # self.move(newpos - self.pos)
+            self.move(newpos - self.pos)
             self.pos = newpos
 
     def move(self, movement):

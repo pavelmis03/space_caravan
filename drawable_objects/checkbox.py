@@ -33,7 +33,8 @@ class CheckBox(DrawableObject):
         self.label = Text(scene, self.select.center, label,
                           CheckBox.TEXT_COLOR, 'left', CheckBox.FONT_NAME, font_size, False)
         self.align = align
-        self.move(pos)
+        self.set_up_size()
+        self.move_to(pos)
         self.check = enabled
 
     def move(self, movement):
@@ -43,23 +44,29 @@ class CheckBox(DrawableObject):
 
         :param movement: вектор переноса
         """
+        self.geometry.move(movement)
+        self.select.move(movement)
+        self.selected.move(movement)
+        self.label.pos += movement
+
+    def move_to(self, position):
+        """
+        Передвигает чекбокс в определенную позицию
+        :param position: новая позиция
+        """
+        movement = position - self.geometry.top_left
         if self.align == 'center':
             half_w = (self.select.width + self.label.text_surface.get_width()) / 2
             movement.x -= half_w
-        self.move_to(movement)
+        self.move(movement)
 
-    def move_to(self, movement):
+    def set_up_size(self):
         """
-        Передвигает чекбокс параллельным переносом на заданные координаты.
-        movement указывает на левый верхний угол позиции чекбокса
-
-        :param movement: вектор переноса
+        Инициализация полей и относительных расположений чекбокса
         """
-        self.select.top_left = movement
         self.label.pos = self.select.center * 1
-        self.label.pos.x += 3  # little space between box and text
-        # move label to left edge of checkbox:
-        # print(self.label.pos.x, self.geometry.width / 2)
+        self.label.pos.x += 3 # little space between box and test
+        # move label to left edge of the checkbox:
         self.label.pos.x += self.select.width / 2
         self.label.pos.y -= self.label.text_surface.get_height() / 2
         # set up second geometry for enabled square(check):
@@ -68,7 +75,6 @@ class CheckBox(DrawableObject):
         # set up hitbox geometry
         self.geometry = Rectangle(self.select.left, self.select.top,
                                   self.label.pos.x + self.label.rect.right, self.select.bottom)
-
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()
