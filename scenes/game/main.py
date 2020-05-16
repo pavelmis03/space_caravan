@@ -10,9 +10,10 @@ from map.level.grid import LevelGrid
 
 class MainScene(GameScene):
     """
-    Класс главной игровой сцены. Называется так, потому что пока это единственная игровая сцена.
+    Класс главной игровой сцены - сцены уровня.
 
     :param game: игра, создающая сцену
+    :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
     """
 
     def __init__(self, game, data_filename: str):

@@ -87,7 +87,8 @@ class DrawableObject(AbstractObject):
 
 class SpriteObject(DrawableObject):
     """
-    Базовый класс объекта с текстурой. Имеет абсолютную позицию на экране и угол поворота.
+    Базовый класс объекта с текстурой. Имеет абсолютную позицию на экране и угол поворота. На этом уровне
+    наследования появляются загрузка и сохранение.
 
     :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
@@ -105,12 +106,18 @@ class SpriteObject(DrawableObject):
         self.zoom = zoom
 
     def from_dict(self, data_dict: Dict):
+        """
+        Воспроизведение объекта из словаря.
+        """
         new_pos = Point()
         new_pos.from_dict(data_dict['pos'])
         self.move(new_pos)
         self.angle = data_dict['angle']
 
     def to_dict(self) -> Dict:
+        """
+        Запись характеристик объекта в словарь.
+        """
         return {
             'pos': self.pos.to_dict(),
             'angle': self.angle,

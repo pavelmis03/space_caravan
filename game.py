@@ -18,6 +18,11 @@ from utils.sound import SoundManager
 
 
 class Game:
+    """
+    Класс игры в смысле приложения. Содержит главный рабочий цикл; организует отрисовку графического окна;
+    как поля имеет контроллер ввода и менеджеры картинок, звука, файлов игры; руководит работой сцен.
+    """
+
     MAIN_MENU_SCENE_INDEX = 0
     SETTINGS_MENU_SCENE_INDEX = 1
     ABOUT_MENU_SCENE_INDEX = 2
@@ -81,6 +86,14 @@ class Game:
         return self.__file_manager
 
     def set_scene(self, scene: Scene, player_loading_needed: bool = True):
+        """
+        Установка заданной сцены текущей. Если старая сцена игровая, она сохраняется. При необходимости
+        новой сцене из файла подгружается игрок.
+
+        :param scene: ссылка на новую сцену
+        :param player_loading_needed: нужно ли подгружать игрока
+        """
+
         if isinstance(self.__current_scene, ConservableScene):
             self.__current_scene.save()
         if player_loading_needed and isinstance(scene, GameScene):
@@ -88,9 +101,16 @@ class Game:
         self.__current_scene = scene
 
     def set_scene_with_index(self, scene_index: int):
+        """
+        Установка сцены из имеющегося списка в качестве текущей. Индексы в списке - константные поля класса игры.
+        """
         self.set_scene(self.__scenes[scene_index])
 
     def start_new_game(self):
+        """
+        Старт нового игрового мира. Пока не имеет альтернатив. Возможно, стоит перенести при создании меню
+        выбора мира.
+        """
         self.file_manager.reset()
         self.file_manager.create_space_storage('world')
         spaceship_scene = SpaceshipScene(self)
@@ -101,6 +121,9 @@ class Game:
         self.__running = False
 
     def main_loop(self):
+        """
+        Главный рабочий цикл.
+        """
         while self.__running:
             self.__controller.iteration()
             self.__current_scene.iteration()

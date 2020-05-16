@@ -11,7 +11,7 @@ from drawable_objects.base import SpriteObject
 
 class Planet(SpriteObject):
     """
-    Объект планеты на звездной карте
+    Объект планеты во всех смыслах: и в структуре игрового мира, и на космической карте.
 
     :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
@@ -38,7 +38,21 @@ class Planet(SpriteObject):
         self.data_filename = 'planet' + str(Planet.COUNTER)
         Planet.COUNTER += 1
 
+    def from_dict(self, data_dict: Dict):
+        """
+        Воспроизведение планеты из словаря.
+        """
+        super().from_dict(data_dict)
+        self.name = data_dict['name']
+        self.biom = data_dict['biom']
+        self.level_created = data_dict['level_created']
+        self.data_filename = data_dict['data_filename']
+        self.geometry = Circle(self.pos, Planet.BUTTON_RADIUS)
+
     def to_dict(self) -> Dict:
+        """
+        Запись характеристик планеты в виде словаря.
+        """
         result = super().to_dict()
         result.update({
             'name': self.name,
@@ -48,16 +62,11 @@ class Planet(SpriteObject):
         })
         return result
 
-    def from_dict(self, data_dict: Dict):
-        super().from_dict(data_dict)
-        self.name = data_dict['name']
-        self.biom = data_dict['biom']
-        self.level_created = data_dict['level_created']
-        self.data_filename = data_dict['data_filename']
-        self.geometry = Circle(self.pos, Planet.BUTTON_RADIUS)
-
     def run_level(self):
-        from scenes.game.main import MainScene
+        """
+        Запуск уровня. Именно здесь создается сцена уровня, так работает загрузка сцен.
+        """
+        from scenes.game.main import MainScene  # В обход цикличеких import'ов
         level_scene = MainScene(self.scene.game, self.data_filename)
         if not self.level_created:
             level_scene.initialize()

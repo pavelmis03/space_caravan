@@ -13,7 +13,6 @@ from controller.controller import Controller
 from weapons.weapons import Pistol
 from weapons.weapons import Shotgun
 
-from utils.game_plane import GamePlane
 
 class Player(Humanoid):
     """
@@ -57,9 +56,16 @@ class Player(Humanoid):
         return result
 
     def load(self):
+        """
+        Загрузка игрока из файла. Игрок хранится отдельно от сцен, потому что должен уметь подгружаться на
+        любую игровую сцену.
+        """
         self.from_dict(self.scene.game.file_manager.read_data(self.DATA_FILENAME))
 
     def save(self):
+        """
+        Сохранение игрока в файл.
+        """
         self.scene.game.file_manager.write_data(self.DATA_FILENAME, self.to_dict())
 
     def process_logic(self):

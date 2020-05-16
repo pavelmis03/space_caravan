@@ -9,8 +9,8 @@ from scenes.conservable import ConservableScene
 
 def delete_destroyed(objects: List[any]):
     """
-    быстрое удаление уничтоженных эл-тов (который not enabled).
-    так как мы меняем местами удаляемый эл-т и делаем pop, работает за O(n)
+    Быстрое удаление уничтоженных эл-тов (который not enabled).
+    Так как мы меняем местами удаляемый эл-т и делаем pop, работает за O(n).
 
     :param objects: список объектов
     """
@@ -26,8 +26,11 @@ def delete_destroyed(objects: List[any]):
 class GameScene(ConservableScene):
     """
     Класс игровой сцены, где помимо объектов интерфейса есть игровые объекты, игрок и сетка.
+
     :param game: игра, создающая сцену
+    :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
     """
+
     SHIFT_SENSIVITY = 1 / 16
     PLAYER_SPAWN_POINT = Point(100, 100)
 
@@ -58,6 +61,9 @@ class GameScene(ConservableScene):
         self.enemies += self.from_list_of_dicts(data_dict['enemies'])
 
     def load_player(self):
+        """
+        Загрузка игрока (он хранится отдельно от сцен). Вызывается автоматически в Game.
+        """
         self.player = Player(self, self.game.controller, Point(0, 0))
         self.player.load()
         self.player.move(self.PLAYER_SPAWN_POINT)
@@ -92,8 +98,7 @@ class GameScene(ConservableScene):
 
     def delete_destroyed_objects(self):
         """
-        быстрое удаление уничтоженных эл-тов (который not enabled).
-        так как мы меняем местами удаляемый эл-т и делаем pop, работает за O(n)
+        Удаление уничтоженных элементов.
         """
         delete_destroyed(self.game_objects)
         delete_destroyed(self.enemies)

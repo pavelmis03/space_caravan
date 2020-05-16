@@ -28,3 +28,10 @@ mouse_buttons.py
 .. automodule:: constants.mouse_buttons
     :members:
     :undoc-members:
+
+saving.py
+---------
+
+.. automodule:: constants.saving
+    :members:
+    :undoc-members:

@@ -5,7 +5,7 @@ from geometry.rectangle import Rectangle
 
 class SpacemapScene(ConservableScene):
     """
-    Сцена звездной карты
+    Сцена звездной карты.
 
     :param game: игра, создающая сцену
     """
@@ -15,6 +15,9 @@ class SpacemapScene(ConservableScene):
         super().__init__(game, self.DATA_FILENAME)
 
     def initialize(self):
+        """
+        Для звездной карты инициализация означает создание планет, чем занимается PlanetsGenerator.
+        """
         space_rectangle = Rectangle(0, 0, self.game.width, self.game.height)
         planets_generator = PlanetsGenerator(space_rectangle, 12, self.game.controller, self)
         self.interface_objects = planets_generator.generate()
