@@ -30,8 +30,8 @@ class GameScene(ConservableScene):
     :param game: игра, создающая сцену
     :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
     """
-
-    SHIFT_SENSIVITY = 1 / 16
+    FIXED_CAMERA = False
+    SHIFT_SENSIVITY = 1 / 10
     PLAYER_SPAWN_POINT = Point(100, 100)
 
     def __init__(self, game, data_filename: str):
@@ -93,7 +93,8 @@ class GameScene(ConservableScene):
 
         self.player.process_logic()
         self.relative_center = self.player.pos - self.game.screen_rectangle.center
-        self.relative_center += self.get_mouse_center_offset()
+        if not GameScene.FIXED_CAMERA:
+            self.relative_center += self.get_mouse_center_offset()
         self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
 
     def delete_destroyed_objects(self):

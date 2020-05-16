@@ -12,6 +12,7 @@ class AmmoDisplay(DisplayCount):
         super().__init__(scene, controller, pos, weapon, AmmoDisplay.FIELDS)
 
     def process_logic(self):
+        self.subject = self.scene.player.weapon
         if self.subject.is_reloading:
             render_string = 'Перезарядка: ' + str(self.subject.is_reloading)
         else:

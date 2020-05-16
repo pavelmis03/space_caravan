@@ -1,4 +1,5 @@
 import weapons.weapons
+#from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
 
 from typing import Optional
 
@@ -80,7 +81,7 @@ class CommandHumanoid(MovingHumanoid):
     """
 
     ADD_TO_GAME_PLANE = True
-    SPEED = 8
+    SPEED = 9
 
     """
     HEARING_RANGE - единица измерения - клетки
@@ -92,7 +93,7 @@ class CommandHumanoid(MovingHumanoid):
     AGGRE_RADIUS = 35 * 25
 
     COOLDOWN_TIME = 50
-    DELAY_BEFORE_FIRST_SHOOT = 4
+    DELAY_BEFORE_FIRST_SHOOT = 12
     DELAY_BEFORE_HEARING = 8
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float,
@@ -105,9 +106,14 @@ class CommandHumanoid(MovingHumanoid):
         self.__cooldown = 0
         self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
 
-
-        self.health = 1
-        self.type = 'Enemy'
+        self.ammo = {
+            'Pistol': 1000000,
+            'Shotgun': 1000000,
+            'Rifle': 1000000,
+        }
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](self)
+        self.scene.game_objects.append(self.weapon)
+        self.hp = 100
 
         self.__command_functions = {'move_to': self.__command_move_to,
                                   'shoot': self.__command_shoot,
@@ -190,6 +196,8 @@ class CommandHumanoid(MovingHumanoid):
         """
         Команда движения к точке.
         """
+        self.scene.grid.save_enemy_pos(pos)  # на случай, если несколько enemy решат пойти в одну клетку
+
         if pos == self.pos:
             self.__command = None
             """
@@ -199,7 +207,6 @@ class CommandHumanoid(MovingHumanoid):
             self.__command_logic()
             return
 
-        self.scene.grid.save_enemy_pos(pos)  # на случай, если несколько enemy решат пойти в одну клетку
         self.move(self.pos + self._get_move_vector(pos))
 
     def __command_shoot(self):
@@ -208,14 +215,11 @@ class CommandHumanoid(MovingHumanoid):
         """
         self._recount_angle(self.scene.player.pos)
 
-        end_of_barrel = vector_from_length_angle(self.HITBOX_RADIUS + 3, self.angle) + self.pos
-        weapons.weapons.Pistol.attack(self, end_of_barrel, self.angle)
+        self.weapon.main_attack()
+        if self.weapon.type == 'Ranged' and self.weapon.magazine == 0:
+            self.weapon.reload()
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
-
-        #create_bullet(self)
-        #self.__cooldown = CommandHumanoid.COOLDOWN_TIME
-
         self.__command = EnemyCommand('aim')
 
     def __command_aim(self):
@@ -243,8 +247,21 @@ class CommandHumanoid(MovingHumanoid):
 
     @property
     def __is_player_in_aggre_radius(self) -> bool:
-        seg = Segment(self.pos, self.scene.player.pos)
-        return seg.length < CommandHumanoid.AGGRE_RADIUS
+        """
+        Находится ли игрок в радиусе слышимости.
+
+        Проверяет, находится ли игрок в квадрате со стороной AGGRE_RADIUS и
+        центром в enemy.pos.
+        """
+        """
+        Проверка через евклидово расстояние не подходит, т.к. aggre_radius должен совпадать с
+        радиусом слышимости, а он рассчитывается bfs'ом, в результате которого получается квадрат, 
+        а не круг (если игнорировать стены).
+        """
+        distance_x = abs(self.pos.x - self.scene.player.pos.x)
+        distance_y = abs(self.pos.y - self.scene.player.pos.y)
+        return distance_x < CommandHumanoid.AGGRE_RADIUS and \
+               distance_y < CommandHumanoid.AGGRE_RADIUS
 
 
 class Enemy(CommandHumanoid):
@@ -342,9 +359,9 @@ class Enemy(CommandHumanoid):
         :param damage: урон
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        self.health -= damage
-        if self.health <= 0:
-            self.die()
+        self.hp -= damage
+        if self.hp <= 0:
+            self.die(angle_of_attack)
 
     def die(self, angle_of_attack=0):
         """
@@ -352,4 +369,5 @@ class Enemy(CommandHumanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
+        self.weapon.destroy()
         self.destroy()
