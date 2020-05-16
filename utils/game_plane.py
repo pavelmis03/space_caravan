@@ -1,5 +1,5 @@
 from math import floor
-from typing import Tuple
+from typing import Tuple, List, ClassVar
 
 from geometry.point import Point
 from drawable_objects.base import GameSprite
@@ -14,7 +14,7 @@ class GamePlane:
     CHUNK_SIZE = 100
 
     def __init__(self):
-        self.objects = {}
+        self.__objects = {}
 
     def get_chunk(self, pos: Point) -> Tuple[int, int]:
         """
@@ -35,9 +35,9 @@ class GamePlane:
         :param pos: точка на плоскости
         """
         chunk = self.get_chunk(pos)
-        if chunk not in self.objects:
-            self.objects[chunk] = set()
-        self.objects[chunk].add(game_object)
+        if chunk not in self.__objects:
+            self.__objects[chunk] = set()
+        self.__objects[chunk].add(game_object)
 
     def erase(self, game_object: GameSprite, pos: Point):
         """
@@ -47,14 +47,14 @@ class GamePlane:
         :param pos: точка на плоскости
         """
         chunk = self.get_chunk(pos)
-        self.objects[chunk].remove(game_object)
-        if len(self.objects[chunk]) == 0:
-            self.objects.pop(chunk)
+        self.__objects[chunk].remove(game_object)
+        if len(self.__objects[chunk]) == 0:
+            self.__objects.pop(chunk)
 
     def do_step(self, game_object: GameSprite, pos: Point, new_pos: Point):
         """
-        Фиксирование перемещение объекта. Вызывается игровыми объектами при перемещении. Если чанк меняется, ссылка
-        на объект перемещается в структуре данных.
+        Фиксирование перемещения объекта. Должно вызываться объектами. Если чанк меняется, ссылка на объект
+        перемещается в структуре данных.
 
         :param game_object: игровой объект
         :param pos: старое положение объекта
@@ -65,15 +65,29 @@ class GamePlane:
         if old_chunk != new_chunk:
             self.erase(game_object, pos)
             self.insert(game_object, new_pos)
-            # print("New chunk is {}".format(new_chunk))
 
-    def get_neighbours(self, pos: Point):
+    def get_objects_from_chunk(self, chunk: Tuple[int, int], objects_class: type) -> List[type]:
         """
-        Получение списка ссылок на объекты поблизости - в чанке точки и восьми соседних.
+        Получение объектов в заданном чанке по классу.
+        """
+        if chunk not in self.__objects:
+            return list()
+        objects_from_chunk = list()
+        for item in self.__objects[chunk]:
+            if isinstance(item, objects_class):
+                objects_from_chunk.append(item)
+        return objects_from_chunk
 
-        Внимание! При запросе по центру некоторого игрового объекта в списке ближайших будет и сам объект!
+    def get_neighbours(self, pos: Point, neighbours_class: type) -> List[type]:
+        """
+        Получение списка ссылок на объекты определенного класса поблизости -
+        в чанке точки и восьми соседних.
+
+        Внимание! При запросе по центру некоторого игрового объекта в списке ближайших
+        его же класса будет в том числе сам объект!
 
         :param pos: точка на плоскости
+        :param neighbours_class: класс
         :return: список объектов в ближайших чанках
         """
         chunk = self.get_chunk(pos)
@@ -81,7 +95,7 @@ class GamePlane:
         for delta_x in range(-1, 2):
             for delta_y in range(-1, 2):
                 neighbour_chunk = (chunk[0] + delta_x, chunk[1] + delta_y)
-                if neighbour_chunk in self.objects:
-                    for item in self.objects[neighbour_chunk]:
-                        neighbours.append(item)
+                objects_from_chunk = self.get_objects_from_chunk(neighbour_chunk, neighbours_class)
+                for item in objects_from_chunk:
+                    neighbours.append(item)
         return neighbours
