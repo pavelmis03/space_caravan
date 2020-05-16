@@ -36,6 +36,14 @@ class Point:
         distance = sqrt(dt.x * dt.x + dt.y * dt.y)
         return distance < EPS
 
+    def from_dict(self, data_dict):
+        self.x = data_dict['x']
+        self.y = data_dict['y']
+
+    def to_dict(self):
+        return { 'x': self.x, 'y':self.y }
+
+
 
 def point_to_tuple(point):
     """

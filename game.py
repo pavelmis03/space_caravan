@@ -1,67 +1,130 @@
 import sys
-
 import pygame
+
+from typing import Tuple
 
 from controller.controller import Controller
 from geometry.rectangle import Rectangle
-from scenes.main import MainScene
-from scenes.spaceship_scene import SpaceshipScene
+from scenes.base import Scene
+from scenes.conservable import ConservableScene
+from scenes.game.base import GameScene
+from scenes.game.spaceship import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
-from scenes.spacemap import SpacemapScene
 from utils.image import ImageManager
-from typing import Tuple
-
+from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
 
 
 class Game:
+    """
+    Класс игры в смысле приложения. Содержит главный рабочий цикл; организует отрисовку графического окна;
+    как поля имеет контроллер ввода и менеджеры картинок, звука, файлов игры; руководит работой сцен.
+    """
+
     MAIN_MENU_SCENE_INDEX = 0
-    MAIN_SCENE_INDEX = 1
-    SETTINGS_MENU_SCENE_INDEX = 2
-    ABOUT_MENU_SCENE_INDEX = 3
-    SPACESHIP_SCENE_INDEX = 4
-    SPACEMAP_SCENE_INDEX = 5
-    GAMEOVER_SCENE_INDEX = 6
+    SETTINGS_MENU_SCENE_INDEX = 1
+    ABOUT_MENU_SCENE_INDEX = 2
 
-    def __init__(self, width=1300, height=800):
-        self.size = (width, height)
-
-        self.screen = None
+    def __init__(self, width: int = 1000, height: int = 700):
         pygame.init()
-        self.create_window()
-        self.running = True
-        self.controller = Controller(self)
+        self.size = (width, height)
+        self.__running = True
         ImageManager.load_all()
         SoundManager.load_all()
-        self.scenes = [MainMenuScene(self), MainScene(self), SettingsMenuScene(
-            self), AboutMenuScene(self), SpaceshipScene(self), SpacemapScene(self)]
-        self.current_scene = 0
+        self.__file_manager = GameDataManager()
+
+        self.__controller = Controller(self)
+        self.__scenes = [
+            MainMenuScene(self),
+            SettingsMenuScene(self),
+            AboutMenuScene(self),
+        ]
+        self.__current_scene = self.__scenes[0]
 
     @property
     def size(self) -> Tuple[int, int]:
-        return self._size
+        return self.__size
 
     @size.setter
     def size(self, value: Tuple[int, int]):
-        self._size = value
-        self.width = self._size[0]
-        self.height = self._size[1]
-        self.screen_rectangle = Rectangle(0, 0, self.width, self.height)
-        self.create_window()
+        """
+        Присвоением окну размера инициализируются все характеристики экрана.
+        """
+        self.__size = value
+        self.__width = self.__size[0]
+        self.__height = self.__size[1]
+        self.__screen_rectangle = Rectangle(0, 0, self.__width, self.__height)
+        self.__create_window()
 
-    def create_window(self):
-        self.screen = pygame.display.set_mode(self.size, pygame.RESIZABLE)
+    def __create_window(self):
+        self.__screen = pygame.display.set_mode(self.__size, pygame.RESIZABLE)
 
-    def set_scene(self, scene_index):
-        self.current_scene = scene_index
+    @property
+    def screen(self) -> pygame.Surface:
+        return self.__screen
+
+    @property
+    def width(self) -> int:
+        return self.__width
+
+    @property
+    def height(self) -> int:
+        return self.__height
+
+    @property
+    def screen_rectangle(self) -> Rectangle:
+        return self.__screen_rectangle
+
+    @property
+    def controller(self) -> Controller:
+        return self.__controller
+
+    @property
+    def file_manager(self) -> GameDataManager:
+        return self.__file_manager
+
+    def set_scene(self, scene: Scene, player_loading_needed: bool = True):
+        """
+        Установка заданной сцены текущей. Если старая сцена игровая, она сохраняется. При необходимости
+        новой сцене из файла подгружается игрок.
+
+        :param scene: ссылка на новую сцену
+        :param player_loading_needed: нужно ли подгружать игрока
+        """
+
+        if isinstance(self.__current_scene, ConservableScene):
+            self.__current_scene.save()
+        if player_loading_needed and isinstance(scene, GameScene):
+            scene.load_player()
+        self.__current_scene = scene
+
+    def set_scene_with_index(self, scene_index: int):
+        """
+        Установка сцены из имеющегося списка в качестве текущей. Индексы в списке - константные поля класса игры.
+        """
+        self.set_scene(self.__scenes[scene_index])
+
+    def start_new_game(self):
+        """
+        Старт нового игрового мира. Пока не имеет альтернатив. Возможно, стоит перенести при создании меню
+        выбора мира.
+        """
+        self.file_manager.reset()
+        self.file_manager.create_space_storage('world')
+        spaceship_scene = SpaceshipScene(self)
+        spaceship_scene.initialize()
+        self.set_scene(spaceship_scene, False)
 
     def end(self):
-        self.running = False
+        self.__running = False
 
     def main_loop(self):
-        while self.running:
-            self.controller.iteration()
-            self.scenes[self.current_scene].iteration()
+        """
+        Главный рабочий цикл.
+        """
+        while self.__running:
+            self.__controller.iteration()
+            self.__current_scene.iteration()
         sys.exit(0)

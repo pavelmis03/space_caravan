@@ -1,5 +1,7 @@
-from typing import List
 import pygame
+
+from typing import List, Dict
+
 from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import sign, length, normalized, polar_angle, get_min_vector
@@ -12,7 +14,6 @@ from controller.controller import Controller
 
 from weapons.weapons import WEAPON_VOCABULARY
 
-from utils.game_plane import GamePlane
 
 class Player(Humanoid):
     """
@@ -42,6 +43,8 @@ class Player(Humanoid):
     WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
 
+    DATA_FILENAME = 'player'
+
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
@@ -64,6 +67,26 @@ class Player(Humanoid):
         self.change_arsenal_weapon_request = -1
         self.weapon = self.arsenal[self.arsenal_ind]
         self.scene.game_objects.append(self.weapon)
+
+    def from_dict(self, data_dict: Dict):
+        super().from_dict(data_dict)
+
+    def to_dict(self) -> Dict:
+        result = super().to_dict()
+        return result
+
+    def load(self):
+        """
+        Загрузка игрока из файла. Игрок хранится отдельно от сцен, потому что должен уметь подгружаться на
+        любую игровую сцену.
+        """
+        self.from_dict(self.scene.game.file_manager.read_data(self.DATA_FILENAME))
+
+    def save(self):
+        """
+        Сохранение игрока в файл.
+        """
+        self.scene.game.file_manager.write_data(self.DATA_FILENAME, self.to_dict())
 
     def process_logic(self):
         self._turn_to_mouse()

@@ -15,6 +15,7 @@ from utils.random import is_random_proc
 from math import pi
 from utils.timer import Timer, EMPTY_TIMER
 
+
 class MovingHumanoid(Humanoid):
     """
     Может принимать команду движения к точке
@@ -277,7 +278,7 @@ class Enemy(CommandHumanoid):
     ROTATION_MIN_COOLDOWN = 100
     ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point = Point(), angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
         self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
         self.__rotation_direction = 1 if is_random_proc() else -1

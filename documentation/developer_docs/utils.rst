@@ -8,6 +8,13 @@ disjoint_set.py
     :members:
     :undoc-members:
 
+game_data_manager.py
+--------------------
+
+.. automodule:: utils.game_data_manager
+    :members:
+    :undoc-members:
+
 game_plane.py
 -------------
 
@@ -22,6 +29,20 @@ image.py
     :members:
     :undoc-members:
 
+is_marked_manager.py
+--------------------
+
+.. automodule:: utils.is_marked_manager
+    :members:
+    :undoc-members:
+
+list.py
+-------
+
+.. automodule:: utils.list
+    :members:
+    :undoc-members:
+
 random.py
 ---------
 
@@ -29,29 +50,22 @@ random.py
     :members:
     :undoc-members:
 
-is_marked_manager
------------------
-
-.. automodule:: utils.is_marked_manager
-    :members:
-    :undoc-members:
-
-list
-----
-
-.. automodule:: utils.list
-    :members:
-    :undoc-members:
-
-simple_math
------------
+simple_math.py
+--------------
 
 .. automodule:: utils.simple_math
     :members:
     :undoc-members:
 
-timer
------
+sound.py
+--------
+
+.. automodule:: utils.sound
+    :members:
+    :undoc-members:
+
+timer.py
+--------
 
 .. automodule:: utils.timer
     :members:
