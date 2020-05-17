@@ -1,3 +1,4 @@
+import pygame
 from geometry.point import Point, tuple_to_point
 from geometry.rectangle import Rectangle
 from drawable_objects.player import Player
@@ -17,10 +18,9 @@ class Camera:
         result = self.__player.pos - self.__game.screen_rectangle.center
 
         result += self.__get_camera_shift_by_mouse()
-        old = result
         result = self.__grid.get_correct_relative_pos(result)
 
-        if self.__transition.is_mouse_in_screen_transition_area:
+        if self.__game.controller.is_key_pressed(CameraTransition.CONTROL):
             self.__transition.move_camera(result)
             result += self.__transition.transition
             #result = self.__transition.correct_transition(result)
@@ -47,15 +47,16 @@ class CameraTransition:
     начинает смещение.
     (значение должно быть в отрезке [0, 1])
     """
-    SCREEN_TRANSITION_AREA_RATIO = 0.1
+    SCREEN_TRANSITION_AREA_RATIO = 0.25
     """
     Коэффициент максимально смещения экрана (на сколько экранов можно максимально сместить камеру).
     """
-    MAXIMUM_TRANSITION_RATIO = 0.4
+    MAXIMUM_TRANSITION_RATIO = 0.45
     """
     Коэффициент скорости смещения экрана (на какую часть экрана должна смещаться камера).
     """
-    CAMERA_TRANSITION_SPEED_RATIO = 0.01
+    CAMERA_TRANSITION_SPEED_RATIO = 0.02
+    CONTROL = pygame.K_LSHIFT
     def __init__(self, game, player: Player):
         self.__game = game
         self.__player = player
