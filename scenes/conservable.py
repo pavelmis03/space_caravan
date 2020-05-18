@@ -1,7 +1,7 @@
 from typing import Dict, List
 
-from constants.saving import CLASSES_BASE
 from scenes.base import Scene
+from utils.game_data_manager import from_list_of_dicts, to_list_of_dicts
 
 
 class ConservableScene(Scene):
@@ -34,27 +34,12 @@ class ConservableScene(Scene):
         """
         Воспроизведение сцены из словаря.
         """
-        self.interface_objects += self.from_list_of_dicts(data_dict['interface_objects'])
+        self.interface_objects += from_list_of_dicts(self, data_dict['interface_objects'])
 
     def to_dict(self) -> Dict:
         """
         Запись характеристик сцены в виде словаря.
         """
         return {
-            'interface_objects': self.to_list_of_dicts(self.interface_objects)
+            'interface_objects': to_list_of_dicts(self.interface_objects)
         }
-
-    def to_list_of_dicts(self, objects: List) -> List[Dict]:
-        result = list()
-        for item in objects:
-            if type(item) in CLASSES_BASE.values():
-                result.append(item.to_dict())
-        return result
-
-    def from_list_of_dicts(self, data_list: List[Dict]) -> List:
-        result = list()
-        for item in data_list:
-            new_object = CLASSES_BASE[item['classname']](self, self.game.controller)
-            new_object.from_dict(item)
-            result.append(new_object)
-        return result

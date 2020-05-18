@@ -23,25 +23,17 @@ class SpaceshipScene(GameScene):
 
     def __init__(self, game):
         super().__init__(game, self.DATA_FILENAME)
+        self.grid = SpaceshipGrid(self, self.game.controller, Point(0, 0),
+                                  self.ROOM_WIDTH, self.ROOM_HEIGHT, self.TOP_LEFT_CORNER_BIAS)
 
     def initialize(self):
         """
         Инициализация для космического корабля означает создание игрока (так это первая сцена, появляющаяся в
         новом игровом мире), а также объектов на корабле.
         """
-        self.grid = SpaceshipGrid(self, self.game.controller, Point(0, 0), self.CELL_SIZE, self.CELL_SIZE,
-                                  self.ROOM_WIDTH, self.ROOM_HEIGHT, self.TOP_LEFT_CORNER_BIAS)
         terminal_spawn_point = Point((self.ROOM_WIDTH / 2) * self.CELL_SIZE, (self.ROOM_HEIGHT - 2) * self.CELL_SIZE)
         terminal_spawn_point += Point(1, 1) * self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
         self.game_objects.append(SpaceMapTerminal(
             self, self.game.controller, terminal_spawn_point, 0))
         self.player = Player(self, self.game.controller, self.PLAYER_SPAWN_POINT)
         self.game.controller.input_objects.append(self.player)
-
-    def from_dict(self, data_dict: Dict):
-        super().from_dict(data_dict)
-        self.grid = SpaceshipGrid(self, self.game.controller, Point(0, 0), 25, 25,
-                                  self.ROOM_WIDTH, self.ROOM_HEIGHT, self.TOP_LEFT_CORNER_BIAS)
-
-    def to_dict(self) -> Dict:
-        return super().to_dict()

@@ -8,6 +8,7 @@ from geometry.optimized.segment import StaticSegment
 from enemy_interaction_with_grid.vision.room.room import Room
 from map.level.rect.splitter import GridRectangle
 from utils.is_marked_manager import IsMarkedManager
+from utils.list import copy_2dimensional_list
 
 
 class RoomsGraph:
@@ -16,7 +17,9 @@ class RoomsGraph:
     """
     def __init__(self, rectangles: List[GridRectangle], arr_after_split: List[List[int]], grid):
         self._grid = grid
-        self._arr_after_split = arr_after_split
+
+        # делаем копию списка, т.к. в будущем его изменим
+        self._arr_after_split = copy_2dimensional_list(arr_after_split)
         self._correct_arr_after_split(rectangles)
 
         self._used = IsMarkedManager(rectangles)

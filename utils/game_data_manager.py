@@ -2,8 +2,8 @@ import os
 import shutil  # хех, шутки шутил
 import json
 
-from typing import Dict
-
+from typing import List, Dict
+from constants.saving import CLASSES_BASE
 
 class GameDataManager:
     """
@@ -54,3 +54,34 @@ class GameDataManager:
         file = open(file_name + '.json', 'w')
         file.write(data_str)
         file.close()
+
+
+def to_list_of_dicts(objects: List) -> List[Dict]:
+    result = list()
+    for item in objects:
+        if type(item) in CLASSES_BASE.values():
+            result.append(item.to_dict())
+    return result
+
+
+def from_list_of_dicts(obj, data_list: List[Dict]) -> List:
+    result = list()
+    for item in data_list:
+        new_object = CLASSES_BASE[item['classname']](obj, obj.game.controller)
+        new_object.from_dict(item)
+        result.append(new_object)
+    return result
+
+
+def to_2dimensional_list_of_dicts(objects: List[List]) -> List[Dict]:
+    result = list()
+    for item in objects:
+        result.append(to_list_of_dicts(item))
+    return result
+
+
+def from_2dimensional_list_of_dicts(obj, data_list: List[List[Dict]]) -> List[List]:
+    result = list()
+    for item in data_list:
+        result.append(from_list_of_dicts(obj, item))
+    return result

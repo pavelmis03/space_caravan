@@ -5,6 +5,8 @@ from utils.game_plane import GamePlane
 from geometry.point import Point
 from drawable_objects.player import Player
 from scenes.conservable import ConservableScene
+from utils.camera import Camera
+from utils.game_data_manager import from_list_of_dicts, to_list_of_dicts
 
 
 def delete_destroyed(objects: List[any]):
@@ -31,7 +33,6 @@ class GameScene(ConservableScene):
     :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
     """
     FIXED_CAMERA = False
-    SHIFT_SENSIVITY = 1 / 10
     PLAYER_SPAWN_POINT = Point(100, 100)
 
     def __init__(self, game, data_filename: str):
@@ -46,19 +47,20 @@ class GameScene(ConservableScene):
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
         self.game.controller.input_objects.append(self.pause_manager)
+        self.camera = Camera(self)
 
     def to_dict(self) -> Dict:
         result = super().to_dict()
         result.update({
-            'game_objects': self.to_list_of_dicts(self.game_objects),
-            'enemies': self.to_list_of_dicts(self.enemies),
+            'game_objects': to_list_of_dicts(self.game_objects),
+            'enemies': to_list_of_dicts(self.enemies),
         })
         return result
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
-        self.game_objects += self.from_list_of_dicts(data_dict['game_objects'])
-        self.enemies += self.from_list_of_dicts(data_dict['enemies'])
+        self.game_objects += from_list_of_dicts(self, data_dict['game_objects'])
+        self.enemies += from_list_of_dicts(self, data_dict['enemies'])
 
     def load_player(self):
         """
@@ -72,11 +74,6 @@ class GameScene(ConservableScene):
     def save(self):
         super().save()
         self.player.save()
-
-    def get_mouse_center_offset(self) -> Point:
-        mouse_pos = self.game.controller.get_mouse_pos()
-        mouse_pos -= Point(self.game.width / 2, self.game.height / 2)
-        return mouse_pos * self.SHIFT_SENSIVITY
 
     def game_logic(self):
         """
@@ -92,10 +89,7 @@ class GameScene(ConservableScene):
             item.process_logic()
 
         self.player.process_logic()
-        self.relative_center = self.player.pos - self.game.screen_rectangle.center
-        if not GameScene.FIXED_CAMERA:
-            self.relative_center += self.get_mouse_center_offset()
-        self.relative_center = self.grid.get_correct_relative_pos(self.relative_center)
+        self.relative_center = self.camera.get_relative_center(not GameScene.FIXED_CAMERA)
 
     def delete_destroyed_objects(self):
         """
