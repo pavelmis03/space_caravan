@@ -59,8 +59,8 @@ class GameScene(ConservableScene):
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
-        self.game_objects += from_list_of_dicts(data_dict['game_objects'])
-        self.enemies += from_list_of_dicts(data_dict['enemies'])
+        self.game_objects += from_list_of_dicts(self, data_dict['game_objects'])
+        self.enemies += from_list_of_dicts(self, data_dict['enemies'])
 
     def load_player(self):
         """

@@ -15,16 +15,6 @@ class LevelGrid(CollisionGrid):
     """
     Сетка уровня (данжа).
     """
-    def load(self):
-        self.from_dict(self.scene.game.file_manager.read_data('levelgrid'))
-
-    def save(self):
-        self.scene.game.file_manager.write_data('levelgrid', self.to_dict())
-
-    def initialize(self):
-        super().initialize()
-        self.save()
-
     def to_dict(self):
         arr = []
         for i in range(len(self.arr)):

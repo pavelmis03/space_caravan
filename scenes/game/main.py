@@ -21,16 +21,9 @@ class MainScene(GameScene):
 
     def initialize(self):
         super().initialize()
-        tmp = LevelGrid(self, self.game.controller, Point(0, 0))
-        tmp.initialize()
-        self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
-        self.grid.load()
-        """
-        Должно быть:
+
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
         self.grid.initialize()
-        """
-
 
         self.game_objects.append(Ladder(
             self, self.game.controller, Point(85, 150), 0))
@@ -38,9 +31,11 @@ class MainScene(GameScene):
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
+        self.grid.from_dict(data_dict['grid'])
 
     def to_dict(self) -> Dict:
         result = super().to_dict()
+        result.update({'grid': self.grid.to_dict()})
         return result
 
     def load_player(self):
