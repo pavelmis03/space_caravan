@@ -55,8 +55,8 @@ class GridRectangle:
         }
 
     def from_dict(self, dict: Dict):
-        self.left_top_index = Tuple(dict['left_top_index'][0], dict['left_top_index'][1])
-        self.bottom_right_index = Tuple(dict['bottom_right_index'][0], dict['bottom_right_index'][1])
+        self.left_top_index = (dict['left_top_index'][0], dict['left_top_index'][1])
+        self.bottom_right_index = (dict['bottom_right_index'][0], dict['bottom_right_index'][1])
 
 class RectSplitter:
     """

@@ -21,8 +21,17 @@ class MainScene(GameScene):
 
     def initialize(self):
         super().initialize()
+        tmp = LevelGrid(self, self.game.controller, Point(0, 0))
+        tmp.initialize()
+        self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
+        self.grid.load()
+        """
+        Должно быть:
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
         self.grid.initialize()
+        """
+
+
         self.game_objects.append(Ladder(
             self, self.game.controller, Point(85, 150), 0))
 

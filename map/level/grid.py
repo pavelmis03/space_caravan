@@ -26,8 +26,13 @@ class LevelGrid(CollisionGrid):
         self.save()
 
     def to_dict(self):
-        arr = to_2dimensional_list_of_dicts(self.arr)
-        arr_after_split = to_2dimensional_list_of_dicts(self.__arr_after_split)
+        arr = []
+        for i in range(len(self.arr)):
+            arr.append([])
+            for item in self.arr[i]:
+                arr[i].append(CollisionGrid.FILENAMES.index(item.image_name))
+
+        arr_after_split = self.__arr_after_split
         room_rectangles = [item.to_dict() for item in self.__room_rectangles]
         return {
             'pos': self.pos.to_dict(),
@@ -45,10 +50,11 @@ class LevelGrid(CollisionGrid):
         new_pos.from_dict(data_dict['pos'])
         self.move(new_pos)
 
-        self.arr = from_2dimensional_list_of_dicts(self.scene, data_dict['arr'])
+        self.arr = data_dict['arr']
         self._arr_initialize(CELL_SIZE, CELL_SIZE)
+        self.transform_ints_to_objects()
 
-        self.__arr_after_split = copy_2dimensional_list(data_dict['arr_after_split'])
+        self.__arr_after_split = data_dict['arr_after_split']
 
         self.__room_rectangles = []
         for item in data_dict['room_rectangles']:
