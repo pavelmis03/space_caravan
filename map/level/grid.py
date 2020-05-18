@@ -1,15 +1,64 @@
+from typing import Dict
 from drawable_objects.enemy import Enemy
 from enemy_interaction_with_grid.manager import GridInteractionWithEnemyManager
 from geometry.point import Point
 from map.collision_grid.collision_grid import CollisionGrid
 from map.level.level_generator import LevelGenerator
 from map.level.enemies_generator import EnemyGenerator
+from map.level.rect.splitter import GridRectangle
+from utils.game_data_manager import to_2dimensional_list_of_dicts, from_2dimensional_list_of_dicts
+from utils.list import copy_2dimensional_list
+from constants.grid import CELL_SIZE
 
 
 class LevelGrid(CollisionGrid):
     """
     Сетка уровня (данжа).
     """
+    def load(self):
+        self.from_dict(self.scene.game.file_manager.read_data('levelgrid'))
+
+    def save(self):
+        self.scene.game.file_manager.write_data('levelgrid', self.to_dict())
+
+    def initialize(self):
+        super().initialize()
+        self.save()
+
+    def to_dict(self):
+        arr = to_2dimensional_list_of_dicts(self.arr)
+        arr_after_split = to_2dimensional_list_of_dicts(self.__arr_after_split)
+        room_rectangles = [item.to_dict() for item in self.__room_rectangles]
+        return {
+            'pos': self.pos.to_dict(),
+            'arr': arr,
+            'arr_after_split': arr_after_split,
+            'room_rectangles': room_rectangles,
+            'classname': self.__class__.__name__
+        }
+
+    def from_dict(self, data_dict: Dict):
+        """
+        Воспроизведение объекта из словаря.
+        """
+        new_pos = Point()
+        new_pos.from_dict(data_dict['pos'])
+        self.move(new_pos)
+
+        self.arr = from_2dimensional_list_of_dicts(self.scene, data_dict['arr'])
+        self._arr_initialize(CELL_SIZE, CELL_SIZE)
+
+        self.__arr_after_split = copy_2dimensional_list(data_dict['arr_after_split'])
+
+        self.__room_rectangles = []
+        for item in data_dict['room_rectangles']:
+            res = GridRectangle((0, 0), (0, 0))
+            res.from_dict(item)
+            self.__room_rectangles.append(res)
+
+        self._other_initialize()
+        self._create_interaction_with_enemy_manager()
+
     def _create_interaction_with_enemy_manager(self):
         """
         Необходимо вызывать до enemy_generation.
@@ -29,9 +78,10 @@ class LevelGrid(CollisionGrid):
         enemy_generator = EnemyGenerator(self, self.__room_rectangles)
         enemy_generator.generate()
 
-        # удаляем ненужные переменные, чтобы освободить память:
-        del self.__arr_after_split
-        del self.__room_rectangles
+        """
+        self.__arr_after_split, self.__room_rectangles нельзя удалять, т.к. их нужно хранить для
+        удобного сохранения данных
+        """
 
     def map_construction(self, min_area: int = 100, min_w: int = 8, min_h: int = 8):
         """

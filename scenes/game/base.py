@@ -6,6 +6,7 @@ from geometry.point import Point
 from drawable_objects.player import Player
 from scenes.conservable import ConservableScene
 from utils.camera import Camera
+from utils.game_data_manager import from_list_of_dicts, to_list_of_dicts
 
 
 def delete_destroyed(objects: List[any]):
@@ -51,15 +52,15 @@ class GameScene(ConservableScene):
     def to_dict(self) -> Dict:
         result = super().to_dict()
         result.update({
-            'game_objects': self.to_list_of_dicts(self.game_objects),
-            'enemies': self.to_list_of_dicts(self.enemies),
+            'game_objects': to_list_of_dicts(self.game_objects),
+            'enemies': to_list_of_dicts(self.enemies),
         })
         return result
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
-        self.game_objects += self.from_list_of_dicts(data_dict['game_objects'])
-        self.enemies += self.from_list_of_dicts(data_dict['enemies'])
+        self.game_objects += from_list_of_dicts(data_dict['game_objects'])
+        self.enemies += from_list_of_dicts(data_dict['enemies'])
 
     def load_player(self):
         """
@@ -73,11 +74,6 @@ class GameScene(ConservableScene):
     def save(self):
         super().save()
         self.player.save()
-
-    def get_mouse_center_offset(self) -> Point:
-        mouse_pos = self.game.controller.get_mouse_pos()
-        mouse_pos -= Point(self.game.width / 2, self.game.height / 2)
-        return mouse_pos * self.SHIFT_SENSIVITY
 
     def game_logic(self):
         """

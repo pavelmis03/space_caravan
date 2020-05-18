@@ -21,13 +21,14 @@ class MainScene(GameScene):
 
     def initialize(self):
         super().initialize()
-        self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
+        self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
+        self.grid.initialize()
         self.game_objects.append(Ladder(
             self, self.game.controller, Point(85, 150), 0))
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
-        self.grid = LevelGrid(self, self.game.controller, Point(0, 0), 25, 25)
+        self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
 
     def to_dict(self) -> Dict:
         result = super().to_dict()

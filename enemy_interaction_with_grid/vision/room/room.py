@@ -20,7 +20,6 @@ class Room:
                 grid):
         self._grid = grid
 
-
         self._grid_rectangle = grid_rectangle
 
         self._outer_rectangle = self._get_outer_rectangle(grid)

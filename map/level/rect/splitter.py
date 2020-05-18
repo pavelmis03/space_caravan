@@ -1,4 +1,4 @@
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 
 from random import randint
 from utils.random import is_random_proc
@@ -46,6 +46,17 @@ class GridRectangle:
         максимальный j
         """
         return self.bottom_right_index[1]
+
+    def to_dict(self) -> Dict:
+        return {
+            'left_top_index': [self.left_top_index[0], self.left_top_index[1]],
+            'bottom_right_index': [self.bottom_right_index[0], self.bottom_right_index[1]],
+            'classname': self.__class__.__name__
+        }
+
+    def from_dict(self, dict: Dict):
+        self.left_top_index = Tuple(dict['left_top_index'][0], dict['left_top_index'][1])
+        self.bottom_right_index = Tuple(dict['bottom_right_index'][0], dict['bottom_right_index'][1])
 
 class RectSplitter:
     """

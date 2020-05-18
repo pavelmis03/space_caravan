@@ -28,8 +28,8 @@ class GridDrawStaticManager(Grid):
         arr_width = int((grid.width + cell_width - 1) / cell_width)
         arr_height = int((grid.height + cell_height - 1) / cell_height)
 
-        super().__init__(grid.scene, grid.controller, grid.pos, 0,
-                         cell_width, cell_height, arr_width, arr_height)
+        super().__init__(grid.scene, grid.controller, grid.pos)
+        self._fill_arr(0, cell_width, cell_height, arr_width, arr_height)
 
         full_grid_surface = self.pre_render_all(grid)
         self.split_on_frames(full_grid_surface)

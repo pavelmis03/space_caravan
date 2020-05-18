@@ -29,7 +29,7 @@ class SpaceshipScene(GameScene):
         Инициализация для космического корабля означает создание игрока (так это первая сцена, появляющаяся в
         новом игровом мире), а также объектов на корабле.
         """
-        self.grid = SpaceshipGrid(self, self.game.controller, Point(0, 0), self.CELL_SIZE, self.CELL_SIZE,
+        self.grid = SpaceshipGrid(self, self.game.controller, Point(0, 0),
                                   self.ROOM_WIDTH, self.ROOM_HEIGHT, self.TOP_LEFT_CORNER_BIAS)
         terminal_spawn_point = Point((self.ROOM_WIDTH / 2) * self.CELL_SIZE, (self.ROOM_HEIGHT - 2) * self.CELL_SIZE)
         terminal_spawn_point += Point(1, 1) * self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
@@ -40,7 +40,7 @@ class SpaceshipScene(GameScene):
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
-        self.grid = SpaceshipGrid(self, self.game.controller, Point(0, 0), 25, 25,
+        self.grid = SpaceshipGrid(self, self.game.controller, Point(0, 0),
                                   self.ROOM_WIDTH, self.ROOM_HEIGHT, self.TOP_LEFT_CORNER_BIAS)
 
     def to_dict(self) -> Dict:
