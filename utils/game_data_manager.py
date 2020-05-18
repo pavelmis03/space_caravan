@@ -55,12 +55,14 @@ class GameDataManager:
         file.write(data_str)
         file.close()
 
+
 def to_list_of_dicts(objects: List) -> List[Dict]:
     result = list()
     for item in objects:
         if type(item) in CLASSES_BASE.values():
             result.append(item.to_dict())
     return result
+
 
 def from_list_of_dicts(obj, data_list: List[Dict]) -> List:
     result = list()
@@ -70,11 +72,13 @@ def from_list_of_dicts(obj, data_list: List[Dict]) -> List:
         result.append(new_object)
     return result
 
+
 def to_2dimensional_list_of_dicts(objects: List[List]) -> List[Dict]:
     result = list()
     for item in objects:
         result.append(to_list_of_dicts(item))
     return result
+
 
 def from_2dimensional_list_of_dicts(obj, data_list: List[List[Dict]]) -> List[List]:
     result = list()
