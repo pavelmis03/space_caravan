@@ -1,5 +1,7 @@
-from typing import List
 import pygame
+
+from typing import List, Dict
+
 from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import sign, length, normalized, polar_angle, get_min_vector
@@ -10,9 +12,8 @@ from constants.mouse_buttons import MouseButtonID
 from scenes.base import Scene
 from controller.controller import Controller
 
-from weapons.weapons import BurstFiringPistol, Shotgun, Pistol, AutomaticRifle, Blade
+from weapons.weapons import WEAPON_VOCABULARY
 
-from utils.game_plane import GamePlane
 
 
 class Player(Humanoid):
@@ -32,7 +33,8 @@ class Player(Humanoid):
     """
 
     ADD_TO_GAME_PLANE = True
-    IMAGE_NAME = 'moving_objects.player'
+    #IMAGE_NAME = 'moving_objects.player'
+    IMAGE_NAME = 'other.person-up_without_weapon'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
         pygame.K_d,
@@ -48,6 +50,8 @@ class Player(Humanoid):
     WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
 
+    DATA_FILENAME = 'player'
+
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
@@ -62,14 +66,34 @@ class Player(Humanoid):
             'Rifle': 100,
         }
         self.arsenal = [
-            Blade(self),
-            BurstFiringPistol(self),
-            AutomaticRifle(self),
+            WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
+            WEAPON_VOCABULARY['Pistol'](self),
+            WEAPON_VOCABULARY['Blade'](self),
         ]
         self.arsenal_ind = 0
         self.change_arsenal_weapon_request = -1
         self.weapon = self.arsenal[self.arsenal_ind]
         self.scene.game_objects.append(self.weapon)
+
+    def from_dict(self, data_dict: Dict):
+        super().from_dict(data_dict)
+
+    def to_dict(self) -> Dict:
+        result = super().to_dict()
+        return result
+
+    def load(self):
+        """
+        Загрузка игрока из файла. Игрок хранится отдельно от сцен, потому что должен уметь подгружаться на
+        любую игровую сцену.
+        """
+        self.from_dict(self.scene.game.file_manager.read_data(self.DATA_FILENAME))
+
+    def save(self):
+        """
+        Сохранение игрока в файл.
+        """
+        self.scene.game.file_manager.write_data(self.DATA_FILENAME, self.to_dict())
 
     def process_logic(self):
         self._turn_to_mouse()
@@ -126,10 +150,10 @@ class Player(Humanoid):
                     if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
                         self.change_arsenal_weapon_request = ind
         if self.change_arsenal_weapon_request != -1 and self.weapon.combo == 0:
-            self.change_arsenal_weapon(self.change_arsenal_weapon_request)
+            self._change_arsenal_weapon(self.change_arsenal_weapon_request)
             self.change_arsenal_weapon_request = -1
 
-    def change_arsenal_weapon(self, ind):
+    def _change_arsenal_weapon(self, ind):
         if self.weapon.type == 'Ranged':
             self.weapon.is_reloading = 0
             self.weapon.reload_request = False
@@ -140,7 +164,7 @@ class Player(Humanoid):
         self.weapon = self.arsenal[ind]
         self.weapon.enabled = True
         self.scene.game_objects.append(self.weapon)
-        self.weapon.cooldown = 30
+        self.weapon.cooldown = 15
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """

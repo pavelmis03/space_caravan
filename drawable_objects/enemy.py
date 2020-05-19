@@ -1,4 +1,5 @@
 import weapons.weapons
+#from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
 
 from typing import Optional
 
@@ -7,12 +8,13 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from geometry.segment import Segment
 from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
 from math import pi
 from utils.timer import Timer, EMPTY_TIMER
+from constants.grid import CELL_SIZE
+
 
 class MovingHumanoid(Humanoid):
     """
@@ -84,11 +86,11 @@ class CommandHumanoid(MovingHumanoid):
     """
     HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 25 * 25
+    VISION_RADIUS = 25 * CELL_SIZE
     VIEW_ANGLE = pi #с углом > pi работать не будет
 
     HEARING_RANGE = 35
-    AGGRE_RADIUS = 35 * 25
+    AGGRE_RADIUS = 35 * CELL_SIZE
 
     COOLDOWN_TIME = 50
     DELAY_BEFORE_FIRST_SHOOT = 12
@@ -109,7 +111,7 @@ class CommandHumanoid(MovingHumanoid):
             'Shotgun': 1000000,
             'Rifle': 1000000,
         }
-        self.weapon = weapons.weapons.BurstFiringPistol(self)
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](self)
         self.scene.game_objects.append(self.weapon)
         self.hp = 100
 
@@ -276,7 +278,7 @@ class Enemy(CommandHumanoid):
     ROTATION_MIN_COOLDOWN = 100
     ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point = Point(), angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
         self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
         self.__rotation_direction = 1 if is_random_proc() else -1

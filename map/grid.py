@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Dict
 
 from drawable_objects.base import DrawableObject
 
@@ -15,13 +15,16 @@ class Grid(DrawableObject):
     """
     Прямоугольная сетка.
     """
-    def __init__(self, scene: Scene, controller: Controller, pos: Point,
-                 default_value: any,
-                 cell_width: int, cell_height: int,
-                 width_arr: int = 100, height_arr: int = 100):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point):
         super().__init__(scene, controller, pos)
 
+    def _fill_arr(self, default_value: any,
+                 cell_width: int, cell_height: int,
+                 width_arr: int = 100, height_arr: int = 100):
         self.arr = [[default_value] * width_arr for i in range(height_arr)]
+        self._arr_initialize(cell_width, cell_height)
+
+    def _arr_initialize(self, cell_width: int, cell_height: int):
         """
         расчет индексов по позиции делегирован index_manager
         """
@@ -31,7 +34,13 @@ class Grid(DrawableObject):
         width = cell_width * len(self.arr[0])
         height = cell_height * len(self.arr)
         self.grid_rectangle = create_rectangle_with_left_top(
-            pos, width, height)
+            self.pos, width, height)
+
+    def from_dict(self, data_dict: Dict):
+        pass
+
+    def to_dict(self):
+        pass
 
     def process_draw(self):
         """

@@ -112,6 +112,18 @@ class Rectangle:
         self._top_left -= movement
         self._bottom_right += movement
 
+    @property
+    def size(self):
+        """
+        Размеры прямоугольника (в ввиде Point)
+        """
+        return self.bottom_right - self.top_left
+
+    @size.setter
+    def size(self, new_size: Point):
+        self.width = new_size.x
+        self.height = new_size.y
+
     def is_inside(self, point):
         """
         Проверка принадлежности точки прямоугольнику.

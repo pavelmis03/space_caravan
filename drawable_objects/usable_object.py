@@ -1,5 +1,7 @@
 import pygame
 
+from typing import Dict
+
 from geometry.point import Point
 from controller.controller import Controller
 from scenes.base import Scene
@@ -29,6 +31,13 @@ class UsableObject(GameSprite):
         self.popping_e = PoppingE(
             self.scene, self.controller, self.pos, image_name, zoom, 0, usage_radius)
         # У каждого UsableObject есть своя PoppingE над ним
+        self.scene.game_objects.append(self.popping_e)
+
+    def from_dict(self, data_dict: Dict):
+        super().from_dict(data_dict)
+        self.popping_e.destroy()
+        self.popping_e = PoppingE(
+            self.scene, self.controller, self.pos, self.image_name, self.zoom, 0, self.usage_radius)
         self.scene.game_objects.append(self.popping_e)
 
     def process_logic(self):
