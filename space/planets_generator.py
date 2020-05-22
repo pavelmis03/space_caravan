@@ -27,12 +27,13 @@ class PlanetsGenerator:
 
     ITERATIONS = 200
     BORDER_FORCE = 10000
-    PLANET_FORCE = 30000
-    SPACE_CENTER_KOEF = 1
+    PLANET_FORCE = 40000
+    SPACE_CENTER_KOEF = 1.2
     MIN_GRAVITY_DIST_SQUARE = 1000
+    SPACE_SIZE = (1000, 700)
 
-    def __init__(self, space_rectangle: Rectangle, planets_number: int, controller: Controller, spacemap_scene: Scene):
-        self.__space_rectangle = space_rectangle
+    def __init__(self, planets_number: int, controller: Controller, spacemap_scene: Scene):
+        self.__space_rectangle = Rectangle(0, 0, self.SPACE_SIZE[0], self.SPACE_SIZE[1])
         self.__planets_number = planets_number
         self.__spacemap_scene = spacemap_scene
         self.__controller = controller
@@ -139,6 +140,7 @@ class PlanetsGenerator:
                 self.__spacemap_scene,
                 self.__controller,
                 center,
+                self.SPACE_SIZE,
                 choice(Planet.BIOMS)
             ))
         return planets

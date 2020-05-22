@@ -18,6 +18,5 @@ class SpacemapScene(ConservableScene):
         """
         Для звездной карты инициализация означает создание планет, чем занимается PlanetsGenerator.
         """
-        space_rectangle = Rectangle(0, 0, self.game.width, self.game.height)
-        planets_generator = PlanetsGenerator(space_rectangle, 12, self.game.controller, self)
+        planets_generator = PlanetsGenerator(12, self.game.controller, self)
         self.interface_objects = planets_generator.generate()

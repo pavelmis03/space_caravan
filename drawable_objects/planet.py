@@ -1,6 +1,6 @@
 from math import pi
 from random import random
-from typing import Dict
+from typing import Dict, Tuple
 
 from geometry.circle import Circle
 from geometry.point import Point
@@ -13,9 +13,13 @@ class Planet(SpriteObject):
     """
     Объект планеты во всех смыслах: и в структуре игрового мира, и на космической карте.
 
+    Для того, чтобы карту можно было масштабировать, планета хранит расчетную позицию и расчетный размер экрана.
+    В логике по текущему размеру окна пересчитывается реальное положение планеты на экране (self.pos).
+
     :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
-    :param pos: координаты объекта
+    :param estimated_pos: расчетная позиция планеты на экране заданного фиксированного размера
+    :param estimated_screen_size: расчетный размер экрана
     :param biom: биом - вид планеты
     :param name: название планеты
     """
@@ -27,10 +31,13 @@ class Planet(SpriteObject):
     }
     COUNTER = 0
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point = Point(), biom=BIOMS[0], name='Test'):
-        super().__init__(scene, controller, Planet.IMAGE_NAMES[biom], pos, random() * 2 * pi, Planet.IMAGE_ZOOM)
-        self.geometry = Circle(pos, Planet.BUTTON_RADIUS)
+    def __init__(self, scene: Scene, controller: Controller, estimated_pos: Point,
+                 estimated_screen_size: Tuple[float, float] = (1, 1), biom=BIOMS[0], name='Test'):
+        super().__init__(scene, controller, Planet.IMAGE_NAMES[biom], Point(), random() * 2 * pi, Planet.IMAGE_ZOOM)
         self.rotation_offset = [0, 0]
+        self.estimated_pos = estimated_pos
+        self.estimated_screen_size = estimated_screen_size
+        self.update_real_pos()
         self.name = name
         self.biom = biom
         self.level_created = False
@@ -43,11 +50,13 @@ class Planet(SpriteObject):
         Воспроизведение планеты из словаря.
         """
         super().from_dict(data_dict)
+        self.estimated_pos.from_dict(data_dict['estimated_pos'])
+        self.estimated_screen_size = data_dict['estimated_screen_size']
+        self.update_real_pos()
         self.name = data_dict['name']
         self.biom = data_dict['biom']
         self.level_created = data_dict['level_created']
         self.data_filename = data_dict['data_filename']
-        self.geometry = Circle(self.pos, Planet.BUTTON_RADIUS)
 
     def to_dict(self) -> Dict:
         """
@@ -55,12 +64,23 @@ class Planet(SpriteObject):
         """
         result = super().to_dict()
         result.update({
+            'estimated_pos': self.estimated_pos.to_dict(),
+            'estimated_screen_size': self.estimated_screen_size,
             'name': self.name,
             'biom': self.biom,
             'level_created': self.level_created,
             'data_filename': self.data_filename,
         })
         return result
+
+    def update_real_pos(self):
+        """
+        Перерасчет реальной позиции планеты на экране по постоянной расчетной позиции, расчетному размеру экрана
+        и текущему размеру окна.
+        """
+        screen_size = self.scene.game.size
+        scale_k = [screen_size[_i] / self.estimated_screen_size[_i] for _i in range(2)]
+        self.pos = Point(scale_k[0] * self.estimated_pos.x, scale_k[1] * self.estimated_pos.y)
 
     def run_level(self):
         """
@@ -76,6 +96,8 @@ class Planet(SpriteObject):
         self.scene.game.set_scene(level_scene)
 
     def process_logic(self):
+        self.update_real_pos()
+        geometry = Circle(self.pos, Planet.BUTTON_RADIUS)
         click_pos = self.controller.get_click_pos()
-        if click_pos and self.geometry.is_inside(click_pos):
+        if click_pos and geometry.is_inside(click_pos):
             self.run_level()
