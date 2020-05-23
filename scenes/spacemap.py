@@ -1,6 +1,5 @@
 from scenes.conservable import ConservableScene
 from space.planets_generator import PlanetsGenerator
-from geometry.rectangle import Rectangle
 
 
 class SpacemapScene(ConservableScene):
@@ -18,5 +17,5 @@ class SpacemapScene(ConservableScene):
         """
         Для звездной карты инициализация означает создание планет, чем занимается PlanetsGenerator.
         """
-        planets_generator = PlanetsGenerator(12, self.game.controller, self)
+        planets_generator = PlanetsGenerator(self.game.controller, self)
         self.interface_objects = planets_generator.generate()

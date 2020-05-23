@@ -1,7 +1,8 @@
 from math import pi
 from random import random
-from typing import Dict, Tuple
+from typing import Dict
 
+from constants.planets_generation import ESTIMATED_SPACE_SIZE
 from geometry.circle import Circle
 from geometry.point import Point
 from scenes.base import Scene
@@ -18,25 +19,31 @@ class Planet(SpriteObject):
 
     :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
-    :param estimated_pos: расчетная позиция планеты на экране заданного фиксированного размера
-    :param estimated_screen_size: расчетный размер экрана
+    :param estimated_pos: расчетная позиция планеты на экране фиксированного размера
     :param biom: биом - вид планеты
     :param name: название планеты
     """
     BUTTON_RADIUS = 50
-    IMAGE_ZOOM = 0.07
-    BIOMS = ['Simple']
-    IMAGE_NAMES = {
-        'Simple': 'level_objects.planet'
-    }
+    BIOM_NAMES = [
+        'Simple',
+        'Ice',
+        'Lava',
+        'Violet',
+        'Mushroom',
+    ]
+    IMAGES = [
+        ('level_objects.simple_planet', 0.07),
+        ('level_objects.ice_planet', 0.35),
+        ('level_objects.lava_planet', 0.3),
+        ('level_objects.violet_planet', 0.3),
+        ('level_objects.mushroom_planet', 0.3),
+    ]
     COUNTER = 0
 
-    def __init__(self, scene: Scene, controller: Controller, estimated_pos: Point,
-                 estimated_screen_size: Tuple[float, float] = (1, 1), biom=BIOMS[0], name='Test'):
-        super().__init__(scene, controller, Planet.IMAGE_NAMES[biom], Point(), random() * 2 * pi, Planet.IMAGE_ZOOM)
+    def __init__(self, scene: Scene, controller: Controller, estimated_pos: Point, biom=0, name='Test'):
+        super().__init__(scene, controller, Planet.IMAGES[biom][0], Point(), random() * 2 * pi, Planet.IMAGES[biom][1])
         self.rotation_offset = [0, 0]
         self.estimated_pos = estimated_pos
-        self.estimated_screen_size = estimated_screen_size
         self.update_real_pos()
         self.name = name
         self.biom = biom
@@ -51,7 +58,6 @@ class Planet(SpriteObject):
         """
         super().from_dict(data_dict)
         self.estimated_pos.from_dict(data_dict['estimated_pos'])
-        self.estimated_screen_size = data_dict['estimated_screen_size']
         self.update_real_pos()
         self.name = data_dict['name']
         self.biom = data_dict['biom']
@@ -65,7 +71,6 @@ class Planet(SpriteObject):
         result = super().to_dict()
         result.update({
             'estimated_pos': self.estimated_pos.to_dict(),
-            'estimated_screen_size': self.estimated_screen_size,
             'name': self.name,
             'biom': self.biom,
             'level_created': self.level_created,
@@ -79,7 +84,7 @@ class Planet(SpriteObject):
         и текущему размеру окна.
         """
         screen_size = self.scene.game.size
-        scale_k = [screen_size[_i] / self.estimated_screen_size[_i] for _i in range(2)]
+        scale_k = [screen_size[_i] / ESTIMATED_SPACE_SIZE[_i] for _i in range(2)]
         self.pos = Point(scale_k[0] * self.estimated_pos.x, scale_k[1] * self.estimated_pos.y)
 
     def run_level(self):
