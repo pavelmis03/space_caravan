@@ -112,7 +112,7 @@ class ImageManager:
         :param rotate_offset: оффсет относительно центра для точки поворота
         """
         if not angle:
-            return image
+            angle = 0
         if not rotate_offset:
             rotate_offset = image.get_rect().center
         w, h = image.get_size()
