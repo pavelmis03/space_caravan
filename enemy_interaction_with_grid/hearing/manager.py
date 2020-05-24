@@ -31,7 +31,6 @@ class EnemyHearingManager:
         """
         return self.__path_finder.is_hearing_player(enemy)
 
-
     def save_enemy_pos(self, pos: Point):
         """
         отмечает, что на этой позиции есть enemy
