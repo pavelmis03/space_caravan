@@ -172,13 +172,6 @@ class GridPathFinder:
         Может ли услышать Enemy Player'а
         """
         i, j = self.__grid.index_manager.get_index_by_pos(enemy.pos)
-        return self.__used_manager.is_marked(i, j)
-
-    def is_in_aggre_zone(self, enemy: Enemy) -> bool:
-        """
-        находится ли enemy в зоне aggre игрока
-        """
-        i, j = self.__grid.index_manager.get_index_by_pos(enemy.pos)
         return self.__is_in_aggre_zone.is_marked(i, j) or self.__used_manager.is_marked(i, j)
 
     def get_pos_to_move(self, enemy: Enemy) -> Optional[Point]:
