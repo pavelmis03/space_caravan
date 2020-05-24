@@ -44,6 +44,12 @@ class GridInteractionWithEnemyManager:
         """
         return self.__hearing_manager.is_hearing_player(enemy)
 
+    def is_in_aggre_zone(self, enemy: Enemy) -> bool:
+        """
+        находится ли enemy в зоне aggre игрока
+        """
+        self.__hearing_manager.is_in_aggre_zone(enemy)
+
     def is_enemy_can_stay(self, i: int, j: int) -> bool:
         """
         Может ли enemy стоять в клетке с индексами i, j

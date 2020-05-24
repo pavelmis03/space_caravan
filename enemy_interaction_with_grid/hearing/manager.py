@@ -31,6 +31,11 @@ class EnemyHearingManager:
         """
         return self.__path_finder.is_hearing_player(enemy)
 
+    def is_in_aggre_zone(self, enemy: Enemy) -> bool:
+        """
+        находится ли enemy в зоне aggre игрока
+        """
+        self.__path_finder.is_in_aggre_zone(enemy)
 
     def save_enemy_pos(self, pos: Point):
         """

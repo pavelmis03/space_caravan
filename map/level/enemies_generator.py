@@ -45,4 +45,5 @@ class EnemyGenerator:
             random_i = randint(item.top_index + WALLS_MIN_DISTANCE, item.bottom_index - WALLS_MIN_DISTANCE)
             random_j = randint(item.left_index + WALLS_MIN_DISTANCE, item.right_index - WALLS_MIN_DISTANCE)
             if self.__grid.is_enemy_can_stay(random_i, random_j):
+                # этот if вроде не нужен, но оставлю его, чтобы ничего не сломать (при будущих модификациях)
                 create_enemy(self.__grid, random_i, random_j)
