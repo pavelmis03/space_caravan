@@ -11,16 +11,16 @@ from geometry.distances import dist, dist_squared, dist_point_line
 
 class CentersArranger:
     """
-    Генератор планет на карте космоса. Вначале расставляет планеты случайно, потом распределяет их по
-    пространству гравитационными силами. Константами можно установить значения этих сил. Планеты
-    отталкиваются друг от друга и от границ космоса. Силы отталкивания разбрасывают планеты по
-    краям, поэтому для компенсации планеты притягиваются к центру.
+    Расстановщик центров планет на карте космоса. Вначале ставит точки центров случайно, потом распределяет
+    их по пространству гравитационными силами. Константами можно установить значения этих сил. Центры планет
+    отталкиваются друг от друга и от границ космоса. Силы отталкивания разбрасывают точки по
+    краям, поэтому для компенсации они притягиваются к центру.
     """
 
     ITERATIONS = 200
     BORDER_FORCE = 10000
-    PLANET_FORCE = 40000
-    SPACE_CENTER_KOEF = 1.2
+    PLANET_FORCE = 20000
+    SPACE_CENTER_KOEF = 1
     MIN_GRAVITY_DIST_SQUARE = 1000
 
     def __init__(self, planets_number: int):
@@ -33,6 +33,10 @@ class CentersArranger:
         return planets_centers
 
     def __already_in_list(self, points: List[Point], sample: Point) -> bool:
+        """
+        Проверка на то, есть ли уже в списке точек заданный образец. Точки считаются равными, если расстояние
+        между ними меньше EPS.
+        """
         for point in points:
             if sign(dist(sample, point)) == 0:
                 return True
@@ -73,7 +77,7 @@ class CentersArranger:
 
     def __planet_gravity(self, planet_pos: Point, other_planet_pos: Point) -> Point:
         """
-        Взаимодействие с другой планетой. Сила отталкивания обратно пропорциональна квадрату
+        Взаимодействие с центром другой планеты. Сила отталкивания обратно пропорциональна квадрату
         расстояния между планетами, определяется константой.
 
         :return: вектор, на который меняется скорость планеты
@@ -95,8 +99,8 @@ class CentersArranger:
 
     def __gravity_iteration(self, planets_centers: List[Point], border_lines: List[Line]):
         """
-        Итерация гравитационных взаимодействий. Формируется массив векторов скоростей планет, затем
-        планеты сдвигаются на эти векторы.
+        Итерация гравитационных взаимодействий. Формируется массив векторов скоростей точек, затем
+        точки сдвигаются на эти векторы.
         """
         velocity = [Point() for _i in range(len(planets_centers))]
         for i in range(len(planets_centers)):
@@ -109,6 +113,9 @@ class CentersArranger:
             planets_centers[i] += velocity[i]
 
     def __spread_centers(self, planets_centers: List[Point]):
+        """
+        Распределение центров планет по карте космоса гравитационными взаимодейтвими.
+        """
         border_segments = self.__space_rectangle.get_edges()
         border_lines = [line_from_points(segment.p1, segment.p2) for segment in border_segments]
         for _i in range(CentersArranger.ITERATIONS):

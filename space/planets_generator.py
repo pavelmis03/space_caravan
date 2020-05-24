@@ -8,6 +8,10 @@ from drawable_objects.planet import Planet
 
 
 class PlanetsGenerator:
+    """
+    Генератор планет на космической карте. Собирает воедино функционал CentersArranger'а и FeaturesArranger'a.
+    """
+
     PLANETS_NUMBER = 20
 
     def __init__(self, controller: Controller, spacemap_scene: Scene):

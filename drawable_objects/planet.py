@@ -61,6 +61,8 @@ class Planet(SpriteObject):
         self.update_real_pos()
         self.name = data_dict['name']
         self.biom = data_dict['biom']
+        self.image_name = self.IMAGES[self.biom][0]
+        self.zoom = self.IMAGES[self.biom][1]
         self.level_created = data_dict['level_created']
         self.data_filename = data_dict['data_filename']
 
