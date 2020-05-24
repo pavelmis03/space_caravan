@@ -128,7 +128,7 @@ class GridPathFinder:
                 клетки, на которых стоят enemy будут обработаны позже. Хоть на эти клетки не могут встать
                 другие enemy, они находятся в aggre_zone.
                 """
-                if self.__is_has_enemy.is_marked(i, j):
+                if not self.__is_has_enemy.is_marked(i, j):
                     q.append((new_i, new_j))
                 else:
                     in_aggre_zone.append((new_i, new_j))
