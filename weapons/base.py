@@ -6,7 +6,10 @@ from geometry.point import Point
 from utils.image import ImageManager
 from utils.sound import SoundManager
 from random import randrange
-from drawable_objects.slash import Slash
+from drawable_objects.slash import PlayerSlash
+from drawable_objects.enemy import Enemy
+from geometry.distances import dist
+from math import atan2, pi
 
 
 class Weapon(GameSprite):
@@ -21,9 +24,8 @@ class Weapon(GameSprite):
         :param combo_size: Количество ударов/выстрелов в 1 атаке -> int
         """
         self.owner = owner
-        self.pos = owner.pos
-        self.angle = owner.angle
-        super().__init__(owner.scene, owner.controller, 'other.gun', self.pos, self.angle, owner.IMAGE_ZOOM * 2)
+        super().__init__(owner.scene, owner.controller, 'other.gun',
+                         self.owner.pos, self.owner.angle, 0.5)
         self.is_automatic = is_automatic
         self.main_attack_interval = main_attack_interval
         self.combo_attack_interval = combo_attack_interval
@@ -33,8 +35,6 @@ class Weapon(GameSprite):
         self.type = ''
 
     def process_logic(self):
-        self.angle = self.owner.angle
-        self.pos = self.owner.pos
         if self.cooldown:
             self.cooldown -= 1
         if self.combo != 0 and self.cooldown == 0:
@@ -43,7 +43,7 @@ class Weapon(GameSprite):
                 self.cooldown = self.main_attack_interval
             else:
                 self.cooldown = self.combo_attack_interval
-            self.attack(self.pos, self.angle)
+            self.attack()
 
     def main_attack(self):
         """
@@ -57,12 +57,9 @@ class Weapon(GameSprite):
         Команда оружию атаковать альтернативно
         """
 
-    def attack(self, pos: Point, angle: float):
+    def attack(self):
         """
         Функция атаки
-
-        :param pos: откуда производится атака -> Point
-        :param angle: под каким углом производится атака -> angle
         """
 
     @property
@@ -134,12 +131,9 @@ class RangedWeapon(Weapon):
         if self.reload_request and not self.is_reloading and self.combo == 0:
             self.reload()
 
-    def attack(self, pos: Point, angle: float):
+    def attack(self):
         """
         Функция атаки
-
-        :param pos: откуда производится атака -> Point
-        :param angle: под каким углом производится атака -> float
         """
         if self.owner.__class__.__name__ == 'Player':
             self._is_fired_this_tick = True
@@ -149,9 +143,9 @@ class RangedWeapon(Weapon):
             return
         self.magazine -= 1
         SoundManager.play_sound('weapon.shoot')
-        end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.angle)
+        end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.owner.angle)
         if self.scene.grid.intersect_seg_walls(Segment(self.owner.pos, end_of_the_barrel)) is None:
-            self.shot(end_of_the_barrel, self.angle)
+            self.shot(end_of_the_barrel, self.owner.angle)
 
     def shot(self, pos: Point, angle: float):
         """
@@ -183,7 +177,7 @@ class RangedWeapon(Weapon):
             return
 
         ImageManager.process_draw(self.image_name, relative_pos,
-                                  self.scene.screen, self.zoom, self.angle, self.rotation_offset)
+                                  self.scene.screen, self.zoom, self.owner.angle, self.rotation_offset)
 
     @property
     def is_fired_this_tick(self):
@@ -195,24 +189,19 @@ class RangedWeapon(Weapon):
 
 class MeleeWeapon(Weapon):
 
-    def __init__(self, owner, main_attack_interval, length, damage):
+    def __init__(self, owner, main_attack_interval, length):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
         :param main_attack_interval: Время между взмахами -> int
         :param length: Длина клинка -> int
-        :param damage: Урон -> int
         """
         super().__init__(owner, main_attack_interval)
-        self.length = owner.HITBOX_RADIUS + 1 + length
-        self.damage = damage
+        self.length = owner.HITBOX_RADIUS + length
         self.type = 'Melee'
 
-    def attack(self, pos: Point, angle: float):
+    def attack(self):
         """
         Функция атаки
-
-        :param pos: откуда производится атака -> Point
-        :param angle: под каким углом производится атака -> float
         """
         #SoundManager.play_sound('weapon.shoot')
-        self.scene.game_objects.append(Slash(self.scene, self.controller, pos, angle, self.damage))
+        self.scene.game_objects.append(PlayerSlash(self.owner, self.length))

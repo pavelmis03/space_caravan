@@ -68,7 +68,7 @@ class Player(Humanoid):
         self.arsenal = [
             WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
             WEAPON_VOCABULARY['Pistol'](self),
-            WEAPON_VOCABULARY['Blade'](self),
+            WEAPON_VOCABULARY['Sword'](self),
         ]
         self.arsenal_ind = 0
         self.change_arsenal_weapon_request = -1

@@ -8,7 +8,7 @@ class Pistol(RangedWeapon):
     def __init__(self, owner, bullets_in_magazine=12):
         super().__init__(owner, bullets_in_magazine, magazine_size=12,
                          main_attack_interval=7, reload_time=40, ammo_type='Pistol',
-                         accuracy=55, damage=70)
+                         accuracy=50, damage=70)
 
 
 class BurstFiringPistol(RangedWeapon):
@@ -107,10 +107,10 @@ class SemiAutomaticRifle(OldRifle):
         self.accuracy = 60
 
 
-class Blade(MeleeWeapon):
+class Sword(MeleeWeapon):
 
     def __init__(self, owner):
-        super().__init__(owner, main_attack_interval=15, length=10, damage=200)
+        super().__init__(owner, main_attack_interval=15, length=60)
 
 
 WEAPON_VOCABULARY = {
@@ -124,5 +124,5 @@ WEAPON_VOCABULARY = {
     'SniperRifle': SniperRifle,
     'OldRifle': OldRifle,
     'SemiAutomaticRifle': SemiAutomaticRifle,
-    'Blade': Blade,
+    'Sword': Sword,
 }
