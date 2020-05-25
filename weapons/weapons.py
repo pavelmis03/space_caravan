@@ -37,7 +37,7 @@ class TwoBarrelShotgun(RangedWeapon):
     """
     def __init__(self, owner, bullets_in_magazine=2):
         super().__init__(owner, bullets_in_magazine, magazine_size=2,
-                         main_attack_interval=10, reload_time=35, ammo_type='Shotgun',
+                         main_attack_interval=8, reload_time=35, ammo_type='Shotgun',
                          accuracy=32, damage=35, combo_attack_interval=2, shells=6)
         self.alternative_attack_combo = 2
 
@@ -91,7 +91,7 @@ class OldRifle(RangedWeapon):
     Старая винтовка
     """
     def __init__(self, owner, bullets_in_magazine=8):
-        super ().__init__(owner, bullets_in_magazine, magazine_size=8,
+        super().__init__(owner, bullets_in_magazine, magazine_size=8,
                          main_attack_interval=14, reload_time=40, ammo_type='Rifle',
                          accuracy=90, damage=90)
 

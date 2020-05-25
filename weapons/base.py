@@ -6,10 +6,7 @@ from geometry.point import Point
 from utils.image import ImageManager
 from utils.sound import SoundManager
 from random import randrange
-from drawable_objects.slash import PlayerSlash
-from drawable_objects.enemy import Enemy
-from geometry.distances import dist
-from math import atan2, pi
+from drawable_objects.slash import PlayerSlash, EnemySlash
 
 
 class Weapon(GameSprite):
@@ -35,6 +32,8 @@ class Weapon(GameSprite):
         self.type = ''
 
     def process_logic(self):
+        self.pos = self.owner.pos
+        self.angle = self.owner.angle
         if self.cooldown:
             self.cooldown -= 1
         if self.combo != 0 and self.cooldown == 0:
@@ -44,6 +43,11 @@ class Weapon(GameSprite):
             else:
                 self.cooldown = self.combo_attack_interval
             self.attack()
+
+    def process_draw(self):
+        self.pos = self.owner.pos
+        self.angle = self.owner.angle
+        super().process_draw()
 
     def main_attack(self):
         """
@@ -159,26 +163,6 @@ class RangedWeapon(Weapon):
                                                     (self.accuracy ** 2 - self.accuracy * 20 + 100), self.damage)
             self.scene.game_objects.append(bullet)
 
-    def process_draw(self):
-        """
-        Отрисовка объекта в относительных координатах
-
-        Если объект вне экрана, он не отрисовывается
-        relative_center: центр относительных координат
-        """
-        if self.owner.__class__.__name__ == 'Enemy':
-            return
-        pos = self.owner.pos + vector_from_length_angle(20, self.owner.angle)
-        relative_center = self.scene.relative_center
-        relative_pos = pos - relative_center
-
-        if ImageManager.is_out_of_screen(self.image_name, self.zoom,
-                                         relative_pos, self.scene.game.screen_rectangle):
-            return
-
-        ImageManager.process_draw(self.image_name, relative_pos,
-                                  self.scene.screen, self.zoom, self.owner.angle, self.rotation_offset)
-
     @property
     def is_fired_this_tick(self):
         """
@@ -204,4 +188,7 @@ class MeleeWeapon(Weapon):
         Функция атаки
         """
         #SoundManager.play_sound('weapon.shoot')
-        self.scene.game_objects.append(PlayerSlash(self.owner, self.length))
+        if self.owner.__class__.__name__ == 'Player':
+            self.scene.game_objects.append(PlayerSlash(self.owner, self.length))
+        else:
+            self.scene.game_objects.append(EnemySlash(self.owner, self.length))

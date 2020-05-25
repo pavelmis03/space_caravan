@@ -111,12 +111,10 @@ class CommandHumanoid(MovingHumanoid):
             'Rifle': 1000000,
         }
         self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](self)
-        self.scene.game_objects.append(self.weapon)
-        self.hp = 100
 
         self.__command_functions = {'move_to': self.__command_move_to,
-                                  'shoot': self.__command_shoot,
-                                  'aim': self.__command_aim, }
+                                    'shoot': self.__command_shoot,
+                                    'aim': self.__command_aim, }
 
     def process_logic(self):
         """
@@ -127,6 +125,7 @@ class CommandHumanoid(MovingHumanoid):
         self.__command_logic()
         if self.__cooldown:
             self.__cooldown -= 1
+        self.weapon.process_logic()
 
     def __vision_logic(self):
         """
@@ -339,17 +338,6 @@ class Enemy(CommandHumanoid):
         Только ли начал поворачиваться
         """
         return self.__rotating_cycles == 0
-
-    def get_damage(self, damage=0, angle_of_attack=0):
-        """
-        Получение урона
-
-        :param damage: урон
-        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
-        """
-        self.hp -= damage
-        if self.hp <= 0:
-            self.die(angle_of_attack)
 
     def die(self, angle_of_attack=0):
         """

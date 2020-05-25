@@ -15,7 +15,6 @@ from controller.controller import Controller
 from weapons.weapons import WEAPON_VOCABULARY
 
 
-
 class Player(Humanoid):
     """
     Игрок на уровне (далек от завершения).
@@ -27,13 +26,13 @@ class Player(Humanoid):
 
     :IMAGE_NAME: путь до изображения персонажа
     :IMAGE_ZOOM: размер изображения
-    :CONTROLS: клавиши управления
-    :WEAPON_TYPE: тип оружия, 1 - Ближнего боя, 2 - дальнего боя
+    :CONTROLS: клавиши управления движением
+    :ARSENAL_CONTROLS: клавиши управления слотами оружия
+    :WEAPON_RELOAD_KEY: клавиша перезарядки
     :SPEED: скорость игрока
     """
 
     ADD_TO_GAME_PLANE = True
-    #IMAGE_NAME = 'moving_objects.player'
     IMAGE_NAME = 'other.person-up_without_weapon'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
@@ -59,7 +58,6 @@ class Player(Humanoid):
             140 * Player.IMAGE_ZOOM,
             126 * Player.IMAGE_ZOOM
         ]
-
         self.ammo = {
             'Pistol': 200,
             'Shotgun': 60,
@@ -73,7 +71,6 @@ class Player(Humanoid):
         self.arsenal_ind = 0
         self.change_arsenal_weapon_request = -1
         self.weapon = self.arsenal[self.arsenal_ind]
-        self.scene.game_objects.append(self.weapon)
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
@@ -99,8 +96,7 @@ class Player(Humanoid):
         self._turn_to_mouse()
         self._movement_controls()
         self._weapon_controls()
-        self.weapon.pos = self.pos
-        self.weapon.angle = self.angle
+        self.weapon.process_logic()
 
     @property
     def is_fired_this_tick(self):
@@ -159,11 +155,8 @@ class Player(Humanoid):
             self.weapon.reload_request = False
         self.weapon.cooldown = 0
         self.arsenal[self.arsenal_ind] = self.weapon
-        self.weapon.destroy()
         self.arsenal_ind = ind
         self.weapon = self.arsenal[ind]
-        self.weapon.enabled = True
-        self.scene.game_objects.append(self.weapon)
         self.weapon.cooldown = 15
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
@@ -202,3 +195,15 @@ class Player(Humanoid):
             if sign(self.HITBOX_RADIUS - length(vector_from_rect)) == 1:
                 vectors_from_bumps.append(vector_from_rect)
         return vectors_from_bumps
+
+    def die(self, angle_of_attack=0):
+        """
+        Смерть
+
+        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
+        """
+        from scenes.spacemap import SpacemapScene
+        scene = SpacemapScene(self.scene.game)
+        scene.load()
+        self.scene.game.set_scene(scene)
+

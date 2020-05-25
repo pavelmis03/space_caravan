@@ -126,7 +126,7 @@ class Bullet(GameSprite):
         :param intersection_point: точка пересечения с Enemy
         :param enemy: Enemy, в которого попала пуля
         """
-        enemy.get_damage(self.damage)
+        enemy.get_damage(self.damage, self.angle)
         self.destroy()
 
     def collision_with_player(self, intersection_point):
@@ -136,6 +136,7 @@ class Bullet(GameSprite):
         :param intersection_point: точка пересечения с Player
         """
         self.scene.game_objects.append(CollisionAnimation(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.player.get_damage(self.damage, self.angle)
         self.destroy()
 
     def collision_with_wall(self, intersection_point):
