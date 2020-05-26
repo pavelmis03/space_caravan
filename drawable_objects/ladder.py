@@ -11,7 +11,7 @@ class Ladder(UsableObject):
     """
     IMAGE_ZOOM = 0.8
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point = Point(), angle: float = 0):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, 'level_objects.ladder',
                          pos, angle, Ladder.IMAGE_ZOOM)
 

@@ -124,6 +124,10 @@ class Rectangle:
         self.width = new_size.x
         self.height = new_size.y
 
+    def __eq__(self, other):
+        """ Overload eq operation for tests """
+        return self.top_left == other.top_left and self.size == other.size
+
     def is_inside(self, point):
         """
         Проверка принадлежности точки прямоугольнику.

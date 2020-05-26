@@ -1,8 +1,7 @@
 import pygame
 
 from drawable_objects.base import DrawableObject
-from geometry.point import Point
-from geometry.rectangle import Rectangle, rect_to_rectangle, rectangle_to_rect
+from geometry.rectangle import rect_to_rectangle, rectangle_to_rect
 
 
 class AlignmentStrategy:

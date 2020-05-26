@@ -34,6 +34,10 @@ class Line:
         """
         return Point(self.b, -self.a)
 
+    def __eq__(self, other):
+        """ Overload == for tests """
+        return self.a == other.a and self.b == other.b and self.c == other.c
+
 
 def line_from_points(p1: Point, p2: Point) -> Line:
     """

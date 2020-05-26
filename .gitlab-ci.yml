@@ -12,6 +12,20 @@ pylint:
     - ci/pylint_runner.sh
   allow_failure: true
 
+tests:
+  stage: test
+  only:
+    - master
+    - develop
+  script:
+    - pip install -r requirements.txt
+    - pip install coverage
+    - ci/tests_runner.sh
+  artifacts:
+    paths:
+      - report.txt
+    expire_in: 1 week
+
 pyinstaller:
   stage: build
   only:
