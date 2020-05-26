@@ -4,6 +4,7 @@ from geometry.circle import Circle
 from geometry.distances import dist, dist_point_line
 from geometry.line import Line, line_from_points, point_on_line
 from geometry.point import Point
+from geometry.segment import Segment, point_on_segment
 
 
 class TestCircle(unittest.TestCase):
@@ -50,6 +51,7 @@ class TestLine(unittest.TestCase):
         self.assertTrue(result)
 
     def test_p_on_line2(self):
+        """ Test if point is not on line really not on line """
         result = point_on_line(Point(3, 6), self.line)
         self.assertFalse(result)
 
@@ -68,6 +70,26 @@ class TestDistances(unittest.TestCase):
         """ Test distance between line and point """
         result = dist_point_line(self.p, Line(1, 0, 2)) # y = 2
         self.assertEqual(result, 3)
+
+
+class TestSegments(unittest.TestCase):
+
+    def setUp(self):
+        self.segment = Segment(Point(1, 1), Point(4, 5))
+
+    def test_length(self):
+        result = self.segment.length
+        self.assertEqual(result, 5)
+
+    def test_p_on_seg1(self):
+        """ Test if point on segment really on segment """
+        result = point_on_segment(Point(1, 1), self.segment)
+        self.assertTrue(result)
+
+    def test_p_on_seg2(self):
+        """ Test if point not on segment really not on segment """
+        result = point_on_segment(Point(-2, -3), self.segment)
+        self.assertFalse(result)
 
 
 if __name__ == '__main__':
