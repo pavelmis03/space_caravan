@@ -23,7 +23,7 @@ tests:
     - ci/tests_runner.sh
   artifacts:
     paths:
-      - tests/report.txt
+      - report.txt
     expire_in: 1 week
 
 pyinstaller:
