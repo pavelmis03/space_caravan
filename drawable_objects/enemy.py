@@ -89,7 +89,7 @@ class CommandHumanoid(MovingHumanoid):
 
     ADD_TO_GAME_PLANE = True
     SPEED = 9
-    MELEE_SPEED = 12
+    MELEE_SPEED = 11
     """
     HEARING_RANGE - единица измерения - клетки
     """
