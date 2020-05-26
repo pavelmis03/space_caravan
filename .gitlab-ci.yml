@@ -12,6 +12,20 @@ pylint:
     - ci/pylint_runner.sh
   allow_failure: true
 
+tests:
+  stage: test
+  only:
+    - master
+    - develop
+  script:
+    - pip install coverage
+    - coverage run -m unittest tests/*.py
+    - coverage report -m > tests/report.txt
+  artifacts:
+    paths:
+      - tests/report.txt
+    expire_in: 1 week
+
 pyinstaller:
   stage: build
   only:
