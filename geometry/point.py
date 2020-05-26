@@ -36,6 +36,10 @@ class Point:
         distance = sqrt(dt.x * dt.x + dt.y * dt.y)
         return distance < EPS
 
+    def __str__(self):
+        """ Debugging tool """
+        return 'Point({}, {})'.format(self.x, self.y)
+
 
 def point_to_tuple(point):
     """

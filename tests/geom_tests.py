@@ -150,6 +150,30 @@ class TestRectangle(unittest.TestCase):
         rect.move(mov)
         self.assertEqual(rect.top_left, self.rect.top_left + mov)
 
+    def test_center(self):
+        self.assertEqual(self.rect.center, Point(2.5, 3))
+
+    def test_bottom_right(self):
+        self.assertEqual(self.rect.bottom_right, Point(4, 5))
+
+    def test_size(self):
+        self.assertEqual(self.rect.size, Point(3, 4))
+
+    def test_is_inside1(self):
+        """ Test if point really is inside rect """
+        result = self.rect.is_inside(Point(2, 2))
+        self.assertTrue(result)
+
+    def test_is_inside(self):
+        """ Test if point not inside really not insede rectangle """
+        result = self.rect.is_inside(Point(6, 6))
+        self.assertFalse(result)
+
+    def test_is_empty(self):
+        rect = Rectangle(0, 0, -20, 20)
+        self.assertTrue(rect.is_empty())
+        self.assertFalse(self.rect.is_empty())
+
 
 if __name__ == '__main__':
     unittest.main()
