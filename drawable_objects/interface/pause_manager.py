@@ -58,6 +58,7 @@ class PauseManager(AbstractObject):
         Отмена паузы игры
         """
         self.scene.game_paused = self.active = False
+        self.scene.player.weapon.cooldown = 7
 
     def main_menu(self):
         """
