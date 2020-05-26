@@ -4,6 +4,7 @@ from geometry.circle import Circle
 from geometry.distances import dist, dist_point_line
 from geometry.line import Line, line_from_points, point_on_line
 from geometry.point import Point, tuple_to_point, point_to_tuple
+from geometry.rectangle import Rectangle, get_rectangle_copy
 from geometry.segment import Segment, point_on_segment
 
 
@@ -132,6 +133,22 @@ class TestPoint(unittest.TestCase):
     def test_from_tuple(self):
         result = point_to_tuple(self.p)
         self.assertEqual(result, (3, 4))
+
+
+class TestRectangle(unittest.TestCase):
+
+    def setUp(self):
+        self.rect = Rectangle(1, 1, 4, 5)
+    
+    def test_copy(self):
+        rect = get_rectangle_copy(self.rect)
+        self.assertEqual(self.rect, rect)
+
+    def test_move(self):
+        rect = get_rectangle_copy(self.rect)
+        mov = Point(3, 6)
+        rect.move(mov)
+        self.assertEqual(rect.top_left, self.rect.top_left + mov)
 
 
 if __name__ == '__main__':
