@@ -4,6 +4,7 @@ import json
 
 from typing import List, Dict
 from constants.saving import CLASSES_BASE
+from geometry.point import Point
 
 class GameDataManager:
     """
@@ -67,13 +68,13 @@ def to_list_of_dicts(objects: List) -> List[Dict]:
 def from_list_of_dicts(obj, data_list: List[Dict]) -> List:
     result = list()
     for item in data_list:
-        new_object = CLASSES_BASE[item['classname']](obj, obj.game.controller)
+        new_object = CLASSES_BASE[item['classname']](obj, obj.game.controller, Point(0, 0))
         new_object.from_dict(item)
         result.append(new_object)
     return result
 
 
-def to_2dimensional_list_of_dicts(objects: List[List]) -> List[Dict]:
+def to_2dimensional_list_of_dicts(objects: List[List]) -> List[List[Dict]]:
     result = list()
     for item in objects:
         result.append(to_list_of_dicts(item))

@@ -18,7 +18,7 @@ class SpaceshipScene(GameScene):
     CELL_SIZE = 25
     ROOM_WIDTH = 30
     ROOM_HEIGHT = 20
-    PLAYER_SPAWN_POINT = Point(1, 1) * TOP_LEFT_CORNER_BIAS * CELL_SIZE + Point(2, 2) * CELL_SIZE
+    PLAYER_SPAWN_POINT = Point(1, 1) * TOP_LEFT_CORNER_BIAS * CELL_SIZE + Point(ROOM_WIDTH, ROOM_HEIGHT) * CELL_SIZE / 2
     DATA_FILENAME = 'spaceship'
 
     def __init__(self, game):
