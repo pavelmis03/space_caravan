@@ -100,8 +100,6 @@ class Controller:
         self.click_pos = None
         self.click_button = None
         self.pressed_keys = set()
-        # objects which will receive input
-        self.input_objects = []
 
     def iteration(self):
         """

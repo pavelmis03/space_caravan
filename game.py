@@ -1,5 +1,6 @@
 import sys
 import pygame
+import gc
 
 from typing import Tuple
 
@@ -42,6 +43,7 @@ class Game:
             AboutMenuScene(self),
         ]
         self.__current_scene = self.__scenes[0]
+        self.__to_delete = list()
 
     @property
     def size(self) -> Tuple[int, int]:
@@ -96,6 +98,7 @@ class Game:
 
         if isinstance(self.__current_scene, ConservableScene):
             self.__current_scene.save()
+            self.__to_delete.append(self.__current_scene)
         if player_loading_needed and isinstance(scene, GameScene):
             scene.load_player()
         self.__current_scene = scene
@@ -120,6 +123,14 @@ class Game:
     def end(self):
         self.__running = False
 
+    def __delete_garbage_scenes(self):
+        """
+        Как такового удаления не происходит, вызывается подчистка сборщиком мусора python'а.
+        """
+        if len(self.__to_delete):
+            self.__to_delete.clear()
+            gc.collect()
+
     def main_loop(self):
         """
         Главный рабочий цикл.
@@ -127,4 +138,5 @@ class Game:
         while self.__running:
             self.__controller.iteration()
             self.__current_scene.iteration()
+            self.__delete_garbage_scenes()
         sys.exit(0)
