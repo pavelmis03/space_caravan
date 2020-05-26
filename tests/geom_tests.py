@@ -3,7 +3,7 @@ import unittest
 from geometry.circle import Circle
 from geometry.distances import dist, dist_point_line
 from geometry.line import Line, line_from_points, point_on_line
-from geometry.point import Point
+from geometry.point import Point, tuple_to_point, point_to_tuple
 from geometry.segment import Segment, point_on_segment
 
 
@@ -90,6 +90,48 @@ class TestSegments(unittest.TestCase):
         """ Test if point not on segment really not on segment """
         result = point_on_segment(Point(-2, -3), self.segment)
         self.assertFalse(result)
+
+
+class TestPoint(unittest.TestCase):
+
+    def setUp(self):
+        self.p = Point(3, 4)
+
+    def test_base_test(self):
+        self.assertEqual(self.p.x, 3)
+        self.assertEqual(self.p.y, 4)
+
+    def test_eq(self):
+        newp = Point(3, 4)
+        self.assertEqual(self.p, newp)
+
+    def test_add(self):
+        result = self.p + Point(3, 5)
+        self.assertEqual(result, Point(6, 9))
+
+    def test_sub(self):
+        result = self.p - Point(3, 5)
+        self.assertEqual(result, Point(0, -1))
+
+    def test_neg(self):
+        result = -self.p
+        self.assertEqual(result, Point(-3, -4))
+
+    def test_mul(self):
+        result = self.p * 2
+        self.assertEqual(result, Point(6, 8))
+
+    def test_div(self):
+        result = self.p / 2
+        self.assertEqual(result, Point(1.5, 2.0))
+
+    def test_to_tuple(self):
+        result = tuple_to_point((3, 4))
+        self.assertEqual(result, self.p)
+
+    def test_from_tuple(self):
+        result = point_to_tuple(self.p)
+        self.assertEqual(result, (3, 4))
 
 
 if __name__ == '__main__':
