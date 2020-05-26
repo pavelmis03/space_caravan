@@ -18,9 +18,9 @@ tests:
     - master
     - develop
   script:
+    - pip install -r requirements.txt
     - pip install coverage
-    - coverage run -m unittest tests/*.py
-    - coverage report -m > tests/report.txt
+    - ci/tests_runner.sh
   artifacts:
     paths:
       - tests/report.txt
