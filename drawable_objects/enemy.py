@@ -31,7 +31,7 @@ class MovingHumanoid(Humanoid):
         вектор, теряет время. Может быть, не требуется переработка. Может быть, это решается передачей следующей точки.
         """
         self._recount_angle(pos)
-        move_vector = vector_from_length_angle(self.SPEED, self.angle)
+        move_vector = vector_from_length_angle(self._speed, self.angle)
         result = self.__get_correct_move_vector(move_vector, pos)
         return result
 
@@ -54,6 +54,13 @@ class MovingHumanoid(Humanoid):
         """
         vector_to_player = new_pos - self.pos
         self.angle = polar_angle(vector_to_player)
+
+    @property
+    def _speed(self) -> float:
+        """
+        получить текущую скорость
+        """
+        return self.SPEED
 
 
 class EnemyCommand:
@@ -82,12 +89,11 @@ class CommandHumanoid(MovingHumanoid):
 
     ADD_TO_GAME_PLANE = True
     SPEED = 9
-
+    MELEE_SPEED = 12
     """
     HEARING_RANGE - единица измерения - клетки
     """
     VISION_RADIUS = 25 * CELL_SIZE
-    MELEE_RADIUS = 3.75 * CELL_SIZE
     VIEW_ANGLE = pi #с углом > pi работать не будет
 
     HEARING_RANGE = 35
@@ -280,12 +286,17 @@ class CommandHumanoid(MovingHumanoid):
         return self.scene.grid.is_hearing_player(self)
 
     @property
+    def _speed(self) -> float:
+        if self.__is_range:
+            return super()._speed
+        return self.MELEE_SPEED
+
+    @property
     def __is_range(self) -> bool:
         """
         Дальнее ли у Enemy оружие
         """
         return self.weapon.type == 'Ranged'
-
 
 class Enemy(CommandHumanoid):
     """
