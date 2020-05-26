@@ -8,7 +8,7 @@ from geometry.point import Point
 from geometry.line import Line, line_from_points
 from geometry.segment import Segment
 from geometry.rectangle import Rectangle
-from geometry.vector import length, dot_product, sign, normalized
+from geometry.vector import length, length_squared, dot_product, sign, normalized
 
 
 def dist(p1: Point, p2: Point) -> float:
@@ -20,6 +20,10 @@ def dist(p1: Point, p2: Point) -> float:
     :return: числовое значение
     """
     return length(p2 - p1)
+
+
+def dist_squared(p1: Point, p2: Point) -> float:
+    return length_squared(p2 - p1)
 
 
 def dist_point_line(p: Point, l: Line) -> float:

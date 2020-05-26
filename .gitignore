@@ -266,4 +266,7 @@ $RECYCLE.BIN/
 venv/
 *.log
 
+# Файлы игры
+game_data/
+
 # End of https://www.gitignore.io/api/linux,macos,python,windows,pycharm+all

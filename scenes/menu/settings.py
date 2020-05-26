@@ -1,9 +1,4 @@
-"""
-Класс страницы настроек меню
-"""
-from drawable_objects.checkbox import CheckBox
-from geometry.point import Point
-from scenes.base import GameScene
+from scenes.game.base import GameScene
 from scenes.menu.base import MenuScene
 
 
@@ -21,4 +16,4 @@ class SettingsMenuScene(MenuScene):
 
     def button_back(self):
         GameScene.FIXED_CAMERA = self.menu.widgets[0].check
-        self.game.set_scene(scene_index=self.game.MAIN_MENU_SCENE_INDEX)
+        self.game.set_scene_with_index(self.game.MAIN_MENU_SCENE_INDEX)

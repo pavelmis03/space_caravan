@@ -8,12 +8,13 @@ from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
 from scenes.base import Scene
-from geometry.segment import Segment
 from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
 from math import pi
 from utils.timer import Timer, EMPTY_TIMER
+from constants.grid import CELL_SIZE
+
 
 class MovingHumanoid(Humanoid):
     """
@@ -85,11 +86,10 @@ class CommandHumanoid(MovingHumanoid):
     """
     HEARING_RANGE - единица измерения - клетки
     """
-    VISION_RADIUS = 25 * 25
+    VISION_RADIUS = 25 * CELL_SIZE
     VIEW_ANGLE = pi #с углом > pi работать не будет
 
     HEARING_RANGE = 35
-    AGGRE_RADIUS = 35 * 25
 
     COOLDOWN_TIME = 50
     DELAY_BEFORE_FIRST_SHOOT = 12
@@ -144,7 +144,7 @@ class CommandHumanoid(MovingHumanoid):
             return
 
         # если timer не started, то это значит, что сейчас используется пустой таймер и можно начать новый.
-        if not self.__hearing_timer_delay.is_started and self.scene.grid.is_hearing_player(self):
+        if not self.__hearing_timer_delay.is_started and self.__is_hearing_player:
             self.__hearing_timer_delay = Timer(Enemy.DELAY_BEFORE_HEARING)
             self.__hearing_timer_delay.start()
 
@@ -179,7 +179,7 @@ class CommandHumanoid(MovingHumanoid):
                 self.scene.grid.save_enemy_pos(new_pos) #на случай, если несколько enemy решат пойти в одну клетку
                 return EnemyCommand('move_to', new_pos)
 
-        if self._is_aggred and not self.__is_player_in_aggre_radius:
+        if self._is_aggred and not self.__is_hearing_player:
             self._is_aggred = False
 
         return None
@@ -245,22 +245,11 @@ class CommandHumanoid(MovingHumanoid):
         return self.__is_see_player and not self.__cooldown
 
     @property
-    def __is_player_in_aggre_radius(self) -> bool:
+    def __is_hearing_player(self) -> bool:
         """
         Находится ли игрок в радиусе слышимости.
-
-        Проверяет, находится ли игрок в квадрате со стороной AGGRE_RADIUS и
-        центром в enemy.pos.
         """
-        """
-        Проверка через евклидово расстояние не подходит, т.к. aggre_radius должен совпадать с
-        радиусом слышимости, а он рассчитывается bfs'ом, в результате которого получается квадрат, 
-        а не круг (если игнорировать стены).
-        """
-        distance_x = abs(self.pos.x - self.scene.player.pos.x)
-        distance_y = abs(self.pos.y - self.scene.player.pos.y)
-        return distance_x < CommandHumanoid.AGGRE_RADIUS and \
-               distance_y < CommandHumanoid.AGGRE_RADIUS
+        return self.scene.grid.is_hearing_player(self)
 
 
 class Enemy(CommandHumanoid):

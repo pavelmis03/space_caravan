@@ -11,10 +11,6 @@ def create_enemy(grid, i: int, j: int):
     """
     Создать врага под данным индексом с рандомным поворотом.
     """
-    """
-    Возможно, не должен быть повернут рандомно. Но пока угол поворота Enemy
-    ни на что не влияет.
-    """
     enemy = Enemy(grid.scene, grid.controller, grid.get_center_of_cell_by_indexes(i, j), random())
     grid.scene.enemies.append(enemy)
 
@@ -49,4 +45,5 @@ class EnemyGenerator:
             random_i = randint(item.top_index + WALLS_MIN_DISTANCE, item.bottom_index - WALLS_MIN_DISTANCE)
             random_j = randint(item.left_index + WALLS_MIN_DISTANCE, item.right_index - WALLS_MIN_DISTANCE)
             if self.__grid.is_enemy_can_stay(random_i, random_j):
+                # этот if вроде не нужен, но оставлю его, чтобы ничего не сломать (при будущих модификациях)
                 create_enemy(self.__grid, random_i, random_j)
