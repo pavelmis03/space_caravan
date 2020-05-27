@@ -1,4 +1,4 @@
 pyinstaller run.py -p . -F
-cp game_data dist/.
-cp images dist/.
-cp sounds dist/.
+cp -r game_data dist/.
+cp -r images dist/.
+cp -r sounds dist/.
