@@ -1,4 +1,3 @@
-pyinstaller run.py -p . -F
-cp -r game_data dist/.
+pyinstaller run.py -p . -F -n space_caravan --hidden-import pygame --windowed
 cp -r images dist/.
 cp -r sounds dist/.
