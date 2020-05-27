@@ -1,6 +1,10 @@
 from game import Game
 
-import pkg_resources.py2_warn
+# this is needed for build
+try:
+    import pkg_resources.py2_warn
+except ImportError:
+    pass
 
 
 if __name__ == '__main__':
