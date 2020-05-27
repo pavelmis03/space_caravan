@@ -35,7 +35,9 @@ pyinstaller:
     - feature/ci
   script:
     - pip install -r requirements.txt
-    - pip install pyinstaller setuptools
+    - pip install pyinstaller
+    - pip install --upgrade setuptools
+    - pip install --upgrade distribute
     - pyinstaller game.py -p . -F
   artifacts:
     paths:
