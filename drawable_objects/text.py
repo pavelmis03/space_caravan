@@ -46,7 +46,7 @@ class Text(DrawableObject):
     :param scene: сцена, на которой находится текст
     :param pos: точка, по которой текст выравнивается
     :param text: строка текста
-    :param: color: цвет текста
+    :param color: цвет текста
     :param align: выравнивание; пока поддерживается только 2 выравнивания: 'left' (pos - левый верхний угол надписи)
         и 'center' (pos - центр надписи)
     :param font_name: название шрифта
