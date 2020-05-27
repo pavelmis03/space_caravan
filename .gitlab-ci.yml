@@ -36,8 +36,7 @@ pyinstaller:
   script:
     - pip install -r requirements.txt
     - pip install pyinstaller
-    - wget https://bootstrap.pypa.io/ez_setup.py -O - | python
-    - pyinstaller game.py -p . -F
+    - pyinstaller run.py -p . -F
   artifacts:
     paths:
       - dist
