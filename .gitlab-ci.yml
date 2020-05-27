@@ -36,6 +36,7 @@ pyinstaller:
   script:
     - pip install -r requirements.txt
     - pip install pyinstaller
+    - pip install --upgrade 'setuptools<45.0.0'
     - ci/build_elf.sh
   artifacts:
     paths:
