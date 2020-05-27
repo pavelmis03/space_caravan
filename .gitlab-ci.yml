@@ -36,7 +36,7 @@ pyinstaller:
   script:
     - pip install -r requirements.txt
     - pip install pyinstaller
-    - pip install --upgrade setuptools
+    - pip install --force-reinstall -U setuptools
     - pyinstaller game.py -p . -F
   artifacts:
     paths:
