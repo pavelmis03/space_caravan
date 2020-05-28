@@ -11,6 +11,15 @@ from drawable_objects.text import Text
 
 
 class TextBox(DrawableObject):
+    """
+    Поле ввода пользователем строки. Сейчас принимает ввод всегда, когда его сцена работает. Поддерживает
+    ввод маленьких латинских букв, цифр и пробела.
+
+    :param scene: сцена объекта
+    :param controller: контроллер
+    :param geometry: кортеж c координатами прямоугольника поля ввода
+    :param prompt_str: строка подсказки, показывающаяся, когда в поле ввода ничего не написано
+    """
     PROMPT_TEXT_COLOR = (100, 100, 100)
     MAIN_TEXT_COLOR = (0, 0, 0)
     FONT_NAME = 'Consolas'
@@ -28,6 +37,9 @@ class TextBox(DrawableObject):
                               font_size, False, False)
 
     def is_symbol_correct(self, symbol: str) -> bool:
+        """
+        Корректен ли введенный символ. Пока что поддерживается только маленьких латинских букв, цифр и пробела.
+        """
         if 'a' <= symbol <= 'z':
             return True
         if '0' <= symbol <= '9':
@@ -46,11 +58,17 @@ class TextBox(DrawableObject):
         self.main_text.update_text(self.main_str + '|')
 
     def move(self, movement: Point):
+        """
+        Перемещение объекта на заданный вектор. Необходимо для встраивания в WidgetGroup.
+        """
         self.geometry.move(movement)
         self.main_text.pos += movement
         self.prompt_text.pos += movement
 
     def process_logic(self):
+        """
+        Логика объекта - фиксирование нажатий клавиш, воспринимаемых от контроллера.
+        """
         if self.controller.get_bumped_key():
             if self.controller.get_bumped_key() == pygame.K_BACKSPACE:
                 self.value = self.main_str[0:-1]

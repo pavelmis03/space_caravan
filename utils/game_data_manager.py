@@ -6,11 +6,11 @@ from typing import List, Dict
 from constants.saving import CLASSES_BASE
 from geometry.point import Point
 
+
 class GameDataManager:
     """
     Менеджер файлов игры, в которых хранится информация о мирах.
     """
-
     STORAGE_ROOT = 'game_data'
 
     def __init__(self):
@@ -20,10 +20,17 @@ class GameDataManager:
         self.__space_path = None
 
     def set_current_space(self, space_name):
+        """
+        Установка текущего космоса. Операции с хранилищем космоса происходят без передачи его имени, так что этот
+        метод нужно вызывать перед ними.
+        """
         self.__space_name = space_name
         self.__space_path = os.path.join(self.STORAGE_ROOT, space_name)
 
     def create_space_storage(self):
+        """
+        Создание нового хранилища космоса. Перед созданием на всякий случай удаляет старое, если оно есть.
+        """
         self.delete_space_storage()
         os.mkdir(self.__space_path)
 
