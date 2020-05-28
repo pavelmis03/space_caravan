@@ -31,7 +31,7 @@ class Game:
     ABOUT_MENU_SCENE_INDEX = 2
     WORLD_CHOICE_MENU_SCENE_INDEX = 3
 
-    def __init__(self, width: idrawable_objects/text.pynt = 1000, height: int = 700):
+    def __init__(self, width: int = 1000, height: int = 700):
         pygame.init()
         self.size = (width, height)
         self.__running = True
