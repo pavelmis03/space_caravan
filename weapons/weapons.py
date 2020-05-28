@@ -5,6 +5,8 @@ class Pistol(RangedWeapon):
     """
     Пистолет
     """
+    SHOOT_SOUND = 'weapon.shoot.pistol'
+
     def __init__(self, owner, bullets_in_magazine=12):
         super().__init__(owner, bullets_in_magazine, magazine_size=12,
                          main_attack_interval=7, reload_time=40, ammo_type='Pistol',
@@ -25,6 +27,8 @@ class Shotgun(RangedWeapon):
     """
     Дробовик
     """
+    SHOOT_SOUND = 'weapon.shoot.shotgun'
+
     def __init__(self, owner, bullets_in_magazine=6):
         super().__init__(owner, bullets_in_magazine, magazine_size=6,
                          main_attack_interval=12, reload_time=70, ammo_type='Shotgun',
