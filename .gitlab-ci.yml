@@ -2,7 +2,8 @@ image: "python:3.7-stretch"
 
 stages:
   - test
-  - build
+  - build_elf
+  - build_deb
 
 pylint:
   stage: test
@@ -28,7 +29,7 @@ tests:
     expire_in: 1 week
 
 pyinstaller:
-  stage: build
+  stage: build_elf
   only:
     - master
     - develop
@@ -41,3 +42,18 @@ pyinstaller:
     paths:
       - dist
     expire_in: 1 week
+
+deb-build:
+  stage: build_deb
+  only:
+    - master
+    - develop
+    - feature/ci
+  dependencies:
+    - pyinstaller
+  script:
+    - apt-get install dpkg debconf debhelper lintian
+    - cd dist
+    - mkdir -p DEBIAN
+    - mkdir -p usr/bin
+    - cp space_caravan usr/bin/
