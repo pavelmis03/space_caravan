@@ -37,7 +37,7 @@ class SoundManager:
             if os.path.isdir(full_item):
                 manager_dir = SoundManager.get_sound(short_dir, os.sep)
                 manager_dir[item] = {}
-                SoundManager.load_dir(full_item)
+                SoundManager.load_dir(full_item, extension)
             elif extension in item:
                 manager_dir = SoundManager.get_sound(short_dir, os.sep)
                 item = item.replace(extension, '')
