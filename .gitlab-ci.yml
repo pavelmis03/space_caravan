@@ -52,7 +52,6 @@ deb-build:
   dependencies:
     - pyinstaller
   script:
-    - apt-get install dpkg debconf debhelper lintian
     - cd dist
     - mkdir -p DEBIAN
     - mkdir -p usr/bin
