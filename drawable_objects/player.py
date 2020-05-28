@@ -120,11 +120,10 @@ class Player(Humanoid):
         Передвижение игрока по команде пользователя.
         """
         velocity = Point()
-        if self in self.controller.input_objects:
-            for i in range(4):
-                if self.controller.is_key_pressed(Player.CONTROLS[i]):
-                    velocity += DIRECTIONS[i]
-            velocity *= self.SPEED
+        for i in range(4):
+            if self.controller.is_key_pressed(Player.CONTROLS[i]):
+                velocity += DIRECTIONS[i]
+        velocity *= self.SPEED
         new_player_pos = self._pos_after_pull_from_walls(self.pos + velocity)
         self.move(new_player_pos)
 

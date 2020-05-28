@@ -38,11 +38,10 @@ class PauseManager(AbstractObject):
         self.active = False
 
     def process_logic(self):
-        if self in self.controller.input_objects:
-            if self.controller.is_key_pressed(PauseManager.CONTROLS['OPEN']) and not self.active:
-                self.pause()
-            if self.controller.is_key_pressed(PauseManager.CONTROLS['CLOSE']) and self.active:
-                self.resume()
+        if self.controller.is_key_pressed(PauseManager.CONTROLS['OPEN']) and not self.active:
+            self.pause()
+        if self.controller.is_key_pressed(PauseManager.CONTROLS['CLOSE']) and self.active:
+            self.resume()
         if self.active:
             self.surface = pygame.transform.scale(self.surface, (self.scene.game.width, self.scene.game.height))
             self.buttons.process_logic()
@@ -58,6 +57,7 @@ class PauseManager(AbstractObject):
         Отмена паузы игры
         """
         self.scene.game_paused = self.active = False
+        self.scene.player.weapon.cooldown = 7
 
     def main_menu(self):
         """
