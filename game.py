@@ -117,8 +117,8 @@ class Game:
         Старт нового игрового мира. Пока не имеет альтернатив. Возможно, стоит перенести при создании меню
         выбора мира.
         """
-        self.file_manager.reset()
-        self.file_manager.create_space_storage('world')
+        self.file_manager.set_current_space('world')
+        self.file_manager.create_space_storage()
         spaceship_scene = SpaceshipScene(self)
         spaceship_scene.initialize()
         self.set_scene(spaceship_scene, False)
