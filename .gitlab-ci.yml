@@ -63,5 +63,5 @@ deb-build:
     - ls
   artifacts:
     paths:
-      - space-caravan.deb
+      - space-caravan_1.0-1.deb
     expire_in: 1 week
