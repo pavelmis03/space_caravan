@@ -55,6 +55,14 @@ class GameDataManager:
         file.write(data_str)
         file.close()
 
+    def get_all_space_names(self) -> List[str]:
+        files_and_folders = os.listdir(self.STORAGE_ROOT)
+        folders = list()
+        for name in files_and_folders:
+            if os.path.isdir(os.path.join(self.STORAGE_ROOT, name)):
+                folders.append(name)
+        return folders
+
 
 def to_list_of_dicts(objects: List) -> List[Dict]:
     result = list()

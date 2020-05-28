@@ -30,15 +30,20 @@ class TextBox(DrawableObject):
     def is_symbol_correct(self, symbol: str) -> bool:
         if 'a' <= symbol <= 'z':
             return True
-        if 'а' <= symbol <= 'я':
-            return True
         if '0' <= symbol <= '9':
+            return True
+        if symbol == ' ':
             return True
         return False
 
-    def set_main_str(self, new_main_str: str):
+    @property
+    def value(self) -> str:
+        return self.main_str
+
+    @value.setter
+    def value(self, new_main_str: str):
         self.main_str = new_main_str
-        self.main_text.update_text(self.main_str)
+        self.main_text.update_text(self.main_str + '|')
 
     def move(self, movement: Point):
         self.geometry.move(movement)
@@ -48,11 +53,11 @@ class TextBox(DrawableObject):
     def process_logic(self):
         if self.controller.get_bumped_key():
             if self.controller.get_bumped_key() == pygame.K_BACKSPACE:
-                self.set_main_str(self.main_str[0:-1])
+                self.value = self.main_str[0:-1]
             else:
                 symbol = chr(self.controller.bumped_key)
                 if self.is_symbol_correct(symbol):
-                    self.set_main_str(self.main_str + symbol)
+                    self.value = self.main_str + symbol
 
     def process_draw(self):
         pygame.draw.rect(self.scene.screen, self.BG_COLOR, rectangle_to_rect(self.geometry))
