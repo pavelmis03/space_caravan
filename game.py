@@ -13,7 +13,7 @@ from scenes.game.spaceship import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
-from scenes.menu.world_choice import WorldChoiceMenuScene
+from scenes.menu.space_choice import SpaceChoiceMenuScene
 from utils.image import ImageManager
 from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
@@ -28,7 +28,7 @@ class Game:
     MAIN_MENU_SCENE_INDEX = 0
     SETTINGS_MENU_SCENE_INDEX = 1
     ABOUT_MENU_SCENE_INDEX = 2
-    WORLD_CHOICE_MENU_SCENE_INDEX = 3
+    SPACE_CHOICE_MENU_SCENE_INDEX = 3
 
     def __init__(self, width: int = 1000, height: int = 700):
         pygame.init()
@@ -43,7 +43,7 @@ class Game:
             MainMenuScene(self),
             SettingsMenuScene(self),
             AboutMenuScene(self),
-            WorldChoiceMenuScene(self),
+            SpaceChoiceMenuScene(self),
         ]
         self.__current_scene = self.__scenes[0]
         self.__to_delete = list()
@@ -90,19 +90,18 @@ class Game:
     def file_manager(self) -> GameDataManager:
         return self.__file_manager
 
-    def set_scene(self, scene: Scene, player_loading_needed: bool = True):
+    def set_scene(self, scene: Scene):
         """
         Установка заданной сцены текущей. Если старая сцена игровая, она сохраняется. При необходимости
         новой сцене из файла подгружается игрок.
 
         :param scene: ссылка на новую сцену
-        :param player_loading_needed: нужно ли подгружать игрока
         """
 
         if isinstance(self.__current_scene, ConservableScene):
             self.__current_scene.save()
             self.__to_delete.append(self.__current_scene)
-        if player_loading_needed and isinstance(scene, GameScene):
+        if isinstance(scene, GameScene):
             scene.load_player()
         self.__current_scene = scene
 
@@ -111,17 +110,6 @@ class Game:
         Установка сцены из имеющегося списка в качестве текущей. Индексы в списке - константные поля класса игры.
         """
         self.set_scene(self.__scenes[scene_index])
-
-    def start_new_game(self):
-        """
-        Старт нового игрового мира. Пока не имеет альтернатив. Возможно, стоит перенести при создании меню
-        выбора мира.
-        """
-        self.file_manager.set_current_space('world')
-        self.file_manager.create_space_storage()
-        spaceship_scene = SpaceshipScene(self)
-        spaceship_scene.initialize()
-        self.set_scene(spaceship_scene, False)
 
     def end(self):
         self.__running = False

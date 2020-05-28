@@ -99,6 +99,12 @@ class ListWidget(DrawableObject):
             if item.value == element:
                 self.items.remove(item)
 
+    def __contains__(self, element):
+        for item in self.items:
+            if item.value == element:
+                return True
+        return False
+
     def process_logic(self):
         self.scroll_controls()
         self.apply_scroll_borders()
