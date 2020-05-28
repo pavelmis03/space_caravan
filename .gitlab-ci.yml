@@ -56,3 +56,12 @@ deb-build:
     - mkdir -p DEBIAN
     - mkdir -p usr/bin
     - cp space_caravan usr/bin/
+    - cp ../ci/control DEBIAN/
+    - cd ..
+    - mv dist space-caravan_1.0-1
+    - dpkg-deb --build space-caravan_1.0-1
+    - ls
+  artifacts:
+    paths:
+      - space-caravan.deb
+    expire_in: 1 week
