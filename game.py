@@ -12,6 +12,7 @@ from scenes.game.spaceship import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
+from utils.font import FontManager
 from utils.image import ImageManager
 from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
