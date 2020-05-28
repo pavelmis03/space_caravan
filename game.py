@@ -13,6 +13,7 @@ from scenes.game.spaceship import SpaceshipScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
+from scenes.menu.world_choice import WorldChoiceMenuScene
 from utils.image import ImageManager
 from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
@@ -27,6 +28,7 @@ class Game:
     MAIN_MENU_SCENE_INDEX = 0
     SETTINGS_MENU_SCENE_INDEX = 1
     ABOUT_MENU_SCENE_INDEX = 2
+    WORLD_CHOICE_MENU_SCENE_INDEX = 3
 
     def __init__(self, width: int = 1000, height: int = 700):
         pygame.init()
@@ -41,6 +43,7 @@ class Game:
             MainMenuScene(self),
             SettingsMenuScene(self),
             AboutMenuScene(self),
+            WorldChoiceMenuScene(self),
         ]
         self.__current_scene = self.__scenes[0]
         self.__to_delete = list()
@@ -114,8 +117,8 @@ class Game:
         Старт нового игрового мира. Пока не имеет альтернатив. Возможно, стоит перенести при создании меню
         выбора мира.
         """
-        self.file_manager.reset()
-        self.file_manager.create_space_storage('world')
+        self.file_manager.set_current_space('world')
+        self.file_manager.create_space_storage()
         spaceship_scene = SpaceshipScene(self)
         spaceship_scene.initialize()
         self.set_scene(spaceship_scene, False)
