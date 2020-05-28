@@ -46,7 +46,6 @@ class GameScene(ConservableScene):
         self.player = None
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
-        self.game.controller.input_objects.append(self.pause_manager)
         self.camera = Camera(self)
 
     def to_dict(self) -> Dict:
@@ -69,7 +68,6 @@ class GameScene(ConservableScene):
         self.player = Player(self, self.game.controller, Point(0, 0))
         self.player.load()
         self.player.move(self.PLAYER_SPAWN_POINT)
-        self.game.controller.input_objects.append(self.player)
 
     def save(self):
         super().save()
@@ -99,7 +97,7 @@ class GameScene(ConservableScene):
         delete_destroyed(self.enemies)
 
     def process_all_logic(self):
-        self.interface_logic()
+        super().process_all_logic()
         if not self.game_paused:
             self.game_logic()
 

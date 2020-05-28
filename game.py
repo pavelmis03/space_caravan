@@ -1,5 +1,6 @@
 import sys
 import pygame
+import gc
 
 from typing import Tuple
 
@@ -13,6 +14,7 @@ from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
 from utils.font import FontManager
+from scenes.menu.world_choice import WorldChoiceMenuScene
 from utils.image import ImageManager
 from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
@@ -27,8 +29,9 @@ class Game:
     MAIN_MENU_SCENE_INDEX = 0
     SETTINGS_MENU_SCENE_INDEX = 1
     ABOUT_MENU_SCENE_INDEX = 2
+    WORLD_CHOICE_MENU_SCENE_INDEX = 3
 
-    def __init__(self, width: int = 1000, height: int = 700):
+    def __init__(self, width: idrawable_objects/text.pynt = 1000, height: int = 700):
         pygame.init()
         self.size = (width, height)
         self.__running = True
@@ -41,8 +44,10 @@ class Game:
             MainMenuScene(self),
             SettingsMenuScene(self),
             AboutMenuScene(self),
+            WorldChoiceMenuScene(self),
         ]
         self.__current_scene = self.__scenes[0]
+        self.__to_delete = list()
 
     @property
     def size(self) -> Tuple[int, int]:
@@ -97,6 +102,7 @@ class Game:
 
         if isinstance(self.__current_scene, ConservableScene):
             self.__current_scene.save()
+            self.__to_delete.append(self.__current_scene)
         if player_loading_needed and isinstance(scene, GameScene):
             scene.load_player()
         self.__current_scene = scene
@@ -112,14 +118,22 @@ class Game:
         Старт нового игрового мира. Пока не имеет альтернатив. Возможно, стоит перенести при создании меню
         выбора мира.
         """
-        self.file_manager.reset()
-        self.file_manager.create_space_storage('world')
+        self.file_manager.set_current_space('world')
+        self.file_manager.create_space_storage()
         spaceship_scene = SpaceshipScene(self)
         spaceship_scene.initialize()
         self.set_scene(spaceship_scene, False)
 
     def end(self):
         self.__running = False
+
+    def __delete_garbage_scenes(self):
+        """
+        Как такового удаления не происходит, вызывается подчистка сборщиком мусора python'а.
+        """
+        if len(self.__to_delete):
+            self.__to_delete.clear()
+            gc.collect()
 
     def main_loop(self):
         """
@@ -128,4 +142,5 @@ class Game:
         while self.__running:
             self.__controller.iteration()
             self.__current_scene.iteration()
+            self.__delete_garbage_scenes()
         sys.exit(0)

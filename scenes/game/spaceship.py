@@ -36,4 +36,3 @@ class SpaceshipScene(GameScene):
         self.game_objects.append(SpaceMapTerminal(
             self, self.game.controller, terminal_spawn_point, 0))
         self.player = Player(self, self.game.controller, self.PLAYER_SPAWN_POINT)
-        self.game.controller.input_objects.append(self.player)

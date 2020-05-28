@@ -28,7 +28,9 @@ class Button(DrawableObject):
     PRESS_SOUND = 'button.press'
     HOVER_RESIZE = 1.05
 
-    def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs={}, font_size=20):
+    def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs=None, font_size=20):
+        if not kwargs:
+            kwargs = {}
         self.geometry = tuple_to_rectangle(geometry)
         super().__init__(scene, controller, self.geometry.center)
         self.function = function
