@@ -27,7 +27,7 @@ class Player(Humanoid):
     :IMAGE_NAME: путь до изображения персонажа
     :IMAGE_ZOOM: размер изображения
     :CONTROLS: клавиши управления движением
-    :ARSENAL_CONTROLS: клавиши управления слотами оружия
+    :WEAPON_SLOTS_CONTROLS: клавиши управления слотами оружия
     :WEAPON_RELOAD_KEY: клавиша перезарядки
     :SPEED: скорость игрока
     """
@@ -41,7 +41,7 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    ARSENAL_CONTROLS = [
+    WEAPON_SLOTS_CONTROLS = [
         pygame.K_1,
         pygame.K_2,
         pygame.K_3,
@@ -63,14 +63,14 @@ class Player(Humanoid):
             'Shotgun': 60,
             'Rifle': 100,
         }
-        self.arsenal = [
+        self.weapon_slots = [
             WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
             WEAPON_VOCABULARY['Pistol'](self),
             WEAPON_VOCABULARY['Sword'](self),
         ]
-        self.arsenal_ind = 0
-        self.change_arsenal_weapon_request = -1
-        self.weapon = self.arsenal[self.arsenal_ind]
+        self.weapon_slots_ind = 0
+        self.change_weapon_request = -1
+        self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
@@ -139,23 +139,23 @@ class Player(Humanoid):
             self.weapon.alternative_attack()
         if self.controller.is_key_pressed(Player.WEAPON_RELOAD_KEY):
             self.weapon.reload_request = True
-        if self.change_arsenal_weapon_request == -1:
-            if not self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[self.arsenal_ind]):
-                for ind in range(len(self.ARSENAL_CONTROLS)):
-                    if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
-                        self.change_arsenal_weapon_request = ind
-        if self.change_arsenal_weapon_request != -1 and self.weapon.combo == 0:
-            self._change_arsenal_weapon(self.change_arsenal_weapon_request)
-            self.change_arsenal_weapon_request = -1
+        if self.change_weapon_request == -1:
+            if not self.controller.is_key_pressed(Player.WEAPON_SLOTS_CONTROLS[self.weapon_slots_ind]):
+                for ind in range(len(self.WEAPON_SLOTS_CONTROLS)):
+                    if self.controller.is_key_pressed(Player.WEAPON_SLOTS_CONTROLS[ind]):
+                        self.change_weapon_request = ind
+        if self.change_weapon_request != -1 and self.weapon.combo == 0:
+            self._change_weapon(self.change_weapon_request)
+            self.change_weapon_request = -1
 
-    def _change_arsenal_weapon(self, ind):
+    def _change_weapon(self, ind):
         if self.weapon.type == 'Ranged':
             self.weapon.is_reloading = 0
             self.weapon.reload_request = False
         self.weapon.cooldown = 0
-        self.arsenal[self.arsenal_ind] = self.weapon
-        self.arsenal_ind = ind
-        self.weapon = self.arsenal[ind]
+        self.weapon_slots[self.weapon_slots_ind] = self.weapon
+        self.weapon_slots_ind = ind
+        self.weapon = self.weapon_slots[ind]
         self.weapon.cooldown = 15
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:

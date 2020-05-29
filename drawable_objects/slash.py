@@ -24,9 +24,11 @@ class PlayerSlash(GameSprite):
         self.creator = creator
         self.image_ind = 0
         self.one_frame_vision_time = 2
-        self.damage = 200
+        self.damage = 250
 
     def process_logic(self):
+        if not self.creator.enabled:
+            self.destroy()
         self.collision_manager()
         self.sprite_manager()
 

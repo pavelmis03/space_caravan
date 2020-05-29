@@ -11,17 +11,20 @@ from drawable_objects.slash import PlayerSlash, EnemySlash
 
 class Weapon(GameSprite):
 
-    def __init__(self, owner, main_attack_interval,
+    def __init__(self, owner, scene_image, interface_image, main_attack_interval,
                  is_automatic=False, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
+        :param scene_image: картинка на сцене
+        :param interface_image: картинка в интерфейсе(в слотах оружия)
         :param main_attack_interval: Время между выстрелами -> int
         :param is_automatic: Автоматическое ли оружие -> bool
         :param combo_attack_interval: Интервал между ударами/выстрелами в 1 атаке -> int
         :param combo_size: Количество ударов/выстрелов в 1 атаке -> int
         """
         self.owner = owner
-        super().__init__(owner.scene, owner.controller, 'other.gun',
+        self.interface_image = interface_image
+        super().__init__(owner.scene, owner.controller, scene_image,
                          self.owner.pos, self.owner.angle, 0.5)
         self.is_automatic = is_automatic
         self.main_attack_interval = main_attack_interval
@@ -76,11 +79,13 @@ class Weapon(GameSprite):
 
 class RangedWeapon(Weapon):
 
-    def __init__(self, owner, bullets_in_magazine, magazine_size, main_attack_interval,
+    def __init__(self, owner, scene_image, interface_image, bullets_in_magazine, magazine_size, main_attack_interval,
                  reload_time, ammo_type, accuracy, damage,
                  is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
+        :param scene_image: картинка на сцене
+        :param interface_image: картинка в интерфейсе(в слотах оружия)
         :param bullets_in_magazine: Сколько пуль в магазине на момент получения оружия -> int
         :param magazine_size: Размер магазина -> int
         :param main_attack_interval: Время между атаками -> int
@@ -93,7 +98,8 @@ class RangedWeapon(Weapon):
         :param combo_attack_interval: Интервал между выстрелами в очереди -> int
         :param combo_size: Длина очереди -> int
         """
-        super().__init__(owner, main_attack_interval, is_automatic, combo_attack_interval, combo_size)
+        super().__init__(owner, scene_image, interface_image, main_attack_interval, is_automatic,
+                         combo_attack_interval, combo_size)
         self.reload_time = reload_time
         self.is_reloading = 0
         self.reload_request = False
@@ -173,13 +179,15 @@ class RangedWeapon(Weapon):
 
 class MeleeWeapon(Weapon):
 
-    def __init__(self, owner, main_attack_interval, length):
+    def __init__(self, owner, scene_image, interface_image, main_attack_interval, length):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
+        :param scene_image: картинка на сцене
+        :param interface_image: картинка в интерфейсе(в слотах оружия)
         :param main_attack_interval: Время между взмахами -> int
         :param length: Длина клинка -> int
         """
-        super().__init__(owner, main_attack_interval)
+        super().__init__(owner, scene_image, interface_image, main_attack_interval)
         self.length = owner.HITBOX_RADIUS + length
         self.type = 'Melee'
 
