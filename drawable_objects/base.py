@@ -201,3 +201,28 @@ class Humanoid(GameSprite):
                  zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.hp = Humanoid.MAXHP
+        self.weapon = None
+
+    def process_draw(self):
+        self.weapon.process_draw()
+        super().process_draw()
+
+    def get_damage(self, damage=0, angle_of_attack=0):
+        """
+        Получение урона
+
+        :param damage: урон
+        :param angle_of_attack: угол, под которым был получен урон(для анимаций)
+        """
+        if damage > 0:
+            self.hp -= damage
+            if self.hp <= 0:
+                self.hp = 0
+                self.die(angle_of_attack)
+
+    def die(self, angle_of_attack=0):
+        """
+        Смерть
+
+        :param angle_of_attack: угол, под которым был получен урон(для анимаций)
+        """

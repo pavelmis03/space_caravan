@@ -23,10 +23,16 @@ class Player(Humanoid):
     :param controller: контроллер
     :param pos: начальная позиция игрока
     :param angle: начальный угол поворота игрока
+
+    :IMAGE_NAME: путь до изображения персонажа
+    :IMAGE_ZOOM: размер изображения
+    :CONTROLS: клавиши управления движением
+    :WEAPON_SLOTS_CONTROLS: клавиши управления слотами оружия
+    :WEAPON_RELOAD_KEY: клавиша перезарядки
+    :SPEED: скорость игрока
     """
 
     ADD_TO_GAME_PLANE = True
-    #IMAGE_NAME = 'moving_objects.player'
     IMAGE_NAME = 'other.person-up_without_weapon'
     IMAGE_ZOOM = 0.25
     CONTROLS = [
@@ -35,10 +41,9 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    ARSENAL_CONTROLS = [
+    WEAPON_SLOTS_CONTROLS = [
         pygame.K_1,
         pygame.K_2,
-        pygame.K_3,
     ]
     WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
@@ -52,21 +57,18 @@ class Player(Humanoid):
             140 * Player.IMAGE_ZOOM,
             126 * Player.IMAGE_ZOOM
         ]
-
         self.ammo = {
             'Pistol': 200,
             'Shotgun': 60,
             'Rifle': 100,
         }
-        self.arsenal = [
+        self.weapon_slots = [
             WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
             WEAPON_VOCABULARY['Pistol'](self),
-            WEAPON_VOCABULARY['SniperRifle'](self),
         ]
-        self.arsenal_ind = 0
-        self.change_arsenal_weapon_request = -1
-        self.weapon = self.arsenal[self.arsenal_ind]
-        self.scene.game_objects.append(self.weapon)
+        self.weapon_slots_ind = 0
+        self.change_weapon_request = -1
+        self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
@@ -94,8 +96,7 @@ class Player(Humanoid):
         self._turn_to_mouse()
         self._movement_controls()
         self._weapon_controls()
-        self.weapon.pos = self.pos
-        self.weapon.angle = self.angle
+        self.weapon.process_logic()
 
     @property
     def is_fired_this_tick(self):
@@ -139,26 +140,23 @@ class Player(Humanoid):
             self.weapon.alternative_attack()
         if self.controller.is_key_pressed(Player.WEAPON_RELOAD_KEY):
             self.weapon.reload_request = True
-        if self.change_arsenal_weapon_request == -1:
-            if not self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[self.arsenal_ind]):
-                for ind in range(len(self.ARSENAL_CONTROLS)):
-                    if self.controller.is_key_pressed(Player.ARSENAL_CONTROLS[ind]):
-                        self.change_arsenal_weapon_request = ind
-        if self.change_arsenal_weapon_request != -1 and self.weapon.combo == 0:
-            self._change_arsenal_weapon(self.change_arsenal_weapon_request)
-            self.change_arsenal_weapon_request = -1
+        if self.change_weapon_request == -1:
+            if not self.controller.is_key_pressed(Player.WEAPON_SLOTS_CONTROLS[self.weapon_slots_ind]):
+                for ind in range(len(self.WEAPON_SLOTS_CONTROLS)):
+                    if self.controller.is_key_pressed(Player.WEAPON_SLOTS_CONTROLS[ind]):
+                        self.change_weapon_request = ind
+        if self.change_weapon_request != -1 and self.weapon.combo == 0:
+            self._change_weapon(self.change_weapon_request)
+            self.change_weapon_request = -1
 
-    def _change_arsenal_weapon(self, ind):
+    def _change_weapon(self, ind):
         if self.weapon.type == 'Ranged':
             self.weapon.is_reloading = 0
             self.weapon.reload_request = False
         self.weapon.cooldown = 0
-        self.arsenal[self.arsenal_ind] = self.weapon
-        self.weapon.destroy()
-        self.arsenal_ind = ind
-        self.weapon = self.arsenal[ind]
-        self.weapon.enabled = True
-        self.scene.game_objects.append(self.weapon)
+        self.weapon_slots[self.weapon_slots_ind] = self.weapon
+        self.weapon_slots_ind = ind
+        self.weapon = self.weapon_slots[ind]
         self.weapon.cooldown = 15
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
@@ -198,3 +196,15 @@ class Player(Humanoid):
             if sign(self.HITBOX_RADIUS - length(vector_from_rect)) == 1:
                 vectors_from_bumps.append(vector_from_rect)
         return vectors_from_bumps
+
+    def die(self, angle_of_attack=0):
+        """
+        Смерть
+
+        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
+        """
+        from scenes.spacemap import SpacemapScene
+        scene = SpacemapScene(self.scene.game)
+        scene.load()
+        self.scene.game.set_scene(scene)
+

@@ -31,7 +31,7 @@ class MovingHumanoid(Humanoid):
         вектор, теряет время. Может быть, не требуется переработка. Может быть, это решается передачей следующей точки.
         """
         self._recount_angle(pos)
-        move_vector = vector_from_length_angle(self.SPEED, self.angle)
+        move_vector = vector_from_length_angle(self._speed, self.angle)
         result = self.__get_correct_move_vector(move_vector, pos)
         return result
 
@@ -54,6 +54,13 @@ class MovingHumanoid(Humanoid):
         """
         vector_to_player = new_pos - self.pos
         self.angle = polar_angle(vector_to_player)
+
+    @property
+    def _speed(self) -> float:
+        """
+        получить текущую скорость
+        """
+        return self.SPEED
 
 
 class EnemyCommand:
@@ -83,7 +90,7 @@ class CommandHumanoid(MovingHumanoid):
 
     ADD_TO_GAME_PLANE = True
     SPEED = 9
-
+    MELEE_SPEED = 11
     """
     HEARING_RANGE - единица измерения - клетки
     """
@@ -112,13 +119,11 @@ class CommandHumanoid(MovingHumanoid):
             'Shotgun': 1000000,
             'Rifle': 1000000,
         }
-        self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](
-            self)
-        self.scene.game_objects.append(self.weapon)
-        self.hp = 100
+
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY['Sword'](self)
 
         self.__command_functions = {'move_to': self.__command_move_to,
-                                    'shoot': self.__command_shoot,
+                                    'attack': self.__command_attack,
                                     'aim': self.__command_aim, }
 
     def process_logic(self):
@@ -130,12 +135,13 @@ class CommandHumanoid(MovingHumanoid):
         self.__command_logic()
         if self.__cooldown:
             self.__cooldown -= 1
+        self.weapon.process_logic()
 
     def __vision_logic(self):
         """
         Логика зрения Enemy
         """
-        self.__is_see_player = self.scene.grid.is_enemy_see_player(self)
+        self.__is_see_player = self.scene.grid.is_enemy_see_player(self, CommandHumanoid.VISION_RADIUS)
 
     def __hearing_logic(self):
         """
@@ -174,9 +180,9 @@ class CommandHumanoid(MovingHumanoid):
         """
         if self.__is_see_player:
             self._is_aggred = True
-            self.__cooldown = max(
-                self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
-            return EnemyCommand('aim')
+            command = self.__get_attack_command()
+            if command is not None:
+                return command
 
         if self._is_aggred:
             new_pos = self.scene.grid.get_pos_to_move(self)
@@ -187,6 +193,25 @@ class CommandHumanoid(MovingHumanoid):
 
         if self._is_aggred and not self.__is_hearing_player:
             self._is_aggred = False
+
+        return None
+
+    def __get_attack_command(self) -> Optional[EnemyCommand]:
+        """
+        Получить команду, для атаки Player'а
+
+        :return: команду или None. Если None, то это означает не команду бесдействия, а невозможность атаки
+        """
+        if self.__is_range:
+            self.__cooldown = max(self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
+            return EnemyCommand('aim')
+
+        if not self.__can_attack_now:
+            return None
+
+        can_melee_attack = self.scene.grid.is_enemy_see_player(self, self.weapon.length)
+        if can_melee_attack:
+            return EnemyCommand('attack')
 
         return None
 
@@ -215,14 +240,14 @@ class CommandHumanoid(MovingHumanoid):
 
         self.move(self.pos + self._get_move_vector(pos))
 
-    def __command_shoot(self):
+    def __command_attack(self):
         """
         Команда выстрела в игрока
         """
         self._recount_angle(self.scene.player.pos)
 
         self.weapon.main_attack()
-        if self.weapon.type == 'Ranged' and self.weapon.magazine == 0:
+        if self.__is_range and self.weapon.magazine == 0:
             self.weapon.reload()
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
@@ -232,8 +257,16 @@ class CommandHumanoid(MovingHumanoid):
         """
         Команда прицеливания в игрока.
         """
-        if self.__can_shoot_now:
-            self.__command = EnemyCommand('shoot')
+        """
+        для melee оружия особое поведение, которое проще всего сделать так:
+        """
+        if not self.__is_range:
+            self.__command = self.__get_attack_command()
+            self.__command_logic()
+            return
+
+        if self.__can_attack_now:
+            self.__command = EnemyCommand('attack')
             self.__command_logic()
             return
 
@@ -245,7 +278,7 @@ class CommandHumanoid(MovingHumanoid):
         self._recount_angle(self.scene.player.pos)
 
     @property
-    def __can_shoot_now(self) -> bool:
+    def __can_attack_now(self) -> bool:
         """
         Может ли выстрелить сейчас
         """
@@ -258,6 +291,18 @@ class CommandHumanoid(MovingHumanoid):
         """
         return self.scene.grid.is_hearing_player(self)
 
+    @property
+    def _speed(self) -> float:
+        if self.__is_range:
+            return super()._speed
+        return self.MELEE_SPEED
+
+    @property
+    def __is_range(self) -> bool:
+        """
+        Дальнее ли у Enemy оружие
+        """
+        return self.weapon.type == 'Ranged'
 
 class Enemy(CommandHumanoid):
     """
@@ -349,17 +394,6 @@ class Enemy(CommandHumanoid):
         Только ли начал поворачиваться
         """
         return self.__rotating_cycles == 0
-
-    def get_damage(self, damage=0, angle_of_attack=0):
-        """
-        Получение урона
-
-        :param damage: урон
-        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
-        """
-        self.hp -= damage
-        if self.hp <= 0:
-            self.die(angle_of_attack)
 
     def die(self, angle_of_attack=0):
         """

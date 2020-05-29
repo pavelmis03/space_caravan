@@ -3,6 +3,7 @@ from typing import Dict
 from drawable_objects.ladder import Ladder
 from drawable_objects.interface.ammo_display import AmmoDisplay
 from drawable_objects.interface.player_icon import PlayerIcon
+from drawable_objects.interface.weapons_display import WeaponsDisplay
 from scenes.game.base import GameScene
 from geometry.point import Point
 from map.level.grid import LevelGrid
@@ -42,6 +43,8 @@ class MainScene(GameScene):
         super().load_player()
         player_icon = PlayerIcon(self, self.game.controller, self.player)
         self.interface_objects.append(player_icon)
-        ammo_display = AmmoDisplay(
-            self, self.game.controller, Point(100, 20), self.player.weapon)
+
+        weapons_display = WeaponsDisplay(self.player, Point(100, 0))
+        self.interface_objects.append(weapons_display)
+        ammo_display = AmmoDisplay(self, self.game.controller, Point(240, 20), self.player.weapon)
         self.interface_objects.append(ammo_display)

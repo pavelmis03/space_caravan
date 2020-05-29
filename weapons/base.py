@@ -6,24 +6,26 @@ from geometry.point import Point
 from utils.image import ImageManager
 from utils.sound import SoundManager
 from random import randrange
+from drawable_objects.slash import PlayerSlash, EnemySlash
 
 
 class Weapon(GameSprite):
 
-    def __init__(self, owner, main_attack_interval,
+    def __init__(self, owner, scene_image, interface_image, main_attack_interval,
                  is_automatic=False, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
+        :param scene_image: картинка на сцене
+        :param interface_image: картинка в интерфейсе(в слотах оружия)
         :param main_attack_interval: Время между выстрелами -> int
         :param is_automatic: Автоматическое ли оружие -> bool
         :param combo_attack_interval: Интервал между ударами/выстрелами в 1 атаке -> int
         :param combo_size: Количество ударов/выстрелов в 1 атаке -> int
         """
         self.owner = owner
-        self.pos = owner.pos
-        self.angle = owner.angle
-        super().__init__(owner.scene, owner.controller, 'other.gun',
-                         self.pos, self.angle, owner.IMAGE_ZOOM * 2)
+        self.interface_image = interface_image
+        super().__init__(owner.scene, owner.controller, scene_image,
+                         self.owner.pos, self.owner.angle, 0.5)
         self.is_automatic = is_automatic
         self.main_attack_interval = main_attack_interval
         self.combo_attack_interval = combo_attack_interval
@@ -33,8 +35,8 @@ class Weapon(GameSprite):
         self.type = ''
 
     def process_logic(self):
-        self.angle = self.owner.angle
         self.pos = self.owner.pos
+        self.angle = self.owner.angle
         if self.cooldown:
             self.cooldown -= 1
         if self.combo != 0 and self.cooldown == 0:
@@ -43,7 +45,12 @@ class Weapon(GameSprite):
                 self.cooldown = self.main_attack_interval
             else:
                 self.cooldown = self.combo_attack_interval
-            self.attack(self.pos, self.angle)
+            self.attack()
+
+    def process_draw(self):
+        self.pos = self.owner.pos
+        self.angle = self.owner.angle
+        super().process_draw()
 
     def main_attack(self):
         """
@@ -57,12 +64,9 @@ class Weapon(GameSprite):
         Команда оружию атаковать альтернативно
         """
 
-    def attack(self, pos: Point, angle: float):
+    def attack(self):
         """
         Функция атаки
-
-        :param pos: откуда производится атака -> Point
-        :param angle: под каким углом производится атака -> angle
         """
 
     @property
@@ -75,11 +79,13 @@ class Weapon(GameSprite):
 
 class RangedWeapon(Weapon):
 
-    def __init__(self, owner, bullets_in_magazine, magazine_size, main_attack_interval,
+    def __init__(self, owner, scene_image, interface_image, bullets_in_magazine, magazine_size, main_attack_interval,
                  reload_time, ammo_type, accuracy, damage,
                  is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
         """
         :param owner: DrawableObject, имеющий оружие -> DrawableObject
+        :param scene_image: картинка на сцене
+        :param interface_image: картинка в интерфейсе(в слотах оружия)
         :param bullets_in_magazine: Сколько пуль в магазине на момент получения оружия -> int
         :param magazine_size: Размер магазина -> int
         :param main_attack_interval: Время между атаками -> int
@@ -92,8 +98,8 @@ class RangedWeapon(Weapon):
         :param combo_attack_interval: Интервал между выстрелами в очереди -> int
         :param combo_size: Длина очереди -> int
         """
-        super().__init__(owner, main_attack_interval,
-                         is_automatic, combo_attack_interval, combo_size)
+        super().__init__(owner, scene_image, interface_image, main_attack_interval, is_automatic,
+                         combo_attack_interval, combo_size)
         self.reload_time = reload_time
         self.is_reloading = 0
         self.reload_request = False
@@ -136,12 +142,9 @@ class RangedWeapon(Weapon):
         if self.reload_request and not self.is_reloading and self.combo == 0:
             self.reload()
 
-    def attack(self, pos: Point, angle: float):
+    def attack(self):
         """
         Функция атаки
-
-        :param pos: откуда производится атака -> Point
-        :param angle: под каким углом производится атака -> float
         """
         if self.owner.__class__.__name__ == 'Player':
             self._is_fired_this_tick = True
@@ -151,10 +154,9 @@ class RangedWeapon(Weapon):
             return
         self.magazine -= 1
         SoundManager.play_sound('weapon.shoot')
-        end_of_the_barrel = self.owner.pos + \
-            vector_from_length_angle(self.barrel_length, self.angle)
+        end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.owner.angle)
         if self.scene.grid.intersect_seg_walls(Segment(self.owner.pos, end_of_the_barrel)) is None:
-            self.shot(end_of_the_barrel, self.angle)
+            self.shot(end_of_the_barrel, self.owner.angle)
 
     def shot(self, pos: Point, angle: float):
         """
@@ -168,29 +170,34 @@ class RangedWeapon(Weapon):
                                                   (self.accuracy ** 2 - self.accuracy * 20 + 100), self.damage)
             self.scene.game_objects.append(bullet)
 
-    def process_draw(self):
-        """
-        Отрисовка объекта в относительных координатах
-
-        Если объект вне экрана, он не отрисовывается
-        relative_center: центр относительных координат
-        """
-        if self.owner.__class__.__name__ == 'Enemy':
-            return
-        pos = self.owner.pos + vector_from_length_angle(20, self.owner.angle)
-        relative_center = self.scene.relative_center
-        relative_pos = pos - relative_center
-
-        if ImageManager.is_out_of_screen(self.image_name, self.zoom,
-                                         relative_pos, self.scene.game.screen_rectangle):
-            return
-
-        ImageManager.process_draw(self.image_name, relative_pos,
-                                  self.scene.screen, self.zoom, self.angle, self.rotation_offset)
-
     @property
     def is_fired_this_tick(self):
         """
         Издало ли оружие звук в этот тик(чтобы Enemy слышали)
         """
         return self._is_fired_this_tick
+
+
+class MeleeWeapon(Weapon):
+
+    def __init__(self, owner, scene_image, interface_image, main_attack_interval, length):
+        """
+        :param owner: DrawableObject, имеющий оружие -> DrawableObject
+        :param scene_image: картинка на сцене
+        :param interface_image: картинка в интерфейсе(в слотах оружия)
+        :param main_attack_interval: Время между взмахами -> int
+        :param length: Длина клинка -> int
+        """
+        super().__init__(owner, scene_image, interface_image, main_attack_interval)
+        self.length = owner.HITBOX_RADIUS + length
+        self.type = 'Melee'
+
+    def attack(self):
+        """
+        Функция атаки
+        """
+        #SoundManager.play_sound('weapon.shoot')
+        if self.owner.__class__.__name__ == 'Player':
+            self.scene.game_objects.append(PlayerSlash(self.owner, self.length))
+        else:
+            self.scene.game_objects.append(EnemySlash(self.owner, self.length))
