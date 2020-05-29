@@ -40,7 +40,7 @@ class Button(DrawableObject):
                          Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
         self.hover_text = Text(scene, self.geometry.center, text, Button.TEXT_HOVER_COLOR, 'center', Button.FONT_NAME,
                                font_size)
-        SoundManager.set_volume(Button.HOVER_SOUND, 0.1)
+        SoundManager.set_volume(Button.HOVER_SOUND, 0.05)
         # SoundManager.set_volume(Button.PRESS_SOUND)
 
     def move(self, movement):

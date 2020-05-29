@@ -31,6 +31,7 @@ class Game:
     SPACE_CHOICE_MENU_SCENE_INDEX = 3
 
     def __init__(self, width: int = 1000, height: int = 700):
+        pygame.mixer.init(22100, -16, 2, 64) # removes sound delay
         pygame.init()
         self.size = (width, height)
         self.__running = True
