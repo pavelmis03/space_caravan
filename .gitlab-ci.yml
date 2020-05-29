@@ -58,7 +58,7 @@ deb-build:
     - cp ../ci/space_caravan usr/bin/
     - cp ../ci/control DEBIAN/
     - mkdir -p usr/share/spacecaravan
-    - cp space_caravan usr/bin/share/spacecaravan/
+    - cp space_caravan usr/share/spacecaravan/
     - cd ..
     - mv dist space-caravan_1.0-1
     - dpkg-deb --build space-caravan_1.0-1
