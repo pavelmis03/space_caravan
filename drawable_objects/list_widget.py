@@ -26,7 +26,7 @@ class ListWidgetItem(DrawableObject):
     BG_COLOR = (255, 255, 255)
     BG_CHOSEN_COLOR = (150, 255, 150)
     FRAME_COLOR = (0, 0, 0)
-    FONT_NAME = 'freesnansbold'
+    FONT_NAME = 'freesansbold'
 
     def __init__(self, scene: Scene, controller: Controller, parent: ListWidget, value: str):
         super().__init__(scene, controller, Point())
