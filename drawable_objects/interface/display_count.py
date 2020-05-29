@@ -16,7 +16,7 @@ class DisplayCount(AbstractObject):
         self.subject = subject
         self.fields = fields
         self.text = Text(scene, pos, '', self.COLOR, 'left',
-                         'freesnansbold', 50, False, False)
+                         'freesansbold', 50, False, False)
         self.render_string = None
 
     def process_logic(self):
