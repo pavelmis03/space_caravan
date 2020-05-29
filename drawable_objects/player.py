@@ -44,7 +44,6 @@ class Player(Humanoid):
     WEAPON_SLOTS_CONTROLS = [
         pygame.K_1,
         pygame.K_2,
-        pygame.K_3,
     ]
     WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
@@ -66,7 +65,6 @@ class Player(Humanoid):
         self.weapon_slots = [
             WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
             WEAPON_VOCABULARY['Pistol'](self),
-            WEAPON_VOCABULARY['Sword'](self),
         ]
         self.weapon_slots_ind = 0
         self.change_weapon_request = -1
