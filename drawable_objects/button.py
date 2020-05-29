@@ -23,7 +23,7 @@ class Button(DrawableObject):
     BG_HOVER_COLOR = (220, 220, 220)
     TEXT_COLOR = COLOR['BLACK']
     TEXT_HOVER_COLOR = COLOR['BLACK']
-    FONT_NAME = 'Consolas'
+    FONT_NAME = 'zelekbold'
     HOVER_SOUND = 'button.select'
     PRESS_SOUND = 'button.press'
     HOVER_RESIZE = 1.05

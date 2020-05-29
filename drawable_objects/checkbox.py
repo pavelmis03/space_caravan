@@ -24,7 +24,7 @@ class CheckBox(DrawableObject):
     BG_COLOR = (120, 120, 120)
     BG_ENABLED_COLOR = (220, 220, 220)
     TEXT_COLOR = COLOR['WHITE']
-    FONT_NAME = 'Consolas'
+    FONT_NAME = 'freesansbold'
     SIZE = 3 / 5
 
     def __init__(self, scene, cotroller, pos, size=10, label='Test', font_size=16, align='left', enabled=False):

@@ -22,7 +22,7 @@ class TextBox(DrawableObject):
     """
     PROMPT_TEXT_COLOR = (100, 100, 100)
     MAIN_TEXT_COLOR = (0, 0, 0)
-    FONT_NAME = 'Consolas'
+    FONT_NAME = 'freesansbold'
     BG_COLOR = (255, 255, 255)
 
     def __init__(self, scene: Scene, controller: Controller, geometry: Tuple, prompt_str: str):
