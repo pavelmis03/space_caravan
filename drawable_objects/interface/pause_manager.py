@@ -33,7 +33,6 @@ class PauseManager(AbstractObject):
 
         self.buttons = WidgetGroup(self.scene, self.controller, [0.5, 0.3], 6)
         self.buttons.add_button('Продолжить', self.resume)
-        self.buttons.add_button('Главное меню', self.main_menu)
 
         self.active = False
 
@@ -59,14 +58,6 @@ class PauseManager(AbstractObject):
         """
         self.scene.game_paused = self.active = False
         self.scene.player.weapon.cooldown = 7
-
-    def main_menu(self):
-        """
-        Переход в главное меню
-        """
-        self.resume()
-        self.scene.game.set_scene_with_index(
-            self.scene.game.MAIN_MENU_SCENE_INDEX)
 
     def process_draw(self):
         if self.active:
