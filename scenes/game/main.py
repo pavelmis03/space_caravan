@@ -3,7 +3,7 @@ from typing import Dict
 from drawable_objects.ladder import Ladder
 from drawable_objects.interface.ammo_display import AmmoDisplay
 from drawable_objects.interface.player_icon import PlayerIcon
-from drawable_objects.interface.weapon_slots import WeaponsDisplay
+from drawable_objects.interface.weapons_display import WeaponsDisplay
 from scenes.game.base import GameScene
 from geometry.point import Point
 from map.level.grid import LevelGrid
