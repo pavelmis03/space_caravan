@@ -25,22 +25,25 @@ class EnemyVisionManager:
         self.rooms_graph = RoomsGraph(rectangles, arr_after_split, grid)
         self._grid = grid
 
-    def is_enemy_see_player(self, enemy: Enemy) -> bool:
+    def is_enemy_see_player(self, enemy, radius: float) -> bool:
         """
         Видит ли enemy player'а
+
+        :param enemy: враг
+        :param radius: радиус, в котором player должен находиться
+        :return: bool
         """
         segment = StaticSegment(
             enemy.pos, self._grid.scene.player.pos)  # важен порядок точек
 
-        if not self.__is_player_in_vision_sector(enemy):
+        if not self.__is_player_in_vision_sector(enemy, radius):
             return False
 
         return not self.rooms_graph.is_seg_intersect_wall(segment)
 
-    def __is_player_in_vision_sector(self, enemy: Enemy) -> bool:
+    def __is_player_in_vision_sector(self, enemy: Enemy, radius: float) -> bool:
         """
         Находится ли Player в секторе обзора enemy
         """
-        sector = Sector(Enemy.VISION_RADIUS, enemy.pos,
-                        enemy.angle, enemy.VIEW_ANGLE)
+        sector = Sector(radius, enemy.pos, enemy.angle, enemy.VIEW_ANGLE)
         return sector.is_inside(self._grid.scene.player.pos)

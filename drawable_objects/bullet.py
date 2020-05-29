@@ -128,7 +128,7 @@ class Bullet(GameSprite):
         :param intersection_point: точка пересечения с Enemy
         :param enemy: Enemy, в которого попала пуля
         """
-        enemy.get_damage(self.damage)
+        enemy.get_damage(self.damage, self.angle)
         self.destroy()
 
     def collision_with_player(self, intersection_point):
@@ -137,8 +137,8 @@ class Bullet(GameSprite):
 
         :param intersection_point: точка пересечения с Player
         """
-        self.scene.game_objects.append(Collision_Animation(
-            self.scene, self.controller, intersection_point, self.angle))
+        self.scene.game_objects.append(CollisionAnimation(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.player.get_damage(self.damage, self.angle)
         self.destroy()
 
     def collision_with_wall(self, intersection_point):
@@ -147,7 +147,7 @@ class Bullet(GameSprite):
 
         :param intersection_point: точка пересечения со стеной
         """
-        self.scene.game_objects.append(Collision_Animation(
+        self.scene.game_objects.append(CollisionAnimation(
             self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
@@ -182,7 +182,7 @@ class RifleBullet(Bullet):
                          image_name, zoom)
 
 
-class Collision_Animation(GameSprite):
+class CollisionAnimation(GameSprite):
 
     IMAGE_NAMES = [
         'moving_objects.bullet.2',
@@ -193,14 +193,15 @@ class Collision_Animation(GameSprite):
     def __init__(self, scene, controller, pos: Point, angle: float = 0):
         pos = pos - vector_from_length_angle(8, angle)
         super().__init__(scene, controller,
-                         Collision_Animation.IMAGE_NAMES[0], pos, angle, Collision_Animation.IMAGE_ZOOMS[0])
+                         CollisionAnimation.IMAGE_NAMES[0], pos, angle, CollisionAnimation.IMAGE_ZOOMS[0])
         self.image_ind = 0
+        self.one_frame_vision_time = 3
 
     def process_logic(self):
-        self.image_name = Collision_Animation.IMAGE_NAMES[self.image_ind // 3]
-        self.zoom = Collision_Animation.IMAGE_ZOOMS[self.image_ind // 3]
+        self.image_name = CollisionAnimation.IMAGE_NAMES[self.image_ind // self.one_frame_vision_time]
+        self.zoom = CollisionAnimation.IMAGE_ZOOMS[self.image_ind // self.one_frame_vision_time]
         self.image_ind += 1
-        if self.image_ind >= len(Collision_Animation.IMAGE_NAMES) * 3:
+        if self.image_ind >= len(CollisionAnimation.IMAGE_NAMES) * self.one_frame_vision_time:
             self.destroy()
 
 
