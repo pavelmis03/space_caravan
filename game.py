@@ -94,8 +94,8 @@ class Game:
     def set_scene(self, scene: Scene, first_run: bool = False):
         """
         Установка заданной сцены текущей. Если старая сцена игровая, она сохраняется. При необходимости
-        новой сцене из файла подгружается игрок. Если новая сцена запускается впервые (то есть после инициализации,
-        а не после загрузки), она сохраняется.
+        новой сцене из файла подгружается игрок и припасы. Если новая сцена запускается впервые (то есть
+        после инициализации, а не после загрузки), она сохраняется.
 
         :param scene: ссылка на новую сцену
         :param first_run: первый ли раз запускается сцена
@@ -104,6 +104,8 @@ class Game:
         if isinstance(self.__current_scene, ConservableScene):
             self.__current_scene.save()
             self.__to_delete.append(self.__current_scene)
+        if isinstance(scene, ConservableScene):
+            scene.load_supply()
         if isinstance(scene, GameScene):
             scene.load_player()
         self.__current_scene = scene

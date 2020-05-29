@@ -2,6 +2,7 @@ from typing import Dict, List
 
 from scenes.base import Scene
 from utils.game_data_manager import from_list_of_dicts, to_list_of_dicts
+from space.supply import Supply
 
 
 class ConservableScene(Scene):
@@ -17,6 +18,7 @@ class ConservableScene(Scene):
     def __init__(self, game, data_filename: str):
         super().__init__(game)
         self.data_filename = data_filename
+        self.supply = None
 
     def initialize(self):
         """
@@ -29,6 +31,11 @@ class ConservableScene(Scene):
 
     def save(self):
         self.game.file_manager.write_data(self.data_filename, self.to_dict())
+        self.supply.save()
+
+    def load_supply(self):
+        self.supply = Supply(self)
+        self.supply.load()
 
     def from_dict(self, data_dict: Dict):
         """
