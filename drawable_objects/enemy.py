@@ -95,8 +95,8 @@ class CommandHumanoid(MovingHumanoid):
     DELAY_BEFORE_FIRST_SHOOT = 12
     DELAY_BEFORE_HEARING = 8
 
-    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float,
-                 image_zoom: float):
+    def __init__(self, scene: Scene, controller: Controller, image_name: str, weapon_name: str,
+                 pos: Point, angle: float, image_zoom: float):
         super().__init__(scene, controller, image_name, pos, angle, image_zoom)
 
         self.__command = None # None означает команду бездействия
@@ -110,7 +110,7 @@ class CommandHumanoid(MovingHumanoid):
             'Shotgun': 1000000,
             'Rifle': 1000000,
         }
-        self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](self)
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY[weapon_name](self)
         self.scene.game_objects.append(self.weapon)
         self.hp = 100
 
@@ -266,8 +266,8 @@ class Enemy(CommandHumanoid):
     ROTATION_MIN_COOLDOWN = 100
     ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
+    def __init__(self, scene: Scene, controller: Controller, weapon_name: str, pos: Point, angle: float = 0):
+        super().__init__(scene, controller, Enemy.IMAGE_NAME, weapon_name, pos, angle, Enemy.IMAGE_ZOOM)
         self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
         self.__rotation_direction = 1 if is_random_proc() else -1
         self.__rotating_cycles = 0

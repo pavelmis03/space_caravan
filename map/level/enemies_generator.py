@@ -1,26 +1,28 @@
-from random import random
-from typing import List
+from typing import List, Tuple
+from random import random, randint
 
 from drawable_objects.enemy import Enemy
 from map.level.rect.splitter import GridRectangle
 from utils.random import is_accurate_random_proc
-from random import randint
+from utils.random import weight_choice
 
 
-def create_enemy(grid, i: int, j: int):
+
+def create_enemy(grid, i: int, j: int, weapon_name: str):
     """
     Создать врага под данным индексом с рандомным поворотом.
     """
-    enemy = Enemy(grid.scene, grid.controller, grid.get_center_of_cell_by_indexes(i, j), random())
+    enemy = Enemy(grid.scene, grid.controller, weapon_name, grid.get_center_of_cell_by_indexes(i, j), random())
     grid.scene.enemies.append(enemy)
 
 class EnemyGenerator:
     """
     Генератор Enemies.
     """
-    def __init__(self, grid, rectangles: List[GridRectangle]):
+    def __init__(self, grid, rectangles: List[GridRectangle], enemy_weapons: List[Tuple[int, str]]):
         self.__grid = grid
         self.__rectangles = rectangles
+        self.__enemy_weapons = enemy_weapons
 
     def generate(self):
         """
@@ -46,4 +48,5 @@ class EnemyGenerator:
             random_j = randint(item.left_index + WALLS_MIN_DISTANCE, item.right_index - WALLS_MIN_DISTANCE)
             if self.__grid.is_enemy_can_stay(random_i, random_j):
                 # этот if вроде не нужен, но оставлю его, чтобы ничего не сломать (при будущих модификациях)
-                create_enemy(self.__grid, random_i, random_j)
+                random_weapon = weight_choice(self.__enemy_weapons)
+                create_enemy(self.__grid, random_i, random_j, random_weapon)

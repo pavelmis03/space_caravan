@@ -9,6 +9,9 @@ from map.level.rect.splitter import GridRectangle
 from utils.game_data_manager import to_2dimensional_list_of_dicts, from_2dimensional_list_of_dicts
 from utils.list import copy_2dimensional_list
 from constants.grid import CELL_SIZE
+from scenes.base import Scene
+from controller.controller import Controller
+from map.level.settings import level_settings
 
 
 class LevelGrid(CollisionGrid):
@@ -20,11 +23,12 @@ class LevelGrid(CollisionGrid):
         for i in range(len(self.arr)):
             arr.append([])
             for item in self.arr[i]:
-                arr[i].append(CollisionGrid.FILENAMES.index(item.image_name))
+                arr[i].append(self.__get_filename_index(item.image_name))
 
         arr_after_split = self.__arr_after_split
         room_rectangles = [item.to_dict() for item in self.__room_rectangles]
         return {
+            'biom': self.biom,
             'pos': self.pos.to_dict(),
             'arr': arr,
             'arr_after_split': arr_after_split,
@@ -36,6 +40,8 @@ class LevelGrid(CollisionGrid):
         """
         Воспроизведение объекта из словаря.
         """
+        self.biom = data_dict['biom']
+
         new_pos = Point()
         new_pos.from_dict(data_dict['pos'])
         self.move(new_pos)
@@ -55,6 +61,14 @@ class LevelGrid(CollisionGrid):
         self._other_initialize()
         self._create_interaction_with_enemy_manager()
 
+    def _get_filename(self, filename_index: int) -> str:
+        filenames = level_settings[self.biom].level_filenames
+        return filenames[filename_index]
+
+    def __get_filename_index(self, filename_str: str) -> int:
+        filenames = level_settings[self.biom].level_filenames
+        return filenames.index(filename_str)
+
     def _create_interaction_with_enemy_manager(self):
         """
         Необходимо вызывать до enemy_generation.
@@ -71,7 +85,7 @@ class LevelGrid(CollisionGrid):
         """
         self._create_interaction_with_enemy_manager()
 
-        enemy_generator = EnemyGenerator(self, self.__room_rectangles)
+        enemy_generator = EnemyGenerator(self, self.__room_rectangles, level_settings[self.biom].enemy_weapons)
         enemy_generator.generate()
 
         """

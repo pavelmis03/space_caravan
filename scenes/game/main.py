@@ -23,10 +23,14 @@ class MainScene(GameScene):
         super().initialize()
 
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
+        self.grid.biom = self.__biom
         self.grid.initialize()
 
         self.game_objects.append(Ladder(
             self, self.game.controller, Point(85, 150), 0))
+
+    def set_biom(self, biom: int):
+        self.__biom = biom
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)

@@ -96,6 +96,7 @@ class Planet(SpriteObject):
         from scenes.game.main import MainScene  # В обход цикличеких import'ов
         level_scene = MainScene(self.scene.game, self.data_filename)
         if not self.level_created:
+            level_scene.set_biom(self.biom)
             level_scene.initialize()
             self.level_created = True
         else:
