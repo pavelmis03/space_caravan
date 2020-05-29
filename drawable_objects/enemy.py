@@ -1,5 +1,5 @@
 import weapons.weapons
-#from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
+# from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
 
 from typing import Optional
 
@@ -60,6 +60,7 @@ class EnemyCommand:
     """
     Команда, которую Enemy должен выполнить
     """
+
     def __init__(self, type: str, *params):
         self.type = type
         self.params = params
@@ -87,7 +88,7 @@ class CommandHumanoid(MovingHumanoid):
     HEARING_RANGE - единица измерения - клетки
     """
     VISION_RADIUS = 25 * CELL_SIZE
-    VIEW_ANGLE = pi #с углом > pi работать не будет
+    VIEW_ANGLE = pi  # с углом > pi работать не будет
 
     HEARING_RANGE = 35
 
@@ -99,24 +100,26 @@ class CommandHumanoid(MovingHumanoid):
                  image_zoom: float):
         super().__init__(scene, controller, image_name, pos, angle, image_zoom)
 
-        self.__command = None # None означает команду бездействия
+        self.__command = None  # None означает команду бездействия
         self.__is_see_player = False
         self._is_aggred = False
         self.__cooldown = 0
-        self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
+        # задержка перед реакцией enemy на выстрел
+        self.__hearing_timer_delay = EMPTY_TIMER
 
         self.ammo = {
             'Pistol': 1000000,
             'Shotgun': 1000000,
             'Rifle': 1000000,
         }
-        self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](self)
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](
+            self)
         self.scene.game_objects.append(self.weapon)
         self.hp = 100
 
         self.__command_functions = {'move_to': self.__command_move_to,
-                                  'shoot': self.__command_shoot,
-                                  'aim': self.__command_aim, }
+                                    'shoot': self.__command_shoot,
+                                    'aim': self.__command_aim, }
 
     def process_logic(self):
         """
@@ -162,7 +165,8 @@ class CommandHumanoid(MovingHumanoid):
             self.__command = self.__get_new_command()
 
         if not self._is_idle:
-            self.__command_functions[self.__command.type](*self.__command.params)
+            self.__command_functions[self.__command.type](
+                *self.__command.params)
 
     def __get_new_command(self) -> Optional[EnemyCommand]:
         """
@@ -170,13 +174,15 @@ class CommandHumanoid(MovingHumanoid):
         """
         if self.__is_see_player:
             self._is_aggred = True
-            self.__cooldown = max(self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
+            self.__cooldown = max(
+                self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
             return EnemyCommand('aim')
 
         if self._is_aggred:
             new_pos = self.scene.grid.get_pos_to_move(self)
             if new_pos is not None:
-                self.scene.grid.save_enemy_pos(new_pos) #на случай, если несколько enemy решат пойти в одну клетку
+                # на случай, если несколько enemy решат пойти в одну клетку
+                self.scene.grid.save_enemy_pos(new_pos)
                 return EnemyCommand('move_to', new_pos)
 
         if self._is_aggred and not self.__is_hearing_player:
@@ -195,7 +201,8 @@ class CommandHumanoid(MovingHumanoid):
         """
         Команда движения к точке.
         """
-        self.scene.grid.save_enemy_pos(pos)  # на случай, если несколько enemy решат пойти в одну клетку
+        self.scene.grid.save_enemy_pos(
+            pos)  # на случай, если несколько enemy решат пойти в одну клетку
 
         if pos == self.pos:
             self.__command = None
@@ -262,13 +269,15 @@ class Enemy(CommandHumanoid):
 
     ANGULAR_VELOCITY = 6 / 65
 
-    ROTATION_TIME = 40 #количество циклов поворота
+    ROTATION_TIME = 40  # количество циклов поворота
     ROTATION_MIN_COOLDOWN = 100
     ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
+
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
-        self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
+        self.__rotate_cooldown = randint(
+            Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
         self.__rotation_direction = 1 if is_random_proc() else -1
         self.__rotating_cycles = 0
 
@@ -324,7 +333,8 @@ class Enemy(CommandHumanoid):
         Закончить поворот
         """
         self.__rotating_cycles = 0
-        self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
+        self.__rotate_cooldown = randint(
+            Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
 
     @property
     def __is_rotating(self):

@@ -6,6 +6,7 @@ from typing import List, Dict
 from constants.saving import CLASSES_BASE
 from geometry.point import Point
 
+
 class GameDataManager:
     """
     Менеджер файлов игры, в которых хранится информация о мирах.
@@ -75,7 +76,8 @@ def to_list_of_dicts(objects: List) -> List[Dict]:
 def from_list_of_dicts(obj, data_list: List[Dict]) -> List:
     result = list()
     for item in data_list:
-        new_object = CLASSES_BASE[item['classname']](obj, obj.game.controller, Point(0, 0))
+        new_object = CLASSES_BASE[item['classname']](
+            obj, obj.game.controller, Point(0, 0))
         new_object.from_dict(item)
         result.append(new_object)
     return result

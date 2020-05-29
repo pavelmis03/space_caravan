@@ -18,9 +18,10 @@ class EnemyVisionManager:
     пересекает стены.
     Может быть, нужно еще учитывать поворот Enemy.
     """
+
     def __init__(self, rectangles: List[GridRectangle],
-                arr_after_split: List[List[int]],
-                grid):
+                 arr_after_split: List[List[int]],
+                 grid):
         self.rooms_graph = RoomsGraph(rectangles, arr_after_split, grid)
         self._grid = grid
 
@@ -28,7 +29,8 @@ class EnemyVisionManager:
         """
         Видит ли enemy player'а
         """
-        segment = StaticSegment(enemy.pos, self._grid.scene.player.pos) #важен порядок точек
+        segment = StaticSegment(
+            enemy.pos, self._grid.scene.player.pos)  # важен порядок точек
 
         if not self.__is_player_in_vision_sector(enemy):
             return False
@@ -39,5 +41,6 @@ class EnemyVisionManager:
         """
         Находится ли Player в секторе обзора enemy
         """
-        sector = Sector(Enemy.VISION_RADIUS, enemy.pos, enemy.angle, enemy.VIEW_ANGLE)
+        sector = Sector(Enemy.VISION_RADIUS, enemy.pos,
+                        enemy.angle, enemy.VIEW_ANGLE)
         return sector.is_inside(self._grid.scene.player.pos)

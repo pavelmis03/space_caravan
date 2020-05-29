@@ -5,6 +5,7 @@ class Pistol(RangedWeapon):
     """
     Пистолет
     """
+
     def __init__(self, owner, bullets_in_magazine=12):
         super().__init__(owner, bullets_in_magazine, magazine_size=12,
                          main_attack_interval=7, reload_time=40, ammo_type='Pistol',
@@ -15,6 +16,7 @@ class BurstFiringPistol(RangedWeapon):
     """
     Стреляющий очередями пистолет
     """
+
     def __init__(self, owner, bullets_in_magazine=20):
         super().__init__(owner, bullets_in_magazine, magazine_size=20,
                          main_attack_interval=14, reload_time=60, ammo_type='Pistol',
@@ -25,6 +27,7 @@ class Shotgun(RangedWeapon):
     """
     Дробовик
     """
+
     def __init__(self, owner, bullets_in_magazine=6):
         super().__init__(owner, bullets_in_magazine, magazine_size=6,
                          main_attack_interval=12, reload_time=70, ammo_type='Shotgun',
@@ -35,6 +38,7 @@ class TwoBarrelShotgun(RangedWeapon):
     """
     Двустволка
     """
+
     def __init__(self, owner, bullets_in_magazine=2):
         super().__init__(owner, bullets_in_magazine, magazine_size=2,
                          main_attack_interval=10, reload_time=35, ammo_type='Shotgun',
@@ -50,6 +54,7 @@ class ThreeBarrelShotgun(TwoBarrelShotgun):
     """
     Трёхстволка
     """
+
     def __init__(self, owner, bullets_in_magazine=3):
         super().__init__(owner, bullets_in_magazine)
         self.magazine_size = 3
@@ -60,6 +65,7 @@ class TacticalShotgun(RangedWeapon):
     """
     Тактический дробоаик
     """
+
     def __init__(self, owner, bullets_in_magazine=6):
         super().__init__(owner, bullets_in_magazine, magazine_size=6,
                          main_attack_interval=9, reload_time=70, ammo_type='Shotgun',
@@ -70,6 +76,7 @@ class AutomaticRifle(RangedWeapon):
     """
     Автоматическая винтовка
     """
+
     def __init__(self, owner, bullets_in_magazine=25):
         super().__init__(owner, bullets_in_magazine, magazine_size=25,
                          main_attack_interval=4, reload_time=60, ammo_type='Rifle',
@@ -80,6 +87,7 @@ class SniperRifle(RangedWeapon):
     """
     Снайперская винтовка
     """
+
     def __init__(self, owner, bullets_in_magazine=5):
         super().__init__(owner, bullets_in_magazine, magazine_size=5,
                          main_attack_interval=20, reload_time=80, ammo_type='Rifle',
@@ -90,8 +98,9 @@ class OldRifle(RangedWeapon):
     """
     Старая винтовка
     """
+
     def __init__(self, owner, bullets_in_magazine=8):
-        super ().__init__(owner, bullets_in_magazine, magazine_size=8,
+        super().__init__(owner, bullets_in_magazine, magazine_size=8,
                          main_attack_interval=14, reload_time=40, ammo_type='Rifle',
                          accuracy=90, damage=90)
 
@@ -100,6 +109,7 @@ class SemiAutomaticRifle(OldRifle):
     """
     Полуавтоматическая винтовка
     """
+
     def __init__(self, owner, bullets_in_magazine=8):
         super().__init__(owner, bullets_in_magazine)
         self.main_attack_interval = 10
@@ -119,4 +129,3 @@ WEAPON_VOCABULARY = {
     'OldRifle': OldRifle,
     'SemiAutomaticRifle': SemiAutomaticRifle,
 }
-

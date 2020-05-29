@@ -22,13 +22,15 @@ class UsableObject(GameSprite):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.usage_radius = usage_radius
         self.player_nearby = False
-        self.popping_e = PoppingE(self.scene, self.controller, image_name, zoom)
+        self.popping_e = PoppingE(
+            self.scene, self.controller, image_name, zoom)
 
     def activate(self):
         pass
 
     def process_logic(self):
-        self.player_nearby = dist(self.scene.player.pos, self.pos) <= self.usage_radius
+        self.player_nearby = dist(
+            self.scene.player.pos, self.pos) <= self.usage_radius
         if self.player_nearby and self.controller.is_key_pressed(key=UsableObject.ACTIVATION_KEY):
             self.activate()
         self.popping_e.update_pos(self.pos)

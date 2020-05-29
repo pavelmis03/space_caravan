@@ -15,6 +15,7 @@ class LevelGrid(CollisionGrid):
     """
     Сетка уровня (данжа).
     """
+
     def to_dict(self):
         arr = []
         for i in range(len(self.arr)):

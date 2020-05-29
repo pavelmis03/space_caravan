@@ -41,7 +41,8 @@ class Planet(SpriteObject):
     COUNTER = 0
 
     def __init__(self, scene: Scene, controller: Controller, estimated_pos: Point, biom=0, name='Test'):
-        super().__init__(scene, controller, Planet.IMAGES[biom][0], Point(), random() * 2 * pi, Planet.IMAGES[biom][1])
+        super().__init__(scene, controller, Planet.IMAGES[biom][0], Point(
+        ), random() * 2 * pi, Planet.IMAGES[biom][1])
         self.rotation_offset = [0, 0]
         self.estimated_pos = estimated_pos
         self.update_real_pos()
@@ -86,8 +87,10 @@ class Planet(SpriteObject):
         и текущему размеру окна.
         """
         screen_size = self.scene.game.size
-        scale_k = [screen_size[_i] / ESTIMATED_SPACE_SIZE[_i] for _i in range(2)]
-        self.pos = Point(scale_k[0] * self.estimated_pos.x, scale_k[1] * self.estimated_pos.y)
+        scale_k = [screen_size[_i] / ESTIMATED_SPACE_SIZE[_i]
+                   for _i in range(2)]
+        self.pos = Point(scale_k[0] * self.estimated_pos.x,
+                         scale_k[1] * self.estimated_pos.y)
 
     def run_level(self):
         """

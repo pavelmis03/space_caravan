@@ -42,5 +42,6 @@ class MainScene(GameScene):
         super().load_player()
         player_icon = PlayerIcon(self, self.game.controller, self.player)
         self.interface_objects.append(player_icon)
-        ammo_display = AmmoDisplay(self, self.game.controller, Point(100, 20), self.player.weapon)
+        ammo_display = AmmoDisplay(
+            self, self.game.controller, Point(100, 20), self.player.weapon)
         self.interface_objects.append(ammo_display)

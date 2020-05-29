@@ -1,6 +1,7 @@
 from drawable_objects.interface.display_count import DisplayCount
 from constants.color import COLOR
 
+
 class AmmoDisplay(DisplayCount):
     """
     Класс для отображения количества патронов

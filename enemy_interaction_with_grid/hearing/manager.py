@@ -10,6 +10,7 @@ class EnemyHearingManager:
     Не доделано до конца.
     Enemy должен реагировать на выстрел игрока (или нет)
     """
+
     def __init__(self, grid):
         self.__path_finder = GridPathFinder(grid)
 

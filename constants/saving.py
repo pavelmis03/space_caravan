@@ -9,5 +9,6 @@ CLASSES_BASE = {
     'Planet': Planet,
     'SpaceMapTerminal': SpaceMapTerminal,
     'Enemy': Enemy,
-    'GridRectangle': GridRectangle #для сохранения оптимизированной структуры grid_interaction_with_enemy
+    # для сохранения оптимизированной структуры grid_interaction_with_enemy
+    'GridRectangle': GridRectangle
 }

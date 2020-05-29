@@ -80,7 +80,8 @@ class WidgetGroup(AbstractObject):
         if not size:
             size = Point(*WidgetGroup.BUTTON_DEF_SIZE)
         pos = self.get_actual_pos()
-        geometry = (pos.x - size.x / 2, pos.y, pos.x + size.x / 2, pos.y + size.y)
+        geometry = (pos.x - size.x / 2, pos.y,
+                    pos.x + size.x / 2, pos.y + size.y)
         btn = Button(self.scene, self.controller,
                      geometry, text, function, kwargs)
         self.widgets.append(btn)

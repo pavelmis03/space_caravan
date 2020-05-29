@@ -58,7 +58,8 @@ class GameScene(ConservableScene):
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
-        self.game_objects += from_list_of_dicts(self, data_dict['game_objects'])
+        self.game_objects += from_list_of_dicts(self,
+                                                data_dict['game_objects'])
         self.enemies += from_list_of_dicts(self, data_dict['enemies'])
 
     def load_player(self):
@@ -87,7 +88,8 @@ class GameScene(ConservableScene):
             item.process_logic()
 
         self.player.process_logic()
-        self.relative_center = self.camera.get_relative_center(not GameScene.FIXED_CAMERA)
+        self.relative_center = self.camera.get_relative_center(
+            not GameScene.FIXED_CAMERA)
 
     def delete_destroyed_objects(self):
         """

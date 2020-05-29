@@ -9,6 +9,7 @@ class RectConnecter:
 
     :return:
     """
+
     def __init__(self, graph_manager: RectGraphManager):
         self.arr = graph_manager.arr
 

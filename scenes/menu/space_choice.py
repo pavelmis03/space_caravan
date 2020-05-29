@@ -8,9 +8,10 @@ from scenes.game.spaceship import SpaceshipScene
 class SpaceChoiceMenuScene(MenuScene):
     def __init__(self, game):
         super().__init__(game)
-        self.space_name_textbox = TextBox(self, self.game.controller, (100, 400, 900, 450), "new space name")
+        self.space_name_textbox = TextBox(
+            self, self.game.controller, (100, 400, 900, 450), "new space name")
         self.space_names_list_widget = ListWidget(self, self.game.controller, (100, 50, 900, 350), 50,
-                                                 self.game.file_manager.get_all_space_names())
+                                                  self.game.file_manager.get_all_space_names())
         new_space_button = Button(self, self.game.controller, (100, 500, 350, 600), "Создать космос",
                                   self.create_space)
         delete_space_button = Button(self, self.game.controller, (375, 500, 625, 600), "Удалить космос",

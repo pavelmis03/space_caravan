@@ -50,10 +50,12 @@ class ListWidgetItem(DrawableObject):
         if self.visible_part.is_empty():
             return
         bg_color = self.BG_CHOSEN_COLOR if self.chosen else self.BG_COLOR
-        pygame.draw.rect(self.scene.screen, bg_color, rectangle_to_rect(self.visible_part))
+        pygame.draw.rect(self.scene.screen, bg_color,
+                         rectangle_to_rect(self.visible_part))
         if self.geometry.height == self.visible_part.height:
             self.text.process_draw()
-        pygame.draw.rect(self.scene.screen, self.FRAME_COLOR, rectangle_to_rect(self.visible_part), 1)
+        pygame.draw.rect(self.scene.screen, self.FRAME_COLOR,
+                         rectangle_to_rect(self.visible_part), 1)
 
 
 class ListWidget(DrawableObject):
@@ -87,11 +89,13 @@ class ListWidget(DrawableObject):
 
     def apply_scroll_borders(self):
         self.scroll_value = min(self.scroll_value, 0)
-        lower_border = min(0, self.geometry.height - self.item_height * len(self.items))
+        lower_border = min(0, self.geometry.height -
+                           self.item_height * len(self.items))
         self.scroll_value = max(self.scroll_value, lower_border)
 
     def add_element(self, element: str):
-        self.items.append(ListWidgetItem(self.scene, self.controller, self, element))
+        self.items.append(ListWidgetItem(
+            self.scene, self.controller, self, element))
         self.items.sort()
 
     def remove_element(self, element: str):
@@ -116,6 +120,7 @@ class ListWidget(DrawableObject):
                 self.choice = item.value
 
     def process_draw(self):
-        pygame.draw.rect(self.scene.screen, self.FRAME_COLOR, rectangle_to_rect(self.geometry), 10)
+        pygame.draw.rect(self.scene.screen, self.FRAME_COLOR,
+                         rectangle_to_rect(self.geometry), 10)
         for item in self.items:
             item.process_draw()

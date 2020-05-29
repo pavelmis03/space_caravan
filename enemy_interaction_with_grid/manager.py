@@ -14,11 +14,13 @@ class GridInteractionWithEnemyManager:
     слух отвечает за поиск кратчайшего пути.
     зрение отвечает на запросы, видит ли enemy player'а
     """
+
     def __init__(self, rectangles: List[GridRectangle],
-                arr_after_split: List[List[int]],
-                grid):
+                 arr_after_split: List[List[int]],
+                 grid):
         self.__hearing_manager = EnemyHearingManager(grid)
-        self.__vision_manager = EnemyVisionManager(rectangles, arr_after_split, grid)
+        self.__vision_manager = EnemyVisionManager(
+            rectangles, arr_after_split, grid)
 
     def is_enemy_see_player(self, enemy: Enemy) -> bool:
         """

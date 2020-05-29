@@ -15,7 +15,8 @@ class DisplayCount(AbstractObject):
         super().__init__(scene, controller)
         self.subject = subject
         self.fields = fields
-        self.text = Text(scene, pos, '', self.COLOR, 'left', 'Consolas', 50, False, False)
+        self.text = Text(scene, pos, '', self.COLOR, 'left',
+                         'Consolas', 50, False, False)
         self.render_string = None
 
     def process_logic(self):

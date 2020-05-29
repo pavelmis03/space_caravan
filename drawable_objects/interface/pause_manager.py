@@ -43,7 +43,8 @@ class PauseManager(AbstractObject):
         if self.controller.is_key_pressed(PauseManager.CONTROLS['CLOSE']) and self.active:
             self.resume()
         if self.active:
-            self.surface = pygame.transform.scale(self.surface, (self.scene.game.width, self.scene.game.height))
+            self.surface = pygame.transform.scale(
+                self.surface, (self.scene.game.width, self.scene.game.height))
             self.buttons.process_logic()
 
     def pause(self):
@@ -64,7 +65,8 @@ class PauseManager(AbstractObject):
         Переход в главное меню
         """
         self.resume()
-        self.scene.game.set_scene_with_index(self.scene.game.MAIN_MENU_SCENE_INDEX)
+        self.scene.game.set_scene_with_index(
+            self.scene.game.MAIN_MENU_SCENE_INDEX)
 
     def process_draw(self):
         if self.active:

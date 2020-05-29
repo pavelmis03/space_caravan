@@ -3,10 +3,12 @@ from typing import List, Tuple, Dict
 from random import randint
 from utils.random import is_random_proc
 
+
 class GridRectangle:
     """
     Прямоугольник сетки, состоящий из индексов
     """
+
     def __init__(self, left_top_index: Tuple[int, int],
                  bottom_right_index: Tuple[int, int]):
         self.left_top_index = left_top_index
@@ -17,7 +19,7 @@ class GridRectangle:
         Внутри ли индекс прямоугольника
         """
         return self.left_top_index[0] <= i <= self.bottom_right_index[0] and \
-               self.left_top_index[1] <= j <= self.bottom_right_index[1]
+            self.left_top_index[1] <= j <= self.bottom_right_index[1]
 
     @property
     def top_index(self):
@@ -55,8 +57,11 @@ class GridRectangle:
         }
 
     def from_dict(self, dict: Dict):
-        self.left_top_index = (dict['left_top_index'][0], dict['left_top_index'][1])
-        self.bottom_right_index = (dict['bottom_right_index'][0], dict['bottom_right_index'][1])
+        self.left_top_index = (
+            dict['left_top_index'][0], dict['left_top_index'][1])
+        self.bottom_right_index = (
+            dict['bottom_right_index'][0], dict['bottom_right_index'][1])
+
 
 class RectSplitter:
     """
@@ -74,6 +79,7 @@ class RectSplitter:
     или
     площадь текущего прямоугольника < min_area
     """
+
     def __init__(self, arr: List[List[int]], min_area: int, min_w: int, min_h: int):
         self.arr = arr
         self.__min_area = min_area
@@ -85,7 +91,8 @@ class RectSplitter:
         """
         Начать разбиение всего self.arr
         """
-        self.__split_rectangle([0, 0], [len(self.arr) - 1, len(self.arr[0]) - 1])
+        self.__split_rectangle(
+            [0, 0], [len(self.arr) - 1, len(self.arr[0]) - 1])
 
     def __split_rectangle(self, pos0: List[int], pos1: List[int]):
         """
@@ -139,13 +146,16 @@ class RectSplitter:
 
         if split_directions == 1:
             if min_pos[0] <= max_pos[0]:
-                self.__split_horizontally(pos0, pos1, randint(min_pos[0], max_pos[0]))
+                self.__split_horizontally(
+                    pos0, pos1, randint(min_pos[0], max_pos[0]))
             else:
-                self.__split_vertical(pos0, pos1, randint(min_pos[1], max_pos[1]))
+                self.__split_vertical(
+                    pos0, pos1, randint(min_pos[1], max_pos[1]))
             return
 
         if is_random_proc():
-            self.__split_horizontally(pos0, pos1, randint(min_pos[0], max_pos[0]))
+            self.__split_horizontally(
+                pos0, pos1, randint(min_pos[0], max_pos[0]))
         else:
             self.__split_vertical(pos0, pos1, randint(min_pos[1], max_pos[1]))
 

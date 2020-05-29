@@ -8,6 +8,7 @@ class RectUnioner:
     делает из прямоугольников фигуры с углами 270 и 90 градусов,
     объединяя некоторые прямоугольники
     """
+
     def __init__(self, graph_manager: RectGraphManager):
         self.arr = graph_manager.arr
         self.UNION_CHANCE = (len(self.arr) * len(self.arr[0])) ** (1 / 2)
@@ -36,7 +37,7 @@ class RectUnioner:
         """
         self.dis_set.union(rect_num1, rect_num2)
         new_figure_count = self.figures_count[rect_num1] + \
-                           self.figures_count[rect_num2]
+            self.figures_count[rect_num2]
 
         self.figures_count[rect_num1] = new_figure_count
         self.figures_count[rect_num2] = new_figure_count
@@ -49,7 +50,7 @@ class RectUnioner:
             return 0
 
         new_figure_count = self.figures_count[rect_num1] * \
-                            self.figures_count[rect_num2]
+            self.figures_count[rect_num2]
 
         return int(self.UNION_CHANCE // (new_figure_count ** 2))
 

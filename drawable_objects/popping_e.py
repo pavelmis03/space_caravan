@@ -28,5 +28,7 @@ class PoppingE(GameSprite):
 
     def update_pos(self, parent_pos):
         self.parent_pos = parent_pos
-        parent_image_height = ImageManager.get_height(self.parent_image_name, self.parent_zoom)
-        self.move(parent_pos + Point(0, -parent_image_height / 2 - self.HEIGHT_ABOVE_PARENT))
+        parent_image_height = ImageManager.get_height(
+            self.parent_image_name, self.parent_zoom)
+        self.move(parent_pos + Point(0, -parent_image_height /
+                                     2 - self.HEIGHT_ABOVE_PARENT))

@@ -24,7 +24,8 @@ class GamePlane:
         :param pos: точка на плоскости
         :return: координаты соответствующего чанка
         """
-        chunk = int(floor(pos.x / GamePlane.CHUNK_SIZE)), int(floor(pos.y / GamePlane.CHUNK_SIZE))
+        chunk = int(floor(pos.x / GamePlane.CHUNK_SIZE)
+                    ), int(floor(pos.y / GamePlane.CHUNK_SIZE))
         return chunk
 
     def insert(self, game_object: GameSprite, pos: Point):
@@ -95,7 +96,8 @@ class GamePlane:
         for delta_x in range(-1, 2):
             for delta_y in range(-1, 2):
                 neighbour_chunk = (chunk[0] + delta_x, chunk[1] + delta_y)
-                objects_from_chunk = self.get_objects_from_chunk(neighbour_chunk, neighbours_class)
+                objects_from_chunk = self.get_objects_from_chunk(
+                    neighbour_chunk, neighbours_class)
                 for item in objects_from_chunk:
                     neighbours.append(item)
         return neighbours

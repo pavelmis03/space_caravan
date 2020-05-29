@@ -22,7 +22,8 @@ class Weapon(GameSprite):
         self.owner = owner
         self.pos = owner.pos
         self.angle = owner.angle
-        super().__init__(owner.scene, owner.controller, 'other.gun', self.pos, self.angle, owner.IMAGE_ZOOM * 2)
+        super().__init__(owner.scene, owner.controller, 'other.gun',
+                         self.pos, self.angle, owner.IMAGE_ZOOM * 2)
         self.is_automatic = is_automatic
         self.main_attack_interval = main_attack_interval
         self.combo_attack_interval = combo_attack_interval
@@ -91,7 +92,8 @@ class RangedWeapon(Weapon):
         :param combo_attack_interval: Интервал между выстрелами в очереди -> int
         :param combo_size: Длина очереди -> int
         """
-        super().__init__(owner, main_attack_interval, is_automatic, combo_attack_interval, combo_size)
+        super().__init__(owner, main_attack_interval,
+                         is_automatic, combo_attack_interval, combo_size)
         self.reload_time = reload_time
         self.is_reloading = 0
         self.reload_request = False
@@ -124,7 +126,8 @@ class RangedWeapon(Weapon):
             self.is_reloading -= 1
             if not self.is_reloading:
                 self.reload_request = False
-                ammo_to_add = min(self.ammo, self.magazine_size - self.magazine)
+                ammo_to_add = min(
+                    self.ammo, self.magazine_size - self.magazine)
                 self.magazine += ammo_to_add
                 self.ammo -= ammo_to_add
                 self.owner.ammo[self.ammo_type] -= ammo_to_add
@@ -148,7 +151,8 @@ class RangedWeapon(Weapon):
             return
         self.magazine -= 1
         SoundManager.play_sound('weapon.shoot')
-        end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.angle)
+        end_of_the_barrel = self.owner.pos + \
+            vector_from_length_angle(self.barrel_length, self.angle)
         if self.scene.grid.intersect_seg_walls(Segment(self.owner.pos, end_of_the_barrel)) is None:
             self.shot(end_of_the_barrel, self.angle)
 
@@ -161,7 +165,7 @@ class RangedWeapon(Weapon):
         """
         for _ in range(self.shells):
             bullet = BULLET_CLASS[self.ammo_type](self, pos, angle + randrange(-100, 100) /
-                                                    (self.accuracy ** 2 - self.accuracy * 20 + 100), self.damage)
+                                                  (self.accuracy ** 2 - self.accuracy * 20 + 100), self.damage)
             self.scene.game_objects.append(bullet)
 
     def process_draw(self):

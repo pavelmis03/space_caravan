@@ -34,7 +34,8 @@ class ConservableScene(Scene):
         """
         Воспроизведение сцены из словаря.
         """
-        self.interface_objects += from_list_of_dicts(self, data_dict['interface_objects'])
+        self.interface_objects += from_list_of_dicts(
+            self, data_dict['interface_objects'])
 
     def to_dict(self) -> Dict:
         """

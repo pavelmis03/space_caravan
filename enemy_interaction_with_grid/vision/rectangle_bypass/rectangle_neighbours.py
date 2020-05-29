@@ -13,6 +13,7 @@ class RectangleNeighbours(RectangleBypasserAbstract):
     """
     neighbour_di = side_di
     neighbour_dj = side_dj
+
     def __init__(self, grid_rectangle: GridRectangle):
         super().__init__(grid_rectangle)
         self._top_neighbours = []
@@ -24,7 +25,7 @@ class RectangleNeighbours(RectangleBypasserAbstract):
                                 self._bottom_neighbours, self._left_neighbours)
 
     def get_neighbours(self, arr: List[List[int]], grid) -> \
-                Tuple[List[int], List[int], List[int], List[int]]:
+            Tuple[List[int], List[int], List[int], List[int]]:
         """
         Возвращает списки Rectangle, к которым можно перейти
         из данного. Порядок списков Rectangle: верхний, правый, нижний, левый.
@@ -33,7 +34,7 @@ class RectangleNeighbours(RectangleBypasserAbstract):
         return self._all_neighbours
 
     def _handle_cell(self, cycle: int, i: int, j: int,
-                      arr: List[List[int]], grid) -> bool:
+                     arr: List[List[int]], grid) -> bool:
         """
         Обработка клетки. По ней определяются соседи комнаты.
         """
@@ -68,5 +69,5 @@ class RectangleNeighbours(RectangleBypasserAbstract):
         """
         Нужно ли добавить neighbour в список соседей.
         """
-        #List и count допустимо использовать, т.к. len(this_neighbour) относительно мал
+        # List и count допустимо использовать, т.к. len(this_neighbour) относительно мал
         return not neighbours_list.count(new_neighbour_color)

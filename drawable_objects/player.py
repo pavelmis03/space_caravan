@@ -80,13 +80,15 @@ class Player(Humanoid):
         Загрузка игрока из файла. Игрок хранится отдельно от сцен, потому что должен уметь подгружаться на
         любую игровую сцену.
         """
-        self.from_dict(self.scene.game.file_manager.read_data(self.DATA_FILENAME))
+        self.from_dict(
+            self.scene.game.file_manager.read_data(self.DATA_FILENAME))
 
     def save(self):
         """
         Сохранение игрока в файл.
         """
-        self.scene.game.file_manager.write_data(self.DATA_FILENAME, self.to_dict())
+        self.scene.game.file_manager.write_data(
+            self.DATA_FILENAME, self.to_dict())
 
     def process_logic(self):
         self._turn_to_mouse()
@@ -128,7 +130,8 @@ class Player(Humanoid):
         """
         Управление оружием игрока по команде пользователя
         """
-        is_attacking = self.weapon.is_automatic and self.controller.is_mouse_pressed(MouseButtonID.LEFT)
+        is_attacking = self.weapon.is_automatic and self.controller.is_mouse_pressed(
+            MouseButtonID.LEFT)
         button = self.controller.get_click_button()
         if (button == MouseButtonID.LEFT or is_attacking) and self.weapon.cooldown == 0:
             self.weapon.main_attack()
@@ -166,7 +169,8 @@ class Player(Humanoid):
         result_pos = Point(player_pos.x, player_pos.y)
         walls_rects = self.scene.grid.get_collision_rects_nearby(player_pos)
         while True:
-            vectors_from_bumps = self._get_vectors_from_bumps(result_pos, walls_rects)
+            vectors_from_bumps = self._get_vectors_from_bumps(
+                result_pos, walls_rects)
             if len(vectors_from_bumps) == 0:
                 break
             min_vector = get_min_vector(vectors_from_bumps)

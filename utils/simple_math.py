@@ -24,4 +24,3 @@ def is_floats_equal(first: float, second: float) -> bool:
     их хранения в памяти
     """
     return abs(first - second) < EPS
-

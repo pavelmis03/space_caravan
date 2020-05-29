@@ -60,7 +60,8 @@ class TextBox(DrawableObject):
                     self.value = self.main_str + symbol
 
     def process_draw(self):
-        pygame.draw.rect(self.scene.screen, self.BG_COLOR, rectangle_to_rect(self.geometry))
+        pygame.draw.rect(self.scene.screen, self.BG_COLOR,
+                         rectangle_to_rect(self.geometry))
         if len(self.main_str) == 0:
             self.prompt_text.process_draw()
         else:
