@@ -55,12 +55,13 @@ deb-build:
     - cd dist
     - mkdir -p DEBIAN
     - mkdir -p usr/bin
-    - cp space_caravan usr/bin/
+    - cp ../ci/space_caravan usr/bin/
     - cp ../ci/control DEBIAN/
+    - mkdir -p usr/share/spacecaravan
+    - cp space_caravan usr/bin/share/spacecaravan/
     - cd ..
     - mv dist space-caravan_1.0-1
     - dpkg-deb --build space-caravan_1.0-1
-    - ls
   artifacts:
     paths:
       - space-caravan_1.0-1.deb
