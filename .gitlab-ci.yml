@@ -60,6 +60,7 @@ deb-build:
     - cp ../ci/space_caravan usr/bin/
     - mkdir -p usr/share/spacecaravan
     - mv ../dist/* usr/share/spacecaravan/
+    - mkdir -p usr/share/spacecaravan/game_data
     - cd ..
     - dpkg-deb --build space-caravan_1.0-1
   artifacts:
