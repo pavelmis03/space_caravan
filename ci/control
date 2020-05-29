@@ -1,0 +1,7 @@
+Package: space-caravan
+Version: 1.0
+Provides: space_caravan
+Maintainer: Ilya 0_o <sorochanilyav@gmail.com>
+Architecture: amd64
+Section: misc
+Description: Игра, разработанная группой ms104 из Школы Программистов 2020 год

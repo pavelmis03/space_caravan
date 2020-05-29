@@ -130,7 +130,7 @@ class Rectangle:
 
     def is_inside(self, point):
         """
-        Проверка принадлежности точки прямоугольнику.
+        Проверка принадлежности точки прямоугольнику (точки на сторонах также ему принадлежат).
 
         :param point: точка
         :return: логическое значение
@@ -138,6 +138,19 @@ class Rectangle:
         if self._top_left.x > point.x or self._top_left.y > point.y:
             return False
         if self._bottom_right.x < point.x or self._bottom_right.y < point.y:
+            return False
+        return True
+
+    def is_strictly_inside(self, point):
+        """
+        Лежит ли точка строго внутри прямоуголиника.
+
+        :param point: точка
+        :return: логическое значение
+        """
+        if self._top_left.x >= point.x or self._top_left.y >= point.y:
+            return False
+        if self._bottom_right.x <= point.x or self._bottom_right.y <= point.y:
             return False
         return True
 

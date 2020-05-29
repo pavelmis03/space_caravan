@@ -15,7 +15,9 @@ class MainMenuScene(MenuScene):
     def __init__(self, game):
         super().__init__(game)
 
-        self.menu.add_button('Играть', self.game.start_new_game)
+        self.menu.add_button('Играть', self.game.set_scene_with_index, {
+            'scene_index': self.game.SPACE_CHOICE_MENU_SCENE_INDEX
+        })
         self.menu.add_button('Настройки', self.game.set_scene_with_index, {
                              'scene_index': self.game.SETTINGS_MENU_SCENE_INDEX})
         self.menu.add_button('О нас', self.game.set_scene_with_index, {

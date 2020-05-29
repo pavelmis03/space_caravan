@@ -55,6 +55,7 @@ class StrategyKeyDown(ControllerStrategy):
     def execute(self, controller, event):
         if event.key not in controller.pressed_keys:
             controller.pressed_keys.add(event.key)
+        controller.bumped_key = event.key
 
 
 class StrategyKeyUp(ControllerStrategy):
@@ -100,12 +101,13 @@ class Controller:
         self.click_pos = None
         self.click_button = None
         self.pressed_keys = set()
+        self.bumped_key = None
 
     def iteration(self):
         """
         Итерация работы контроллера.
         """
-        self.click_pos = self.click_button = None
+        self.click_pos = self.click_button = self.bumped_key = None
         event_list = pygame.event.get()
         for event in event_list:
             if event.type in Controller.STRATEGIES:
@@ -159,3 +161,9 @@ class Controller:
         for key in keys:
             b += self.is_key_pressed(key)
         return bool(b)
+
+    def get_bumped_key(self):
+        """
+        :return: код клавиши, ставшей нажатой на текущей итерации (None, если ее нет)
+        """
+        return self.bumped_key

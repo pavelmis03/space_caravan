@@ -2,6 +2,7 @@ import pygame
 
 from drawable_objects.base import DrawableObject
 from geometry.rectangle import rect_to_rectangle, rectangle_to_rect
+from utils.font import FontManager
 
 
 class AlignmentStrategy:
@@ -46,7 +47,7 @@ class Text(DrawableObject):
     :param scene: сцена, на которой находится текст
     :param pos: точка, по которой текст выравнивается
     :param text: строка текста
-    :param: color: цвет текста
+    :param color: цвет текста
     :param align: выравнивание; пока поддерживается только 2 выравнивания: 'left' (pos - левый верхний угол надписи)
         и 'center' (pos - центр надписи)
     :param font_name: название шрифта
@@ -67,8 +68,9 @@ class Text(DrawableObject):
             self.align = align
         else:
             self.align = 'left'
-        self.font = pygame.font.SysFont(
-            font_name, font_size, is_bold, is_italic)
+        self.font = FontManager.get_font(font_name, font_size)
+        self.font.set_bold(is_bold)
+        self.font.set_italic(is_italic)
         self.text = None
         self.text_surface = None
         self.width_limit = width_limit
