@@ -28,9 +28,10 @@ class SpaceMapTerminal(UsableObject):
     def activate(self):
         from scenes.spacemap import SpacemapScene
         spacemap_scene = SpacemapScene(self.scene.game)
+        first_run = not self.spacemap_created
         if not self.spacemap_created:
             spacemap_scene.initialize()
             self.spacemap_created = True
         else:
             spacemap_scene.load()
-        self.scene.game.set_scene(spacemap_scene)
+        self.scene.game.set_scene(spacemap_scene, first_run)

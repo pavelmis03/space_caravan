@@ -98,12 +98,13 @@ class Planet(SpriteObject):
         """
         from scenes.game.main import MainScene  # В обход цикличеких import'ов
         level_scene = MainScene(self.scene.game, self.data_filename)
+        first_run = not self.level_created
         if not self.level_created:
             level_scene.initialize()
             self.level_created = True
         else:
             level_scene.load()
-        self.scene.game.set_scene(level_scene)
+        self.scene.game.set_scene(level_scene, first_run)
 
     def process_logic(self):
         self.update_real_pos()
