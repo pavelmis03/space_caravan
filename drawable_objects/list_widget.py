@@ -13,6 +13,15 @@ from geometry.point import Point, point_to_tuple
 
 
 class ListWidgetItem(DrawableObject):
+    """
+    Пункт списка ListWidget. Выравнивается по родительскому объекту списка самостоятельно. Содержит в себе текст;
+    может быть выбран пользователем нажатием мыши.
+
+    :param scene: сцена объекта
+    :param controller: контроллер
+    :param parent: родительский объект списка
+    :param value: значение пункта - отображаемая на нем строка
+    """
     TEXT_COLOR = (0, 0, 0)
     BG_COLOR = (255, 255, 255)
     BG_CHOSEN_COLOR = (150, 255, 150)
@@ -34,6 +43,11 @@ class ListWidgetItem(DrawableObject):
         return self.value < other.value
 
     def update_geometry(self, index):
+        """
+        Обновление размера и положения по родительскому объекту. Вычисление видимой пользователю области объекта.
+
+        :param index: индекс этого пункта в списке
+        """
         self.geometry.width = self.parent.geometry.width
         left, top = point_to_tuple(self.parent.geometry.top_left)
         top += self.parent.item_height * index + self.parent.scroll_value
@@ -42,11 +56,18 @@ class ListWidgetItem(DrawableObject):
         self.visible_part = intersect(self.geometry, self.parent.geometry)
 
     def process_logic(self):
+        """
+        Логика объекта - отслеживание положения щелчка мыши, чтобы понять, выбран ли пункт.
+        """
         click_pos = self.controller.get_click_pos()
         if self.controller.click_pos and self.parent.geometry.is_inside(click_pos):
             self.chosen = self.visible_part.is_strictly_inside(click_pos)
 
     def process_draw(self):
+        """
+        Отрисовка объекта. Объект отрисовывается, если виден пользователю. Если виден не полностью, отрисовывается
+        видимая область, но без текста.
+        """
         if self.visible_part.is_empty():
             return
         bg_color = self.BG_CHOSEN_COLOR if self.chosen else self.BG_COLOR
@@ -59,6 +80,15 @@ class ListWidgetItem(DrawableObject):
 
 
 class ListWidget(DrawableObject):
+    """
+    Список для пользовательского выбора. Пункт выбирается щелчком мыши; список можно прокручивать вверх/вниз.
+
+    :param scene: сцена объекта
+    :param controller: контроллер
+    :param geometry: кортеж с координатами прямоугольника объекта
+    :param item_height: высота каждого пункта в списке
+    :param elements: значения пунктов списка
+    """
     FRAME_COLOR = (0, 0, 200)
     KEY_UP = pygame.K_UP
     KEY_DOWN = pygame.K_DOWN
@@ -75,11 +105,35 @@ class ListWidget(DrawableObject):
         self.items.sort()
         self.choice = None
 
+    def add_element(self, element: str):
+        """
+        Добавление в список элемента. Имеет смысл хранить в списке только неповторяющиеся значения.
+        """
+        self.items.append(ListWidgetItem(self.scene, self.controller, self, element))
+        self.items.sort()
+
+    def remove_element(self, element: str):
+        for item in self.items:
+            if item.value == element:
+                self.items.remove(item)
+
+    def get_choice(self):
+        return self.choice
+
     def arrange_items(self):
         index = 0
         for item in self.items:
             item.update_geometry(index)
             index += 1
+
+    def __contains__(self, element):
+        """
+        Перегрузка оператора in. Позволяет узнать, есть ли в списке пункт с заданным значением.
+        """
+        for item in self.items:
+            if item.value == element:
+                return True
+        return False
 
     def scroll_controls(self):
         if self.controller.is_key_pressed(self.KEY_UP):
@@ -88,26 +142,20 @@ class ListWidget(DrawableObject):
             self.scroll_value -= self.SCROLL_SPEED
 
     def apply_scroll_borders(self):
+        """
+        Применение границ к текущему значению прокрутки списка. Список не прокручивается наверх за первый элемент
+        и вниз за последний.
+        """
         self.scroll_value = min(self.scroll_value, 0)
         lower_border = min(0, self.geometry.height -
                            self.item_height * len(self.items))
         self.scroll_value = max(self.scroll_value, lower_border)
 
-    def add_element(self, element: str):
-        self.items.append(ListWidgetItem(
-            self.scene, self.controller, self, element))
-        self.items.sort()
-
-    def remove_element(self, element: str):
-        for item in self.items:
-            if item.value == element:
-                self.items.remove(item)
-
-    def __contains__(self, element):
-        for item in self.items:
-            if item.value == element:
-                return True
-        return False
+    def move(self, movement):
+        """
+        Перемещение объекта на заданный вектор. Нужно для встраивания в WidgetGroup.
+        """
+        self.geometry.move(movement)
 
     def process_logic(self):
         self.scroll_controls()
