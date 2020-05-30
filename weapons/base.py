@@ -126,17 +126,24 @@ class RangedWeapon(Weapon):
             self.is_reloading = self.reload_time
             self.cooldown = self.reload_time
 
+    def end_reloading(self):
+        """
+        Делает всё, что нужно после перезарядки
+        """
+        self.reload_request = False
+        ammo_to_add = min(
+            self.ammo, self.magazine_size - self.magazine)
+        self.magazine += ammo_to_add
+        self.ammo -= ammo_to_add
+        self.owner.ammo[self.ammo_type] -= ammo_to_add
+
     def process_logic(self):
         self.ammo = self.owner.ammo[self.ammo_type]
         if self.is_reloading:
             self.is_reloading -= 1
             if not self.is_reloading:
-                self.reload_request = False
-                ammo_to_add = min(
-                    self.ammo, self.magazine_size - self.magazine)
-                self.magazine += ammo_to_add
-                self.ammo -= ammo_to_add
-                self.owner.ammo[self.ammo_type] -= ammo_to_add
+                self.end_reloading()
+
         self._is_fired_this_tick = False
         super().process_logic()
         if self.reload_request and not self.is_reloading and self.combo == 0:

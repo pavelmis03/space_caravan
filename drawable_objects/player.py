@@ -12,7 +12,7 @@ from constants.mouse_buttons import MouseButtonID
 from scenes.base import Scene
 from controller.controller import Controller
 
-from weapons.weapons import WEAPON_VOCABULARY
+from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
 
 
 class Player(Humanoid):
@@ -75,8 +75,31 @@ class Player(Humanoid):
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
 
+        self.weapon_slots = []
+        for weapon_name in data_dict['weapons']:
+            weapon = WEAPON_VOCABULARY[weapon_name](self)
+            self.weapon_slots.append(weapon)
+
+        self.weapon_slots_ind = data_dict['weapon_slots_ind']
+        self.weapon = self.weapon_slots[self.weapon_slots_ind]
+        self.ammo = data_dict['ammo']
+
     def to_dict(self) -> Dict:
         result = super().to_dict()
+
+        weapons = []
+        for item in self.weapon_slots:
+            if item.type == 'Ranged':
+                item.end_reloading() # перезарядка, чтобы не нужно было хранить обойму
+
+            weapon_dict = weapon_to_dict(item)
+            weapons.append(weapon_dict['weapon'])
+
+        result.update({'weapons': weapons})
+
+        result.update({'weapon_slots_ind': self.weapon_slots_ind})
+        result.update({'ammo': self.ammo})
+
         return result
 
     def load(self):

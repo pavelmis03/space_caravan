@@ -144,9 +144,7 @@ class CommandHumanoid(MovingHumanoid):
         работает за O(weapons.weapons.WEAPON_VOCABULARY), но
         в высокой скорости нет необходимости:
         '''
-        for key, value in weapons.weapons.WEAPON_VOCABULARY.items():
-            if isinstance(self.weapon, value):
-                result.update({'weapon': key})
+        result.update(weapons.weapons.weapon_to_dict(self.weapon))
 
         return result
 

@@ -1,4 +1,5 @@
-from weapons.base import RangedWeapon, MeleeWeapon
+from typing import Dict
+from weapons.base import Weapon, RangedWeapon, MeleeWeapon
 
 
 class Pistol(RangedWeapon):
@@ -149,3 +150,15 @@ WEAPON_VOCABULARY = {
     'SemiAutomaticRifle': SemiAutomaticRifle, #t2
     'Sword': Sword, #t?
 }
+
+
+def weapon_to_dict(weapon: Weapon) -> Dict:
+    '''
+    работает за O(weapons.weapons.WEAPON_VOCABULARY), но
+    в высокой скорости нет необходимости
+    '''
+    for key, value in WEAPON_VOCABULARY.items():
+        if isinstance(weapon, value):
+            return {'weapon': key}
+
+    raise Exception('Weapon didnt exist')
