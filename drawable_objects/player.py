@@ -27,7 +27,7 @@ class Player(Humanoid):
     :IMAGE_NAME: путь до изображения персонажа
     :IMAGE_ZOOM: размер изображения
     :CONTROLS: клавиши управления движением
-    :WEAPON_SLOTS_CONTROLS: клавиши управления слотами оружия
+    :NUMBERIC_WEAPON_SLOTS_CONTROLS: клавиши управления слотами оружия
     :WEAPON_RELOAD_KEY: клавиша перезарядки
     :SPEED: скорость игрока
     """
@@ -41,10 +41,11 @@ class Player(Humanoid):
         pygame.K_a,
         pygame.K_s,
     ]
-    WEAPON_SLOTS_CONTROLS = [
+    NUMBERIC_WEAPON_SLOTS_CONTROLS = [
         pygame.K_1,
         pygame.K_2,
     ]
+    TAB_WEAPON_SLOTS_CONTROLS = pygame.K_TAB
     WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
 
@@ -68,6 +69,7 @@ class Player(Humanoid):
         ]
         self.weapon_slots_ind = 0
         self.change_weapon_request = -1
+        self.change_weapon_cooldown = 0
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
     def from_dict(self, data_dict: Dict):
@@ -131,8 +133,7 @@ class Player(Humanoid):
         """
         Управление оружием игрока по команде пользователя
         """
-        is_attacking = self.weapon.is_automatic and self.controller.is_mouse_pressed(
-            MouseButtonID.LEFT)
+        is_attacking = self.weapon.is_automatic and self.controller.is_mouse_pressed(MouseButtonID.LEFT)
         button = self.controller.get_click_button()
         if (button == MouseButtonID.LEFT or is_attacking) and self.weapon.cooldown == 0:
             self.weapon.main_attack()
@@ -140,13 +141,19 @@ class Player(Humanoid):
             self.weapon.alternative_attack()
         if self.controller.is_key_pressed(Player.WEAPON_RELOAD_KEY):
             self.weapon.reload_request = True
-        if self.change_weapon_request == -1:
-            if not self.controller.is_key_pressed(Player.WEAPON_SLOTS_CONTROLS[self.weapon_slots_ind]):
-                for ind in range(len(self.WEAPON_SLOTS_CONTROLS)):
-                    if self.controller.is_key_pressed(Player.WEAPON_SLOTS_CONTROLS[ind]):
-                        self.change_weapon_request = ind
+        if self.change_weapon_cooldown != 0:
+            self.change_weapon_cooldown -= 1
+        else:
+            if self.change_weapon_request == -1:
+                if not self.controller.is_key_pressed(Player.NUMBERIC_WEAPON_SLOTS_CONTROLS[self.weapon_slots_ind]):
+                    for ind in range(len(self.NUMBERIC_WEAPON_SLOTS_CONTROLS)):
+                        if self.controller.is_key_pressed(Player.NUMBERIC_WEAPON_SLOTS_CONTROLS[ind]):
+                            self.change_weapon_request = ind
+                if self.controller.is_key_pressed(Player.TAB_WEAPON_SLOTS_CONTROLS):
+                    self.change_weapon_request = 1 + self.weapon_slots_ind == 1
         if self.change_weapon_request != -1 and self.weapon.combo == 0:
             self._change_weapon(self.change_weapon_request)
+            self.change_weapon_cooldown = 20
             self.change_weapon_request = -1
 
     def _change_weapon(self, ind):
