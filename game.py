@@ -40,13 +40,14 @@ class Game:
         self.__file_manager = GameDataManager()
 
         self.__controller = Controller(self)
-        self.__scenes = [
-            MainMenuScene(self),
-            SettingsMenuScene(self),
-            AboutMenuScene(self),
-            SpaceChoiceMenuScene(self),
+        self.__scenes_classes = [
+            MainMenuScene,
+            SettingsMenuScene,
+            AboutMenuScene,
+            SpaceChoiceMenuScene,
         ]
-        self.__current_scene = self.__scenes[0]
+        self.__current_scene = None
+        self.set_scene_with_index(0)
         self.__to_delete = list()
 
     @property
@@ -99,8 +100,7 @@ class Game:
 
         :param scene: ссылка на новую сцену
         """
-
-        if isinstance(self.__current_scene, ConservableScene):
+        if self.__current_scene:
             self.__current_scene.save()
         if isinstance(self.__current_scene, GameScene):
             self.__to_delete.append(self.__current_scene)
@@ -108,15 +108,15 @@ class Game:
             scene.load_supply()
         if isinstance(scene, LevelScene):
             scene.load_player()
-        if isinstance(scene, ConservableScene):
-            scene.construct()
+        scene.construct()
         self.__current_scene = scene
 
     def set_scene_with_index(self, scene_index: int):
         """
         Установка сцены из имеющегося списка в качестве текущей. Индексы в списке - константные поля класса игры.
         """
-        self.set_scene(self.__scenes[scene_index])
+        scene = self.__scenes_classes[scene_index](self)
+        self.set_scene(scene)
 
     def end(self):
         self.__running = False

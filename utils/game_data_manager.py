@@ -45,7 +45,7 @@ class GameDataManager:
         if self.__space_name:
             return os.path.join(self.__space_path, file_name + '.json')
         else:
-            return os.path.join(self.STORAGE_ROOT, file_name + 'json')
+            return os.path.join(self.STORAGE_ROOT, file_name + '.json')
 
     def read_data(self, file_name: str) -> Dict:
         """
