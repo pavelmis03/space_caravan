@@ -12,8 +12,9 @@ def create_enemy(grid, i: int, j: int, weapon_name: str):
     """
     Создать врага под данным индексом с рандомным поворотом.
     """
-    enemy = Enemy(grid.scene, grid.controller, weapon_name,
+    enemy = Enemy(grid.scene, grid.controller,
                   grid.get_center_of_cell_by_indexes(i, j), random())
+    enemy.set_weapon(weapon_name)
     grid.scene.enemies.append(enemy)
 
 

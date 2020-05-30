@@ -18,26 +18,19 @@ class LevelSettings:
         if sum_chance != 100:
             raise Exception('sum of enemy_weapons chance not equal 100. The value: {}'.format(sum_chance))
 
-'''
-= [
-        ('level_objects.simple_planet', 0.07),
-        ('level_objects.ice_planet', 0.35),
-        ('level_objects.lava_planet', 0.3),
-        ('level_objects.violet_planet', 0.3),
-        ('level_objects.mushroom_planet', 0.3),
-    ]
-'''
 
 # список настроек для каждого уровня.
 level_settings = [
     LevelSettings('level.floor3', 'level.wall1',
-                [(40, 'Pistol'), (30, 'Pistol'), (30, 'TwoBarrelShotgun')]), #первое должно быть Sword
+                [(30, 'Sword'), (60, 'Pistol'), (10, 'TwoBarrelShotgun')]),
     LevelSettings('level.floor3', 'level.wall1',
-                [(40, 'Pistol'), (30, 'Pistol'), (30, 'TwoBarrelShotgun')]),
+                [(30, 'Pistol'), (10, 'TwoBarrelShotgun'),
+                 (30, 'OldRifle'), (30, 'SemiAutomaticRifle')]),
     LevelSettings('level.floor3', 'level.wall1',
-                [(40, 'Pistol'), (30, 'Pistol'), (30, 'TwoBarrelShotgun')]),
+                [(30, 'SemiAutomaticRifle'), (30, 'ThreeBarrelShotgun'),
+                 (25, 'SniperRifle'), (15, 'BurstFiringPistol')]),
     LevelSettings('level.floor3', 'level.wall1',
-                [(40, 'Pistol'), (30, 'Pistol'), (30, 'TwoBarrelShotgun')]),
+                [(10, 'Sword'), (30, 'SniperRifle'), (30, 'Shotgun'), (30, 'AutomaticRifle')]),
     LevelSettings('level.floor3', 'level.wall1',
-                [(40, 'Pistol'), (30, 'Pistol'), (30, 'TwoBarrelShotgun')])
+                [(10, 'Sword'), (20, 'AutomaticRifle'), (30, 'Shotgun'), (40, 'TacticalShotgun')])
 ]

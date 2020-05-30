@@ -1,7 +1,7 @@
 import weapons.weapons
 # from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
 
-from typing import Optional
+from typing import Optional, Dict
 
 from controller.controller import Controller
 from drawable_objects.base import Humanoid
@@ -102,15 +102,16 @@ class CommandHumanoid(MovingHumanoid):
     COOLDOWN_TIME = 50
     DELAY_BEFORE_FIRST_SHOOT = 12
     DELAY_BEFORE_HEARING = 8
+    LEVEL_LOAD_DELAY = 36
 
-    def __init__(self, scene: Scene, controller: Controller, image_name: str, weapon_name: str,
+    def __init__(self, scene: Scene, controller: Controller, image_name: str,
                  pos: Point, angle: float, image_zoom: float):
         super().__init__(scene, controller, image_name, pos, angle, image_zoom)
 
         self.__command = None  # None означает команду бездействия
         self.__is_see_player = False
         self._is_aggred = False
-        self.__cooldown = 0
+        self.__cooldown = CommandHumanoid.LEVEL_LOAD_DELAY #чтобы на лестнице сразу не убивали
         # задержка перед реакцией enemy на выстрел
         self.__hearing_timer_delay = EMPTY_TIMER
 
@@ -119,11 +120,38 @@ class CommandHumanoid(MovingHumanoid):
             'Shotgun': 1000000,
             'Rifle': 1000000,
         }
-        self.weapon = weapons.weapons.WEAPON_VOCABULARY['Sword'](self)
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY['Sword'](self) #изначальное значение не важно
 
         self.__command_functions = {'move_to': self.__command_move_to,
                                     'attack': self.__command_attack,
                                     'aim': self.__command_aim, }
+
+    def from_dict(self, data_dict: Dict):
+        """
+        Воспроизведение объекта из словаря.
+        """
+        self.hp = data_dict['hp']
+        self.set_weapon(data_dict['weapon'])
+        super().from_dict(data_dict)
+
+    def to_dict(self) -> Dict:
+        """
+        Запись характеристик объекта в словарь.
+        """
+        result = super().to_dict()
+        result.update({'hp': self.hp})
+        '''
+        работает за O(weapons.weapons.WEAPON_VOCABULARY), но
+        в высокой скорости нет необходимости:
+        '''
+        for key, value in weapons.weapons.WEAPON_VOCABULARY.items():
+            if isinstance(self.weapon, value):
+                result.update({'weapon': key})
+
+        return result
+
+    def set_weapon(self, weapon_name):
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY[weapon_name](self)
 
     def process_logic(self):
         """
@@ -317,8 +345,8 @@ class Enemy(CommandHumanoid):
     ROTATION_MIN_COOLDOWN = 100
     ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
-    def __init__(self, scene: Scene, controller: Controller, weapon_name: str, pos: Point, angle: float = 0):
-        super().__init__(scene, controller, Enemy.IMAGE_NAME, weapon_name, pos, angle, Enemy.IMAGE_ZOOM)
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+        super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
         self.__rotate_cooldown = randint(
             Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
         self.__rotation_direction = 1 if is_random_proc() else -1
