@@ -6,10 +6,12 @@ from geometry.point import Point
 from map.level.rect.splitter import GridRectangle
 from utils.list import delete_element
 
+
 class CollisionFormCreator(RectangleBypasserAbstract):
     """
     Создает прямоугольники коллизий комнаты (объединяет несколько клеток стен в один прямоугольник).
     """
+
     def __init__(self, grid_rectangle: GridRectangle):
         super().__init__(grid_rectangle)
         self._collision_rectangles = []
@@ -21,7 +23,8 @@ class CollisionFormCreator(RectangleBypasserAbstract):
         self._start_of_rect = None
         self._end_of_rect = None
 
-        self._old_cycle = -1 # на каком цикле bypass мы находились прошлый тик.
+        # на каком цикле bypass мы находились прошлый тик.
+        self._old_cycle = -1
 
     def _bypass(self, arr: List[List[int]], grid):
         """
@@ -42,7 +45,7 @@ class CollisionFormCreator(RectangleBypasserAbstract):
         if self._is_should_create_collision_rectangle(cycle, i, j, grid):
             self._create_and_add_new_rectangle()
         self._save_this_tic_data(cycle, i, j, grid)
-        return True #никогда не нужно прерывать обход
+        return True  # никогда не нужно прерывать обход
 
     def _is_should_create_collision_rectangle(self, cycle: int, i: int, j: int, grid):
         """
@@ -118,6 +121,7 @@ class UselessRectanglesDeleter:
     """
     Занимается удаление ненужных прямоугольников коллизий.
     """
+
     def __init__(self, collision_rectangles: List[Rectangle]):
         self._collision_rectangles = collision_rectangles
 

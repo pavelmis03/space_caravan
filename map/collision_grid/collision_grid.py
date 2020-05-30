@@ -24,7 +24,7 @@ class CollisionGrid(Grid):
         self._fill_arr(CELL_SIZE, CELL_SIZE)
 
     def _fill_arr(self, cell_width: int, cell_height: int,
-                 width_arr: int = 100, height_arr: int = 100):
+                  width_arr: int = 100, height_arr: int = 100):
         super()._fill_arr(0, cell_width, cell_height, width_arr, height_arr)
         self.map_construction()
 

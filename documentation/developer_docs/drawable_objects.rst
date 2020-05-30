@@ -36,6 +36,13 @@ ladder.py
     :members:
     :undoc-members:
 
+list_widget.py
+--------------
+
+.. automodule:: drawable_objects.list_widget
+    :members:
+    :undoc-members:
+
 multiline_text.py
 -----------------
 
@@ -75,6 +82,13 @@ text.py
 -------
 
 .. automodule:: drawable_objects.text
+    :members:
+    :undoc-members:
+
+textbox.py
+----------
+
+.. automodule:: drawable_objects.textbox
     :members:
     :undoc-members:
 

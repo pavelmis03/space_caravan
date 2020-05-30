@@ -18,6 +18,7 @@ class LevelGrid(CollisionGrid):
     """
     Сетка уровня (данжа).
     """
+
     def to_dict(self):
         arr = []
         for i in range(len(self.arr)):
@@ -109,11 +110,15 @@ class LevelGrid(CollisionGrid):
         """
         self.enemy_interaction_manager.process_logic()
 
-    def is_enemy_see_player(self, enemy: Enemy) -> bool:
+    def is_enemy_see_player(self, enemy: Enemy, radius: float) -> bool:
         """
         Видит ли enemy player'а
+
+        :param enemy: враг
+        :param radius: радиус, в котором player должен находиться
+        :return: bool
         """
-        return self.enemy_interaction_manager.is_enemy_see_player(enemy)
+        return self.enemy_interaction_manager.is_enemy_see_player(enemy, radius)
 
     def save_enemy_pos(self, pos: Point):
         """

@@ -6,7 +6,6 @@ import os
 import pygame
 
 
-
 class SoundManager:
 
     """
@@ -24,7 +23,7 @@ class SoundManager:
         SoundManager.load_dir(SoundManager.SOUND_PATH)
 
     @staticmethod
-    def load_dir(directory: str, extension: str='.wav'):
+    def load_dir(directory: str, extension: str = '.wav'):
         """
         Загрузка всех файлов расширения extension из директории рекурсивно
         :param directory: директория
@@ -37,7 +36,7 @@ class SoundManager:
             if os.path.isdir(full_item):
                 manager_dir = SoundManager.get_sound(short_dir, os.sep)
                 manager_dir[item] = {}
-                SoundManager.load_dir(full_item)
+                SoundManager.load_dir(full_item, extension)
             elif extension in item:
                 manager_dir = SoundManager.get_sound(short_dir, os.sep)
                 item = item.replace(extension, '')
@@ -74,7 +73,7 @@ class SoundManager:
         sound.play()
 
     @staticmethod
-    def set_volume(sound_path: str, value: float=1):
+    def set_volume(sound_path: str, value: float = 1):
         sound = SoundManager.get_sound(sound_path)
         if isinstance(sound, dict):
             raise ValueError(sound + ' is a dir, not a file')

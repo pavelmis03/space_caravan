@@ -43,7 +43,8 @@ class MultilineText(DrawableObject):
         self.text = [
             Text(self.scene, self.pos, splited[0], **self.text_params)
         ]
-        offset = self.text[0].text_surface.get_height() + MultilineText.LINE_OFFSET
+        offset = self.text[0].text_surface.get_height() + \
+            MultilineText.LINE_OFFSET
         for i, line in list(enumerate(splited))[1:]:
             newtxt = Text(self.scene, self.pos +
                           Point(0, i * offset),

@@ -4,6 +4,7 @@ from geometry.point import Point
 from scenes.base import Scene
 from controller.controller import Controller
 
+
 class Ladder(UsableObject):
     """
     Класс уводящей с уровня лестницы, с которой игрок может взаимодействовать. При взаимодействии устанавливается

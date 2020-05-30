@@ -15,6 +15,7 @@ class RoomsGraph:
     """
     Граф комнат. Нужен для того, чтобы отвечать на запрос, пересекает ли отрезок какую-нибудь стену.
     """
+
     def __init__(self, rectangles: List[GridRectangle], arr_after_split: List[List[int]], grid):
         self._grid = grid
 
@@ -35,13 +36,13 @@ class RoomsGraph:
         :param seg: отрезок, который проверяем
         :return: bool
         """
-        #часто встречается color - 1, т.к. arr_after_split содержит в себе цвета с 1, а индексация в списках с 0
+        # часто встречается color - 1, т.к. arr_after_split содержит в себе цвета с 1, а индексация в списках с 0
         self._used.next_iteration()
 
         color0 = self._get_room_color_by_pos(seg.p1)
         self._used.mark(color0 - 1)
 
-        queue = deque() # collections.deque работает быстрее, чем queue.Queue
+        queue = deque()  # collections.deque работает быстрее, чем queue.Queue
         queue.append(color0)
 
         while len(queue):
@@ -76,7 +77,8 @@ class RoomsGraph:
         """
         result = []
         for i in range(len(grid_rectangles)):
-            new_room = Room(grid_rectangles[i], self._arr_after_split, self._grid)
+            new_room = Room(grid_rectangles[i],
+                            self._arr_after_split, self._grid)
             result.append(new_room)
 
         return result
@@ -87,7 +89,8 @@ class RoomsGraph:
         """
         for i in range(len(rectangles)):
             correcter = ArrCorrecter(rectangles[i])
-            correcter.correct_arr_after_split(self._arr_after_split, self._grid)
+            correcter.correct_arr_after_split(
+                self._arr_after_split, self._grid)
 
     def process_draw(self):
         """

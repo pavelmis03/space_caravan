@@ -46,7 +46,6 @@ class GameScene(ConservableScene):
         self.player = None
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
-        self.game.controller.input_objects.append(self.pause_manager)
         self.camera = Camera(self)
 
     def to_dict(self) -> Dict:
@@ -59,7 +58,8 @@ class GameScene(ConservableScene):
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
-        self.game_objects += from_list_of_dicts(self, data_dict['game_objects'])
+        self.game_objects += from_list_of_dicts(self,
+                                                data_dict['game_objects'])
         self.enemies += from_list_of_dicts(self, data_dict['enemies'])
 
     def load_player(self):
@@ -69,7 +69,6 @@ class GameScene(ConservableScene):
         self.player = Player(self, self.game.controller, Point(0, 0))
         self.player.load()
         self.player.move(self.PLAYER_SPAWN_POINT)
-        self.game.controller.input_objects.append(self.player)
 
     def save(self):
         super().save()
@@ -89,7 +88,8 @@ class GameScene(ConservableScene):
             item.process_logic()
 
         self.player.process_logic()
-        self.relative_center = self.camera.get_relative_center(not GameScene.FIXED_CAMERA)
+        self.relative_center = self.camera.get_relative_center(
+            not GameScene.FIXED_CAMERA)
 
     def delete_destroyed_objects(self):
         """
@@ -99,7 +99,7 @@ class GameScene(ConservableScene):
         delete_destroyed(self.enemies)
 
     def process_all_logic(self):
-        self.interface_logic()
+        super().process_all_logic()
         if not self.game_paused:
             self.game_logic()
 

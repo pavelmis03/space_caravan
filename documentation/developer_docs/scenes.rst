@@ -77,3 +77,10 @@ menu.settings.py
 .. automodule:: scenes.menu.settings
     :members:
     :undoc-members:
+
+menu.space_choice.py
+--------------------
+
+.. automodule:: scenes.menu.space_choice
+    :members:
+    :undoc-members:

@@ -29,7 +29,7 @@ class AboutMenuScene(MenuScene):
         super().__init__(game)
         self.menu.add_multilinetext(AboutMenuScene.DESCRIPTION,
                                     color=COLOR['WHITE'], align='center',
-                                    font_name='Consolas', font_size=20,
+                                    font_name='freesansbold', font_size=20,
                                     is_bold=False)
         self.menu.add_button('Назад', self.game.set_scene_with_index,
                              {'scene_index': self.game.MAIN_MENU_SCENE_INDEX})

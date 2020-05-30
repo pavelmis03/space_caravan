@@ -10,6 +10,7 @@ def is_indexes_correct(arr: List[List[any]], i: int, j: int) -> bool:
     """
     return 0 <= i < len(arr) and 0 <= j < len(arr[i])
 
+
 def get_list_without_equal_elements(arr: List[any]) -> List[any]:
     """
     :param arr: одномерный список. Не изменяется
@@ -25,6 +26,7 @@ def get_list_without_equal_elements(arr: List[any]) -> List[any]:
         result.append(old)
     return result
 
+
 def delete_element(arr: List[any], i: int):
     """
     Удаление элемента (O(1) асимптотика).
@@ -35,12 +37,14 @@ def delete_element(arr: List[any], i: int):
     arr[i], arr[-1] = arr[-1], arr[i]
     arr.pop()
 
+
 def copy_list(arr: List[any]) -> List[any]:
     """
     Копирует эл-ты arr и возвращает список. Не работает, если arr[i] содержит ссылку на объект
     """
     result = [item for item in arr]
     return result
+
 
 def copy_2dimensional_list(arr: List[List[any]]) -> List[List[any]]:
     """
