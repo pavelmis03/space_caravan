@@ -9,8 +9,8 @@ class Pistol(RangedWeapon):
     def __init__(self, owner, bullets_in_magazine=12):
         super().__init__(owner, scene_image='other.gun', interface_image='interface.weapon_icons.Pistol',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=12,
-                         main_attack_interval=7, reload_time=40, ammo_type='Pistol',
-                         accuracy=42, damage=60)
+                         main_attack_interval=9, reload_time=40, ammo_type='Pistol',
+                         accuracy=42, damage=45)
 
 
 class BurstFiringPistol(RangedWeapon):
@@ -21,8 +21,8 @@ class BurstFiringPistol(RangedWeapon):
     def __init__(self, owner, bullets_in_magazine=20):
         super().__init__(owner, scene_image='other.gun', interface_image='interface.weapon_icons.TwoBarrelShotgun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=20,
-                         main_attack_interval=14, reload_time=60, ammo_type='Pistol',
-                         accuracy=40, damage=60, combo_attack_interval=3, combo_size=4)
+                         main_attack_interval=15, reload_time=60, ammo_type='Pistol',
+                         accuracy=40, damage=45, combo_attack_interval=3, combo_size=4)
 
 
 class Shotgun(RangedWeapon):
@@ -88,7 +88,7 @@ class AutomaticRifle(RangedWeapon):
         super().__init__(owner, scene_image='other.gun', interface_image='other.gun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=25,
                          main_attack_interval=4, reload_time=60, ammo_type='Rifle',
-                         accuracy=60, damage=90, is_automatic=True)
+                         accuracy=60, damage=80, is_automatic=True)
 
 
 class SniperRifle(RangedWeapon):
