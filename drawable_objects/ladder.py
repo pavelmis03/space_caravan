@@ -7,9 +7,9 @@ from controller.controller import Controller
 
 class Ladder(UsableObject):
     """
-        Класс лестницы, с которой игрок может взаимодействовать,
-        при взаимодействии отправляет игрока на сцену SCENE_INDEX
-        """
+    Класс уводящей с уровня лестницы, с которой игрок может взаимодействовать. При взаимодействии устанавливается
+    сцена корябля.
+    """
     IMAGE_ZOOM = 0.8
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
@@ -17,4 +17,10 @@ class Ladder(UsableObject):
                          pos, angle, Ladder.IMAGE_ZOOM)
 
     def activate(self):
-        self.scene.game.set_scene(self.scene.game.SPACESHIP_SCENE_INDEX)
+        """
+        Действия при активации. Именно здесь создается сцена корабля, так работает загрузка сцен.
+        """
+        from scenes.game.spaceship import SpaceshipScene  # В обход циклических import'ов
+        spaceship_scene = SpaceshipScene(self.scene.game)
+        spaceship_scene.load()
+        self.scene.game.set_scene(spaceship_scene)
