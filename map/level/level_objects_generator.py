@@ -66,7 +66,7 @@ class LevelObjectsGenerator:
             create_enemy(self.__grid, random_i, random_j, random_weapon)
 
     def __generate_chest(self, room: GridRectangle):
-        CHANCE_SPAWN = 5
+        CHANCE_SPAWN = 2
 
         if not is_accurate_random_proc(CHANCE_SPAWN):
             return
