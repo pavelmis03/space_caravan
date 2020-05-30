@@ -8,6 +8,13 @@ base.py
     :members:
     :undoc-members:
 
+conservable.py
+--------------
+
+.. automodule:: scenes.conservable
+    :members:
+    :undoc-members:
+
 final.py
 --------
 
@@ -15,16 +22,65 @@ final.py
     :members:
     :undoc-members:
 
-main.py
--------
+spacemap.py
+-----------
 
-.. automodule:: scenes.main
+.. automodule:: scenes.spacemap
     :members:
     :undoc-members:
 
-menu.py
--------
+game.base.py
+------------
 
-.. automodule:: scenes.menu
+.. automodule:: scenes.game.base
+    :members:
+    :undoc-members:
+
+game.main.py
+------------
+
+.. automodule:: scenes.game.main
+    :members:
+    :undoc-members:
+
+game.spaceship.py
+-----------------
+
+.. automodule:: scenes.game.spaceship
+    :members:
+    :undoc-members:
+
+menu.about.py
+--------------
+
+.. automodule:: scenes.menu.about
+    :members:
+    :undoc-members:
+
+menu.base.py
+------------
+
+.. automodule:: scenes.menu.base
+    :members:
+    :undoc-members:
+
+menu.main.py
+------------
+
+.. automodule:: scenes.menu.main
+    :members:
+    :undoc-members:
+
+menu.settings.py
+----------------
+
+.. automodule:: scenes.menu.settings
+    :members:
+    :undoc-members:
+
+menu.space_choice.py
+--------------------
+
+.. automodule:: scenes.menu.space_choice
     :members:
     :undoc-members:

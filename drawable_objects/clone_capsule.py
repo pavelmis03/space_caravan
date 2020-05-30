@@ -1,5 +1,5 @@
 from controller.controller import Controller
-from drawable_objects.usable_object import  UsableObject
+from drawable_objects.usable_object import UsableObject
 from geometry.point import Point
 from scenes.base import Scene
 

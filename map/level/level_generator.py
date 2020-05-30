@@ -15,8 +15,9 @@ class LevelGenerator:
     Результат генерации - заполнение исходного прямоугольника фигурами
     с углами 270 и 90 градусов.
     """
-    def __init__(self, arr:List[List[int]],
-                 min_area: int=100, min_w: int=8, min_h: int=8):
+
+    def __init__(self, arr: List[List[int]],
+                 min_area: int = 100, min_w: int = 8, min_h: int = 8):
         self.arr = arr
 
         self.rect_splitter = RectSplitter(self.arr, min_area, min_w, min_h)
@@ -46,7 +47,8 @@ class LevelGenerator:
         # Необходимо сохранить список для дальнейших нужд:
         self.arr_after_split = self.rect_splitter.get_arr_after_split()
 
-        self.graph_manager = RectGraphManager(self.rect_splitter.arr, self.rect_splitter.rects_colors_count)
+        self.graph_manager = RectGraphManager(
+            self.rect_splitter.arr, self.rect_splitter.rects_colors_count)
 
     def __union(self):
         """

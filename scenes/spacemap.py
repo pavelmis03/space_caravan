@@ -1,20 +1,21 @@
-from drawable_objects.button import Button
-from drawable_objects.planet import Planet
-from geometry.point import Point
-from scenes.base import Scene
+from scenes.conservable import ConservableScene
+from space.planets_generator import PlanetsGenerator
 
 
-class SpacemapScene(Scene):
+class SpacemapScene(ConservableScene):
     """
-    Сцена звездной карты
+    Сцена звездной карты.
 
-
-    :param game: игра, создающая сцену (self.scene, self.controller, self.pos, self.angle)
+    :param game: игра, создающая сцену
     """
+    DATA_FILENAME = 'spacemap'
 
     def __init__(self, game):
-        super().__init__(game)
-        self.interface_objects.append(Planet(self, self.game.controller, 'level_objects.planet', Point(200, 200), 0, 0.09,
-                                             self.game.set_scene, {'scene_index': self.game.MAIN_SCENE_INDEX}))
-        self.interface_objects.append(Planet(self, self.game.controller, 'level_objects.planet', Point(600, 600), 0, 0.09,
-                                             self.game.set_scene, {'scene_index': self.game.MAIN_SCENE_INDEX}))
+        super().__init__(game, self.DATA_FILENAME)
+
+    def initialize(self):
+        """
+        Для звездной карты инициализация означает создание планет, чем занимается PlanetsGenerator.
+        """
+        planets_generator = PlanetsGenerator(self.game.controller, self)
+        self.interface_objects = planets_generator.generate()

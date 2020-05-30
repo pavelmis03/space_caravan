@@ -16,7 +16,7 @@ class Entry(DrawableObject):
     BORDER_COLOR = COLOR['WHITE']
     TEXT_COLOR = COLOR['WHITE']
     TEXT_SHIFT = Point(3, 3)
-    FONT_NAME = "Consolas"
+    FONT_NAME = "zelekbold"
 
     def __init__(self, scene, controller, geometry, initial_text="",
                  font_size=20, visible=True, width_limit=None):

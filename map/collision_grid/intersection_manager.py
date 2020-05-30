@@ -6,6 +6,7 @@ from geometry.point import Point
 from geometry.segment import Segment
 from utils.is_marked_manager import TwoDimensionalIsMarkedManager
 
+
 class GridIntersectionManager:
     """
     Работает медленно, но не понятно как ускорить.

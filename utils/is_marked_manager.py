@@ -4,11 +4,13 @@
 """
 from typing import List
 
+
 class IsMarkedManagerAbstract:
     """
     Абстрактный класс isMarked.
     Нужен для маркировки данных по индексам и быстрым ответам на запрос о маркировке.
     """
+
     def __init__(self, arr: List[any]):
         """
         self._marked - список, в котором хранятся числа маркировки.
@@ -61,10 +63,12 @@ class IsMarkedManagerAbstract:
         """
         return self._get_by_indexes(*indexes) == self._mark_counter
 
+
 class IsMarkedManager(IsMarkedManagerAbstract):
     """
     Отмечает клетки в одномерном массиве
     """
+
     def _fill_marked(self, arr: List[int]):
         """
         O(len(arr)) памяти и времени.
@@ -84,6 +88,7 @@ class IsMarkedManager(IsMarkedManagerAbstract):
         """
         i = indexes[0]
         self._marked[i] = value
+
 
 class TwoDimensionalIsMarkedManager(IsMarkedManagerAbstract):
     """

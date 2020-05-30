@@ -13,6 +13,7 @@ class RectangleBypasserAbstract:
     """
     bypass_di = side_di[1], side_di[0], side_di[3], side_di[2]
     bypass_dj = [side_dj[1], side_dj[0], side_dj[3], side_dj[2]]
+
     def __init__(self, grid_rectangle: GridRectangle):
         """
         :param grid_rectangle: обрабатываемый прямоугольник
@@ -37,7 +38,8 @@ class RectangleBypasserAbstract:
         :param arr: список после разбиения сетки на прямоугольники
         :param grid: сетка
         """
-        self._color = arr[self._grid_rectangle.top_index + 1][self._grid_rectangle.left_index + 1]
+        self._color = arr[self._grid_rectangle.top_index +
+                          1][self._grid_rectangle.left_index + 1]
 
         for cycle in range(len(self.bypass_di)):
             i = self._start_pos[cycle][0]

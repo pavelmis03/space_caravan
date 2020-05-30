@@ -1,24 +1,74 @@
-image: "python:3.7"
+image: "python:3.7-stretch"
 
 stages:
   - test
-  - build
+  - style
+  - build_elf
+  - build_deb
+
+
+tests:
+  stage: test
+  only:
+    - master
+    - develop
+    - feature/ci
+  script:
+    - pip install -r requirements.txt
+    - pip install coverage
+    - ci/tests_runner.sh
+  artifacts:
+    paths:
+      - report.txt
+    expire_in: 1 week
+
 
 pylint:
-  stage: test
+  stage: style
   script:
     - pip install -r requirements.txt
     - pip install pylint
     - ci/pylint_runner.sh
   allow_failure: true
 
+
 pyinstaller:
-  stage: build
+  stage: build_elf
+  only:
+    - master
+    - develop
+    - feature/ci
   script:
     - pip install -r requirements.txt
     - pip install pyinstaller
-    - pyinstaller game.py -p . -F
+    - ci/build_elf.sh
   artifacts:
     paths:
       - dist
+    expire_in: 1 week
+
+
+deb-build:
+  stage: build_deb
+  only:
+    - master
+    - develop
+    - feature/ci
+  dependencies:
+    - pyinstaller
+  script:
+    - mkdir space-caravan_1.0-1
+    - cd space-caravan_1.0-1
+    - mkdir -p DEBIAN
+    - cp ../ci/control DEBIAN/
+    - mkdir -p usr/bin
+    - cp ../ci/space_caravan usr/bin/
+    - mkdir -p usr/share/spacecaravan
+    - mv ../dist/* usr/share/spacecaravan/
+    - mkdir -p usr/share/spacecaravan/game_data
+    - cd ..
+    - dpkg-deb --build space-caravan_1.0-1
+  artifacts:
+    paths:
+      - space-caravan_1.0-1.deb
     expire_in: 1 week

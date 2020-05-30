@@ -2,15 +2,18 @@ from typing import List, Tuple, Dict
 
 DIRECTION = [0, 1, -1]
 
+
 class Edge:
     """
     Ребро - возможный проход между прямоугольниками
     """
+
     def __init__(self, new1: Dict[str, int], new2: Dict[str, int], direction: List[int], arr):
         self.new1 = new1
         self.new2 = new2
         self.direction = direction
         self.color = [arr[new1['i']][new1['j']], arr[new2['i']][new2['j']]]
+
     def delete(self, arr: List[List[int]]):
         '''
         Присваивает двум стенам, разделяющим фигуры,
@@ -26,8 +29,11 @@ class Edge:
         wall_j = j[0] + (j[1] - j[0]) // 2
 
         arr[wall_i][wall_j] = self.color[0]
-        arr[wall_i + self.direction[0]][wall_j + self.direction[1]] = self.color[0]
-        arr[wall_i - self.direction[0]][wall_j - self.direction[1]] = self.color[0]
+        arr[wall_i + self.direction[0]][wall_j +
+                                        self.direction[1]] = self.color[0]
+        arr[wall_i - self.direction[0]][wall_j -
+                                        self.direction[1]] = self.color[0]
+
 
 class EdgeManager:
     """
@@ -48,6 +54,7 @@ class EdgeManager:
     Этот огромный код необходим, чтобы можно было
     делать проходы в 3 клетки
     """
+
     def __init__(self, arr, used):
         self.arr = arr
         self.used = used
@@ -107,7 +114,7 @@ class EdgeManager:
             shift_j = direction[r] * dy
             next1, next2 = \
                 self.connect_manager.get_connect(i + shift_i, j + shift_j,
-                                             dy, dx)
+                                                 dy, dx)
             if not self.connect_manager.can_connect(next1, next2):
                 return False
             res[0].append(next1)
@@ -115,10 +122,12 @@ class EdgeManager:
 
         return True
 
+
 class ConnectManager:
     """
     Менеджер связей
     """
+
     def __init__(self, arr, used):
         self.arr = arr
         self.used = used
@@ -142,7 +151,7 @@ class ConnectManager:
             return False
 
         return (self.arr[new1['i']][new1['j']] and self.arr[new2['i']][new2['j']] and
-                        self.arr[new1['i']][new1['j']] != self.arr[new2['i']][new2['j']])
+                self.arr[new1['i']][new1['j']] != self.arr[new2['i']][new2['j']])
 
     def get_shifted_coord(self, i: int, j: int, dy: int, dx: int) -> Dict[str, int]:
         """

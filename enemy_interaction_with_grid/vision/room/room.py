@@ -15,11 +15,11 @@ class Room:
     """
     Комната. Имеет внешние границы (для перехода к соседним) и внутренние (для коллизий).
     """
-    def __init__(self, grid_rectangle: GridRectangle,
-                arr_after_split: List[List[int]],
-                grid):
-        self._grid = grid
 
+    def __init__(self, grid_rectangle: GridRectangle,
+                 arr_after_split: List[List[int]],
+                 grid):
+        self._grid = grid
 
         self._grid_rectangle = grid_rectangle
 
@@ -27,7 +27,8 @@ class Room:
         self._collision_rectangles = self._get_collision_rectangles(grid)
         self._neighbours = self._get_all_neighbours(arr_after_split, grid)
 
-        self._drawer = RoomDrawer(self._grid, self._outer_rectangle, self._collision_rectangles)
+        self._drawer = RoomDrawer(
+            self._grid, self._outer_rectangle, self._collision_rectangles)
 
     def is_intersect(self, seg: StaticSegment) -> bool:
         """
@@ -56,12 +57,14 @@ class Room:
         return result
 
     def _get_all_neighbours(self, arr_after_split: List[List[int]], grid) -> \
-                Tuple[List[int], List[int], List[int], List[int]]:
+            Tuple[List[int], List[int], List[int], List[int]]:
         """
         Создание и получение соседних комнат
         """
-        group_of_neighour_rectangles = RectangleNeighbours(self._grid_rectangle)
-        result = group_of_neighour_rectangles.get_neighbours(arr_after_split, grid)
+        group_of_neighour_rectangles = RectangleNeighbours(
+            self._grid_rectangle)
+        result = group_of_neighour_rectangles.get_neighbours(
+            arr_after_split, grid)
         return result
 
     def _get_collision_rectangles(self, grid) -> List[StaticRectangle]:
@@ -84,7 +87,7 @@ class Room:
                                                     grid_rectangle.right_index)
 
         return StaticRectangle(left_top_cell.left, left_top_cell.top,
-            right_bottom_cell.right, right_bottom_cell.bottom)
+                               right_bottom_cell.right, right_bottom_cell.bottom)
 
     def process_draw(self):
         """
@@ -97,6 +100,7 @@ class RoomDrawer:
     """
     Отрисовка внутрених и внешних границ комнаты. (Для debug).
     """
+
     def __init__(self, grid, outer_rectangle: Rectangle, collision_rectangles: List[Rectangle]):
         self._grid = grid
         self._outer_rectangle = outer_rectangle
@@ -111,7 +115,7 @@ class RoomDrawer:
         dy = self._grid.scene.relative_center.y
 
         draw.rect(self._grid.scene.screen, COLOR,
-            (rectangle.left - dx, rectangle.top - dy, rectangle.width, rectangle.height), LINE_WIDTH)
+                  (rectangle.left - dx, rectangle.top - dy, rectangle.width, rectangle.height), LINE_WIDTH)
 
     def draw_outer_rectangle(self):
         """
