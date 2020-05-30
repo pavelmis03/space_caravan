@@ -75,25 +75,28 @@ class Player(Humanoid):
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
 
+        self.ammo = data_dict['ammo']
+
         self.weapon_slots = []
-        for weapon_name in data_dict['weapons']:
-            weapon = WEAPON_VOCABULARY[weapon_name](self)
+        for weapon_dict in data_dict['weapons']:
+            weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](self)
+            if weapon.type == 'Ranged':
+                weapon.magazine = weapon_dict['magazine']
             self.weapon_slots.append(weapon)
 
         self.weapon_slots_ind = data_dict['weapon_slots_ind']
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
-        self.ammo = data_dict['ammo']
+
 
     def to_dict(self) -> Dict:
         result = super().to_dict()
 
         weapons = []
         for item in self.weapon_slots:
-            if item.type == 'Ranged':
-                item.end_reloading() # перезарядка, чтобы не нужно было хранить обойму
-
             weapon_dict = weapon_to_dict(item)
-            weapons.append(weapon_dict['weapon'])
+            if item.type == 'Ranged':
+                weapon_dict.update({'magazine': item.magazine})
+            weapons.append(weapon_dict)
 
         result.update({'weapons': weapons})
 
