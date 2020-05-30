@@ -4,6 +4,7 @@ from drawable_objects.ladder import Ladder
 from drawable_objects.interface.ammo_display import AmmoDisplay
 from drawable_objects.interface.player_icon import PlayerIcon
 from drawable_objects.interface.weapons_display import WeaponsDisplay
+from drawable_objects.interface.enemy_count_display import EnemyCountDisplay
 from scenes.game.base import GameScene
 from geometry.point import Point
 from map.level.grid import LevelGrid
@@ -52,3 +53,7 @@ class MainScene(GameScene):
         self.interface_objects.append(weapons_display)
         ammo_display = AmmoDisplay(self, self.game.controller, Point(240, 20), self.player.weapon)
         self.interface_objects.append(ammo_display)
+
+        enemy_count_display = EnemyCountDisplay(self, self.game.controller,
+                                                (1, 0), self.enemies)
+        self.interface_objects.append(enemy_count_display)

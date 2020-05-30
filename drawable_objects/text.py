@@ -1,8 +1,10 @@
 import pygame
 
 from drawable_objects.base import DrawableObject
+from geometry.point import Point
 from geometry.rectangle import rect_to_rectangle, rectangle_to_rect
 from utils.font import FontManager
+
 
 
 class AlignmentStrategy:
@@ -38,6 +40,15 @@ class StrategyCenter(AlignmentStrategy):
         rectangle.center = pos
 
 
+class StrategyRight(AlignmentStrategy):
+    """
+    Выравнивание по правому краю.
+    """
+
+    def execute(self, rectangle, pos):
+        rectangle.bottom_right = Point(pos.x, pos.y + rectangle.height)
+
+
 class Text(DrawableObject):
     """
     Надпись на экране игры.
@@ -58,6 +69,7 @@ class Text(DrawableObject):
     ALIGNS = {
         'left': StrategyLeft(),
         'center': StrategyCenter(),
+        'right': StrategyRight()
     }
 
     def __init__(self, scene, pos, text='Define me!', color=(255, 255, 255), align='left', font_name='Comic Sans',
