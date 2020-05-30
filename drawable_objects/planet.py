@@ -48,10 +48,12 @@ class Planet(SpriteObject):
         self.update_real_pos()
         self.name = name
         self.biom = biom
-        self.level_created = False
         self.enabled = True
-        self.data_filename = 'planet' + str(Planet.COUNTER)
+        self.index = str(Planet.COUNTER)
         Planet.COUNTER += 1
+
+        self.scene.supply.planet_biom[self.index] = self.biom
+        self.scene.supply.planet_completed[self.index] = False
 
     def from_dict(self, data_dict: Dict):
         """
@@ -64,8 +66,7 @@ class Planet(SpriteObject):
         self.biom = data_dict['biom']
         self.image_name = self.IMAGES[self.biom][0]
         self.zoom = self.IMAGES[self.biom][1]
-        self.level_created = data_dict['level_created']
-        self.data_filename = data_dict['data_filename']
+        self.index = data_dict['index']
 
     def to_dict(self) -> Dict:
         """
@@ -76,8 +77,7 @@ class Planet(SpriteObject):
             'estimated_pos': self.estimated_pos.to_dict(),
             'name': self.name,
             'biom': self.biom,
-            'level_created': self.level_created,
-            'data_filename': self.data_filename,
+            'index': self.index,
         })
         return result
 
@@ -97,15 +97,8 @@ class Planet(SpriteObject):
         Запуск уровня. Именно здесь создается сцена уровня, так работает загрузка сцен.
         """
         from scenes.game.main import MainScene  # В обход цикличеких import'ов
-        level_scene = MainScene(self.scene.game, self.data_filename)
-        first_run = not self.level_created
-        if not self.level_created:
-            level_scene.set_biom(self.biom)
-            level_scene.initialize()
-            self.level_created = True
-        else:
-            level_scene.load()
-        self.scene.game.set_scene(level_scene, first_run)
+        level_scene = MainScene(self.scene.game, self.index)
+        self.scene.game.set_scene(level_scene)
 
     def process_logic(self):
         self.update_real_pos()

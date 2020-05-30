@@ -22,5 +22,4 @@ class Ladder(UsableObject):
         """
         from scenes.game.spaceship import SpaceshipScene  # В обход циклических import'ов
         spaceship_scene = SpaceshipScene(self.scene.game)
-        spaceship_scene.load()
         self.scene.game.set_scene(spaceship_scene)

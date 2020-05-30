@@ -1,4 +1,4 @@
-from scenes.game.base import GameScene
+from scenes.game.level import LevelScene
 from geometry.point import Point
 from map.spaceship_grid import SpaceshipGrid
 from drawable_objects.space_map_terminal import SpaceMapTerminal
@@ -6,7 +6,7 @@ from drawable_objects.player import Player
 from space.supply import Supply
 
 
-class SpaceshipScene(GameScene):
+class SpaceshipScene(LevelScene):
     """
     Класс сцены космического корабля.
 

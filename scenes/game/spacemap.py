@@ -1,8 +1,8 @@
-from scenes.conservable import ConservableScene
+from scenes.game.base import GameScene
 from space.planets_generator import PlanetsGenerator
 
 
-class SpacemapScene(ConservableScene):
+class SpacemapScene(GameScene):
     """
     Сцена звездной карты.
 

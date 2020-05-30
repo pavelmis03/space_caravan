@@ -17,6 +17,8 @@ class Supply:
         self.__scene = scene
         self.fuel = 0
         self.essence = 0
+        self.planet_biom = {}
+        self.planet_completed = {}
 
     def initialize(self):
         self.fuel = self.START_FUEL
@@ -25,11 +27,15 @@ class Supply:
     def from_dict(self, data_dict: Dict):
         self.fuel = data_dict['fuel']
         self.essence = data_dict['essence']
+        self.planet_biom = data_dict['planet_biom']
+        self.planet_completed = data_dict['planet_completed']
 
     def to_dict(self) -> Dict:
         return {
             'fuel': self.fuel,
             'essence': self.essence,
+            'planet_biom': self.planet_biom,
+            'planet_completed': self.planet_completed,
         }
 
     def load(self):

@@ -25,7 +25,10 @@ class GameDataManager:
         метод нужно вызывать перед ними.
         """
         self.__space_name = space_name
-        self.__space_path = os.path.join(self.STORAGE_ROOT, space_name)
+        if space_name:
+            self.__space_path = os.path.join(self.STORAGE_ROOT, space_name)
+        else:
+            self.__space_name = None
 
     def create_space_storage(self):
         """
@@ -39,7 +42,10 @@ class GameDataManager:
             shutil.rmtree(self.__space_path)
 
     def __get_file_path(self, file_name) -> str:
-        return os.path.join(self.__space_path, file_name + '.json')
+        if self.__space_name:
+            return os.path.join(self.__space_path, file_name + '.json')
+        else:
+            return os.path.join(self.STORAGE_ROOT, file_name + 'json')
 
     def read_data(self, file_name: str) -> Dict:
         """
@@ -69,6 +75,10 @@ class GameDataManager:
             if os.path.isdir(os.path.join(self.STORAGE_ROOT, name)):
                 folders.append(name)
         return folders
+
+    def file_exists(self, file_name: str):
+        file_path = self.__get_file_path(file_name)
+        return os.path.exists(file_path) and os.path.isfile(file_path)
 
 
 def to_list_of_dicts(objects: List) -> List[Dict]:

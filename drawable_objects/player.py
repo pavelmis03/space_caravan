@@ -203,8 +203,6 @@ class Player(Humanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        from scenes.spacemap import SpacemapScene
+        from scenes.game.spacemap import SpacemapScene
         scene = SpacemapScene(self.scene.game)
-        scene.load()
         self.scene.game.set_scene(scene)
-

@@ -37,8 +37,7 @@ class SpaceChoiceMenuScene(MenuScene):
         файлов.
         """
         spaceship_scene = SpaceshipScene(self.game)
-        spaceship_scene.initialize()
-        spaceship_scene.save()
+        spaceship_scene.construct()
 
     def create_space(self):
         """
@@ -77,5 +76,4 @@ class SpaceChoiceMenuScene(MenuScene):
             return
         self.game.file_manager.set_current_space(space_name)
         spaceship_scene = SpaceshipScene(self.game)
-        spaceship_scene.load()
         self.game.set_scene(spaceship_scene)
