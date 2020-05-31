@@ -161,4 +161,4 @@ def weapon_to_dict(weapon: Weapon) -> Dict:
         if isinstance(weapon, value):
             return {'weapon': key}
 
-    raise Exception('Weapon didnt exist')
+    raise Exception('Weapon does not exist')

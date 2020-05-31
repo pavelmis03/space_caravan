@@ -86,7 +86,8 @@ class LevelGrid(CollisionGrid):
         """
         self._create_interaction_with_enemy_manager()
 
-        enemy_generator = LevelObjectsGenerator(self, self.__room_rectangles, level_settings[self.biom].enemy_weapons)
+        enemy_generator = LevelObjectsGenerator(self, self.__room_rectangles,
+                        level_settings[self.biom].enemy_weapons, level_settings[self.biom].chest_drop)
         enemy_generator.generate()
 
         """

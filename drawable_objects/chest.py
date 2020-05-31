@@ -1,4 +1,5 @@
 from drawable_objects.usable_object import UsableObject
+from drawable_objects.drop.chest_drop import create_drop
 from geometry.point import Point
 
 from scenes.base import Scene
@@ -13,9 +14,27 @@ class Chest(UsableObject):
     IMAGE_ZOOM = 1.5
     IMAGE_NAME ='level_objects.boxes.box'
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene: Scene, controller: Controller, drop: str, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Chest.IMAGE_NAME,
                          pos, angle, Chest.IMAGE_ZOOM)
+        self.__drop = drop
+        self.__activated = False
 
     def activate(self):
+        if self.__activated:
+            return
+        self.__activated = True
+
         self.image_name ='level_objects.boxes.box_open'
+
+        drop = create_drop(self.__drop, self.scene, self.controller, self.pos)
+        self.scene.game_objects.append(drop)
+
+    def _popping_e_draw(self):
+        if self.__activated:
+            return
+        super()._popping_e_draw()
+
+    @property
+    def _can_be_activated(self):
+        return not self.__activated

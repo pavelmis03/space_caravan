@@ -19,7 +19,7 @@ def create_enemy(grid, i: int, j: int, weapon_name: str):
 
 
 def create_chest(grid, i: int, j: int, item_name: str):
-    chest = Chest(grid.scene, grid.controller,
+    chest = Chest(grid.scene, grid.controller, item_name,
                     grid.get_center_of_cell_by_indexes(i, j), 0)
     grid.scene.game_objects.append(chest)
 
@@ -29,10 +29,11 @@ class LevelObjectsGenerator:
     Генератор Enemies.
     """
     def __init__(self, grid, rectangles: List[GridRectangle],
-                 enemy_weapons: List[Tuple[int, str]]):
+                 enemy_weapons: List[Tuple[int, str]], chest_drop: List[Tuple[int, str]]):
         self.__grid = grid
         self.__rectangles = rectangles
         self.__enemy_weapons = enemy_weapons
+        self.__chest_drop = chest_drop
 
     def generate(self):
         """
@@ -66,13 +67,13 @@ class LevelObjectsGenerator:
             create_enemy(self.__grid, random_i, random_j, random_weapon)
 
     def __generate_chest(self, room: GridRectangle):
-        CHANCE_SPAWN = 2
+        CHANCE_SPAWN = 100
 
         if not is_accurate_random_proc(CHANCE_SPAWN):
             return
         random_i, random_j = self.__get_random_cell(room)
 
-        random_item = 'tmp'#weight_choice(self.__enemy_weapons)
+        random_item = weight_choice(self.__chest_drop)
         create_chest(self.__grid, random_i, random_j, random_item)
 
     def __get_random_cell(self, room: GridRectangle) -> Tuple[int, int]:
