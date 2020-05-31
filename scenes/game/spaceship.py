@@ -1,12 +1,12 @@
-from scenes.game.base import GameScene
+from scenes.game.level import LevelScene
 from geometry.point import Point
 from map.spaceship_grid import SpaceshipGrid
 from drawable_objects.space_map_terminal import SpaceMapTerminal
 from drawable_objects.player import Player
-from space.supply import Supply
+from space.common_game_data import CommonGameData
 
 
-class SpaceshipScene(GameScene):
+class SpaceshipScene(LevelScene):
     """
     Класс сцены космического корабля.
 
@@ -28,8 +28,8 @@ class SpaceshipScene(GameScene):
 
     def initialize(self):
         """
-        Инициализация для космического корабля означает создание игрока и припасов (так это первая сцена,
-        появляющаяся в новом игровом мире), а также объектов на корабле.
+        Инициализация для космического корабля означает создание игрока и общих данных игры (так это первая
+        сцена, появляющаяся в новом игровом мире), а также объектов на корабле.
         """
         terminal_spawn_point = Point(
             (self.ROOM_WIDTH / 2) * self.CELL_SIZE, (self.ROOM_HEIGHT - 2) * self.CELL_SIZE)
@@ -39,5 +39,5 @@ class SpaceshipScene(GameScene):
             self, self.game.controller, terminal_spawn_point, 0))
         self.player = Player(self, self.game.controller,
                              self.PLAYER_SPAWN_POINT)
-        self.supply = Supply(self)
-        self.supply.initialize()
+        self.common_data = CommonGameData(self)
+        self.common_data.initialize()

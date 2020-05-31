@@ -1,10 +1,11 @@
 import pygame
 
+from typing import Dict
+
 from constants.color import COLOR
 from drawable_objects.base import DrawableObject
-from drawable_objects.text import Text
-from geometry.point import Point
-from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect, get_rectangle_copy, rect_to_rectangle, Rectangle
+from drawable_objects.menu.text import Text
+from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect, get_rectangle_copy, Rectangle
 
 
 class CheckBox(DrawableObject):
@@ -36,6 +37,14 @@ class CheckBox(DrawableObject):
         self.set_up_size()
         self.move_to(pos)
         self.check = enabled
+
+    def to_dict(self) -> Dict:
+        return {
+            'check': self.check,
+        }
+
+    def from_dict(self, data_dict: Dict):
+        self.check = data_dict['check']
 
     def move(self, movement):
         """

@@ -3,8 +3,6 @@
 """
 
 from constants.color import COLOR
-from drawable_objects.multiline_text import MultilineText
-from geometry.point import Point
 from scenes.menu.base import MenuScene
 
 

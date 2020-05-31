@@ -5,7 +5,7 @@ import pygame
 
 from constants.color import COLOR
 from drawable_objects.base import DrawableObject
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 from geometry.point import Point
 from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect
 

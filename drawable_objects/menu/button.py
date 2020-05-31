@@ -2,7 +2,7 @@ import pygame
 
 from constants.color import COLOR
 from drawable_objects.base import DrawableObject
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 from geometry.rectangle import rectangle_to_rect, tuple_to_rectangle
 from utils.sound import SoundManager
 
