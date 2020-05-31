@@ -25,6 +25,7 @@ class PlayerSlash(GameSprite):
         self.image_ind = 0
         self.one_frame_vision_time = 2
         self.damage = 250
+        self.reach = 1.5
 
     def process_logic(self):
         if not self.creator.enabled:
@@ -35,9 +36,8 @@ class PlayerSlash(GameSprite):
     def is_angle_correct(self, neighbour):
         vector_to_neighbour = neighbour.pos - self.creator.pos
         neighbour_to_attacker_angle = atan2 (-vector_to_neighbour.y, vector_to_neighbour.x)
-        reach = 1.5
-        neighbour_to_attacker_angle_range = [neighbour_to_attacker_angle - reach,
-                                             neighbour_to_attacker_angle + reach]
+        neighbour_to_attacker_angle_range = [neighbour_to_attacker_angle - self.reach,
+                                             neighbour_to_attacker_angle + self.reach]
         is_angle_correct = False
         if neighbour_to_attacker_angle_range[1] > pi and \
                 (neighbour_to_attacker_angle_range[0] < self.creator.angle <= pi or
@@ -84,13 +84,24 @@ class EnemySlash(PlayerSlash):
             self.scene.player.get_damage(self.damage)
 
 
-class Punch(GameSprite):
+class Punch(PlayerSlash):
     """
     Удар кулаком
     """
 
     IMAGE_NAMES = [
-        'moving_objects.melee_weapon.attack.heavy_splash.1',
-        'moving_objects.melee_weapon.attack.heavy_splash.2',
-        'moving_objects.melee_weapon.attack.heavy_splash.3',
+        'moving_objects.melee_weapon.attack.light_splash.11',
+        'moving_objects.melee_weapon.attack.light_splash.22',
+        'moving_objects.melee_weapon.attack.light_splash.44',
     ]
+
+    def __init__(self, creator: GameSprite):
+        super().__init__(creator, 30 + creator.scene.player.HITBOX_RADIUS)
+        self.zoom = 0.5
+        self.one_frame_vision_time = 2
+        self.damage = 65
+        self.reach = 1
+
+    def process_logic(self):
+        super().process_logic()
+        self.damage = 0
