@@ -3,8 +3,8 @@ from drawable_objects.enemy import Enemy
 from enemy_interaction_with_grid.manager import GridInteractionWithEnemyManager
 from geometry.point import Point
 from map.collision_grid.collision_grid import CollisionGrid
-from map.level.level_generator import LevelGenerator
-from map.level.level_objects_generator import LevelObjectsGenerator
+from map.level.map_generator import LevelGenerator
+from map.level.objects_generator import LevelObjectsGenerator
 from map.level.rect.splitter import GridRectangle
 from utils.game_data_manager import to_2dimensional_list_of_dicts, from_2dimensional_list_of_dicts
 from utils.list import copy_2dimensional_list

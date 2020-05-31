@@ -7,7 +7,6 @@ from controller.controller import Controller
 from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
-from scenes.base import Scene
 from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
@@ -105,7 +104,7 @@ class CommandHumanoid(MovingHumanoid):
     DELAY_BEFORE_HEARING = 8
     LEVEL_LOAD_DELAY = 36
 
-    def __init__(self, scene: Scene, controller: Controller, image_name: str,
+    def __init__(self, scene, controller: Controller, image_name: str,
                  pos: Point, angle: float, image_zoom: float):
         super().__init__(scene, controller, image_name, pos, angle, image_zoom)
 
@@ -342,7 +341,7 @@ class Enemy(CommandHumanoid):
     ROTATION_MIN_COOLDOWN = 100
     ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
         self.__rotate_cooldown = randint(
             Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
