@@ -2,6 +2,7 @@ from scenes.game.base import GameScene
 from geometry.point import Point
 from map.spaceship_grid import SpaceshipGrid
 from drawable_objects.space_map_terminal import SpaceMapTerminal
+from drawable_objects.clone_capsule import CloneCapsule
 from drawable_objects.player import Player
 from space.supply import Supply
 
@@ -32,11 +33,19 @@ class SpaceshipScene(GameScene):
         появляющаяся в новом игровом мире), а также объектов на корабле.
         """
         terminal_spawn_point = Point(
-            (self.ROOM_WIDTH / 2) * self.CELL_SIZE, (self.ROOM_HEIGHT - 2) * self.CELL_SIZE)
+            (self.ROOM_WIDTH / 2) * self.CELL_SIZE, (self.ROOM_HEIGHT - 1) * self.CELL_SIZE)
         terminal_spawn_point += Point(1, 1) * \
             self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
+        capsule_spawn_point = Point (
+            (self.ROOM_WIDTH - 1) * self.CELL_SIZE, (self.ROOM_HEIGHT - 2) * self.CELL_SIZE)
+        capsule_spawn_point += Point (1, 1) * \
+                                self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
+
         self.game_objects.append(SpaceMapTerminal(
             self, self.game.controller, terminal_spawn_point, 0))
+        self.game_objects.append(CloneCapsule(
+            self, self.game.controller, capsule_spawn_point, 0))
+
         self.player = Player(self, self.game.controller,
                              self.PLAYER_SPAWN_POINT)
         self.supply = Supply(self)
