@@ -14,10 +14,11 @@ class Chest(UsableObject):
         """
     IMAGE_ZOOM = 1.5
     IMAGE_NAME ='level_objects.boxes.box'
+    USAGE_RADIUS = 80
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Chest.IMAGE_NAME,
-                         pos, angle, Chest.IMAGE_ZOOM)
+                         pos, angle, Chest.IMAGE_ZOOM, Chest.USAGE_RADIUS)
         self.__activated = False
 
     def activate(self):
