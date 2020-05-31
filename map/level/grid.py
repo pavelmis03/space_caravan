@@ -90,7 +90,8 @@ class LevelGrid(CollisionGrid):
                         level_settings[self.biom].enemy_weapons,
                         level_settings[self.biom].chest_weapon_drop,
                         level_settings[self.biom].CHEST_OTHER_DROP,
-                        level_settings[self.biom].CHEST_WEAPON_DROP_CHANCE)
+                        level_settings[self.biom].CHEST_WEAPON_DROP_CHANCE,
+                        level_settings[self.biom].chest_imgs)
         enemy_generator.generate()
 
         """

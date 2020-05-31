@@ -18,10 +18,11 @@ def create_enemy(grid, i: int, j: int, weapon_name: str):
     grid.scene.enemies.append(enemy)
 
 
-def create_chest(grid, i: int, j: int, item_name: str):
+def create_chest(grid, i: int, j: int, item_name: str, chest_imgs: Tuple[str, str]):
     chest = Chest(grid.scene, grid.controller,
                     grid.get_center_of_cell_by_indexes(i, j), 0)
     chest.set_drop(item_name)
+    chest.set_image(chest_imgs)
     grid.scene.game_objects.append(chest)
 
 
@@ -31,13 +32,15 @@ class LevelObjectsGenerator:
     """
     def __init__(self, grid, rectangles: List[GridRectangle],
                  enemy_weapons: List[Tuple[int, str]], chest_weapon_drop: List[Tuple[int, str]],
-                 chest_other_drop: List[Tuple[int, str]], chance_weapon_drop: int):
+                 chest_other_drop: List[Tuple[int, str]], chance_weapon_drop: int,
+                 chest_imgs: Tuple[str, str]):
         self.__grid = grid
         self.__rectangles = rectangles
         self.__enemy_weapons = enemy_weapons
         self.__chest_weapon_drop = chest_weapon_drop
         self.__chest_other_drop = chest_other_drop
         self.__chance_weapon_drop = chance_weapon_drop
+        self.__chest_imgs = chest_imgs
 
     def generate(self):
         """
@@ -78,7 +81,7 @@ class LevelObjectsGenerator:
         random_i, random_j = self.__get_random_cell(room)
 
         random_item = self.__get_random_drop()
-        create_chest(self.__grid, random_i, random_j, random_item)
+        create_chest(self.__grid, random_i, random_j, random_item, self.__chest_imgs)
 
     def __get_random_drop(self) -> str:
         if is_accurate_random_proc(self.__chance_weapon_drop):
