@@ -6,6 +6,7 @@ from drawable_objects.enemy import Enemy
 from map.level.rect.splitter import GridRectangle
 from drawable_objects.chest import Chest
 from drawable_objects.drop.chest_drop import WeaponDrop
+from drawable_objects.drop.enemy_drop import AmmoDrop
 
 
 
@@ -17,5 +18,6 @@ CLASSES_BASE = {
     # для сохранения оптимизированной структуры grid_interaction_with_enemy
     'GridRectangle': GridRectangle,
     'WeaponDrop': WeaponDrop,
+    'AmmoDrop': AmmoDrop,
     'Chest': Chest
 }
