@@ -136,6 +136,21 @@ class Sword(MeleeWeapon):
                          main_attack_interval=15, length=60)
 
 
+class Fists(MeleeWeapon):
+
+    def __init__(self, owner):
+        super().__init__(owner, scene_image='other.bullet', interface_image='other.bullet',
+                         main_attack_interval=10, length=40)
+
+    def attack(self):
+        """
+        Функция атаки
+        """
+        #from drawable_objects.slash import
+        # SoundManager.play_sound('weapon.shoot')
+        #self.scene.game_objects.append(PlayerSlash(self.owner, self.length))
+
+
 WEAPON_VOCABULARY = {
     'Pistol': Pistol,
     'BurstFiringPistol': BurstFiringPistol,
