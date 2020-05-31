@@ -2,7 +2,7 @@
 Основа для создания сцен меню
 """
 
-from drawable_objects.interface.widget_group import WidgetGroup
+from drawable_objects.menu.widget_group import WidgetGroup
 from scenes.conservable import ConservableScene
 
 

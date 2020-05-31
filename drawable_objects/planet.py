@@ -35,11 +35,11 @@ class Planet(SpriteObject):
         'Mushroom',
     ]
     IMAGES = [
-        ('level_objects.simple_planet', 0.07),
-        ('level_objects.ice_planet', 0.35),
-        ('level_objects.lava_planet', 0.3),
-        ('level_objects.violet_planet', 0.3),
-        ('level_objects.mushroom_planet', 0.3),
+        ('spacemap.simple_planet', 0.07),
+        ('spacemap.ice_planet', 0.35),
+        ('spacemap.lava_planet', 0.3),
+        ('spacemap.violet_planet', 0.3),
+        ('spacemap.mushroom_planet', 0.3),
     ]
     COUNTER = 0
 
