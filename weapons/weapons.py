@@ -152,15 +152,15 @@ class Fists(MeleeWeapon):
 
 
 WEAPON_VOCABULARY = {
-    'Pistol': Pistol,
-    'BurstFiringPistol': BurstFiringPistol,
-    'Shotgun': Shotgun,
-    'TwoBarrelShotgun': TwoBarrelShotgun,
-    'ThreeBarrelShotgun': ThreeBarrelShotgun,
-    'TacticalShotgun': TacticalShotgun,
-    'AutomaticRifle': AutomaticRifle,
-    'SniperRifle': SniperRifle,
-    'OldRifle': OldRifle,
-    'SemiAutomaticRifle': SemiAutomaticRifle,
-    'Sword': Sword,
+    'Pistol': Pistol, #tier1
+    'BurstFiringPistol': BurstFiringPistol, #t3
+    'Shotgun': Shotgun, #t3
+    'TwoBarrelShotgun': TwoBarrelShotgun, #t1
+    'ThreeBarrelShotgun': ThreeBarrelShotgun, #t2
+    'TacticalShotgun': TacticalShotgun, #t3.5
+    'AutomaticRifle': AutomaticRifle, #t2.5
+    'SniperRifle': SniperRifle, #t2.5
+    'OldRifle': OldRifle, #t1
+    'SemiAutomaticRifle': SemiAutomaticRifle, #t2
+    'Sword': Sword, #t?
 }

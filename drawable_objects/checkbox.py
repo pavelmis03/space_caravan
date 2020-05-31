@@ -1,5 +1,7 @@
 import pygame
 
+from typing import Dict
+
 from constants.color import COLOR
 from drawable_objects.base import DrawableObject
 from drawable_objects.text import Text
@@ -36,6 +38,14 @@ class CheckBox(DrawableObject):
         self.set_up_size()
         self.move_to(pos)
         self.check = enabled
+
+    def to_dict(self) -> Dict:
+        return {
+            'check': self.check,
+        }
+
+    def from_dict(self, data_dict: Dict):
+        self.check = data_dict['check']
 
     def move(self, movement):
         """

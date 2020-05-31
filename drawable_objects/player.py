@@ -64,8 +64,8 @@ class Player(Humanoid):
             'Rifle': 100,
         }
         self.weapon_slots = [
-            WEAPON_VOCABULARY['Sword'](self),
             WEAPON_VOCABULARY['Pistol'](self),
+            WEAPON_VOCABULARY['Sword'](self),
         ]
         self.weapon_slots_ind = 0
         self.change_weapon_request = -1
@@ -210,8 +210,6 @@ class Player(Humanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        from scenes.spacemap import SpacemapScene
+        from scenes.game.spacemap import SpacemapScene
         scene = SpacemapScene(self.scene.game)
-        scene.load()
         self.scene.game.set_scene(scene)
-

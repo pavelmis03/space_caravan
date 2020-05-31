@@ -32,18 +32,17 @@ class SpaceChoiceMenuScene(MenuScene):
 
     def init_spaceship_scene(self):
         """
-        Инициализация сцены космического корабля, которая включает в себя создание игрока. Проинициализированная
+        Конструирование сцены космического корабля, которая включает в себя создание игрока. Проинициализированная
         сцена и игрок сохраняются и выбрасываются. При последующих загрузках космоса будет происходить загрузка из
         файлов.
         """
         spaceship_scene = SpaceshipScene(self.game)
-        spaceship_scene.initialize()
-        spaceship_scene.save()
+        spaceship_scene.construct()
 
     def create_space(self):
         """
         Создание нового космоса: очистка поля ввода, добавление пункта в список для пользователя, создание
-        хранилища файлов, инициализация игрового мира. Если поле ввода пустое или космос с введенным
+        хранилища файлов, создание сцены космического корабля. Если поле ввода пустое или космос с введенным
         именем уже есть, ничего не происходит.
         """
         space_name = self.space_name_textbox.value
@@ -77,5 +76,4 @@ class SpaceChoiceMenuScene(MenuScene):
             return
         self.game.file_manager.set_current_space(space_name)
         spaceship_scene = SpaceshipScene(self.game)
-        spaceship_scene.load()
         self.game.set_scene(spaceship_scene)
