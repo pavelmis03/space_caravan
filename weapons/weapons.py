@@ -133,14 +133,14 @@ class Sword(MeleeWeapon):
 
     def __init__(self, owner):
         super().__init__(owner, scene_image='other.gun', interface_image='other.gun',
-                         main_attack_interval=15, length=30)
+                         main_attack_interval=15, length=60)
 
 
 class Fist(MeleeWeapon):
 
     def __init__(self, owner):
         super().__init__(owner, scene_image='other.bullet', interface_image='other.bullet',
-                         main_attack_interval=10, length=40)
+                         main_attack_interval=7, length=30)
 
     def attack(self):
         """
@@ -148,7 +148,7 @@ class Fist(MeleeWeapon):
         """
         from drawable_objects.slash import Punch
         # SoundManager.play_sound('weapon.shoot')
-        self.scene.game_objects.append(Punch(self.owner))
+        self.scene.game_objects.append(Punch(self.owner, self.length))
 
 
 WEAPON_VOCABULARY = {

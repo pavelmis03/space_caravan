@@ -95,7 +95,6 @@ class Player(Humanoid):
             self.DATA_FILENAME, self.to_dict())
 
     def process_logic(self):
-        self.hp = 100
         self._turn_to_mouse()
         self._movement_controls()
         self._weapon_controls()
