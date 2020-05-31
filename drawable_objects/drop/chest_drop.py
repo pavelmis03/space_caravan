@@ -1,20 +1,22 @@
 from typing import Dict
-from drawable_objects.usable_object import UsableObject
+from drawable_objects.drop.base import Drop
 from controller.controller import Controller
 from geometry.point import Point
 from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
 
 
-class WeaponDrop(UsableObject):
+class WeaponDrop(Drop):
+    IMAGE_NAME = 'other.gun' #временное значение. будет изменено в set_weapon_dict
+
     def __init__(self, scene, controller: Controller,
                  pos: Point, angle: float = 0, zoom: float = 0.5, usage_radius: float = 75):
-        super().__init__(scene, controller, WEAPON_VOCABULARY['Sword'].IMAGE_NAME,
+        super().__init__(scene, controller,
                          pos, angle, zoom, usage_radius)
     # напиши нормальный get_image
     def activate(self):
         old_weapon = weapon_to_dict(self.scene.player.weapon)
         self.scene.player.set_weapon(self.__weapon_dict)
-        self.enabled = False
+        self.destroy()
 
         new_weapon = WeaponDrop(self.scene, self.controller,
                             self.pos, self.angle, self.zoom, self.usage_radius)
@@ -40,7 +42,21 @@ class WeaponDrop(UsableObject):
         self.set_weapon_dict(weapon_dict)
 
 
-def create_drop(name: str, scene, controller: Controller, pos: Point) -> UsableObject:
+class MedKitDrop(Drop):
+    IMAGE_NAME = 'other.medkit'
+
+    def __init__(self, scene, controller: Controller,
+                 pos: Point, angle: float = 0, zoom: float = 0.15, usage_radius: float = 75):
+        POS_TRANSITION = Point(0, -10)
+        super().__init__(scene, controller,
+                         (pos + POS_TRANSITION), angle, zoom, usage_radius)
+
+    def activate(self):
+        self.scene.player.hp = self.scene.player.MAXHP
+        self.destroy()
+
+
+def create_drop(name: str, scene, controller: Controller, pos: Point) -> Drop:
     """
     создать новый дроп по названию name
     """
@@ -50,4 +66,8 @@ def create_drop(name: str, scene, controller: Controller, pos: Point) -> UsableO
         res.set_weapon_dict(weapon_to_dict(tmp_weapon))
         return res
 
-    raise Exception('Drop does not exist')
+    OTHER_DROP = {
+        'MedKit': MedKitDrop,
+    }
+    return OTHER_DROP[name](scene, controller, pos)
+

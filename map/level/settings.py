@@ -31,7 +31,8 @@ class LevelSettings:
 level_settings = [
     LevelSettings('level.floor3', 'level.wall1',
                 [(30, 'Sword'), (60, 'Pistol'), (10, 'TwoBarrelShotgun')],
-                  [(20, 'Sword'), (40, 'TwoBarrelShotgun'), (40, 'OldRifle')]),
+                  [(100, 'MedKit')]),
+                  #[(20, 'Sword'), (40, 'TwoBarrelShotgun'), (40, 'OldRifle')]),
     LevelSettings('level.floor3', 'level.wall1',
                 [(30, 'Pistol'), (10, 'TwoBarrelShotgun'),
                  (30, 'OldRifle'), (30, 'SemiAutomaticRifle')],

@@ -5,7 +5,7 @@ from drawable_objects.space_map_terminal import SpaceMapTerminal
 from drawable_objects.enemy import Enemy
 from map.level.rect.splitter import GridRectangle
 from drawable_objects.chest import Chest
-from drawable_objects.drop.chest_drop import WeaponDrop
+from drawable_objects.drop.chest_drop import WeaponDrop, MedKitDrop
 from drawable_objects.drop.enemy_drop import AmmoDrop
 
 
@@ -19,5 +19,6 @@ CLASSES_BASE = {
     'GridRectangle': GridRectangle,
     'WeaponDrop': WeaponDrop,
     'AmmoDrop': AmmoDrop,
+    'MedKitDrop': MedKitDrop,
     'Chest': Chest
 }
