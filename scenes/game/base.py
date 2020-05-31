@@ -2,13 +2,13 @@ from typing import Dict, List
 
 from scenes.conservable import ConservableScene
 from utils.game_data_manager import from_list_of_dicts, to_list_of_dicts
-from space.supply import Supply
+from space.common_game_data import CommonGameData
 
 
 class GameScene(ConservableScene):
     """
     Базовый класс игровой сцены, то есть сцены игрового мира. Не обязательно содержит игрока и игровые объекты
-    (например, карта планет), но обязательно припасы.
+    (например, карта планет), но обязательно - объект с общими данными игры.
     
     :param game: игра, создающая сцену
     :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
@@ -17,18 +17,18 @@ class GameScene(ConservableScene):
     def __init__(self, game, data_filename: str):
         super().__init__(game, data_filename)
         self.data_filename = data_filename
-        self.supply = None
+        self.common_data = None
 
-    def load_supply(self):
+    def load_common_data(self):
         """
-        Загрузка объекта припасов.
+        Загрузка объекта с общими данными игры.
         """
-        self.supply = Supply(self)
-        self.supply.load()
+        self.common_data = CommonGameData(self)
+        self.common_data.load()
 
     def save(self):
         super().save()
-        self.supply.save()
+        self.common_data.save()
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)

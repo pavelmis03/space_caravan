@@ -25,7 +25,7 @@ class MainScene(LevelScene):
         super().initialize()
 
         self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
-        self.grid.biom = self.supply.planet_biom[self.planet_index]
+        self.grid.biom = self.common_data.planet_biom[self.planet_index]
         self.grid.initialize()
 
         self.game_objects.append(Ladder(
@@ -54,4 +54,4 @@ class MainScene(LevelScene):
     def game_logic(self):
         super().game_logic()
         if len(self.enemies) == 0:
-            self.supply.planet_completed[self.planet_index] = True
+            self.common_data.planet_completed[self.planet_index] = True

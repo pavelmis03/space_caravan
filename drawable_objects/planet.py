@@ -52,8 +52,8 @@ class Planet(SpriteObject):
         self.index = str(Planet.COUNTER)
         Planet.COUNTER += 1
 
-        self.scene.supply.planet_biom[self.index] = self.biom
-        self.scene.supply.planet_completed[self.index] = False
+        self.scene.common_data.planet_biom[self.index] = self.biom
+        self.scene.common_data.planet_completed[self.index] = False
 
     def from_dict(self, data_dict: Dict):
         """

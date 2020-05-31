@@ -95,8 +95,8 @@ class Game:
     def set_scene(self, scene: Scene):
         """
         Установка заданной сцены текущей. Старая сцена может быть None; если она не None, она сохраняется. Если
-        старая сцена игровая, она готовится к удалению. Далее новой сцене подгружается игрок и припасы, если
-        необходимо. После вызывается конструирование новой сцены и обновляется __current_scene.
+        старая сцена игровая, она готовится к удалению. Далее новой сцене подгружается игрок и объект с общими
+        данными игры, если необходимо. После вызывается конструирование новой сцены и обновляется __current_scene.
 
         :param scene: ссылка на новую сцену
         """
@@ -105,7 +105,7 @@ class Game:
         if isinstance(self.__current_scene, GameScene):
             self.__to_delete.append(self.__current_scene)
         if isinstance(scene, GameScene):
-            scene.load_supply()
+            scene.load_common_data()
         if isinstance(scene, LevelScene):
             scene.load_player()
         if isinstance(scene, MenuScene):
