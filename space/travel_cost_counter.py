@@ -5,6 +5,9 @@ from geometry.distances import dist
 
 
 class TravelCostCounter:
+    """
+    Счетчик стоимости перелета между планетами.
+    """
     def __init__(self):
         pass
 

@@ -15,14 +15,26 @@ from geometry.point import Point
 
 
 class PanelArranger:
+    """
+    Расстановщик виджетов меню на панели космической карты.
+
+    :param scene: сцена космической карты, создающая объект
+    """
     def __init__(self, scene):
         self.__scene = scene
         self.__widgets = []
 
     def add_widget(self, widget, relative_pos: Point):
+        """
+        Добавление виджета с его позицией относительно левого верхнего угла панели.
+        """
         self.__widgets.append((widget, relative_pos))
+        self.__scene.interface_objects.append(widget)
 
     def process_logic(self):
+        """
+        Логика объекта - перемещение виджетов на свои места на панели.
+        """
         relative_center = Point(0, self.__scene.game.height - self.__scene.PANEL_HEIGHT)
         for item in self.__widgets:
             target_top_left = relative_center + item[1]
@@ -32,13 +44,23 @@ class PanelArranger:
 
 class SpacemapScene(GameScene):
     """
-    Сцена звездной карты.
+    Сцена космической карты. Содержит список планет и виджеты панели управления кораблем. Корабль игрока всегда
+    около одной из планет - текущей. Можно выбирать планеты и перелетать к ним.
 
     :param game: игра, создающая сцену
     """
     DATA_FILENAME = 'spacemap'
-    PANEL_HEIGHT = 80
+
     REVOLVING_RADIUS = 50
+
+    WIDGET_WIDTH = 200
+    WIDGET_HEIGHT = 60
+    WIDGET_INDENT_LEFT = 20
+    WIDGET_INDENT_TOP = 10
+    PANEL_HEIGHT = WIDGET_HEIGHT + 2 * WIDGET_INDENT_TOP
+    BUTTON_GEOMETRY = (0, 0, WIDGET_WIDTH, WIDGET_HEIGHT)
+    LABEL_HEIGHT = (WIDGET_HEIGHT - WIDGET_INDENT_TOP) // 2
+    LABEL_GEOMETRY = (0, 0, WIDGET_WIDTH, LABEL_HEIGHT)
 
     def __init__(self, game):
         super().__init__(game, self.DATA_FILENAME)
@@ -50,18 +72,20 @@ class SpacemapScene(GameScene):
         self.interface_objects.append(self.spaceship_icon)
         self.panel_arranger = PanelArranger(self)
 
-        land_button = Button(self, self.game.controller, (0, 0, 150, 60), 'Высадиться', self.run_level)
-        travel_button = Button(self, self.game.controller, (0, 0, 150, 60), 'Перелететь', self.travel)
-        self.fuel_label = Label(self, (0, 0, 150, 20), '---', 'left')
-        self.cost_label = Label(self, (0, 0, 150, 20), '---', 'left')
-        self.interface_objects.append(land_button)
-        self.interface_objects.append(travel_button)
-        self.interface_objects.append(self.fuel_label)
-        self.interface_objects.append(self.cost_label)
-        self.panel_arranger.add_widget(land_button, Point(20, 10))
-        self.panel_arranger.add_widget(travel_button, Point(190, 10))
-        self.panel_arranger.add_widget(self.fuel_label, Point(360, 10))
-        self.panel_arranger.add_widget(self.cost_label, Point(360, 40))
+        land_button = Button(self, self.game.controller, self.BUTTON_GEOMETRY, 'Высадиться', self.run_level)
+        travel_button = Button(self, self.game.controller, self.BUTTON_GEOMETRY, 'Перелететь', self.travel)
+        self.fuel_label = Label(self, self.LABEL_GEOMETRY, '', 'left')
+        self.cost_label = Label(self, self.LABEL_GEOMETRY, '', 'left')
+        back_button = Button(self, self.game.controller, self.BUTTON_GEOMETRY, 'Назад', self.back_to_spaceship)
+        self.panel_arranger.add_widget(land_button, Point(2 * self.WIDGET_INDENT_LEFT, self.WIDGET_INDENT_TOP))
+        self.panel_arranger.add_widget(travel_button, Point(3 * self.WIDGET_INDENT_LEFT + self.WIDGET_WIDTH,
+                                                            self.WIDGET_INDENT_TOP))
+        self.panel_arranger.add_widget(self.fuel_label, Point(4 * self.WIDGET_INDENT_LEFT + 2 * self.WIDGET_WIDTH,
+                                                              self.WIDGET_INDENT_TOP))
+        self.panel_arranger.add_widget(self.cost_label, Point(4 * self.WIDGET_INDENT_LEFT + 2 * self.WIDGET_WIDTH,
+                                                              2 * self.WIDGET_INDENT_TOP + self.LABEL_HEIGHT))
+        self.panel_arranger.add_widget(back_button, Point(5 * self.WIDGET_INDENT_LEFT + 3 * self.WIDGET_WIDTH,
+                                                          self.WIDGET_INDENT_TOP))
 
     def initialize(self):
         """
@@ -87,6 +111,10 @@ class SpacemapScene(GameScene):
         return result
 
     def draw_terminal_window(self):
+        """
+        Отрисовка элементов окна терминала: рамки вокруг космической карты и прямоугольника панели управления
+        кораблем.
+        """
         window_rect = Rect(0, 0, self.game.width, self.game.height)
         panel_rect = Rect(0, self.game.height - self.PANEL_HEIGHT, self.game.width, self.PANEL_HEIGHT)
         pygame.draw.rect(self.screen, COLOR['BLUE'], window_rect, 2)
@@ -104,22 +132,31 @@ class SpacemapScene(GameScene):
         super().process_all_draw()
         self.planets_draw()
 
+    def labels_update(self):
+        """
+        Обновление текста надписей на панели управления кораблем.
+        """
+        self.fuel_label.update_text('Топливо: {}'.format(self.common_data.fuel))
+        cost = '---'
+        if self.choice:
+            cost = self.travel_cost_counter.get_cost(self.current_planet, self.choice)
+        self.cost_label.update_text('Стоимость: {}'.format(cost))
+
     def interface_logic(self):
         self.panel_arranger.process_logic()
-        self.fuel_label.update_text('Топливо: ' + str(self.common_data.fuel))
-        if self.choice and self.choice != self.current_planet:
-            cost = self.travel_cost_counter.get_cost(self.current_planet, self.choice)
-            self.cost_label.update_text('Стоимость: ' + str(cost))
-        else:
-            self.cost_label.update_text('Стоимость: ---')
         super().interface_logic()
+        self.labels_update()
 
     def planets_logic(self):
+        """
+        Логика планет: собственно вызов логики у планет, поиск выбранной пользователем планеты и логика иконки
+        космического корабля. Текущую планету выбрать нельзя.
+        """
         for planet in self.planets:
             planet.process_logic()
         self.choice = None
         for planet in self.planets:
-            if planet.chosen:
+            if planet.chosen and planet != self.current_planet:
                 self.choice = planet
         self.spaceship_icon.set_planet_pos(self.current_planet.pos)
 
@@ -131,9 +168,17 @@ class SpacemapScene(GameScene):
         self.current_planet.run_level()
 
     def travel(self):
-        if self.choice and self.current_planet != self.choice:
+        """
+        Перелет от текущей планеты к выбранной пользователем, если это возможно.
+        """
+        if self.choice:
             cost = self.travel_cost_counter.get_cost(self.current_planet, self.choice)
             if cost > self.common_data.fuel:
                 return
             self.common_data.fuel -= cost
             self.current_planet = self.choice
+
+    def back_to_spaceship(self):
+        from scenes.game.spaceship import SpaceshipScene
+        spaceship_scene = SpaceshipScene(self.game)
+        self.game.set_scene(spaceship_scene)

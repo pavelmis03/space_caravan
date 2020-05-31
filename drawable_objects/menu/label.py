@@ -8,6 +8,16 @@ from constants.color import COLOR
 
 
 class Label(Text):
+    """
+    Надпись меню. Отличается от обычного объекта Text тем, что является полноценным виджетом меню с полем
+    geometry и методом move(вектор перемещения).
+
+    :param scene: сцена объекта
+    :param controller: контроллер
+    :param text: отображаемая строка
+    :param align: выравнивание (аналогично тому, что у Text)
+    """
+
     def pos_align_left(self) -> Point:
         return self.geometry.top_left
 
