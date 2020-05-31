@@ -7,9 +7,9 @@ from typing import Tuple
 from controller.controller import Controller
 from geometry.rectangle import Rectangle
 from scenes.base import Scene
-from scenes.conservable import ConservableScene
 from scenes.game.base import GameScene
 from scenes.game.level import LevelScene
+from scenes.menu.base import MenuScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
@@ -31,7 +31,7 @@ class Game:
     SPACE_CHOICE_MENU_SCENE_INDEX = 3
 
     def __init__(self, width: int = 1000, height: int = 700):
-        pygame.mixer.init(22100, -16, 2, 64) # removes sound delay
+        pygame.mixer.init(22100, -16, 2, 64)  # removes sound delay
         pygame.init()
         self.size = (width, height)
         self.__running = True
@@ -94,9 +94,9 @@ class Game:
 
     def set_scene(self, scene: Scene):
         """
-        Установка заданной сцены текущей. Если старая сцена игровая, она сохраняется. При необходимости
-        новой сцене из файла подгружается игрок и припасы. Если новая сцена запускается впервые (то есть
-        после инициализации, а не после загрузки), она сохраняется.
+        Установка заданной сцены текущей. Старая сцена может быть None; если она не None, она сохраняется. Если
+        старая сцена игровая, она готовится к удалению. Далее новой сцене подгружается игрок и припасы, если
+        необходимо. После вызывается конструирование новой сцены и обновляется __current_scene.
 
         :param scene: ссылка на новую сцену
         """
@@ -108,6 +108,8 @@ class Game:
             scene.load_supply()
         if isinstance(scene, LevelScene):
             scene.load_player()
+        if isinstance(scene, MenuScene):
+            self.file_manager.set_current_space(None)
         scene.construct()
         self.__current_scene = scene
 

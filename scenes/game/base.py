@@ -7,7 +7,9 @@ from space.supply import Supply
 
 class GameScene(ConservableScene):
     """
-
+    Базовый класс игровой сцены, то есть сцены игрового мира. Не обязательно содержит игрока и игровые объекты
+    (например, карта планет), но обязательно припасы.
+    
     :param game: игра, создающая сцену
     :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
     """
@@ -18,6 +20,9 @@ class GameScene(ConservableScene):
         self.supply = None
 
     def load_supply(self):
+        """
+        Загрузка объекта припасов.
+        """
         self.supply = Supply(self)
         self.supply.load()
 

@@ -27,7 +27,7 @@ def delete_destroyed(objects: List[any]):
 
 class LevelScene(GameScene):
     """
-
+    Базовый класс сцены уровня. Содержит игрока, сетку и прочие элементы игрового уровня.
 
     :param game: игра, создающая сцену
     :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
