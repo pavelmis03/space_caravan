@@ -59,3 +59,10 @@ def get_list_chance_sum(arr: List[Tuple[int, any]]):
     for item in arr:
         result += item[0]
     return result
+
+
+def check_chance_list(arr: List[Tuple[int, any]]):
+    sum_chance = get_list_chance_sum(arr)
+    if sum_chance != 100:
+        raise Exception('sum of chance list not equal 100. The value: {}'. \
+                        format(sum_chance))

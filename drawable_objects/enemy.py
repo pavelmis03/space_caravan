@@ -131,7 +131,6 @@ class CommandHumanoid(MovingHumanoid):
         """
         Воспроизведение объекта из словаря.
         """
-        self.hp = data_dict['hp']
         self.set_weapon(data_dict['weapon'])
         super().from_dict(data_dict)
 
@@ -140,7 +139,6 @@ class CommandHumanoid(MovingHumanoid):
         Запись характеристик объекта в словарь.
         """
         result = super().to_dict()
-        result.update({'hp': self.hp})
         '''
         работает за O(weapons.weapons.WEAPON_VOCABULARY), но
         в высокой скорости нет необходимости:

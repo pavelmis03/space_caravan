@@ -3,6 +3,7 @@ from drawable_objects.drop.base import Drop
 from controller.controller import Controller
 from geometry.point import Point
 from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
+from random import randint
 
 
 class WeaponDrop(Drop):
@@ -55,6 +56,33 @@ class MedKitDrop(Drop):
         self.scene.player.hp = self.scene.player.MAXHP
         self.destroy()
 
+class EssenceDrop(Drop):
+    IMAGE_NAME = 'other.essence'
+
+    def __init__(self, scene, controller: Controller,
+                 pos: Point, angle: float = 0, zoom: float = 0.15, usage_radius: float = 75):
+        super().__init__(scene, controller,
+                         pos, angle, zoom, usage_radius)
+
+    def activate(self):
+        self.scene.common_data.essence += 1
+        self.destroy()
+
+
+class FuelDrop(Drop):
+    IMAGE_NAME = 'other.fuel'
+
+    def __init__(self, scene, controller: Controller,
+                 pos: Point, angle: float = 0, zoom: float = 0.25, usage_radius: float = 75):
+        super().__init__(scene, controller,
+                         pos, angle, zoom, usage_radius)
+
+    def activate(self):
+        MINIMUM_ADD = 75
+        MAXIMUM_ADD = 125
+        self.scene.common_data.fuel += randint(MINIMUM_ADD, MAXIMUM_ADD)
+        self.destroy()
+
 
 def create_drop(name: str, scene, controller: Controller, pos: Point) -> Drop:
     """
@@ -68,6 +96,8 @@ def create_drop(name: str, scene, controller: Controller, pos: Point) -> Drop:
 
     OTHER_DROP = {
         'MedKit': MedKitDrop,
+        'Essence': EssenceDrop,
+        'Fuel': FuelDrop
     }
     return OTHER_DROP[name](scene, controller, pos)
 

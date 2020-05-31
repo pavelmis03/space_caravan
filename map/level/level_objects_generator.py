@@ -30,11 +30,14 @@ class LevelObjectsGenerator:
     Генератор Enemies.
     """
     def __init__(self, grid, rectangles: List[GridRectangle],
-                 enemy_weapons: List[Tuple[int, str]], chest_drop: List[Tuple[int, str]]):
+                 enemy_weapons: List[Tuple[int, str]], chest_weapon_drop: List[Tuple[int, str]],
+                 chest_other_drop: List[Tuple[int, str]], chance_weapon_drop: int):
         self.__grid = grid
         self.__rectangles = rectangles
         self.__enemy_weapons = enemy_weapons
-        self.__chest_drop = chest_drop
+        self.__chest_weapon_drop = chest_weapon_drop
+        self.__chest_other_drop = chest_other_drop
+        self.__chance_weapon_drop = chance_weapon_drop
 
     def generate(self):
         """
@@ -68,14 +71,20 @@ class LevelObjectsGenerator:
             create_enemy(self.__grid, random_i, random_j, random_weapon)
 
     def __generate_chest(self, room: GridRectangle):
-        CHANCE_SPAWN = 100
+        CHANCE_SPAWN = 10
 
         if not is_accurate_random_proc(CHANCE_SPAWN):
             return
         random_i, random_j = self.__get_random_cell(room)
 
-        random_item = weight_choice(self.__chest_drop)
+        random_item = self.__get_random_drop()
         create_chest(self.__grid, random_i, random_j, random_item)
+
+    def __get_random_drop(self) -> str:
+        if is_accurate_random_proc(self.__chance_weapon_drop):
+            return weight_choice(self.__chest_weapon_drop)
+        return weight_choice(self.__chest_other_drop)
+
 
     def __get_random_cell(self, room: GridRectangle) -> Tuple[int, int]:
         WALLS_MIN_DISTANCE = 2  # нужно, чтобы объекты не спавнились прямо у стены
