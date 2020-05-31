@@ -9,8 +9,8 @@ class Pistol(RangedWeapon):
     def __init__(self, owner, bullets_in_magazine=12):
         super().__init__(owner, scene_image='other.gun', interface_image='interface.weapon_icons.Pistol',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=12,
-                         main_attack_interval=7, reload_time=40, ammo_type='Pistol',
-                         accuracy=42, damage=60)
+                         main_attack_interval=9, reload_time=40, ammo_type='Pistol',
+                         accuracy=42, damage=45)
 
 
 class BurstFiringPistol(RangedWeapon):
@@ -21,8 +21,8 @@ class BurstFiringPistol(RangedWeapon):
     def __init__(self, owner, bullets_in_magazine=20):
         super().__init__(owner, scene_image='other.gun', interface_image='interface.weapon_icons.TwoBarrelShotgun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=20,
-                         main_attack_interval=14, reload_time=60, ammo_type='Pistol',
-                         accuracy=40, damage=60, combo_attack_interval=3, combo_size=4)
+                         main_attack_interval=15, reload_time=60, ammo_type='Pistol',
+                         accuracy=40, damage=45, combo_attack_interval=3, combo_size=4)
 
 
 class Shotgun(RangedWeapon):
@@ -88,7 +88,7 @@ class AutomaticRifle(RangedWeapon):
         super().__init__(owner, scene_image='other.gun', interface_image='other.gun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=25,
                          main_attack_interval=4, reload_time=60, ammo_type='Rifle',
-                         accuracy=60, damage=90, is_automatic=True)
+                         accuracy=60, damage=80, is_automatic=True)
 
 
 class SniperRifle(RangedWeapon):
@@ -136,16 +136,32 @@ class Sword(MeleeWeapon):
                          main_attack_interval=15, length=60)
 
 
+class Fist(MeleeWeapon):
+
+    def __init__(self, owner):
+        super().__init__(owner, scene_image='other.bullet', interface_image='other.bullet',
+                         main_attack_interval=7, length=30)
+
+    def attack(self):
+        """
+        Функция атаки
+        """
+        from drawable_objects.slash import Punch
+        # SoundManager.play_sound('weapon.shoot')
+        self.scene.game_objects.append(Punch(self.owner, self.length))
+
+
 WEAPON_VOCABULARY = {
-    'Pistol': Pistol,
-    'BurstFiringPistol': BurstFiringPistol,
-    'Shotgun': Shotgun,
-    'TwoBarrelShotgun': TwoBarrelShotgun,
-    'ThreeBarrelShotgun': ThreeBarrelShotgun,
-    'TacticalShotgun': TacticalShotgun,
-    'AutomaticRifle': AutomaticRifle,
-    'SniperRifle': SniperRifle,
-    'OldRifle': OldRifle,
-    'SemiAutomaticRifle': SemiAutomaticRifle,
-    'Sword': Sword,
+    'Pistol': Pistol, #tier1
+    'BurstFiringPistol': BurstFiringPistol, #t3
+    'Shotgun': Shotgun, #t3
+    'TwoBarrelShotgun': TwoBarrelShotgun, #t1
+    'ThreeBarrelShotgun': ThreeBarrelShotgun, #t2
+    'TacticalShotgun': TacticalShotgun, #t3.5
+    'AutomaticRifle': AutomaticRifle, #t2.5
+    'SniperRifle': SniperRifle, #t2.5
+    'OldRifle': OldRifle, #t1
+    'SemiAutomaticRifle': SemiAutomaticRifle, #t2
+    'Sword': Sword, #t?
+    'Fist': Fist,
 }

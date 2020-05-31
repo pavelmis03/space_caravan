@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pygame
 
 from typing import Tuple, List
@@ -28,7 +26,7 @@ class ListWidgetItem(DrawableObject):
     FRAME_COLOR = (0, 0, 0)
     FONT_NAME = 'freesansbold'
 
-    def __init__(self, scene: Scene, controller: Controller, parent: ListWidget, value: str):
+    def __init__(self, scene: Scene, controller: Controller, parent, value: str):
         super().__init__(scene, controller, Point())
         self.parent = parent
         self.value = value
@@ -39,7 +37,7 @@ class ListWidgetItem(DrawableObject):
         self.visible_part = None
         self.chosen = False
 
-    def __lt__(self, other: ListWidgetItem):
+    def __lt__(self, other):
         return self.value < other.value
 
     def update_geometry(self, index):

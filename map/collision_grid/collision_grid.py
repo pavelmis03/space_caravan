@@ -20,8 +20,6 @@ class CollisionGrid(Grid):
     Генерируется в map_construction, далее преобразует
     инты в объекты.
     """
-    FILENAMES = ['level.wall1', 'level.floor3']
-
     def initialize(self):
         self._fill_arr(CELL_SIZE, CELL_SIZE)
 
@@ -66,10 +64,14 @@ class CollisionGrid(Grid):
                 filename_index = int(bool(self.arr[i][j]))
 
                 self.arr[i][j] = GameSprite(self.scene, self.controller,
-                                            CollisionGrid.FILENAMES[filename_index], Point(pos_x, pos_y))
+                                            self._get_filename(filename_index), Point(pos_x, pos_y))
 
     def is_passable(self, i: int, j: int) -> bool:
-        return self.arr[i][j].image_name != CollisionGrid.FILENAMES[0]
+        return self.arr[i][j].image_name != self._get_filename(0)
+
+    def _get_filename(self, filename_index: int) -> str:
+        FILENAMES = ['level.wall1', 'level.floor3']
+        return FILENAMES[filename_index]
 
     def get_collision_rect(self, i: int, j: int) -> Rectangle:
         h = self.cell_height

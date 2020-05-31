@@ -7,10 +7,6 @@ from controller.controller import Controller
 from scenes.base import Scene
 from utils.image import ImageManager
 
-from geometry.distances import dist
-from math import cos
-from math import sin
-
 
 class AbstractObject:
     """
