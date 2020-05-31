@@ -1,10 +1,13 @@
+import pygame
+
 from math import pi
 from random import random
 from typing import Dict
 
 from constants.planets_generation import ESTIMATED_SPACE_SIZE
+from constants.color import COLOR
 from geometry.circle import Circle
-from geometry.point import Point
+from geometry.point import Point, point_to_tuple
 from scenes.base import Scene
 from controller.controller import Controller
 from drawable_objects.base import SpriteObject
@@ -23,7 +26,7 @@ class Planet(SpriteObject):
     :param biom: биом - вид планеты
     :param name: название планеты
     """
-    BUTTON_RADIUS = 50
+    BUTTON_RADIUS = 35
     BIOM_NAMES = [
         'Simple',
         'Ice',
@@ -49,6 +52,7 @@ class Planet(SpriteObject):
         self.name = name
         self.biom = biom
         self.enabled = True
+        self.chosen = False
         self.index = str(Planet.COUNTER)
         Planet.COUNTER += 1
 
@@ -86,7 +90,8 @@ class Planet(SpriteObject):
         Перерасчет реальной позиции планеты на экране по постоянной расчетной позиции, расчетному размеру экрана
         и текущему размеру окна.
         """
-        screen_size = self.scene.game.size
+        screen_size = list(self.scene.game.size)
+        screen_size[1] -= self.scene.PANEL_HEIGHT
         scale_k = [screen_size[_i] / ESTIMATED_SPACE_SIZE[_i]
                    for _i in range(2)]
         self.pos = Point(scale_k[0] * self.estimated_pos.x,
@@ -100,9 +105,15 @@ class Planet(SpriteObject):
         level_scene = MainScene(self.scene.game, self.index)
         self.scene.game.set_scene(level_scene)
 
+    def process_draw(self):
+        if self.chosen:
+            integer_pos = (round(self.pos.x), round(self.pos.y))
+            pygame.draw.circle(self.scene.screen, COLOR['RED'], integer_pos, self.BUTTON_RADIUS)
+        super().process_draw()
+
     def process_logic(self):
         self.update_real_pos()
         geometry = Circle(self.pos, Planet.BUTTON_RADIUS)
         click_pos = self.controller.get_click_pos()
-        if click_pos and geometry.is_inside(click_pos):
-            self.run_level()
+        if click_pos:
+            self.chosen = geometry.is_inside(click_pos)
