@@ -4,7 +4,6 @@ from typing import Dict
 
 from geometry.point import Point
 from controller.controller import Controller
-from scenes.base import Scene
 from drawable_objects.base import GameSprite
 from geometry.distances import dist
 from drawable_objects.popping_e import PoppingE
@@ -19,7 +18,7 @@ class UsableObject(GameSprite):
     ACTIVATION_KEY = pygame.K_e
     ACTIVATION_COOLDOWN = 10
 
-    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
+    def __init__(self, scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
                  zoom: float = 1, usage_radius: float = 100):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.usage_radius = usage_radius
@@ -31,8 +30,8 @@ class UsableObject(GameSprite):
         pass
 
     def process_logic(self):
-        self.player_nearby = dist(
-            self.scene.player.pos, self.pos) <= self.usage_radius
+        self._update_player_nearby()
+
         if self.player_nearby:
             self.player_nearby = True
             pass
@@ -44,6 +43,10 @@ class UsableObject(GameSprite):
             self.scene.e_timer.start()
 
         self.popping_e.update_pos(self.pos)
+
+    def _update_player_nearby(self):
+        self.player_nearby = dist(
+            self.scene.player.pos, self.pos) <= self.usage_radius
 
     def process_draw(self):
         super().process_draw()

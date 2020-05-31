@@ -14,6 +14,7 @@ from utils.random import is_random_proc
 from math import pi
 from utils.timer import Timer, EMPTY_TIMER
 from constants.grid import CELL_SIZE
+from drawable_objects.drop.enemy_drop import AmmoDrop
 
 
 class MovingHumanoid(Humanoid):
@@ -227,7 +228,7 @@ class CommandHumanoid(MovingHumanoid):
 
         :return: команду или None. Если None, то это означает не команду бесдействия, а невозможность атаки
         """
-        if self.__is_range:
+        if self._is_range:
             self.__cooldown = max(self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
             return EnemyCommand('aim')
 
@@ -272,7 +273,7 @@ class CommandHumanoid(MovingHumanoid):
         self._recount_angle(self.scene.player.pos)
 
         self.weapon.main_attack()
-        if self.__is_range and self.weapon.magazine == 0:
+        if self._is_range and self.weapon.magazine == 0:
             self.weapon.reload()
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
@@ -285,7 +286,7 @@ class CommandHumanoid(MovingHumanoid):
         """
         для melee оружия особое поведение, которое проще всего сделать так:
         """
-        if not self.__is_range:
+        if not self._is_range:
             self.__command = self.__get_attack_command()
             self.__command_logic()
             return
@@ -318,12 +319,12 @@ class CommandHumanoid(MovingHumanoid):
 
     @property
     def _speed(self) -> float:
-        if self.__is_range:
+        if self._is_range:
             return super()._speed
         return self.MELEE_SPEED
 
     @property
-    def __is_range(self) -> bool:
+    def _is_range(self) -> bool:
         """
         Дальнее ли у Enemy оружие
         """
@@ -427,3 +428,10 @@ class Enemy(CommandHumanoid):
         """
         self.weapon.destroy()
         self.destroy()
+
+        if self._is_range:
+            self.__drop_ammo()
+
+    def __drop_ammo(self):
+        ammo = AmmoDrop(self.scene, self.controller, self.pos)
+        self.scene.game_objects.append(ammo)

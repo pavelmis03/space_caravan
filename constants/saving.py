@@ -1,3 +1,4 @@
+from drawable_objects.player import Player #не удалять. без этой строчки все ломается
 from drawable_objects.ladder import Ladder
 from drawable_objects.planet import Planet
 from drawable_objects.space_map_terminal import SpaceMapTerminal
