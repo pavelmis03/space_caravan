@@ -7,7 +7,7 @@ import pygame
 
 from constants.color import COLOR
 from drawable_objects.base import AbstractObject
-from drawable_objects.interface.widget_group import WidgetGroup
+from drawable_objects.menu.widget_group import WidgetGroup
 
 
 class PauseManager(AbstractObject):
