@@ -1,11 +1,13 @@
 from typing import List, Dict
 
 from drawable_objects.interface.pause_manager import PauseManager
-from utils.game_plane import GamePlane
-from geometry.point import Point
 from drawable_objects.player import Player
+from drawable_objects.usable_object import UsableObject
+from geometry.point import Point
 from scenes.game.base import GameScene
 from utils.camera import Camera
+from utils.timer import Timer
+from utils.game_plane import GamePlane
 from utils.game_data_manager import from_list_of_dicts, to_list_of_dicts
 
 
@@ -47,6 +49,8 @@ class LevelScene(GameScene):
         self.pause_manager = PauseManager(self, self.game.controller)
         self.interface_objects.append(self.pause_manager)
         self.camera = Camera(self)
+        self.e_timer = Timer(UsableObject.ACTIVATION_COOLDOWN)  # таймер для "перезарядки" кнопки E
+        self.e_timer.start()
 
     def to_dict(self) -> Dict:
         result = super().to_dict()
@@ -104,6 +108,7 @@ class LevelScene(GameScene):
             self.game_logic()
 
         self.delete_destroyed_objects()
+        self.e_timer.process_logic()
 
     def game_draw(self):
         """

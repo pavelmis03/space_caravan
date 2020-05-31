@@ -4,6 +4,7 @@ from drawable_objects.ladder import Ladder
 from drawable_objects.interface.ammo_display import AmmoDisplay
 from drawable_objects.interface.player_icon import PlayerIcon
 from drawable_objects.interface.weapons_display import WeaponsDisplay
+from drawable_objects.interface.enemy_count_display import EnemyCountDisplay
 from scenes.game.level import LevelScene
 from geometry.point import Point
 from map.level.grid import LevelGrid
@@ -14,12 +15,15 @@ class MainScene(LevelScene):
     Класс главной игровой сцены - сцены уровня.
 
     :param game: игра, создающая сцену
-    :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
+    :param planet_index: индекс планеты, создавшей уровень
     """
 
     def __init__(self, game, planet_index: str):
         super().__init__(game, 'planet' + str(planet_index))
         self.planet_index = planet_index
+        enemy_count_display = EnemyCountDisplay(self, self.game.controller,
+                                                (1, 0), self.enemies)
+        self.interface_objects.append(enemy_count_display)
 
     def initialize(self):
         super().initialize()
