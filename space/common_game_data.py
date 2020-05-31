@@ -11,7 +11,7 @@ class CommonGameData:
     START_FUEL = 0
     START_ESSENCE = 0
 
-    DATA_FILENAME = 'supply'
+    DATA_FILENAME = 'сommon_game_data'
 
     def __init__(self, scene: Scene):
         self.__scene = scene
