@@ -72,17 +72,22 @@ class Player(Humanoid):
         self.change_weapon_cooldown = 0
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
-    def set_weapon(self, weapon_name: str):
+    def set_weapon(self, weapon_dict: Dict):
         """
         Присвоить на место оружия на текущем слоте weapon
         """
-        self.weapon_slots[self.weapon_slots_ind] = WEAPON_VOCABULARY[weapon_name](self)
+        weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](self)
+        if weapon.type == 'Ranged':
+            weapon.magazine = weapon_dict['magazine']
+
+        self.weapon_slots[self.weapon_slots_ind] = weapon
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
 
         self.ammo = data_dict['ammo']
+        self.weapon_slots_ind = data_dict['weapon_slots_ind']
 
         self.weapon_slots = []
         for weapon_dict in data_dict['weapons']:
@@ -91,7 +96,6 @@ class Player(Humanoid):
                 weapon.magazine = weapon_dict['magazine']
             self.weapon_slots.append(weapon)
 
-        self.weapon_slots_ind = data_dict['weapon_slots_ind']
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
     def to_dict(self) -> Dict:
@@ -100,8 +104,6 @@ class Player(Humanoid):
         weapons = []
         for item in self.weapon_slots:
             weapon_dict = weapon_to_dict(item)
-            if item.type == 'Ranged':
-                weapon_dict.update({'magazine': item.magazine})
             weapons.append(weapon_dict)
 
         result.update({'weapons': weapons})

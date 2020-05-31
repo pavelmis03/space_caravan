@@ -19,8 +19,9 @@ def create_enemy(grid, i: int, j: int, weapon_name: str):
 
 
 def create_chest(grid, i: int, j: int, item_name: str):
-    chest = Chest(grid.scene, grid.controller, item_name,
+    chest = Chest(grid.scene, grid.controller,
                     grid.get_center_of_cell_by_indexes(i, j), 0)
+    chest.set_drop(item_name)
     grid.scene.game_objects.append(chest)
 
 
