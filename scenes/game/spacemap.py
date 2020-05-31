@@ -7,6 +7,8 @@ from scenes.game.base import GameScene
 from space.planets_generator import PlanetsGenerator
 from constants.color import COLOR
 from utils.game_data_manager import from_list_of_dicts, to_list_of_dicts
+from drawable_objects.menu.button import Button
+from geometry.point import Point
 
 
 class SpacemapScene(GameScene):
@@ -16,11 +18,14 @@ class SpacemapScene(GameScene):
     :param game: игра, создающая сцену
     """
     DATA_FILENAME = 'spacemap'
-    PANEL_HEIGHT = 100
+    PANEL_HEIGHT = 80
 
     def __init__(self, game):
         super().__init__(game, self.DATA_FILENAME)
         self.planets = list()
+        self.choice = None
+        self.land_button = Button(self, self.game.controller, (0, 0, 150, 60), 'Высадиться', self.run_level)
+        self.interface_objects.append(self.land_button)
 
     def initialize(self):
         """
@@ -58,10 +63,24 @@ class SpacemapScene(GameScene):
         super().process_all_draw()
         self.planets_draw()
 
+    def interface_logic(self):
+        super().interface_logic()
+        target_top_left = Point(10, self.game.height - self.PANEL_HEIGHT + 10,)
+        self.land_button.move(target_top_left - self.land_button.geometry.top_left)
+
     def planets_logic(self):
         for planet in self.planets:
             planet.process_logic()
 
+        self.choice = None
+        for planet in self.planets:
+            if planet.chosen:
+                self.choice = planet
+
     def process_all_logic(self):
         super().process_all_logic()
         self.planets_logic()
+
+    def run_level(self):
+        if self.choice:
+            self.choice.run_level()
