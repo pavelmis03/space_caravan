@@ -44,8 +44,8 @@ class Chest(UsableObject):
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
-        self.set_activated(data_dict['activated'])
         self.set_image((data_dict['main_image'], data_dict['open_image']))
+        self.set_activated(data_dict['activated'])
         self.set_drop(data_dict['drop'])
 
     def to_dict(self) -> Dict:
