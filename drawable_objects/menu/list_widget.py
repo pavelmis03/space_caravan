@@ -5,7 +5,7 @@ from typing import Tuple, List
 from scenes.base import Scene
 from controller.controller import Controller
 from drawable_objects.base import DrawableObject
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 from geometry.rectangle import Rectangle, tuple_to_rectangle, rectangle_to_rect, intersect
 from geometry.point import Point, point_to_tuple
 

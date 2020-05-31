@@ -1,9 +1,7 @@
-import pygame
-
 from drawable_objects.base import DrawableObject
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 from geometry.point import Point
-from geometry.rectangle import Rectangle, rectangle_to_rect
+from geometry.rectangle import Rectangle
 
 
 class MultilineText(DrawableObject):

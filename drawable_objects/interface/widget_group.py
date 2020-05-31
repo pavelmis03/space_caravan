@@ -1,12 +1,8 @@
-import pygame
-
-from constants.color import COLOR
 from drawable_objects.base import AbstractObject
-from drawable_objects.button import Button
-from drawable_objects.checkbox import CheckBox
-from drawable_objects.multiline_text import MultilineText
+from drawable_objects.menu.button import Button
+from drawable_objects.menu.checkbox import CheckBox
+from drawable_objects.menu.multiline_text import MultilineText
 from geometry.point import Point
-from geometry.rectangle import tuple_to_rectangle
 
 
 class WidgetGroup(AbstractObject):

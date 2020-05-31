@@ -1,5 +1,5 @@
 from drawable_objects.base import AbstractObject
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 
 
 class DisplayCount(AbstractObject):
