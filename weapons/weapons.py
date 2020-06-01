@@ -6,7 +6,7 @@ class Pistol(RangedWeapon):
     """
     Пистолет
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.Pistol'
 
     def __init__(self, owner, bullets_in_magazine=12):
         super().__init__(owner, interface_image='interface.weapon_icons.Pistol',
@@ -19,7 +19,7 @@ class BurstFiringPistol(RangedWeapon):
     """
     Стреляющий очередями пистолет
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.BurstFiringPistol'
 
     def __init__(self, owner, bullets_in_magazine=20):
         super().__init__(owner, interface_image='interface.weapon_icons.TwoBarrelShotgun',
@@ -32,7 +32,7 @@ class Shotgun(RangedWeapon):
     """
     Дробовик
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.Shotgun'
 
     def __init__(self, owner, bullets_in_magazine=6):
         super().__init__(owner, interface_image='other.gun',
@@ -45,7 +45,7 @@ class TwoBarrelShotgun(RangedWeapon):
     """
     Двустволка
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.TwoBarrelShotgun'
 
     def __init__(self, owner, bullets_in_magazine=2):
         super().__init__(owner, interface_image='interface.weapon_icons.TwoBarrelShotgun',
@@ -63,11 +63,11 @@ class ThreeBarrelShotgun(TwoBarrelShotgun):
     """
     Трёхстволка
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.ThreeBarrelShotgun'
 
     def __init__(self, owner, bullets_in_magazine=3):
         super().__init__(owner, bullets_in_magazine)
-        self.image_name = 'other.gun'
+        self.image_name = 'weapons.ThreeBarrelShotgun'
         self.interface_image = 'other.gun'
         self.magazine_size = 3
         self.alternative_attack_combo = 3
@@ -77,7 +77,7 @@ class TacticalShotgun(RangedWeapon):
     """
     Тактический дробовик
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.TacticalShotgun'
 
     def __init__(self, owner, bullets_in_magazine=6):
         super().__init__(owner, interface_image='other.gun',
@@ -90,7 +90,7 @@ class AutomaticRifle(RangedWeapon):
     """
     Автоматическая винтовка
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.AutomaticRifle'
 
     def __init__(self, owner, bullets_in_magazine=25):
         super().__init__(owner, interface_image='other.gun',
@@ -103,7 +103,7 @@ class SniperRifle(RangedWeapon):
     """
     Снайперская винтовка
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.SniperRifle'
 
     def __init__(self, owner, bullets_in_magazine=5):
         super().__init__(owner, interface_image='other.gun',
@@ -116,7 +116,7 @@ class OldRifle(RangedWeapon):
     """
     Старая винтовка
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.OldRifle'
 
     def __init__(self, owner, bullets_in_magazine=8):
         super().__init__(owner, interface_image='other.gun',
@@ -129,7 +129,7 @@ class SemiAutomaticRifle(OldRifle):
     """
     Полуавтоматическая винтовка
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.SemiAutomaticRifle'
 
     def __init__(self, owner, bullets_in_magazine=8):
         super().__init__(owner, bullets_in_magazine)

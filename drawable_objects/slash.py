@@ -100,7 +100,12 @@ class Punch(PlayerSlash):
         self.zoom = 0.5
         self.damage = 25
         self.reach = 1
+        self.scene.player.image_name = 'moving_objects.Punch'
 
     def process_logic(self):
         super().process_logic()
         self.damage = 0
+
+    def destroy(self):
+        self.scene.player.image_name = 'moving_objects.PlayerBarehanded'
+        super().destroy()

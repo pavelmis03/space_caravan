@@ -33,8 +33,8 @@ class Player(Humanoid):
     """
 
     ADD_TO_GAME_PLANE = True
-    IMAGE_NAME = 'other.person-up_without_weapon'
-    IMAGE_ZOOM = 0.25
+    IMAGE_NAME = 'moving_objects.Player'
+    IMAGE_ZOOM = 1.15
     CONTROLS = [
         pygame.K_d,
         pygame.K_w,
@@ -54,10 +54,10 @@ class Player(Humanoid):
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0, is_clone=False):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
-        self.rotation_offset = [
-            140 * Player.IMAGE_ZOOM,
-            126 * Player.IMAGE_ZOOM
-        ]
+        #self.rotation_offset = [
+        #    140 * Player.IMAGE_ZOOM,
+        #    126 * Player.IMAGE_ZOOM
+        #]
         self.ammo = {
             'Pistol': 200,
             'Shotgun': 60,
@@ -138,6 +138,7 @@ class Player(Humanoid):
         self._movement_controls()
         self._weapon_controls()
         self.weapon.process_logic()
+        self.sprite_manager()
 
     @property
     def is_fired_this_tick(self):
@@ -204,6 +205,15 @@ class Player(Humanoid):
         self.weapon_slots_ind = ind
         self.weapon = self.weapon_slots[ind]
         self.weapon.cooldown = 15
+
+    def sprite_manager(self):
+        if self.weapon.__class__.__name__ == 'Pistol' or self.weapon.__class__.__name__ == 'BurstFiringPistol':
+            self.image_name = 'moving_objects.PlayerWithPistol'
+        elif self.weapon.__class__.__name__ == 'Fist':
+            if self.image_name != 'moving_objects.Punch':
+                self.image_name = 'moving_objects.PlayerBarehanded'
+        else:
+            self.image_name = 'moving_objects.Player'
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """
