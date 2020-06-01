@@ -187,6 +187,21 @@ WEAPON_VOCABULARY = {
 }
 
 
+WEAPON_ON_FLOOR_IMAGE = {
+    'Pistol': 'weapons_on_floor.Pistol',
+    BurstFiringPistol: 'weapons_on_floor.BurstFiringPistol',
+    Shotgun: 'weapons_on_floor.Shotgun',
+    'TwoBarrelShotgun': 'weapons_on_floor.TwoBarrelShotgun',
+    ThreeBarrelShotgun: 'weapons_on_floor.ThreeBarrelShotgun',
+    TacticalShotgun: 'weapons_on_floor.TacticalShotgun',
+    AutomaticRifle: 'weapons_on_floor.AutomaticRifle',
+    SniperRifle: 'weapons_on_floor.SniperRifle',
+    OldRifle: 'weapons_on_floor.OldRifle',
+    SemiAutomaticRifle: 'weapons_on_floor.SemiAutomaticRifle',
+    'Sword': 'other.gun',
+}
+
+
 def weapon_to_dict(weapon: Weapon) -> Dict:
     """
     работает за O(weapons.weapons.WEAPON_VOCABULARY), но

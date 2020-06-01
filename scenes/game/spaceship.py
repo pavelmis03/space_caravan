@@ -3,6 +3,7 @@ from geometry.point import Point
 from map.spaceship_grid import SpaceshipGrid
 from drawable_objects.space_map_terminal import SpaceMapTerminal
 from drawable_objects.clone_capsule import CloneCapsule
+from drawable_objects.weapon_shelf import WeaponShelf
 from drawable_objects.player import Player
 from space.common_game_data import CommonGameData
 
@@ -40,11 +41,17 @@ class SpaceshipScene(LevelScene):
             (self.ROOM_WIDTH / 2) * self.CELL_SIZE, -1 * self.CELL_SIZE)
         terminal_spawn_point += Point(1, 1) * \
                                 self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
+        shelf_spawn_point = Point(
+            3 * self.CELL_SIZE, self.ROOM_HEIGHT * self.CELL_SIZE - 10)
+        shelf_spawn_point += Point(1, 1) * \
+                                self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
 
         self.game_objects.append(SpaceMapTerminal(
             self, self.game.controller, terminal_spawn_point, 0))
         self.game_objects.append(CloneCapsule(
             self, self.game.controller, capsule_spawn_point, 0))
+        self.game_objects.append(WeaponShelf(
+            self, self.game.controller, shelf_spawn_point, 0))
 
         self.player = Player(self, self.game.controller,
                              self.PLAYER_SPAWN_POINT)

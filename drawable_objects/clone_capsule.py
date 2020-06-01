@@ -53,11 +53,13 @@ class CloneCapsule(UsableObject):
     """
     Капсула клонирования. Создаёт клона и позволяет меняться телами с клоном, если он уже создан
     """
+    IMAGE_NAME = 'level_objects.clone'
     IMAGE_ZOOM = 0.38
     CLONE_COST = 0
+    COOLDOWN_TIME = 30
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__(scene, controller, 'level_objects.clone',
+        super().__init__(scene, controller, self.IMAGE_NAME,
                          pos, angle, self.IMAGE_ZOOM)
         self.soulless_player = None
         self.is_clone_created = False
@@ -70,7 +72,7 @@ class CloneCapsule(UsableObject):
 
     def activate(self):
         if not self.changing_cooldown:
-            self.changing_cooldown = 30
+            self.changing_cooldown = self.COOLDOWN_TIME
             if not(self.scene.player.is_clone or self.is_clone_created):
                 if self.scene.common_data.essence >= CloneCapsule.CLONE_COST:
                     self.scene.common_data.essence -= CloneCapsule.CLONE_COST
@@ -191,33 +193,3 @@ class SoullessPlayer(Humanoid):
     def process_draw(self):
         super().process_draw()
         self.weapon.process_draw()
-
-    def from_dict(self, data_dict: Dict):
-        super().from_dict(data_dict)
-        self.weapon.owner = self.scene.player
-
-        self.ammo = data_dict['ammo']
-        self.weapon_slots_ind = data_dict['weapon_slots_ind']
-
-        self.weapon_slots = []
-        for weapon_dict in data_dict['weapons']:
-            weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](self)
-            if weapon.type == 'Ranged':
-                weapon.magazine = weapon_dict['magazine']
-            self.weapon_slots.append(weapon)
-        self.weapon = self.weapon_slots[self.weapon_slots_ind]
-
-    def to_dict(self) -> Dict:
-        result = super().to_dict()
-
-        weapons = []
-        for item in self.weapon_slots:
-            weapon_dict = weapon_to_dict(item)
-            weapons.append(weapon_dict)
-
-        result.update({'weapons': weapons})
-
-        result.update({'weapon_slots_ind': self.weapon_slots_ind})
-        result.update({'ammo': self.ammo})
-
-        return result
