@@ -8,7 +8,7 @@ from scenes.base import Scene
 from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
 
 
-def transplant_soul_between_bodies(player, soulless_body):
+def transplant_soul_between_bodies(soulless_body):
     player = soulless_body.scene.player
     soulless_body.weapon_slots[0].owner = player
     soulless_body.weapon_slots[1].owner = player
@@ -47,12 +47,14 @@ def transplant_soul_between_bodies(player, soulless_body):
 
 
 class CloneCapsule(UsableObject):
+    """
+    Капсула клонирования. Создаёт клона и позволяет меняться телами с клоном, если он уже создан
+    """
     IMAGE_ZOOM = 0.8
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, 'level_objects.terminal_up',
                          pos, angle, self.IMAGE_ZOOM)
-        self.spacemap_created = False
         self.soulless_player = None
         self.is_clone_created = False
         self.changing_cooldown = 0
@@ -89,10 +91,11 @@ class CloneCapsule(UsableObject):
                     WEAPON_VOCABULARY['Fist'](self.scene.player),
                 ]
                 self.scene.player.weapon = self.scene.player.weapon_slots[0]
+
                 self.scene.player.is_clone = True
                 self.is_clone_created = True
             else:
-                transplant_soul_between_bodies(self.scene.player, self.soulless_player)
+                transplant_soul_between_bodies(self.soulless_player)
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)

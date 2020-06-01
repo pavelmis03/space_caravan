@@ -7,6 +7,7 @@ class Pistol(RangedWeapon):
     Пистолет
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=12):
         super().__init__(owner, interface_image='interface.weapon_icons.Pistol',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=12,
@@ -19,6 +20,7 @@ class BurstFiringPistol(RangedWeapon):
     Стреляющий очередями пистолет
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=20):
         super().__init__(owner, interface_image='interface.weapon_icons.TwoBarrelShotgun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=20,
@@ -31,6 +33,7 @@ class Shotgun(RangedWeapon):
     Дробовик
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=6):
         super().__init__(owner, interface_image='other.gun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=6,
@@ -43,6 +46,7 @@ class TwoBarrelShotgun(RangedWeapon):
     Двустволка
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=2):
         super().__init__(owner, interface_image='interface.weapon_icons.TwoBarrelShotgun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=2,
@@ -60,6 +64,7 @@ class ThreeBarrelShotgun(TwoBarrelShotgun):
     Трёхстволка
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=3):
         super().__init__(owner, bullets_in_magazine)
         self.image_name = 'other.gun'
@@ -73,6 +78,7 @@ class TacticalShotgun(RangedWeapon):
     Тактический дробовик
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=6):
         super().__init__(owner, interface_image='other.gun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=6,
@@ -98,6 +104,7 @@ class SniperRifle(RangedWeapon):
     Снайперская винтовка
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=5):
         super().__init__(owner, interface_image='other.gun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=5,
@@ -174,10 +181,10 @@ WEAPON_VOCABULARY = {
 
 
 def weapon_to_dict(weapon: Weapon) -> Dict:
-    '''
+    """
     работает за O(weapons.weapons.WEAPON_VOCABULARY), но
     в высокой скорости нет необходимости
-    '''
+    """
     for key, value in WEAPON_VOCABULARY.items():
         if not isinstance(weapon, value):
             continue
