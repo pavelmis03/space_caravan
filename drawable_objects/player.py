@@ -262,12 +262,7 @@ class Player(Humanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        if self.is_clone:
-            from scenes.game.spaceship import SpaceshipScene
-            self.is_dead = True
-            scene = SpaceshipScene(self.scene.game)
-            self.scene.game.set_scene(scene)
-        else:
-            from scenes.menu.main import MainMenuScene
-            scene = MainMenuScene(self.scene.game)
-            self.scene.game.set_scene(scene)
+        # from scenes.game.spacemap import SpacemapScene
+        # scene = SpacemapScene(self.scene.game)
+        # self.scene.game.set_scene(scene)
+        self.scene.game.set_scene_with_index(self.scene.game.CLONE_KILLED_SCENE_INDEX)

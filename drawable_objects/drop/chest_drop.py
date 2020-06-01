@@ -77,7 +77,7 @@ class FuelDrop(Drop):
     IMAGE_NAME = 'other.fuel'
 
     def __init__(self, scene, controller: Controller,
-                 pos: Point, angle: float = 0, zoom: float = 0.25, usage_radius: float = 75):
+                 pos: Point, angle: float = 0, zoom: float = 0.15, usage_radius: float = 75):
         super().__init__(scene, controller,
                          pos, angle, zoom, usage_radius)
 

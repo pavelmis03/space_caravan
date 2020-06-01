@@ -1,20 +1,25 @@
+import pygame
+
 from drawable_objects.base import AbstractObject
 from drawable_objects.menu.button import Button
 from drawable_objects.menu.checkbox import CheckBox
+from drawable_objects.menu.list_widget import ListWidget
 from drawable_objects.menu.multiline_text import MultilineText
+from drawable_objects.menu.text import Text
+from drawable_objects.menu.textbox import TextBox
+from drawable_objects.menu.widget_row import WidgetRow
 from geometry.point import Point
+from geometry.rectangle import rectangle_to_rect
 
 
 class WidgetGroup(AbstractObject):
     """
     Класс для динамического выравнивания виджетов по центру
-    На данный момент виджеты - это кнопки(Button) и чекбоксы(CheckBox)
-    У виджета должно быть поле geometry
+    Виджет - объект с полем geometry
 
     :param scene: сцена, на которой кнопка находится
     :param controller: контроллер
     :param offset: оффсет центра в процентах [(0-1), (0-1)] относительно размеров окна
-    :param widget_geometry: размеры создаваемых виджетов (базовый)
     :param widget_offset: расстояние между виджетами (что бы они не слипались)
     """
 
@@ -96,7 +101,6 @@ class WidgetGroup(AbstractObject):
             size = WidgetGroup.CHECKBOX_DEF_SIZE
         pos = self.get_actual_pos()
         pos.y += size / 2
-        p = self.get_actual_pos()
         box = CheckBox(self.scene, self.controller,
                        pos, size, text, align='center')
         self.widgets.append(box)
@@ -113,6 +117,41 @@ class WidgetGroup(AbstractObject):
         label = MultilineText(self.scene, Point(0, 0), text, **text_kwargs)
         label.move(pos)
         self.widgets.append(label)
+
+    def add_textbox(self, size, prompt_str):
+        """
+        Добавляет текстбокс в отображаемые объекты
+        :param size: Point с указанием размеров
+        :param prompt_str: строка подсказки
+        """
+        pos = self.get_actual_pos()
+        geom = (pos.x - size.x/2, pos.y + self.widget_offset,
+                pos.x + size.x/2, pos.y + self.widget_offset + size.y)
+        textbox = TextBox(self.scene, self.controller, geom, prompt_str)
+        self.widgets.append(textbox)
+
+    def add_list_widget(self, size, item_height, elements):
+        """
+        Добавляет список миров в отображаемые объекты
+        :param size: Point с размерами списка
+        :param item_height: высота элемента списка
+        :param elements: список элементов
+        """
+        pos = self.get_actual_pos()
+        size /= 2
+        geom = (pos.x - size.x, pos.y - size.y,
+                pos.x + size.x, pos.y + size.y)
+        list_widget = ListWidget(self.scene, self.controller, geom, item_height, elements)
+        self.widgets.append(list_widget)
+
+    def add_widget_row(self, widget_offset):
+        """
+        Добавляет строку виджетов в отображаемые объекты
+        """
+        pos = self.get_actual_pos()
+        offset = pos.y
+        widgetrow = WidgetRow(self.scene, self.controller, offset, widget_offset)
+        self.widgets.append(widgetrow)
 
     def update_offset(self, offset):
         """
@@ -131,3 +170,4 @@ class WidgetGroup(AbstractObject):
     def process_draw(self):
         for widget in self.widgets:
             widget.process_draw()
+            # pygame.draw.rect(self.scene.screen, (255, 0, 0), rectangle_to_rect(widget.geometry), 4)

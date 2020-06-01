@@ -9,8 +9,8 @@ class WeaponsDisplay(DrawableObject):
 
     def __init__(self, player, pos):
         super().__init__(player.scene, player.controller, pos)
-        self.weapon_slots = [WeaponSlot(player, Point(pos.x + 30, pos.y + 40), 0),
-                             WeaponSlot(player, Point(pos.x + 110, pos.y + 40), 1)]
+        self.weapon_slots = [WeaponSlot(player, Point(pos.x + 20, pos.y + 40), 0),
+                             WeaponSlot(player, Point(pos.x + 100, pos.y + 40), 1)]
         self.choosen_slot = ChoosenSlot(self)
 
     def process_logic(self):

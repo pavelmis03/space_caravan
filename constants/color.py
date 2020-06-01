@@ -11,5 +11,19 @@ COLOR = {
     'MAGENTA': (255, 0, 255),
     'BLACK': (0, 0, 0),
     'WHITE': (255, 255, 255),
-    'ORANGE': (255, 180, 0)
+    'ORANGE': (255, 180, 0),
+
+    'DARK_RED': (150, 0, 0),
+    'LIGHT_RED': (255, 150, 150),
+    'DARK_BLUE': (0, 0, 150),
+    'LIGHT_BLUE': (150, 150, 255),
+    'DARK_GREEN': (0, 150, 0),
+    'LIGHT_GREEN': (150, 255, 150),
+    'DARK_YELLOW': (150, 150, 0),
+    'LIGHT_YELLOW': (255, 255, 150),
+    'DARK_CYAN': (0, 150, 150),
+    'LIGHT_CYAN': (150, 255, 255),
+    'DARK_MAGENTA': (150, 0, 150),
+    'LIGHT_MAGENTA': (255, 150, 255),
+    'GREY': (150, 150, 150),
 }

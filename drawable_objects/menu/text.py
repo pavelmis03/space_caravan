@@ -102,10 +102,10 @@ class Text(DrawableObject):
                 x = rect.width - self.width_limit
                 self.text_surface = self.text_surface.subsurface(
                     (x, rect.y, rect.width - x, rect.height))
-        self.rect = rect_to_rectangle(self.text_surface.get_rect())
+        self.geometry = rect_to_rectangle(self.text_surface.get_rect())
 
     def process_draw(self):
-        rectangle = self.rect
+        rectangle = self.geometry
         if self.align in Text.ALIGNS:
             Text.ALIGNS[self.align].execute(rectangle, self.pos)
         self.scene.screen.blit(self.text_surface, rectangle_to_rect(rectangle))
