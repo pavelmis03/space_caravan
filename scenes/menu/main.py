@@ -14,6 +14,9 @@ class MainMenuScene(MenuScene):
 
     def __init__(self, game):
         super().__init__(game)
+        self.menu.update_offset([0.5, 0.2])
+        self.menu.add_multilinetext('Space Caravan', align='center',
+                                    font_name='zelekbold', font_size=90)
 
         self.menu.add_button('Играть', self.game.set_scene_with_index, {
             'scene_index': self.game.SPACE_CHOICE_MENU_SCENE_INDEX
