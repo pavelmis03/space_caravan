@@ -7,10 +7,10 @@ from random import randint
 
 
 class WeaponDrop(Drop):
-    IMAGE_NAME = 'other.gun' #временное значение. будет изменено в set_weapon_dict
+    IMAGE_NAME = 'other.gun'  # временное значение. будет изменено в set_weapon_dict
 
     def __init__(self, scene, controller: Controller,
-                 pos: Point, angle: float = 0, zoom: float = 0.5, usage_radius: float = 75):
+                 pos: Point, angle: float = 0, zoom: float = 1.15, usage_radius: float = 75):
         super().__init__(scene, controller,
                          pos, angle, zoom, usage_radius)
     # напиши нормальный get_image
@@ -58,6 +58,7 @@ class MedKitDrop(Drop):
     def activate(self):
         self.scene.player.hp = self.scene.player.MAXHP
         self.destroy()
+
 
 class EssenceDrop(Drop):
     IMAGE_NAME = 'other.essence'

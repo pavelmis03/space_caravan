@@ -101,6 +101,7 @@ class RangedWeapon(Weapon):
         """
         super().__init__(owner, interface_image, main_attack_interval, is_automatic,
                          combo_attack_interval, combo_size)
+        self.zoom = 1.15
         self.reload_time = reload_time
         self.is_reloading = 0
         self.reload_request = False

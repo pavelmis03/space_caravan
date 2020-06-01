@@ -327,13 +327,14 @@ class CommandHumanoid(MovingHumanoid):
         """
         return self.weapon.type == 'Ranged'
 
+
 class Enemy(CommandHumanoid):
     """
     Основной противник в Dungeon.
     """
 
-    IMAGE_ZOOM = 0.3
-    IMAGE_NAME = 'moving_objects.enemy2'
+    IMAGE_ZOOM = 1.2
+    IMAGE_NAME = 'moving_objects.Enemy'
 
     ANGULAR_VELOCITY = 6 / 65
 
