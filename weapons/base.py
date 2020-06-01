@@ -157,12 +157,12 @@ class RangedWeapon(Weapon):
         """
         Функция атаки
         """
-        if self.owner.__class__.__name__ == 'Player':
-            self._is_fired_this_tick = True
         if self.magazine == 0:
             self.cooldown = 0
             self.reload()
             return
+        if self.owner.__class__.__name__ == 'Player':
+            self._is_fired_this_tick = True
         self.magazine -= 1
         SoundManager.play_sound(self.SHOOT_SOUND)
         end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.owner.angle)
