@@ -3,11 +3,13 @@ from geometry.point import Point
 from geometry.rectangle import Rectangle
 from geometry.optimized.segment import StaticSegment
 
+
 class StaticRectangle(Rectangle):
     """
     Статический прямоугольник. Его точки нельзя менять. За счет этого можно получить некоторый бонус в
     производительности, т.к. некоторые значения можно предподсчитать.
     """
+
     def __init__(self, left_x: float = 0, up_y: float = 0, right_x: float = 0, down_y: float = 0):
         super().__init__(left_x, up_y, right_x, down_y)
         self._vertexes = super().get_vertexes()

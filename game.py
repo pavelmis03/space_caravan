@@ -7,13 +7,13 @@ from typing import Tuple
 from controller.controller import Controller
 from geometry.rectangle import Rectangle
 from scenes.base import Scene
-from scenes.conservable import ConservableScene
 from scenes.game.base import GameScene
-from scenes.game.spaceship import SpaceshipScene
+from scenes.game.level import LevelScene
+from scenes.menu.base import MenuScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
-from scenes.menu.world_choice import WorldChoiceMenuScene
+from scenes.menu.space_choice import SpaceChoiceMenuScene
 from utils.image import ImageManager
 from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
@@ -28,9 +28,10 @@ class Game:
     MAIN_MENU_SCENE_INDEX = 0
     SETTINGS_MENU_SCENE_INDEX = 1
     ABOUT_MENU_SCENE_INDEX = 2
-    WORLD_CHOICE_MENU_SCENE_INDEX = 3
+    SPACE_CHOICE_MENU_SCENE_INDEX = 3
 
     def __init__(self, width: int = 1000, height: int = 700):
+        pygame.mixer.init(22100, -16, 2, 64)  # removes sound delay
         pygame.init()
         self.size = (width, height)
         self.__running = True
@@ -39,13 +40,14 @@ class Game:
         self.__file_manager = GameDataManager()
 
         self.__controller = Controller(self)
-        self.__scenes = [
-            MainMenuScene(self),
-            SettingsMenuScene(self),
-            AboutMenuScene(self),
-            WorldChoiceMenuScene(self),
+        self.__scenes_classes = [
+            MainMenuScene,
+            SettingsMenuScene,
+            AboutMenuScene,
+            SpaceChoiceMenuScene,
         ]
-        self.__current_scene = self.__scenes[0]
+        self.__current_scene = None
+        self.set_scene_with_index(0)
         self.__to_delete = list()
 
     @property
@@ -90,38 +92,33 @@ class Game:
     def file_manager(self) -> GameDataManager:
         return self.__file_manager
 
-    def set_scene(self, scene: Scene, player_loading_needed: bool = True):
+    def set_scene(self, scene: Scene):
         """
-        Установка заданной сцены текущей. Если старая сцена игровая, она сохраняется. При необходимости
-        новой сцене из файла подгружается игрок.
+        Установка заданной сцены текущей. Старая сцена может быть None; если она не None, она сохраняется. Если
+        старая сцена игровая, она готовится к удалению. Далее новой сцене подгружается игрок и объект с общими
+        данными игры, если необходимо. После вызывается конструирование новой сцены и обновляется __current_scene.
 
         :param scene: ссылка на новую сцену
-        :param player_loading_needed: нужно ли подгружать игрока
         """
-
-        if isinstance(self.__current_scene, ConservableScene):
+        if self.__current_scene:
             self.__current_scene.save()
+        if isinstance(self.__current_scene, GameScene):
             self.__to_delete.append(self.__current_scene)
-        if player_loading_needed and isinstance(scene, GameScene):
+        if isinstance(scene, GameScene):
+            scene.load_common_data()
+        if isinstance(scene, LevelScene):
             scene.load_player()
+        if isinstance(scene, MenuScene):
+            self.file_manager.set_current_space(None)
+        scene.construct()
         self.__current_scene = scene
 
     def set_scene_with_index(self, scene_index: int):
         """
         Установка сцены из имеющегося списка в качестве текущей. Индексы в списке - константные поля класса игры.
         """
-        self.set_scene(self.__scenes[scene_index])
-
-    def start_new_game(self):
-        """
-        Старт нового игрового мира. Пока не имеет альтернатив. Возможно, стоит перенести при создании меню
-        выбора мира.
-        """
-        self.file_manager.set_current_space('world')
-        self.file_manager.create_space_storage()
-        spaceship_scene = SpaceshipScene(self)
-        spaceship_scene.initialize()
-        self.set_scene(spaceship_scene, False)
+        scene = self.__scenes_classes[scene_index](self)
+        self.set_scene(scene)
 
     def end(self):
         self.__running = False

@@ -1,8 +1,8 @@
 from drawable_objects.usable_object import UsableObject
 from geometry.point import Point
 
-from scenes.base import Scene
 from controller.controller import Controller
+
 
 class Ladder(UsableObject):
     """
@@ -11,7 +11,7 @@ class Ladder(UsableObject):
     """
     IMAGE_ZOOM = 0.8
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, 'level_objects.ladder',
                          pos, angle, Ladder.IMAGE_ZOOM)
 
@@ -21,5 +21,4 @@ class Ladder(UsableObject):
         """
         from scenes.game.spaceship import SpaceshipScene  # В обход циклических import'ов
         spaceship_scene = SpaceshipScene(self.scene.game)
-        spaceship_scene.load()
         self.scene.game.set_scene(spaceship_scene)

@@ -3,6 +3,7 @@ import pygame
 from constants.color import COLOR
 from geometry.point import Point
 
+
 class Scene:
     """
     Базовый класс сцены.

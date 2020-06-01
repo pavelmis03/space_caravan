@@ -18,7 +18,8 @@ class HillFunction:
     :param range: длинна горки в каждом из двух направлений
     :param height: высота "горки"
     """
-    def __init__(self, center: float, range: float, height: float=1):
+
+    def __init__(self, center: float, range: float, height: float = 1):
         self.__center = center
         self.__range = range
         self.__height = height

@@ -7,7 +7,7 @@ import pygame
 
 from constants.color import COLOR
 from drawable_objects.base import AbstractObject
-from drawable_objects.interface.widget_group import WidgetGroup
+from drawable_objects.menu.widget_group import WidgetGroup
 
 
 class PauseManager(AbstractObject):
@@ -33,7 +33,6 @@ class PauseManager(AbstractObject):
 
         self.buttons = WidgetGroup(self.scene, self.controller, [0.5, 0.3], 6)
         self.buttons.add_button('Продолжить', self.resume)
-        self.buttons.add_button('Главное меню', self.main_menu)
 
         self.active = False
 
@@ -43,7 +42,8 @@ class PauseManager(AbstractObject):
         if self.controller.is_key_pressed(PauseManager.CONTROLS['CLOSE']) and self.active:
             self.resume()
         if self.active:
-            self.surface = pygame.transform.scale(self.surface, (self.scene.game.width, self.scene.game.height))
+            self.surface = pygame.transform.scale(
+                self.surface, (self.scene.game.width, self.scene.game.height))
             self.buttons.process_logic()
 
     def pause(self):
@@ -58,13 +58,6 @@ class PauseManager(AbstractObject):
         """
         self.scene.game_paused = self.active = False
         self.scene.player.weapon.cooldown = 7
-
-    def main_menu(self):
-        """
-        Переход в главное меню
-        """
-        self.resume()
-        self.scene.game.set_scene_with_index(self.scene.game.MAIN_MENU_SCENE_INDEX)
 
     def process_draw(self):
         if self.active:

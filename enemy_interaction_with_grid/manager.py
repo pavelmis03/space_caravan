@@ -14,17 +14,23 @@ class GridInteractionWithEnemyManager:
     слух отвечает за поиск кратчайшего пути.
     зрение отвечает на запросы, видит ли enemy player'а
     """
-    def __init__(self, rectangles: List[GridRectangle],
-                arr_after_split: List[List[int]],
-                grid):
-        self.__hearing_manager = EnemyHearingManager(grid)
-        self.__vision_manager = EnemyVisionManager(rectangles, arr_after_split, grid)
 
-    def is_enemy_see_player(self, enemy: Enemy) -> bool:
+    def __init__(self, rectangles: List[GridRectangle],
+                 arr_after_split: List[List[int]],
+                 grid):
+        self.__hearing_manager = EnemyHearingManager(grid)
+        self.__vision_manager = EnemyVisionManager(
+            rectangles, arr_after_split, grid)
+
+    def is_enemy_see_player(self, enemy: Enemy, radius: float) -> bool:
         """
         Видит ли enemy player'а
+
+        :param enemy: враг
+        :param radius: радиус, в котором player должен находиться
+        :return: bool
         """
-        return self.__vision_manager.is_enemy_see_player(enemy)
+        return self.__vision_manager.is_enemy_see_player(enemy, radius)
 
     def save_enemy_pos(self, pos: Point):
         """

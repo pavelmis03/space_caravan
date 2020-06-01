@@ -9,8 +9,9 @@ class ArrCorrecter(RectangleBypasserAbstract):
     цвет ближайшей комнаты. Из-за того, что это делается для каждой комнаты, некоторые стены будут перекрашены
     несколько раз.
     """
+
     def _handle_cell(self, cycle: int, i: int, j: int,
-                      arr: List[List[int]], grid) -> bool:
+                     arr: List[List[int]], grid) -> bool:
         """
         Присваивает клетке цвет.
         :return: True

@@ -30,7 +30,8 @@ class Camera:
 
     def __get_camera_shift_by_mouse(self) -> Point:
         mouse_pos = self.__scene.game.controller.get_mouse_pos()
-        mouse_transition = mouse_pos - Point(self.__scene.game.width / 2, self.__scene.game.height / 2)
+        mouse_transition = mouse_pos - \
+            Point(self.__scene.game.width / 2, self.__scene.game.height / 2)
         return mouse_transition * Camera.MOUSE_SHIFT_SENSIVITY
 
 
@@ -53,6 +54,7 @@ class CameraTransition:
     """
     CAMERA_TRANSITION_SPEED_RATIO = 0.02
     CONTROL = pygame.K_LSHIFT
+
     def __init__(self, scene):
         self.__scene = scene
 
@@ -72,8 +74,10 @@ class CameraTransition:
     def move_camera(self, this_camera_pos: Point):
         speed = self.__speed
         direction = self.__get_camera_direction()
-        self.__transition += Point(speed.x * direction.x, speed.y * direction.y)
-        self.__transition = self.__get_correct_transition(self.__transition, this_camera_pos)
+        self.__transition += Point(speed.x * direction.x,
+                                   speed.y * direction.y)
+        self.__transition = self.__get_correct_transition(
+            self.__transition, this_camera_pos)
 
     @property
     def transition(self) -> Point:
@@ -83,18 +87,23 @@ class CameraTransition:
         self.__transition = Point(0, 0)
 
     def __get_correct_transition(self, transition, this_camera_pos: Point) -> Point:
-        max_value = tuple_to_point(self.__scene.game.size) * CameraTransition.MAXIMUM_TRANSITION_RATIO
+        max_value = tuple_to_point(
+            self.__scene.game.size) * CameraTransition.MAXIMUM_TRANSITION_RATIO
         screen_center = tuple_to_point(self.__scene.game.size) / 2
         player_on_screen = self.__scene.player.pos - screen_center
         result = Point(transition.x, transition.y)
 
-        result.x = min(result.x, (player_on_screen.x + max_value.x) - this_camera_pos.x)
+        result.x = min(result.x, (player_on_screen.x +
+                                  max_value.x) - this_camera_pos.x)
 
-        result.x = max(result.x, (player_on_screen.x - max_value.x) - this_camera_pos.x)
+        result.x = max(result.x, (player_on_screen.x -
+                                  max_value.x) - this_camera_pos.x)
 
-        result.y = min(result.y, (player_on_screen.y + max_value.y) - this_camera_pos.y)
+        result.y = min(result.y, (player_on_screen.y +
+                                  max_value.y) - this_camera_pos.y)
 
-        result.y = max(result.y, (player_on_screen.y - max_value.y) - this_camera_pos.y)
+        result.y = max(result.y, (player_on_screen.y -
+                                  max_value.y) - this_camera_pos.y)
 
         return result
 

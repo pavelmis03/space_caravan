@@ -1,5 +1,5 @@
 from drawable_objects.base import AbstractObject
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 
 
 class DisplayCount(AbstractObject):
@@ -15,7 +15,8 @@ class DisplayCount(AbstractObject):
         super().__init__(scene, controller)
         self.subject = subject
         self.fields = fields
-        self.text = Text(scene, pos, '', self.COLOR, 'left', 'Consolas', 50, False, False)
+        self.text = Text(scene, pos, '', self.COLOR, 'left',
+                         'freesansbold', 50, False, False)
         self.render_string = None
 
     def process_logic(self):

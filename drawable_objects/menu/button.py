@@ -2,7 +2,7 @@ import pygame
 
 from constants.color import COLOR
 from drawable_objects.base import DrawableObject
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 from geometry.rectangle import rectangle_to_rect, tuple_to_rectangle
 from utils.sound import SoundManager
 
@@ -23,7 +23,7 @@ class Button(DrawableObject):
     BG_HOVER_COLOR = (220, 220, 220)
     TEXT_COLOR = COLOR['BLACK']
     TEXT_HOVER_COLOR = COLOR['BLACK']
-    FONT_NAME = 'Consolas'
+    FONT_NAME = 'zelekbold'
     HOVER_SOUND = 'button.select'
     PRESS_SOUND = 'button.press'
     HOVER_RESIZE = 1.05
@@ -40,7 +40,7 @@ class Button(DrawableObject):
                          Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
         self.hover_text = Text(scene, self.geometry.center, text, Button.TEXT_HOVER_COLOR, 'center', Button.FONT_NAME,
                                font_size)
-        SoundManager.set_volume(Button.HOVER_SOUND, 0.1)
+        SoundManager.set_volume(Button.HOVER_SOUND, 0.05)
         # SoundManager.set_volume(Button.PRESS_SOUND)
 
     def move(self, movement):

@@ -1,19 +1,19 @@
 import weapons.weapons
-#from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
+# from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
 
-from typing import Optional
+from typing import Optional, Dict
 
 from controller.controller import Controller
 from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
-from scenes.base import Scene
 from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
 from math import pi
 from utils.timer import Timer, EMPTY_TIMER
 from constants.grid import CELL_SIZE
+from drawable_objects.drop.enemy_drop import AmmoDrop
 
 
 class MovingHumanoid(Humanoid):
@@ -31,7 +31,7 @@ class MovingHumanoid(Humanoid):
         вектор, теряет время. Может быть, не требуется переработка. Может быть, это решается передачей следующей точки.
         """
         self._recount_angle(pos)
-        move_vector = vector_from_length_angle(self.SPEED, self.angle)
+        move_vector = vector_from_length_angle(self._speed, self.angle)
         result = self.__get_correct_move_vector(move_vector, pos)
         return result
 
@@ -55,11 +55,19 @@ class MovingHumanoid(Humanoid):
         vector_to_player = new_pos - self.pos
         self.angle = polar_angle(vector_to_player)
 
+    @property
+    def _speed(self) -> float:
+        """
+        получить текущую скорость
+        """
+        return self.SPEED
+
 
 class EnemyCommand:
     """
     Команда, которую Enemy должен выполнить
     """
+
     def __init__(self, type: str, *params):
         self.type = type
         self.params = params
@@ -82,41 +90,64 @@ class CommandHumanoid(MovingHumanoid):
 
     ADD_TO_GAME_PLANE = True
     SPEED = 9
-
+    MELEE_SPEED = 11
     """
     HEARING_RANGE - единица измерения - клетки
     """
     VISION_RADIUS = 25 * CELL_SIZE
-    VIEW_ANGLE = pi #с углом > pi работать не будет
+    VIEW_ANGLE = pi  # с углом > pi работать не будет
 
     HEARING_RANGE = 35
 
     COOLDOWN_TIME = 50
     DELAY_BEFORE_FIRST_SHOOT = 12
     DELAY_BEFORE_HEARING = 8
+    LEVEL_LOAD_DELAY = 36
 
-    def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float,
-                 image_zoom: float):
+    def __init__(self, scene, controller: Controller, image_name: str,
+                 pos: Point, angle: float, image_zoom: float):
         super().__init__(scene, controller, image_name, pos, angle, image_zoom)
 
-        self.__command = None # None означает команду бездействия
+        self.__command = None  # None означает команду бездействия
         self.__is_see_player = False
         self._is_aggred = False
-        self.__cooldown = 0
-        self.__hearing_timer_delay = EMPTY_TIMER #задержка перед реакцией enemy на выстрел
+        self.__cooldown = CommandHumanoid.LEVEL_LOAD_DELAY #чтобы на лестнице сразу не убивали
+        # задержка перед реакцией enemy на выстрел
+        self.__hearing_timer_delay = EMPTY_TIMER
 
         self.ammo = {
             'Pistol': 1000000,
             'Shotgun': 1000000,
             'Rifle': 1000000,
         }
-        self.weapon = weapons.weapons.WEAPON_VOCABULARY['BurstFiringPistol'](self)
-        self.scene.game_objects.append(self.weapon)
-        self.hp = 100
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY['Sword'](self) #изначальное значение не важно
 
         self.__command_functions = {'move_to': self.__command_move_to,
-                                  'shoot': self.__command_shoot,
-                                  'aim': self.__command_aim, }
+                                    'attack': self.__command_attack,
+                                    'aim': self.__command_aim, }
+
+    def from_dict(self, data_dict: Dict):
+        """
+        Воспроизведение объекта из словаря.
+        """
+        self.set_weapon(data_dict['weapon'])
+        super().from_dict(data_dict)
+
+    def to_dict(self) -> Dict:
+        """
+        Запись характеристик объекта в словарь.
+        """
+        result = super().to_dict()
+        '''
+        работает за O(weapons.weapons.WEAPON_VOCABULARY), но
+        в высокой скорости нет необходимости:
+        '''
+        result.update(weapons.weapons.weapon_to_dict(self.weapon))
+
+        return result
+
+    def set_weapon(self, weapon_name):
+        self.weapon = weapons.weapons.WEAPON_VOCABULARY[weapon_name](self)
 
     def process_logic(self):
         """
@@ -127,12 +158,13 @@ class CommandHumanoid(MovingHumanoid):
         self.__command_logic()
         if self.__cooldown:
             self.__cooldown -= 1
+        self.weapon.process_logic()
 
     def __vision_logic(self):
         """
         Логика зрения Enemy
         """
-        self.__is_see_player = self.scene.grid.is_enemy_see_player(self)
+        self.__is_see_player = self.scene.grid.is_enemy_see_player(self, CommandHumanoid.VISION_RADIUS)
 
     def __hearing_logic(self):
         """
@@ -162,7 +194,8 @@ class CommandHumanoid(MovingHumanoid):
             self.__command = self.__get_new_command()
 
         if not self._is_idle:
-            self.__command_functions[self.__command.type](*self.__command.params)
+            self.__command_functions[self.__command.type](
+                *self.__command.params)
 
     def __get_new_command(self) -> Optional[EnemyCommand]:
         """
@@ -170,17 +203,38 @@ class CommandHumanoid(MovingHumanoid):
         """
         if self.__is_see_player:
             self._is_aggred = True
-            self.__cooldown = max(self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
-            return EnemyCommand('aim')
+            command = self.__get_attack_command()
+            if command is not None:
+                return command
 
         if self._is_aggred:
             new_pos = self.scene.grid.get_pos_to_move(self)
             if new_pos is not None:
-                self.scene.grid.save_enemy_pos(new_pos) #на случай, если несколько enemy решат пойти в одну клетку
+                # на случай, если несколько enemy решат пойти в одну клетку
+                self.scene.grid.save_enemy_pos(new_pos)
                 return EnemyCommand('move_to', new_pos)
 
         if self._is_aggred and not self.__is_hearing_player:
             self._is_aggred = False
+
+        return None
+
+    def __get_attack_command(self) -> Optional[EnemyCommand]:
+        """
+        Получить команду, для атаки Player'а
+
+        :return: команду или None. Если None, то это означает не команду бесдействия, а невозможность атаки
+        """
+        if self._is_range:
+            self.__cooldown = max(self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
+            return EnemyCommand('aim')
+
+        if not self.__can_attack_now:
+            return None
+
+        can_melee_attack = self.scene.grid.is_enemy_see_player(self, self.weapon.length)
+        if can_melee_attack:
+            return EnemyCommand('attack')
 
         return None
 
@@ -195,7 +249,8 @@ class CommandHumanoid(MovingHumanoid):
         """
         Команда движения к точке.
         """
-        self.scene.grid.save_enemy_pos(pos)  # на случай, если несколько enemy решат пойти в одну клетку
+        self.scene.grid.save_enemy_pos(
+            pos)  # на случай, если несколько enemy решат пойти в одну клетку
 
         if pos == self.pos:
             self.__command = None
@@ -208,14 +263,14 @@ class CommandHumanoid(MovingHumanoid):
 
         self.move(self.pos + self._get_move_vector(pos))
 
-    def __command_shoot(self):
+    def __command_attack(self):
         """
         Команда выстрела в игрока
         """
         self._recount_angle(self.scene.player.pos)
 
         self.weapon.main_attack()
-        if self.weapon.type == 'Ranged' and self.weapon.magazine == 0:
+        if self._is_range and self.weapon.magazine == 0:
             self.weapon.reload()
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
@@ -225,8 +280,16 @@ class CommandHumanoid(MovingHumanoid):
         """
         Команда прицеливания в игрока.
         """
-        if self.__can_shoot_now:
-            self.__command = EnemyCommand('shoot')
+        """
+        для melee оружия особое поведение, которое проще всего сделать так:
+        """
+        if not self._is_range:
+            self.__command = self.__get_attack_command()
+            self.__command_logic()
+            return
+
+        if self.__can_attack_now:
+            self.__command = EnemyCommand('attack')
             self.__command_logic()
             return
 
@@ -238,7 +301,7 @@ class CommandHumanoid(MovingHumanoid):
         self._recount_angle(self.scene.player.pos)
 
     @property
-    def __can_shoot_now(self) -> bool:
+    def __can_attack_now(self) -> bool:
         """
         Может ли выстрелить сейчас
         """
@@ -251,6 +314,18 @@ class CommandHumanoid(MovingHumanoid):
         """
         return self.scene.grid.is_hearing_player(self)
 
+    @property
+    def _speed(self) -> float:
+        if self._is_range:
+            return super()._speed
+        return self.MELEE_SPEED
+
+    @property
+    def _is_range(self) -> bool:
+        """
+        Дальнее ли у Enemy оружие
+        """
+        return self.weapon.type == 'Ranged'
 
 class Enemy(CommandHumanoid):
     """
@@ -262,13 +337,14 @@ class Enemy(CommandHumanoid):
 
     ANGULAR_VELOCITY = 6 / 65
 
-    ROTATION_TIME = 40 #количество циклов поворота
+    ROTATION_TIME = 40  # количество циклов поворота
     ROTATION_MIN_COOLDOWN = 100
     ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
-        self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
+        self.__rotate_cooldown = randint(
+            Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
         self.__rotation_direction = 1 if is_random_proc() else -1
         self.__rotating_cycles = 0
 
@@ -324,7 +400,8 @@ class Enemy(CommandHumanoid):
         Закончить поворот
         """
         self.__rotating_cycles = 0
-        self.__rotate_cooldown = randint(Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
+        self.__rotate_cooldown = randint(
+            Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
 
     @property
     def __is_rotating(self):
@@ -340,17 +417,6 @@ class Enemy(CommandHumanoid):
         """
         return self.__rotating_cycles == 0
 
-    def get_damage(self, damage=0, angle_of_attack=0):
-        """
-        Получение урона
-
-        :param damage: урон
-        :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
-        """
-        self.hp -= damage
-        if self.hp <= 0:
-            self.die(angle_of_attack)
-
     def die(self, angle_of_attack=0):
         """
         Смээээрть
@@ -359,3 +425,10 @@ class Enemy(CommandHumanoid):
         """
         self.weapon.destroy()
         self.destroy()
+
+        if self._is_range:
+            self.__drop_ammo()
+
+    def __drop_ammo(self):
+        ammo = AmmoDrop(self.scene, self.controller, self.pos)
+        self.scene.game_objects.append(ammo)

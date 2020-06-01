@@ -10,24 +10,28 @@ class GridPathFinder:
     """
     Обход двумерного графа. Поиск пути (bfs).
     """
+
     def __init__(self, grid):
         """
         O(len(grid.arr) * len(grid.arr[0])) памяти и времени
         """
         self.__grid = grid
 
-        self.__distance = [[0] * len(grid.arr[0]) for i in range(len(grid.arr))]
+        self.__distance = [[0] * len(grid.arr[0])
+                           for i in range(len(grid.arr))]
 
         self.__used_manager = TwoDimensionalIsMarkedManager(grid.arr)
 
         self.__is_in_aggre_zone = TwoDimensionalIsMarkedManager(grid.arr)
 
-        self.__parent = [[(0, 0)] * len(grid.arr[0]) for i in range(len(grid.arr))]
+        self.__parent = [[(0, 0)] * len(grid.arr[0])
+                         for i in range(len(grid.arr))]
 
         self.__is_has_enemy = TwoDimensionalIsMarkedManager(grid.arr)
 
         # не мешают ли стены стоять здесь enemy
-        self.__is_standable = [[True] * len(grid.arr[i]) for i in range(len(grid.arr))]
+        self.__is_standable = [
+            [True] * len(grid.arr[i]) for i in range(len(grid.arr))]
 
         self.__fill_is_standable_list()
 
@@ -81,10 +85,12 @@ class GridPathFinder:
             for k in range(len(transition_cells)):
                 new_i = transition_cells[k][0]
                 new_j = transition_cells[k][1]
-                if self.__is_in_aggre_zone.is_marked(new_i, new_j): # уже обработано
+                # уже обработано
+                if self.__is_in_aggre_zone.is_marked(new_i, new_j):
                     continue
 
-                self.__is_in_aggre_zone.mark(new_i, new_j) # важно, что тут не __used_manager
+                # важно, что тут не __used_manager
+                self.__is_in_aggre_zone.mark(new_i, new_j)
                 self.__parent[new_i][new_j] = (i, j)
                 self.__distance[new_i][new_j] = new_distance
 
@@ -100,7 +106,8 @@ class GridPathFinder:
         self.__used_manager.next_iteration()
 
         player_pos = self.__grid.scene.player.pos
-        player_i, player_j = self.__grid.index_manager.get_index_by_pos(player_pos)
+        player_i, player_j = self.__grid.index_manager.get_index_by_pos(
+            player_pos)
 
         q = deque()  # collections.deque работает быстрее, чем queue.Queue
         q.append((player_i, player_j))
@@ -198,6 +205,3 @@ class GridPathFinder:
             return None
 
         return self.__grid.get_center_of_cell_by_indexes(new_i, new_j)
-
-
-

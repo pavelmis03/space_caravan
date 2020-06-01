@@ -2,6 +2,7 @@ class Timer:
     """
     Класс для замера времени (пока в циклах)
     """
+
     def __init__(self, time: int):
         self.__is_started = False
         self.__time = time
@@ -33,4 +34,6 @@ class Timer:
         if self.__is_started and not self.is_alarm:
             self.__time -= 1
 
-EMPTY_TIMER = Timer(1) #таймер-заглушка. Он не запущен, поэтому никогда не будет is_alarm
+
+# таймер-заглушка. Он не запущен, поэтому никогда не будет is_alarm
+EMPTY_TIMER = Timer(1)

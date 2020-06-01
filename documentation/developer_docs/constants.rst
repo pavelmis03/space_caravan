@@ -15,6 +15,13 @@ directions.py
     :members:
     :undoc-members:
 
+grid.py
+-------
+
+.. automodule:: constants.grid
+    :members:
+    :undoc-members:
+
 math.py
 -------
 

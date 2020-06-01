@@ -6,11 +6,11 @@ from typing import List, Dict
 from constants.saving import CLASSES_BASE
 from geometry.point import Point
 
+
 class GameDataManager:
     """
     Менеджер файлов игры, в которых хранится информация о мирах.
     """
-
     STORAGE_ROOT = 'game_data'
 
     def __init__(self):
@@ -20,10 +20,20 @@ class GameDataManager:
         self.__space_path = None
 
     def set_current_space(self, space_name):
+        """
+        Установка текущего космоса. Операции с хранилищем космоса происходят без передачи его имени, так что этот
+        метод нужно вызывать перед ними.
+        """
         self.__space_name = space_name
-        self.__space_path = os.path.join(self.STORAGE_ROOT, space_name)
+        if space_name:
+            self.__space_path = os.path.join(self.STORAGE_ROOT, space_name)
+        else:
+            self.__space_name = None
 
     def create_space_storage(self):
+        """
+        Создание нового хранилища космоса. Перед созданием на всякий случай удаляет старое, если оно есть.
+        """
         self.delete_space_storage()
         os.mkdir(self.__space_path)
 
@@ -32,7 +42,10 @@ class GameDataManager:
             shutil.rmtree(self.__space_path)
 
     def __get_file_path(self, file_name) -> str:
-        return os.path.join(self.__space_path, file_name + '.json')
+        if self.__space_name:
+            return os.path.join(self.__space_path, file_name + '.json')
+        else:
+            return os.path.join(self.STORAGE_ROOT, file_name + '.json')
 
     def read_data(self, file_name: str) -> Dict:
         """
@@ -55,6 +68,18 @@ class GameDataManager:
         file.write(data_str)
         file.close()
 
+    def get_all_space_names(self) -> List[str]:
+        files_and_folders = os.listdir(self.STORAGE_ROOT)
+        folders = list()
+        for name in files_and_folders:
+            if os.path.isdir(os.path.join(self.STORAGE_ROOT, name)):
+                folders.append(name)
+        return folders
+
+    def file_exists(self, file_name: str):
+        file_path = self.__get_file_path(file_name)
+        return os.path.exists(file_path) and os.path.isfile(file_path)
+
 
 def to_list_of_dicts(objects: List) -> List[Dict]:
     result = list()
@@ -67,7 +92,8 @@ def to_list_of_dicts(objects: List) -> List[Dict]:
 def from_list_of_dicts(obj, data_list: List[Dict]) -> List:
     result = list()
     for item in data_list:
-        new_object = CLASSES_BASE[item['classname']](obj, obj.game.controller, Point(0, 0))
+        new_object = CLASSES_BASE[item['classname']](
+            obj, obj.game.controller, Point(0, 0))
         new_object.from_dict(item)
         result.append(new_object)
     return result

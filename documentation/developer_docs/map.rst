@@ -50,17 +50,24 @@ level.grid
     :members:
     :undoc-members:
 
-enemies_generator
+objects_generator
 -----------------
 
-.. automodule:: map.level.enemies_generator
+.. automodule:: map.level.objects_generator
     :members:
     :undoc-members:
 
-level_generator
----------------
+map_generator
+-------------
 
-.. automodule:: map.level.level_generator
+.. automodule:: map.level.map_generator
+    :members:
+    :undoc-members:
+
+level_settings
+--------------
+
+.. automodule:: map.level.settings
     :members:
     :undoc-members:
 

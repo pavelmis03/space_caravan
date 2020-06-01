@@ -1,45 +1,59 @@
-from typing import Dict, List
+from typing import Dict
 
 from scenes.base import Scene
-from utils.game_data_manager import from_list_of_dicts, to_list_of_dicts
 
 
 class ConservableScene(Scene):
     """
-    Базовый класс сохраняемой сцены (в проекте мир сохраняется именно на сценах). В конструкторе инициализируются не
-    все поля, некоторые просто объявлены None. После создания объекта нужно вызвать initialize (для создания
-    с нуля) или load (для загрузки из файла). Save вызывается автоматически в Game.
+    Базовый класс сохраняемой сцены. Основная структура сохранений содержится здесь. Чтобы перейти на сцену, нужно
+    создать объект класса сцены и воспользоваться Game.set_scene. Никакие методы сцены дополнительно вызывать не
+    требуется.
 
     :param game: игра, создающая сцену
     :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
     """
-
     def __init__(self, game, data_filename: str):
         super().__init__(game)
         self.data_filename = data_filename
 
+    def construct(self):
+        """
+        Конструирование сцены. Вызывается автоматически игрой при установке сцены текущей. Сцена сама выбирает,
+        загружаться или инициализироваться.
+        """
+        if self.data_filename and self.game.file_manager.file_exists(self.data_filename):
+            self.load()
+        else:
+            self.initialize()
+            self.save()
+
     def initialize(self):
         """
-        Создание полей сцены с нуля.
+        Инициализация - создание сцены с нуля.
         """
         pass
 
     def load(self):
+        """
+        Загрузка сцены из файла.
+        """
         self.from_dict(self.game.file_manager.read_data(self.data_filename))
 
     def save(self):
-        self.game.file_manager.write_data(self.data_filename, self.to_dict())
+        """
+        Сохранение сцены в файл (если self.data_filename не None).
+        """
+        if self.data_filename:
+            self.game.file_manager.write_data(self.data_filename, self.to_dict())
 
     def from_dict(self, data_dict: Dict):
         """
-        Воспроизведение сцены из словаря.
+        Формирование сцены по словарю с ее данными.
         """
-        self.interface_objects += from_list_of_dicts(self, data_dict['interface_objects'])
+        pass
 
     def to_dict(self) -> Dict:
         """
-        Запись характеристик сцены в виде словаря.
+        Представление данных сцены в виде словаря.
         """
-        return {
-            'interface_objects': to_list_of_dicts(self.interface_objects)
-        }
+        return {}

@@ -1,12 +1,8 @@
-import pygame
-
-from constants.color import COLOR
 from drawable_objects.base import AbstractObject
-from drawable_objects.button import Button
-from drawable_objects.checkbox import CheckBox
-from drawable_objects.multiline_text import MultilineText
+from drawable_objects.menu.button import Button
+from drawable_objects.menu.checkbox import CheckBox
+from drawable_objects.menu.multiline_text import MultilineText
 from geometry.point import Point
-from geometry.rectangle import tuple_to_rectangle
 
 
 class WidgetGroup(AbstractObject):
@@ -62,7 +58,8 @@ class WidgetGroup(AbstractObject):
     def get_actual_pos(self):
         """
         Получение точки для верхней границы нового виджета
-        :return точка верхней границы нового виджета
+
+        :return: точка верхней границы нового виджета
         """
         if self.widgets:
             last = self.widgets[-1].geometry
@@ -72,6 +69,7 @@ class WidgetGroup(AbstractObject):
     def add_button(self, text, function, kwargs={}, size=None):
         """
         Добавляет кнопку в отображаемые виджеты
+
         :param size: точка, состаящия из высоты(x) и ширины(y) кнопки
         :param text: текст для кнопки
         :param function: вызываемая кнопкой при нажатии на неё функция
@@ -80,16 +78,19 @@ class WidgetGroup(AbstractObject):
         if not size:
             size = Point(*WidgetGroup.BUTTON_DEF_SIZE)
         pos = self.get_actual_pos()
-        geometry = (pos.x - size.x / 2, pos.y, pos.x + size.x / 2, pos.y + size.y)
+        geometry = (pos.x - size.x / 2, pos.y,
+                    pos.x + size.x / 2, pos.y + size.y)
         btn = Button(self.scene, self.controller,
                      geometry, text, function, kwargs)
         self.widgets.append(btn)
 
-    def add_checkbox(self, text, size=None):
+    def add_checkbox(self, text, size=None) -> CheckBox:
         """
         Добавляет чекбокс в отображаемые виджеты
+
         :param text: Текст для чекбокса
         :param size: Размеры чекбокса (самого квадрата)
+        :return: ссылка на созданный checkbox
         """
         if not size:
             size = WidgetGroup.CHECKBOX_DEF_SIZE
@@ -99,10 +100,12 @@ class WidgetGroup(AbstractObject):
         box = CheckBox(self.scene, self.controller,
                        pos, size, text, align='center')
         self.widgets.append(box)
+        return box
 
     def add_multilinetext(self, text, **text_kwargs):
         """
         Добавляет многострочный текст в отображаемые виджеты
+
         :param text: многострочный текст
         :param text_kwargs: аргументы многострочного текста
         """
@@ -114,6 +117,7 @@ class WidgetGroup(AbstractObject):
     def update_offset(self, offset):
         """
         Изменение оффсета для отображения группы виджетов
+
         :param offset: новоый оффсет
         """
         self.offset = Point(*offset)

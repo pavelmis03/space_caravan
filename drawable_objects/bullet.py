@@ -36,7 +36,6 @@ class Bullet(GameSprite):
         self.damage = damage
         self.is_hurting_enemies = weapon.owner.__class__.__name__ != 'Enemy'
 
-
     def process_draw(self):
         """
         Отрисовка объекта в относительных координатах
@@ -47,14 +46,15 @@ class Bullet(GameSprite):
         Если объект вне экрана, он не отрисовывается
         relative_center: центр относительных координат
         """
-        pos = self.pos - vector_from_length_angle(ImageManager.get_width(self.image_name, self.zoom) // 2, self.angle)
+        pos = self.pos - vector_from_length_angle(
+            ImageManager.get_width(self.image_name, self.zoom) // 2, self.angle)
         relative_center = self.scene.relative_center
         relative_pos = pos - relative_center
         if ImageManager.is_out_of_screen(self.image_name, self.zoom,
-                                          relative_pos, self.scene.game.screen_rectangle):
+                                         relative_pos, self.scene.game.screen_rectangle):
             return
         ImageManager.process_draw(self.image_name, relative_pos,
-                                   self.scene.screen, self.zoom, self.angle, self.rotation_offset)
+                                  self.scene.screen, self.zoom, self.angle, self.rotation_offset)
 
     def process_logic(self):
         next_pos = self.pos + self.direction
@@ -79,7 +79,8 @@ class Bullet(GameSprite):
         if dist(intersect_walls[0], self.pos) < dist(intersection[0], self.pos):
             intersection = intersect_walls
 
-        intersect_enemy_point, shooted_enemy = self.is_colliding_with_enemies(trajectory)
+        intersect_enemy_point, shooted_enemy = self.is_colliding_with_enemies(
+            trajectory)
         intersect_enemies = [intersect_enemy_point, self.collision_with_enemy]
         if dist(intersect_enemies[0], self.pos) < dist(intersection[0], self.pos):
             intersect_enemies[1](intersect_enemies[0], shooted_enemy)
@@ -112,7 +113,8 @@ class Bullet(GameSprite):
         neighbours = self.scene.plane.get_neighbours(middle, Enemy)
         for neighbour in neighbours:
             enemy_circle = Circle(neighbour.pos, neighbour.HITBOX_RADIUS)
-            neighbour_intersection_point = intersect_seg_circle(tragectory, enemy_circle)
+            neighbour_intersection_point = intersect_seg_circle(
+                tragectory, enemy_circle)
             distance = dist(self.pos, neighbour_intersection_point)
             if distance < dist(self.pos, intersection_point):
                 shooted_enemy = neighbour
@@ -126,7 +128,7 @@ class Bullet(GameSprite):
         :param intersection_point: точка пересечения с Enemy
         :param enemy: Enemy, в которого попала пуля
         """
-        enemy.get_damage(self.damage)
+        enemy.get_damage(self.damage, self.angle)
         self.destroy()
 
     def collision_with_player(self, intersection_point):
@@ -135,7 +137,8 @@ class Bullet(GameSprite):
 
         :param intersection_point: точка пересечения с Player
         """
-        self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.game_objects.append(CollisionAnimation(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.player.get_damage(self.damage, self.angle)
         self.destroy()
 
     def collision_with_wall(self, intersection_point):
@@ -144,7 +147,8 @@ class Bullet(GameSprite):
 
         :param intersection_point: точка пересечения со стеной
         """
-        self.scene.game_objects.append(Collision_Animation(self.scene, self.controller, intersection_point, self.angle))
+        self.scene.game_objects.append(CollisionAnimation(
+            self.scene, self.controller, intersection_point, self.angle))
         self.destroy()
 
 
@@ -165,7 +169,7 @@ class PistolBullet(Bullet):
         image_name = 'moving_objects.bullet.pistol_bullet'
         zoom = 0.55
         super().__init__(weapon, pos, angle, damage, speed,
-                           image_name, zoom)
+                         image_name, zoom)
 
 
 class RifleBullet(Bullet):
@@ -175,10 +179,10 @@ class RifleBullet(Bullet):
         image_name = 'moving_objects.bullet.rifle_bullet'
         zoom = 0.6
         super().__init__(weapon, pos, angle, damage, speed,
-                           image_name, zoom)
+                         image_name, zoom)
 
 
-class Collision_Animation(GameSprite):
+class CollisionAnimation(GameSprite):
 
     IMAGE_NAMES = [
         'moving_objects.bullet.2',
@@ -188,14 +192,16 @@ class Collision_Animation(GameSprite):
 
     def __init__(self, scene, controller, pos: Point, angle: float = 0):
         pos = pos - vector_from_length_angle(8, angle)
-        super().__init__(scene, controller,  Collision_Animation.IMAGE_NAMES[0], pos, angle, Collision_Animation.IMAGE_ZOOMS[0])
+        super().__init__(scene, controller,
+                         CollisionAnimation.IMAGE_NAMES[0], pos, angle, CollisionAnimation.IMAGE_ZOOMS[0])
         self.image_ind = 0
+        self.one_frame_vision_time = 3
 
     def process_logic(self):
-        self.image_name = Collision_Animation.IMAGE_NAMES[self.image_ind // 3]
-        self.zoom = Collision_Animation.IMAGE_ZOOMS[self.image_ind // 3]
+        self.image_name = CollisionAnimation.IMAGE_NAMES[self.image_ind // self.one_frame_vision_time]
+        self.zoom = CollisionAnimation.IMAGE_ZOOMS[self.image_ind // self.one_frame_vision_time]
         self.image_ind += 1
-        if self.image_ind >= len(Collision_Animation.IMAGE_NAMES) * 3:
+        if self.image_ind >= len(CollisionAnimation.IMAGE_NAMES) * self.one_frame_vision_time:
             self.destroy()
 
 

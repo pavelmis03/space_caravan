@@ -7,10 +7,6 @@ from controller.controller import Controller
 from scenes.base import Scene
 from utils.image import ImageManager
 
-from geometry.distances import dist
-from math import cos
-from math import sin
-
 
 class AbstractObject:
     """
@@ -201,3 +197,37 @@ class Humanoid(GameSprite):
                  zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
         self.hp = Humanoid.MAXHP
+        self.weapon = None
+
+    def process_draw(self):
+        self.weapon.process_draw()
+        super().process_draw()
+
+    def get_damage(self, damage=0, angle_of_attack=0):
+        """
+        Получение урона
+
+        :param damage: урон
+        :param angle_of_attack: угол, под которым был получен урон(для анимаций)
+        """
+        if damage > 0:
+            self.hp -= damage
+            if self.hp <= 0:
+                self.hp = 0
+                self.die(angle_of_attack)
+
+    def to_dict(self) -> Dict:
+        result = super().to_dict()
+        result.update({'hp': self.hp})
+        return result
+
+    def from_dict(self, data_dict):
+        super().from_dict(data_dict)
+        self.hp = data_dict['hp']
+
+    def die(self, angle_of_attack=0):
+        """
+        Смерть
+
+        :param angle_of_attack: угол, под которым был получен урон(для анимаций)
+        """

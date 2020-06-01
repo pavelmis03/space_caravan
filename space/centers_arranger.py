@@ -24,7 +24,8 @@ class CentersArranger:
     MIN_GRAVITY_DIST_SQUARE = 1000
 
     def __init__(self, planets_number: int):
-        self.__space_rectangle = Rectangle(0, 0, ESTIMATED_SPACE_SIZE[0], ESTIMATED_SPACE_SIZE[1])
+        self.__space_rectangle = Rectangle(
+            0, 0, ESTIMATED_SPACE_SIZE[0], ESTIMATED_SPACE_SIZE[1])
         self.__planets_number = planets_number
 
     def generate(self) -> List[Point]:
@@ -54,7 +55,8 @@ class CentersArranger:
         planets_centers = list()
         for i in range(self.__planets_number):
             while True:
-                current_center = self.__get_random_point_inside(self.__space_rectangle)
+                current_center = self.__get_random_point_inside(
+                    self.__space_rectangle)
                 if not self.__already_in_list(planets_centers, current_center):
                     break
             planets_centers.append(current_center)
@@ -71,7 +73,8 @@ class CentersArranger:
         for line in border_lines:
             direction_vector = -normalized(line.get_normal())
             dist_square = dist_point_line(planet_pos, line) ** 2
-            dist_square = max(dist_square, CentersArranger.MIN_GRAVITY_DIST_SQUARE)
+            dist_square = max(
+                dist_square, CentersArranger.MIN_GRAVITY_DIST_SQUARE)
             result += direction_vector / dist_square * CentersArranger.BORDER_FORCE
         return result
 
@@ -94,7 +97,8 @@ class CentersArranger:
 
         :return: вектор, на который меняется скорость планеты
         """
-        direction_vector = normalized(self.__space_rectangle.center - planet_pos)
+        direction_vector = normalized(
+            self.__space_rectangle.center - planet_pos)
         return direction_vector * CentersArranger.SPACE_CENTER_KOEF
 
     def __gravity_iteration(self, planets_centers: List[Point], border_lines: List[Line]):
@@ -104,11 +108,13 @@ class CentersArranger:
         """
         velocity = [Point() for _i in range(len(planets_centers))]
         for i in range(len(planets_centers)):
-            velocity[i] += self.__border_gravity(planets_centers[i], border_lines)
+            velocity[i] += self.__border_gravity(
+                planets_centers[i], border_lines)
             velocity[i] += self.__space_center_gravity(planets_centers[i])
             for j in range(len(planets_centers)):
                 if i != j:
-                    velocity[i] += self.__planet_gravity(planets_centers[i], planets_centers[j])
+                    velocity[i] += self.__planet_gravity(
+                        planets_centers[i], planets_centers[j])
         for i in range(len(planets_centers)):
             planets_centers[i] += velocity[i]
 
@@ -117,6 +123,7 @@ class CentersArranger:
         Распределение центров планет по карте космоса гравитационными взаимодейтвими.
         """
         border_segments = self.__space_rectangle.get_edges()
-        border_lines = [line_from_points(segment.p1, segment.p2) for segment in border_segments]
+        border_lines = [line_from_points(
+            segment.p1, segment.p2) for segment in border_segments]
         for _i in range(CentersArranger.ITERATIONS):
             self.__gravity_iteration(planets_centers, border_lines)
