@@ -53,10 +53,11 @@ class CloneCapsule(UsableObject):
     """
     Капсула клонирования. Создаёт клона и позволяет меняться телами с клоном, если он уже создан
     """
-    IMAGE_ZOOM = 0.8
+    IMAGE_ZOOM = 0.38
+    CLONE_COST = 0
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__(scene, controller, 'level_objects.terminal_up',
+        super().__init__(scene, controller, 'level_objects.clone',
                          pos, angle, self.IMAGE_ZOOM)
         self.soulless_player = None
         self.is_clone_created = False
@@ -71,64 +72,73 @@ class CloneCapsule(UsableObject):
         if not self.changing_cooldown:
             self.changing_cooldown = 30
             if not(self.scene.player.is_clone or self.is_clone_created):
+                if self.scene.common_data.essence >= CloneCapsule.CLONE_COST:
+                    self.scene.common_data.essence -= CloneCapsule.CLONE_COST
+                    self.scene.player.weapon.cooldown = 0
+                    self.scene.player.weapon.burst = 0
+                    if self.scene.player.weapon.type == 'Ranged':
+                        self.scene.player.weapon.is_reloading = 0
+                        self.scene.player.weapon.reload_request = False
+                    self.scene.player.weapon_slots[self.scene.player.weapon_slots_ind] = self.scene.player.weapon
 
-                self.scene.player.weapon.cooldown = 0
-                self.scene.player.weapon.burst = 0
-                if self.scene.player.weapon.type == 'Ranged':
-                    self.scene.player.weapon.is_reloading = 0
-                    self.scene.player.weapon.reload_request = False
-                self.scene.player.weapon_slots[self.scene.player.weapon_slots_ind] = self.scene.player.weapon
+                    self.scene.player.change_weapon_request = -1
+                    self.scene.player.change_weapon_cooldown = 0
 
-                self.scene.player.change_weapon_request = -1
-                self.scene.player.change_weapon_cooldown = 0
+                    self.soulless_player = SoullessPlayer(self.scene.player)
+                    self.scene.game_objects.append(self.soulless_player)
+                    self.scene.player.ammo = {
+                        'Pistol': 0,
+                        'Shotgun': 0,
+                        'Rifle': 0,
+                    }
+                    self.scene.player.weapon_slots = [
+                        WEAPON_VOCABULARY['Fist'](self.scene.player),
+                        WEAPON_VOCABULARY['Fist'](self.scene.player),
+                    ]
+                    self.scene.player.weapon = self.scene.player.weapon_slots[0]
 
-                self.soulless_player = SoullessPlayer(self.scene.player)
-                self.scene.game_objects.append(self.soulless_player)
-                self.scene.player.ammo = {
-                    'Pistol': 0,
-                    'Shotgun': 0,
-                    'Rifle': 0,
-                }
-                self.scene.player.weapon_slots = [
-                    WEAPON_VOCABULARY['Fist'](self.scene.player),
-                    WEAPON_VOCABULARY['Fist'](self.scene.player),
-                ]
-                self.scene.player.weapon = self.scene.player.weapon_slots[0]
-
-                self.scene.player.is_clone = True
-                self.is_clone_created = True
+                    self.scene.player.is_clone = True
+                    self.is_clone_created = True
             else:
                 transplant_soul_between_bodies(self.soulless_player)
+
+    def load_player_paremeters(self, player: Humanoid, data_dict: Dict):
+        new_pos = Point()
+        new_pos.from_dict(data_dict['player_pos'])
+        player.move(new_pos)
+        player.angle = data_dict['player_angle']
+        player.image_name = data_dict['player_image_name']
+        player.zoom = data_dict['player_zoom']
+
+        player.hp = data_dict['hp']
+
+        player.weapon_slots[0].owner = self.scene.player
+        player.weapon_slots[1].owner = self.scene.player
+
+        player.ammo = data_dict['ammo']
+        player.weapon_slots_ind = data_dict['weapon_slots_ind']
+
+        player.weapon_slots = []
+        for weapon_dict in data_dict['weapons']:
+            weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](player)
+            if weapon.type == 'Ranged':
+                weapon.magazine = weapon_dict['magazine']
+            player.weapon_slots.append(weapon)
+        player.weapon = player.weapon_slots[player.weapon_slots_ind]
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
         self.is_clone_created = data_dict['is_clone_created']
         if self.is_clone_created:
-            self.soulless_player = SoullessPlayer(self.scene.player)
-            new_pos = Point()
-            new_pos.from_dict(data_dict['player_pos'])
-            self.soulless_player.move(new_pos)
-            self.soulless_player.angle = data_dict['player_angle']
-            self.soulless_player.image_name = data_dict['player_image_name']
-            self.soulless_player.zoom = data_dict['player_zoom']
-
-            self.soulless_player.hp = data_dict['hp']
-
-            self.soulless_player.weapon_slots[0].owner = self.scene.player
-            self.soulless_player.weapon_slots[1].owner = self.scene.player
-
-            self.soulless_player.ammo = data_dict['ammo']
-            self.soulless_player.weapon_slots_ind = data_dict['weapon_slots_ind']
-
-            self.soulless_player.weapon_slots = []
-            for weapon_dict in data_dict['weapons']:
-                weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](self.soulless_player)
-                if weapon.type == 'Ranged':
-                    weapon.magazine = weapon_dict['magazine']
-                self.soulless_player.weapon_slots.append(weapon)
-            self.soulless_player.weapon = self.soulless_player.weapon_slots[self.soulless_player.weapon_slots_ind]
-
-            self.scene.game_objects.append(self.soulless_player)
+            if self.scene.player.is_dead:
+                self.is_clone_created = False
+                self.scene.player.is_dead = False
+                self.scene.player.is_clone = False
+                self.load_player_paremeters(self.scene.player, data_dict)
+            else:
+                self.soulless_player = SoullessPlayer(self.scene.player)
+                self.load_player_paremeters(self.soulless_player, data_dict)
+                self.scene.game_objects.append(self.soulless_player)
 
     def to_dict(self) -> Dict:
         result = super().to_dict()

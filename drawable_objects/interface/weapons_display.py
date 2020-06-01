@@ -10,7 +10,7 @@ class WeaponsDisplay(DrawableObject):
     def __init__(self, player, pos):
         super().__init__(player.scene, player.controller, pos)
         self.weapon_slots = [WeaponSlot(player, Point(pos.x + 30, pos.y + 40), 0),
-                             WeaponSlot(player, Point(pos.x + 100, pos.y + 40), 1)]
+                             WeaponSlot(player, Point(pos.x + 110, pos.y + 40), 1)]
         self.choosen_slot = ChoosenSlot(self)
 
     def process_logic(self):
@@ -30,7 +30,7 @@ class WeaponSlot(SpriteObject):
     """
     def __init__(self, player, pos, weapon_slots_ind):
         self.weapon_slots_ind = weapon_slots_ind
-        super().__init__(player.scene, player.controller, player.weapon_slots[weapon_slots_ind].interface_image, pos, zoom=0.75)
+        super().__init__(player.scene, player.controller, player.weapon_slots[weapon_slots_ind].interface_image, pos)
 
     def process_logic(self):
         self.image_name = self.scene.player.weapon_slots[self.weapon_slots_ind].interface_image
@@ -41,7 +41,8 @@ class ChoosenSlot(SpriteObject):
     Объект для обозначения выбранного слота оружия
     """
     def __init__(self, weapons_display):
-        super().__init__(weapons_display.scene, weapons_display.controller, 'interface.choosen_weapon_slot', weapons_display.weapon_slots[0].pos)
+        super().__init__(weapons_display.scene, weapons_display.controller, 'interface.choosen_weapon_slot',
+                         weapons_display.weapon_slots[0].pos, zoom=1.1)
         self.weapons_display = weapons_display
 
     def process_logic(self):
