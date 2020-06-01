@@ -24,8 +24,8 @@ class Button(DrawableObject):
     TEXT_COLOR = COLOR['BLACK']
     TEXT_HOVER_COLOR = COLOR['BLACK']
     FONT_NAME = 'zelekbold'
-    HOVER_SOUND = 'button.select'
-    PRESS_SOUND = 'button.press'
+    HOVER_SOUND = 'ui.select'
+    PRESS_SOUND = 'ui.press1'
     HOVER_RESIZE = 1.05
 
     def __init__(self, scene, controller, geometry, text='Test', function=None, kwargs=None, font_size=20):
@@ -40,7 +40,7 @@ class Button(DrawableObject):
                          Button.TEXT_COLOR, 'center', Button.FONT_NAME, font_size)
         self.hover_text = Text(scene, self.geometry.center, text, Button.TEXT_HOVER_COLOR, 'center', Button.FONT_NAME,
                                font_size)
-        SoundManager.set_volume(Button.HOVER_SOUND, 0.05)
+        SoundManager.set_volume(Button.HOVER_SOUND)
         # SoundManager.set_volume(Button.PRESS_SOUND)
 
     def move(self, movement):

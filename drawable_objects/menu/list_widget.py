@@ -8,6 +8,7 @@ from drawable_objects.base import DrawableObject
 from drawable_objects.menu.text import Text
 from geometry.rectangle import Rectangle, tuple_to_rectangle, rectangle_to_rect, intersect
 from geometry.point import Point, point_to_tuple
+from utils.sound import SoundManager
 
 
 class ListWidgetItem(DrawableObject):
@@ -25,6 +26,7 @@ class ListWidgetItem(DrawableObject):
     BG_CHOSEN_COLOR = (150, 255, 150)
     FRAME_COLOR = (0, 0, 0)
     FONT_NAME = 'freesansbold'
+    CLICK_SOUND = 'ui.press2'
 
     def __init__(self, scene: Scene, controller: Controller, parent, value: str):
         super().__init__(scene, controller, Point())
@@ -60,6 +62,8 @@ class ListWidgetItem(DrawableObject):
         click_pos = self.controller.get_click_pos()
         if self.controller.click_pos and self.parent.geometry.is_inside(click_pos):
             self.chosen = self.visible_part.is_strictly_inside(click_pos)
+            if self.chosen:
+                SoundManager.play_sound(ListWidgetItem.CLICK_SOUND)
 
     def process_draw(self):
         """
