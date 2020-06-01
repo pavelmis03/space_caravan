@@ -94,6 +94,8 @@ class SpacemapScene(GameScene):
         planets_generator = PlanetsGenerator(self.game.controller, self)
         self.planets = planets_generator.generate()
         self.current_planet = self.planets[0]
+        for planet in self.planets:
+            planet.add_to_common_data()
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
