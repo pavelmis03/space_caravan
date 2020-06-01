@@ -8,6 +8,7 @@ from constants.planets_generation import ESTIMATED_SPACE_SIZE
 from constants.color import COLOR
 from geometry.circle import Circle
 from geometry.point import Point, point_to_tuple
+from geometry.vector import vector_from_length_angle
 from scenes.base import Scene
 from controller.controller import Controller
 from drawable_objects.base import SpriteObject
@@ -26,7 +27,8 @@ class Planet(SpriteObject):
     :param biom: биом - вид планеты
     :param name: название планеты
     """
-    BUTTON_RADIUS = 35
+    BUTTON_RADIUS = 30
+    CROSS_COLOR = COLOR['RED']
     BIOM_NAMES = [
         'Simple',
         'Ice',
@@ -56,6 +58,7 @@ class Planet(SpriteObject):
         self.index = str(Planet.COUNTER)
         Planet.COUNTER += 1
 
+    def add_to_common_data(self):
         self.scene.common_data.planet_biom[self.index] = self.biom
         self.scene.common_data.planet_completed[self.index] = False
 
@@ -105,11 +108,21 @@ class Planet(SpriteObject):
         level_scene = MainScene(self.scene.game, self.index)
         self.scene.game.set_scene(level_scene)
 
+    def draw_cross(self):
+        """
+        Крест, перечеркивающий пройденную планету (если все враги побеждены).
+        """
+        cross_tuples = list()
+        for i in range(4):
+            cross_point = self.pos + vector_from_length_angle(self.BUTTON_RADIUS, pi / 4 + pi / 2 * i)
+            cross_tuples.append(point_to_tuple(cross_point))
+        for i in range(2):
+            pygame.draw.line(self.scene.screen, self.CROSS_COLOR, cross_tuples[i], cross_tuples[i + 2], 10)
+
     def process_draw(self):
-        if self.chosen:
-            integer_pos = (round(self.pos.x), round(self.pos.y))
-            pygame.draw.circle(self.scene.screen, COLOR['RED'], integer_pos, self.BUTTON_RADIUS)
         super().process_draw()
+        if self.scene.common_data.planet_completed[self.index]:
+            self.draw_cross()
 
     def process_logic(self):
         self.update_real_pos()
