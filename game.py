@@ -14,6 +14,9 @@ from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
 from scenes.menu.space_choice import SpaceChoiceMenuScene
+from scenes.menu.redirecting.base import RedirectingScene
+from scenes.menu.redirecting.gameover import GameoverScene
+from scenes.menu.redirecting.clone_killed import CloneKilledScene
 from utils.image import ImageManager
 from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
@@ -29,6 +32,8 @@ class Game:
     SETTINGS_MENU_SCENE_INDEX = 1
     ABOUT_MENU_SCENE_INDEX = 2
     SPACE_CHOICE_MENU_SCENE_INDEX = 3
+    GAMEOVER_SCENE_INDEX = 4
+    CLONE_KILLED_SCENE_INDEX = 5
 
     def __init__(self, width: int = 1000, height: int = 700):
         pygame.mixer.init(22100, -16, 2, 64)  # removes sound delay
@@ -45,6 +50,8 @@ class Game:
             SettingsMenuScene,
             AboutMenuScene,
             SpaceChoiceMenuScene,
+            GameoverScene,
+            CloneKilledScene,
         ]
         self.__current_scene = None
         self.set_scene_with_index(0)
@@ -108,7 +115,7 @@ class Game:
             scene.load_common_data()
         if isinstance(scene, LevelScene):
             scene.load_player()
-        if isinstance(scene, MenuScene):
+        if isinstance(scene, MenuScene) and not isinstance(scene, RedirectingScene):
             self.file_manager.set_current_space(None)
         scene.construct()
         self.__current_scene = scene
