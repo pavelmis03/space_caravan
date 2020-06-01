@@ -16,12 +16,15 @@ class SpaceChoiceMenuScene(MenuScene):
         self.menu.add_list_widget(Point(800, 300), 50,
                                   self.game.file_manager.get_all_space_names())
         self.menu.add_textbox(Point(800, 50), "new space name")
-        widgetrow = WidgetRow(self, self.game.controller, [0.5, 0.8], 25)
+        self.menu.add_widget_row(25)
+        widgetrow = self.menu.widgets[-1]
         widgetrow.add_button("Создать космос", self.create_space)
         widgetrow.add_button("Удалить космос", self.delete_space)
         widgetrow.add_button("Начать игру", self.start_game)
 
-        self.interface_objects.append(widgetrow)
+        self.menu.add_button("Назад", self.game.set_scene_with_index,
+                             {'scene_index': self.game.MAIN_MENU_SCENE_INDEX},
+                             size=Point(250, 100))
 
     @property
     def space_names_list_widget(self):

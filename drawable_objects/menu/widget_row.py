@@ -1,6 +1,9 @@
+import pygame
+
 from drawable_objects.base import AbstractObject
 from drawable_objects.menu.button import Button
 from geometry.point import Point
+from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect
 
 
 class WidgetRow(AbstractObject):
@@ -10,14 +13,14 @@ class WidgetRow(AbstractObject):
 
     :param scene: сцена, на которой кнопка находится
     :param controller: контроллер
-    :param offset: оффсет центра в процентах [(0-1), (0-1)] относительно размеров окна
+    :param offset: высота по y для выравнивания
     :param widget_offset: промежуток между виджетами (что бы они не слипались)
     """
     BUTTON_DEF_SIZE = [250, 100]
 
     def __init__(self, scene, controller, offset, widget_offset=0):
         super().__init__(scene, controller)
-        self.offset = Point(*offset)
+        self.offset = offset
         self.pos = self.get_base_pos()
         self.widget_offset = widget_offset
         self.widgets = []
@@ -27,8 +30,8 @@ class WidgetRow(AbstractObject):
         расчитывает базовую точку для группы виджетов
         """
         return Point(
-            self.scene.game.width * self.offset.x,
-            self.scene.game.height * self.offset.y
+            self.scene.game.width * 0.5,
+            self.offset
         )
 
     def recalc_pos(self):
@@ -80,8 +83,23 @@ class WidgetRow(AbstractObject):
         shift = size.x
         if len(self.widgets) != 1:
             shift += self.widget_offset
+        else:
+            self.offset += size.y / 2
         shift /= 2
         self.move(Point(-shift, 0))
+        self.recalc_pos()
+
+    @property
+    def geometry(self):
+        top = [i.geometry.top for i in self.widgets]
+        bottom = [i.geometry.bottom for i in self.widgets]
+        left = [i.geometry.left for i in self.widgets]
+        right = [i.geometry.right for i in self.widgets]
+        return tuple_to_rectangle((
+            min(left), min(top),
+            max(right), max(bottom)
+        ))
+
 
     def update_offset(self, offset):
         """
@@ -93,7 +111,6 @@ class WidgetRow(AbstractObject):
         self.recalc_pos()
 
     def process_logic(self):
-        self.recalc_pos()
         for widget in self.widgets:
             widget.process_logic()
 

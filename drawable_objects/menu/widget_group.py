@@ -1,10 +1,14 @@
+import pygame
+
 from drawable_objects.base import AbstractObject
 from drawable_objects.menu.button import Button
 from drawable_objects.menu.checkbox import CheckBox
 from drawable_objects.menu.list_widget import ListWidget
 from drawable_objects.menu.multiline_text import MultilineText
 from drawable_objects.menu.textbox import TextBox
+from drawable_objects.menu.widget_row import WidgetRow
 from geometry.point import Point
+from geometry.rectangle import rectangle_to_rect
 
 
 class WidgetGroup(AbstractObject):
@@ -139,6 +143,15 @@ class WidgetGroup(AbstractObject):
         list_widget = ListWidget(self.scene, self.controller, geom, item_height, elements)
         self.widgets.append(list_widget)
 
+    def add_widget_row(self, widget_offset):
+        """
+        Добавляет строку виджетов в отображаемые объекты
+        """
+        pos = self.get_actual_pos()
+        offset = pos.y
+        widgetrow = WidgetRow(self.scene, self.controller, offset, widget_offset)
+        self.widgets.append(widgetrow)
+
     def update_offset(self, offset):
         """
         Изменение оффсета для отображения группы виджетов
@@ -156,3 +169,4 @@ class WidgetGroup(AbstractObject):
     def process_draw(self):
         for widget in self.widgets:
             widget.process_draw()
+            # pygame.draw.rect(self.scene.screen, (255, 0, 0), rectangle_to_rect(widget.geometry), 4)
