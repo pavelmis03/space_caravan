@@ -1,7 +1,9 @@
 from drawable_objects.base import AbstractObject
 from drawable_objects.menu.button import Button
 from drawable_objects.menu.checkbox import CheckBox
+from drawable_objects.menu.list_widget import ListWidget
 from drawable_objects.menu.multiline_text import MultilineText
+from drawable_objects.menu.textbox import TextBox
 from geometry.point import Point
 
 
@@ -96,7 +98,6 @@ class WidgetGroup(AbstractObject):
             size = WidgetGroup.CHECKBOX_DEF_SIZE
         pos = self.get_actual_pos()
         pos.y += size / 2
-        p = self.get_actual_pos()
         box = CheckBox(self.scene, self.controller,
                        pos, size, text, align='center')
         self.widgets.append(box)
@@ -113,6 +114,33 @@ class WidgetGroup(AbstractObject):
         label = MultilineText(self.scene, Point(0, 0), text, **text_kwargs)
         label.move(pos)
         self.widgets.append(label)
+
+    def add_textbox(self, size, prompt_str):
+        """
+        Добавляет текстбокс в отображаемые объекты
+        :param size: Point с указанием размеров
+        :param prompt_str: строка подсказки
+        """
+        pos = self.get_actual_pos()
+        # 5 - Маленький отступ, что бы не слипалось
+        geom = (pos.x - size.x/2, pos.y + 5,
+                pos.x + size.x/2, pos.y + 5 + size.y)
+        textbox = TextBox(self.scene, self.controller, geom, prompt_str)
+        self.widgets.append(textbox)
+
+    def add_list_widget(self, size, item_height, elements):
+        """
+        Добавляет список миров в отображаемые объекты
+        :param size: Point с размерами списка
+        :param item_height: высота элемента списка
+        :param elements: список элементов
+        """
+        pos = self.get_actual_pos()
+        size /= 2
+        geom = (pos.x - size.x, pos.y - size.y,
+                pos.x + size.x, pos.y + size.y)
+        list_widget = ListWidget(self.scene, self.controller, geom, item_height, elements)
+        self.widgets.append(list_widget)
 
     def update_offset(self, offset):
         """

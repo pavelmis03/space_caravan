@@ -1,3 +1,4 @@
+from geometry.point import Point
 from scenes.menu.base import MenuScene
 from drawable_objects.menu.textbox import TextBox
 from drawable_objects.menu.list_widget import ListWidget
@@ -11,9 +12,9 @@ class SpaceChoiceMenuScene(MenuScene):
     """
     def __init__(self, game):
         super().__init__(game)
-        self.space_names_list_widget = ListWidget(self, self.game.controller, (100, 25, 900, 325), 50,
-                                                  self.game.file_manager.get_all_space_names())
-        self.space_name_textbox = TextBox(self, self.game.controller, (100, 350, 900, 400), "new space name")
+        self.menu.add_list_widget(Point(800, 300), 50,
+                                  self.game.file_manager.get_all_space_names())
+        self.menu.add_textbox(Point(800, 50), "new space name")
         new_space_button = Button(self, self.game.controller, (100, 425, 350, 525), "Создать космос",
                                   self.create_space)
         delete_space_button = Button(self, self.game.controller, (375, 425, 625, 525), "Удалить космос",
@@ -27,8 +28,14 @@ class SpaceChoiceMenuScene(MenuScene):
         self.interface_objects.append(delete_space_button)
         self.interface_objects.append(start_game_button)
         self.interface_objects.append(back_button)
-        self.interface_objects.append(self.space_name_textbox)
-        self.interface_objects.append(self.space_names_list_widget)
+
+    @property
+    def space_names_list_widget(self):
+        return self.menu.widgets[0]
+
+    @property
+    def space_name_textbox(self):
+        return self.menu.widgets[1]
 
     def init_spaceship_scene(self):
         """
