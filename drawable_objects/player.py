@@ -265,4 +265,9 @@ class Player(Humanoid):
         # from scenes.game.spacemap import SpacemapScene
         # scene = SpacemapScene(self.scene.game)
         # self.scene.game.set_scene(scene)
-        self.scene.game.set_scene_with_index(self.scene.game.CLONE_KILLED_SCENE_INDEX)
+        if self.is_clone:
+            self.is_dead = True
+            self.scene.game.set_scene_with_index(self.scene.game.CLONE_KILLED_SCENE_INDEX)
+        else:
+            # смерть персонажа
+            self.scene.game.set_scene_with_index (self.scene.game.CLONE_KILLED_SCENE_INDEX)

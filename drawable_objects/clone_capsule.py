@@ -55,7 +55,7 @@ class CloneCapsule(UsableObject):
     """
     IMAGE_NAME = 'level_objects.clone'
     IMAGE_ZOOM = 0.38
-    CLONE_COST = 0
+    CLONE_COST = 1
     COOLDOWN_TIME = 30
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):

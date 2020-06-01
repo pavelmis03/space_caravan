@@ -59,18 +59,22 @@ class TwoBarrelShotgun(RangedWeapon):
             self.combo = self.alternative_attack_combo
 
 
-class ThreeBarrelShotgun(TwoBarrelShotgun):
+class ThreeBarrelShotgun(RangedWeapon):
     """
     Трёхстволка
     """
     IMAGE_NAME = 'weapons.ThreeBarrelShotgun'
 
     def __init__(self, owner, bullets_in_magazine=3):
-        super().__init__(owner, bullets_in_magazine)
-        self.image_name = 'weapons.ThreeBarrelShotgun'
-        self.interface_image = 'interface.weapon_icons.ThreeBarrelShotgun'
-        self.magazine_size = 3
+        super().__init__(owner, interface_image='interface.weapon_icons.ThreeBarrelShotgun',
+                         bullets_in_magazine=bullets_in_magazine, magazine_size=3,
+                         main_attack_interval=8, reload_time=35, ammo_type='Shotgun',
+                         accuracy=32, damage=35, combo_attack_interval=2, shells=6)
         self.alternative_attack_combo = 3
+
+    def alternative_attack(self):
+        if self.cooldown == 0 and self.combo == 0:
+            self.combo = self.alternative_attack_combo
 
 
 class TacticalShotgun(RangedWeapon):
@@ -157,7 +161,7 @@ class Fist(MeleeWeapon):
     """
     def __init__(self, owner):
         super().__init__(owner, interface_image='interface.weapon_icons.Nothing',
-                         main_attack_interval=7, length=30)
+                         main_attack_interval=7, length=40)
 
     def attack(self):
         """
