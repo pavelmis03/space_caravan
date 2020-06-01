@@ -1,3 +1,4 @@
+from drawable_objects.menu.widget_row import WidgetRow
 from geometry.point import Point
 from scenes.menu.base import MenuScene
 from drawable_objects.menu.textbox import TextBox
@@ -15,19 +16,12 @@ class SpaceChoiceMenuScene(MenuScene):
         self.menu.add_list_widget(Point(800, 300), 50,
                                   self.game.file_manager.get_all_space_names())
         self.menu.add_textbox(Point(800, 50), "new space name")
-        new_space_button = Button(self, self.game.controller, (100, 425, 350, 525), "Создать космос",
-                                  self.create_space)
-        delete_space_button = Button(self, self.game.controller, (375, 425, 625, 525), "Удалить космос",
-                                     self.delete_space)
-        start_game_button = Button(self, self.game.controller, (650, 425, 900, 525), "Начать игру",
-                                   self.start_game)
-        back_button = Button(self, self.game.controller, (375, 550, 625, 650), "Назад", self.game.set_scene_with_index,
-                             {'scene_index': self.game.MAIN_MENU_SCENE_INDEX})
+        widgetrow = WidgetRow(self, self.game.controller, [0.5, 0.8], 25)
+        widgetrow.add_button("Создать космос", self.create_space)
+        widgetrow.add_button("Удалить космос", self.delete_space)
+        widgetrow.add_button("Начать игру", self.start_game)
 
-        self.interface_objects.append(new_space_button)
-        self.interface_objects.append(delete_space_button)
-        self.interface_objects.append(start_game_button)
-        self.interface_objects.append(back_button)
+        self.interface_objects.append(widgetrow)
 
     @property
     def space_names_list_widget(self):

@@ -10,13 +10,11 @@ from geometry.point import Point
 class WidgetGroup(AbstractObject):
     """
     Класс для динамического выравнивания виджетов по центру
-    На данный момент виджеты - это кнопки(Button) и чекбоксы(CheckBox)
-    У виджета должно быть поле geometry
+    Виджет - объект с полем geometry
 
     :param scene: сцена, на которой кнопка находится
     :param controller: контроллер
     :param offset: оффсет центра в процентах [(0-1), (0-1)] относительно размеров окна
-    :param widget_geometry: размеры создаваемых виджетов (базовый)
     :param widget_offset: расстояние между виджетами (что бы они не слипались)
     """
 
@@ -122,9 +120,8 @@ class WidgetGroup(AbstractObject):
         :param prompt_str: строка подсказки
         """
         pos = self.get_actual_pos()
-        # 5 - Маленький отступ, что бы не слипалось
-        geom = (pos.x - size.x/2, pos.y + 5,
-                pos.x + size.x/2, pos.y + 5 + size.y)
+        geom = (pos.x - size.x/2, pos.y + self.widget_offset,
+                pos.x + size.x/2, pos.y + self.widget_offset + size.y)
         textbox = TextBox(self.scene, self.controller, geom, prompt_str)
         self.widgets.append(textbox)
 
