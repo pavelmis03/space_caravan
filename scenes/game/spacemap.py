@@ -132,6 +132,9 @@ class SpacemapScene(GameScene):
         super().interface_draw()
 
     def mark_choice(self):
+        """
+        Отметка выбранной планеты (одного из двух типов в зависимости от того, возможно ли долететь до нее).
+        """
         if self.choice:
             if self.is_travel_possible():
                 choice_color = self.CHOICE_ALLOWED_COLOR
@@ -204,6 +207,9 @@ class SpacemapScene(GameScene):
             self.current_planet = self.choice
 
     def back_to_spaceship(self):
+        """
+        Возвращение на корабль - установка соответствующей сцены.
+        """
         from scenes.game.spaceship import SpaceshipScene
         spaceship_scene = SpaceshipScene(self.game)
         self.game.set_scene(spaceship_scene)
