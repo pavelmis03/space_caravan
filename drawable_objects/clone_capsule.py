@@ -10,6 +10,9 @@ from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
 
 def transplant_soul_between_bodies(soulless_body):
     player = soulless_body.scene.player
+
+    player.hp, soulless_body.hp = soulless_body.hp, player.hp
+
     soulless_body.weapon_slots[0].owner = player
     soulless_body.weapon_slots[1].owner = player
 
@@ -109,6 +112,8 @@ class CloneCapsule(UsableObject):
             self.soulless_player.image_name = data_dict['player_image_name']
             self.soulless_player.zoom = data_dict['player_zoom']
 
+            self.soulless_player.hp = data_dict['hp']
+
             self.soulless_player.weapon_slots[0].owner = self.scene.player
             self.soulless_player.weapon_slots[1].owner = self.scene.player
 
@@ -133,6 +138,8 @@ class CloneCapsule(UsableObject):
             result.update({'player_angle': self.soulless_player.angle})
             result.update({'player_image_name': self.soulless_player.image_name})
             result.update({'player_zoom': self.soulless_player.zoom})
+
+            result.update({'hp': self.soulless_player.hp})
 
             weapons = []
 
@@ -169,6 +176,7 @@ class SoullessPlayer(Humanoid):
         self.weapon_slots_ind = player.weapon_slots_ind
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
         self.weapon.owner = self
+        self.hp = 100
 
     def process_draw(self):
         super().process_draw()

@@ -141,6 +141,9 @@ class SemiAutomaticRifle(OldRifle):
 
 
 class Sword(MeleeWeapon):
+    """
+    Меч
+    """
     IMAGE_NAME = 'other.gun'
 
     def __init__(self, owner):
@@ -149,6 +152,9 @@ class Sword(MeleeWeapon):
 
 
 class Fist(MeleeWeapon):
+    """
+    Кулак(наш персонаж бьёт только одним)
+    """
     IMAGE_NAME = 'other.bullet'
 
     def __init__(self, owner):
