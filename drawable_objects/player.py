@@ -33,7 +33,7 @@ class Player(Humanoid):
     """
 
     ADD_TO_GAME_PLANE = True
-    IMAGE_NAME = 'moving_objects.Player'
+    IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 1.15
     CONTROLS = [
         pygame.K_d,
@@ -64,8 +64,8 @@ class Player(Humanoid):
             'Rifle': 100,
         }
         self.weapon_slots = [
-            WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
-            WEAPON_VOCABULARY['Pistol'](self),
+            WEAPON_VOCABULARY['Fist'](self),
+            WEAPON_VOCABULARY['Fist'](self),
         ]
         self.weapon_slots_ind = 0
         self.change_weapon_request = -1
@@ -211,12 +211,12 @@ class Player(Humanoid):
 
     def sprite_manager(self):
         if self.weapon.__class__.__name__ == 'Pistol' or self.weapon.__class__.__name__ == 'BurstFiringPistol':
-            self.image_name = 'moving_objects.PlayerWithPistol'
+            self.image_name = 'moving_objects.player_with_pistol'
         elif self.weapon.__class__.__name__ == 'Fist':
-            if self.image_name != 'moving_objects.Punch':
-                self.image_name = 'moving_objects.PlayerBarehanded'
+            if self.image_name != 'moving_objects.punch':
+                self.image_name = 'moving_objects.player_barehanded'
         else:
-            self.image_name = 'moving_objects.Player'
+            self.image_name = 'moving_objects.player'
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """

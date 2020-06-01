@@ -2,7 +2,7 @@ from typing import Dict
 from drawable_objects.drop.base import Drop
 from controller.controller import Controller
 from geometry.point import Point
-from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
+from weapons.weapons import WEAPON_ON_FLOOR_IMAGE, WEAPON_VOCABULARY, weapon_to_dict
 from random import randint
 
 
@@ -21,7 +21,7 @@ class WeaponDrop(Drop):
         self.scene.player.set_weapon(self.__weapon_dict)
         self.destroy()
 
-        if not is_player_holding_fist:  # если оружие игрка - кулаки(без оружия), ничего не дропнется
+        if not is_player_holding_fist:  # если оружие игрка - кулаки(без оружия), то ничего не дропнется
             new_weapon = WeaponDrop(self.scene, self.controller,
                                 self.pos, self.angle, self.zoom, self.usage_radius)
             new_weapon.set_weapon_dict(old_weapon)
@@ -29,7 +29,7 @@ class WeaponDrop(Drop):
 
     def set_weapon_dict(self, weapon_dict: Dict):
         self.__weapon_dict = weapon_dict
-        self.image_name = WEAPON_VOCABULARY[self.__weapon_dict['weapon']].IMAGE_NAME
+        self.image_name = WEAPON_ON_FLOOR_IMAGE[self.__weapon_dict['weapon']]
 
     def to_dict(self) -> Dict:
         result = super().to_dict()

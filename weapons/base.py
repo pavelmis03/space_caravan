@@ -119,7 +119,7 @@ class RangedWeapon(Weapon):
         self.barrel_length = owner.HITBOX_RADIUS + 1
         self.magazine_size = magazine_size
         self.magazine = bullets_in_magazine
-        self.ammo = owner.ammo[ammo_type]
+        self.ammo = 0
         self.ammo_type = ammo_type
         self.accuracy = accuracy
         self.damage = damage
@@ -221,3 +221,6 @@ class MeleeWeapon(Weapon):
             self.scene.game_objects.append(PlayerSlash(self.owner, self.length))
         else:
             self.scene.game_objects.append(EnemySlash(self.owner, self.length))
+
+    def process_draw(self):
+        pass
