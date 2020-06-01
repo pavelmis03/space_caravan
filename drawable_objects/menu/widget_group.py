@@ -5,6 +5,7 @@ from drawable_objects.menu.button import Button
 from drawable_objects.menu.checkbox import CheckBox
 from drawable_objects.menu.list_widget import ListWidget
 from drawable_objects.menu.multiline_text import MultilineText
+from drawable_objects.menu.text import Text
 from drawable_objects.menu.textbox import TextBox
 from drawable_objects.menu.widget_row import WidgetRow
 from geometry.point import Point

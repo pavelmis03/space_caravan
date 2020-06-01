@@ -31,8 +31,10 @@ class PauseManager(AbstractObject):
         self.surface.set_alpha(PauseManager.SURFACE_ALPHA)
         self.surface.fill(PauseManager.SURFACE_COLOR)
 
-        self.buttons = WidgetGroup(self.scene, self.controller, [0.5, 0.3], 6)
-        self.buttons.add_button('Продолжить', self.resume)
+        self.menu = WidgetGroup(self.scene, self.controller, [0.5, 0.3], 40)
+        self.menu.add_multilinetext('Пауза', align='center', font_name='zelekbold',
+                                    is_bold=False, font_size=70)
+        self.menu.add_button('Продолжить', self.resume)
 
         self.active = False
 
@@ -44,7 +46,7 @@ class PauseManager(AbstractObject):
         if self.active:
             self.surface = pygame.transform.scale(
                 self.surface, (self.scene.game.width, self.scene.game.height))
-            self.buttons.process_logic()
+            self.menu.process_logic()
 
     def pause(self):
         """
@@ -62,4 +64,4 @@ class PauseManager(AbstractObject):
     def process_draw(self):
         if self.active:
             self.scene.screen.blit(self.surface, (0, 0))
-            self.buttons.process_draw()
+            self.menu.process_draw()
