@@ -258,3 +258,6 @@ class Player(Humanoid):
             scene = SpaceshipScene(self.scene.game)
             self.scene.game.set_scene(scene)
         else:
+            from scenes.menu.main import MainMenuScene
+            scene = MainMenuScene(self.scene.game)
+            self.scene.game.set_scene(scene)
