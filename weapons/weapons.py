@@ -22,7 +22,7 @@ class BurstFiringPistol(RangedWeapon):
     IMAGE_NAME = 'weapons.BurstFiringPistol'
 
     def __init__(self, owner, bullets_in_magazine=20):
-        super().__init__(owner, interface_image='interface.weapon_icons.TwoBarrelShotgun',
+        super().__init__(owner, interface_image='interface.weapon_icons.Pistol',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=20,
                          main_attack_interval=15, reload_time=60, ammo_type='Pistol',
                          accuracy=40, damage=45, combo_attack_interval=3, combo_size=4)
@@ -35,7 +35,7 @@ class Shotgun(RangedWeapon):
     IMAGE_NAME = 'weapons.Shotgun'
 
     def __init__(self, owner, bullets_in_magazine=6):
-        super().__init__(owner, interface_image='other.gun',
+        super().__init__(owner, interface_image='interface.weapon_icons.Shotgun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=6,
                          main_attack_interval=12, reload_time=70, ammo_type='Shotgun',
                          accuracy=35, damage=50, shells=5)
@@ -153,13 +153,14 @@ class Sword(MeleeWeapon):
 
 class Fist(MeleeWeapon):
     """
-    Кулак(наш персонаж бьёт только одним)
+    Кулак(персонаж бьёт только одним)
     """
-    IMAGE_NAME = 'other.bullet'
-
     def __init__(self, owner):
         super().__init__(owner, interface_image='other.bullet',
                          main_attack_interval=7, length=30)
+
+    def process_draw(self):
+        pass
 
     def attack(self):
         """

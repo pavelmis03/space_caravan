@@ -53,11 +53,11 @@ class CloneCapsule(UsableObject):
     """
     Капсула клонирования. Создаёт клона и позволяет меняться телами с клоном, если он уже создан
     """
-    IMAGE_ZOOM = 0.8
-    CLONE_COST = 3
+    IMAGE_ZOOM = 0.38
+    CLONE_COST = 0
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
-        super().__init__(scene, controller, 'level_objects.terminal_up',
+        super().__init__(scene, controller, 'level_objects.clone',
                          pos, angle, self.IMAGE_ZOOM)
         self.soulless_player = None
         self.is_clone_created = False

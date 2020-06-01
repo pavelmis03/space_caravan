@@ -64,8 +64,8 @@ class Player(Humanoid):
             'Rifle': 100,
         }
         self.weapon_slots = [
+            WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
             WEAPON_VOCABULARY['Pistol'](self),
-            WEAPON_VOCABULARY['Sword'](self),
         ]
         self.weapon_slots_ind = 0
         self.change_weapon_request = -1
