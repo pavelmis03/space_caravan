@@ -89,9 +89,9 @@ class CloneCapsule(UsableObject):
                     self.soulless_player = SoullessPlayer(self.scene.player)
                     self.scene.game_objects.append(self.soulless_player)
                     self.scene.player.ammo = {
-                        'Pistol': 0,
-                        'Shotgun': 0,
-                        'Rifle': 0,
+                        'Pistol': 100,
+                        'Shotgun': 30,
+                        'Rifle': 65,
                     }
                     self.scene.player.weapon_slots = [
                         WEAPON_VOCABULARY['Fist'](self.scene.player),
