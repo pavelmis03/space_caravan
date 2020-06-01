@@ -54,6 +54,7 @@ class CloneCapsule(UsableObject):
     Капсула клонирования. Создаёт клона и позволяет меняться телами с клоном, если он уже создан
     """
     IMAGE_ZOOM = 0.8
+    CLONE_COST = 3
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, 'level_objects.terminal_up',
@@ -71,32 +72,33 @@ class CloneCapsule(UsableObject):
         if not self.changing_cooldown:
             self.changing_cooldown = 30
             if not(self.scene.player.is_clone or self.is_clone_created):
+                if self.scene.common_data.essence >= CloneCapsule.CLONE_COST:
+                    self.scene.common_data.essence -= CloneCapsule.CLONE_COST
+                    self.scene.player.weapon.cooldown = 0
+                    self.scene.player.weapon.burst = 0
+                    if self.scene.player.weapon.type == 'Ranged':
+                        self.scene.player.weapon.is_reloading = 0
+                        self.scene.player.weapon.reload_request = False
+                    self.scene.player.weapon_slots[self.scene.player.weapon_slots_ind] = self.scene.player.weapon
 
-                self.scene.player.weapon.cooldown = 0
-                self.scene.player.weapon.burst = 0
-                if self.scene.player.weapon.type == 'Ranged':
-                    self.scene.player.weapon.is_reloading = 0
-                    self.scene.player.weapon.reload_request = False
-                self.scene.player.weapon_slots[self.scene.player.weapon_slots_ind] = self.scene.player.weapon
+                    self.scene.player.change_weapon_request = -1
+                    self.scene.player.change_weapon_cooldown = 0
 
-                self.scene.player.change_weapon_request = -1
-                self.scene.player.change_weapon_cooldown = 0
+                    self.soulless_player = SoullessPlayer(self.scene.player)
+                    self.scene.game_objects.append(self.soulless_player)
+                    self.scene.player.ammo = {
+                        'Pistol': 0,
+                        'Shotgun': 0,
+                        'Rifle': 0,
+                    }
+                    self.scene.player.weapon_slots = [
+                        WEAPON_VOCABULARY['Fist'](self.scene.player),
+                        WEAPON_VOCABULARY['Fist'](self.scene.player),
+                    ]
+                    self.scene.player.weapon = self.scene.player.weapon_slots[0]
 
-                self.soulless_player = SoullessPlayer(self.scene.player)
-                self.scene.game_objects.append(self.soulless_player)
-                self.scene.player.ammo = {
-                    'Pistol': 0,
-                    'Shotgun': 0,
-                    'Rifle': 0,
-                }
-                self.scene.player.weapon_slots = [
-                    WEAPON_VOCABULARY['Fist'](self.scene.player),
-                    WEAPON_VOCABULARY['Fist'](self.scene.player),
-                ]
-                self.scene.player.weapon = self.scene.player.weapon_slots[0]
-
-                self.scene.player.is_clone = True
-                self.is_clone_created = True
+                    self.scene.player.is_clone = True
+                    self.is_clone_created = True
             else:
                 transplant_soul_between_bodies(self.soulless_player)
 
