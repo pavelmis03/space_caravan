@@ -37,7 +37,7 @@ class MultilineText(DrawableObject):
         """
         if not text:
             return
-        splited = text.split('\n')
+        splited = [txt.strip() for txt in text.split('\n')]
         self.text = [
             Text(self.scene, self.pos, splited[0], **self.text_params)
         ]

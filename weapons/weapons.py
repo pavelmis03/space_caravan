@@ -32,11 +32,11 @@ class BurstFiringPistol(RangedWeapon):
     IMAGE_NAME = 'weapons.BurstFiringPistol'
 
     DESCRIPTION = """
-                Оружие: Пистолет
+                Оружие: Пистолет стреляющий очередями
                 Тип: Средние дистанции
                 Урон: 45
                 Точность: 40
-                Интервал стрельбы: 15
+                Интервал между очередями: 15
                 Время перезарядки: 40
                 Описание: 
                 """
@@ -112,8 +112,7 @@ class ThreeBarrelShotgun(TwoBarrelShotgun):
                 Точность: 42
                 Интервал стрельбы: 9
                 Время перезарядки: 40
-                Описание: Ваше первоначальное оружие
-                          Вы можете попытаться убить кого-то им, но поищите что-то получше 
+                Описание: 
                 """
 
     def __init__(self, owner, bullets_in_magazine=3):
@@ -131,14 +130,13 @@ class TacticalShotgun(RangedWeapon):
     IMAGE_NAME = 'weapons.TacticalShotgun'
 
     DESCRIPTION = """
-                Оружие: Пистолет
+                Оружие: Тактический дробовик
                 Тип: Средние дистанции
                 Урон: 45
                 Точность: 42
                 Интервал стрельбы: 9
-                Время перезарядки: 40
-                Описание: Ваше первоначальное оружие
-                          Вы можете попытаться убить кого-то им, но поищите что-то получше 
+                Время перезарядки: 70
+                Описание: 
                 """
 
     def __init__(self, owner, bullets_in_magazine=6):
@@ -155,14 +153,13 @@ class AutomaticRifle(RangedWeapon):
     IMAGE_NAME = 'weapons.AutomaticRifle'
 
     DESCRIPTION = """
-                Оружие: Пистолет
+                Оружие: Автоматическая винтовка
                 Тип: Средние дистанции
-                Урон: 45
-                Точность: 42
-                Интервал стрельбы: 9
-                Время перезарядки: 40
-                Описание: Ваше первоначальное оружие
-                          Вы можете попытаться убить кого-то им, но поищите что-то получше 
+                Урон: 80
+                Точность: 60
+                Интервал стрельбы: 4
+                Время перезарядки: 60
+                Описание:  
                 """
 
     def __init__(self, owner, bullets_in_magazine=25):
@@ -179,14 +176,13 @@ class SniperRifle(RangedWeapon):
     IMAGE_NAME = 'weapons.SniperRifle'
 
     DESCRIPTION = """
-                Оружие: Пистолет
-                Тип: Средние дистанции
-                Урон: 45
-                Точность: 42
-                Интервал стрельбы: 9
-                Время перезарядки: 40
-                Описание: Ваше первоначальное оружие
-                          Вы можете попытаться убить кого-то им, но поищите что-то получше 
+                Оружие: Снайперская винтовка
+                Тип: Дальние дистанции
+                Урон: 120
+                Точность: 110
+                Интервал стрельбы: 20
+                Время перезарядки: 80
+                Описание:  
                 """
 
     def __init__(self, owner, bullets_in_magazine=5):
@@ -202,6 +198,16 @@ class OldRifle(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.OldRifle'
 
+    DESCRIPTION = """
+                    Оружие: Довоенная винтовка
+                    Тип: Дальние дистанции
+                    Урон: 90
+                    Точность: 90
+                    Интервал стрельбы: 14
+                    Время перезарядки: 40
+                    Описание:  
+                    """
+
 
     def __init__(self, owner, bullets_in_magazine=8):
         super().__init__(owner, interface_image='other.gun',
@@ -215,6 +221,16 @@ class SemiAutomaticRifle(OldRifle):
     Полуавтоматическая винтовка
     """
     IMAGE_NAME = 'weapons.SemiAutomaticRifle'
+
+    DESCRIPTION = """
+                    Оружие: Полуавтоматическая винтовка
+                    Тип: Дальние дистанции
+                    Урон: 120
+                    Точность: 60
+                    Интервал стрельбы: 10
+                    Время перезарядки: 50
+                    Описание:  
+                    """
 
     def __init__(self, owner, bullets_in_magazine=8):
         super().__init__(owner, bullets_in_magazine)
@@ -231,6 +247,16 @@ class Sword(MeleeWeapon):
     """
     IMAGE_NAME = 'other.gun'
 
+    DESCRIPTION = """
+                        Оружие: Меч
+                        Тип: Ближние дистанции
+                        Урон: 999
+                        Точность: 999
+                        Интервал удара: 15
+                        Время перезарядки: ОНА ЕМУ НЕ НУЖНА
+                        Описание:  
+                        """
+
     def __init__(self, owner):
         super().__init__(owner, interface_image='other.gun',
                          main_attack_interval=15, length=60)
@@ -240,6 +266,16 @@ class Fist(MeleeWeapon):
     """
     Кулак(персонаж бьёт только одним)
     """
+    DESCRIPTION = """
+                            Оружие: братиш, у тебя его нет
+                            Тип: угу
+                            Урон: 25
+                            Точность: ну так себе
+                            Интервал удара: 7
+                            Время перезарядки: ручки быстро устают
+                            Описание:  
+                            """
+
     def __init__(self, owner):
         super().__init__(owner, interface_image='other.bullet',
                          main_attack_interval=7, length=30)

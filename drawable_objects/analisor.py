@@ -17,4 +17,5 @@ class WeaponAnalisor(UsableObject):
         self.scene.interface_objects.append(self.message)
     def activate(self):
         SoundManager.play_sound(WeaponAnalisor.ACTIVATE_SOUND)
+        self.message.buttons.widgets[0].set_text(self.scene.player.weapon.DESCRIPTION)
         self.message.show()

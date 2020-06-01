@@ -31,13 +31,14 @@ class MessageDisplay(AbstractObject):
             (self.scene.game.width, self.scene.game.height))
         self.surface.set_alpha(MessageDisplay.SURFACE_ALPHA)
         self.surface.fill(MessageDisplay.SURFACE_COLOR)
+        self.text = text
 
         """self.append(MultilineText(self.scene,Point (100,100),MessageDisplay.DESCRIPTION,
                                     color=COLOR['WHITE'], align='left',
                                     font_name='freesansbold', font_size=20,
                                     is_bold=False))"""
         self.buttons = WidgetGroup(self.scene, self.controller, [0.5, 0.3], 6)
-        self.buttons.add_multilinetext(text,
+        self.buttons.add_multilinetext(self.text,
                                     color=COLOR['WHITE'], align='center',
                                     font_name='freesansbold', font_size=20,
                                     is_bold=False)

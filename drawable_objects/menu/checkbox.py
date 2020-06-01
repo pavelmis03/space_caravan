@@ -86,7 +86,7 @@ class CheckBox(DrawableObject):
         self.selected.size *= CheckBox.SIZE
         # set up hitbox geometry
         self.geometry = Rectangle(self.select.left, self.select.top,
-                                  self.label.pos.x + self.label.rect.right, self.select.bottom)
+                                  self.label.pos.x + self.label.geometry.right, self.select.bottom)
 
     def process_logic(self):
         click_pos = self.controller.get_click_pos()
