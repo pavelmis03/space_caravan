@@ -14,7 +14,7 @@ class SpaceshipScene(LevelScene):
     :param game: игра, создающая сцену
     """
 
-    TOP_LEFT_CORNER_BIAS = 25
+    TOP_LEFT_CORNER_BIAS = 45
     CELL_SIZE = 25
     ROOM_WIDTH = 20
     ROOM_HEIGHT = 15
