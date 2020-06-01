@@ -51,7 +51,12 @@ class SpacemapScene(GameScene):
     """
     DATA_FILENAME = 'spacemap'
 
+    PANEL_BG_COLOR = COLOR['BLUE']
+    CHOICE_ALLOWED_COLOR = COLOR['GREEN']
+    CHOICE_UNALLOWED_COLOR = COLOR['RED']
+
     REVOLVING_RADIUS = 50
+    CHOICE_VIEW_RADIUS = 35
 
     WIDGET_WIDTH = 200
     WIDGET_HEIGHT = 60
@@ -119,14 +124,24 @@ class SpacemapScene(GameScene):
         """
         window_rect = Rect(0, 0, self.game.width, self.game.height)
         panel_rect = Rect(0, self.game.height - self.PANEL_HEIGHT, self.game.width, self.PANEL_HEIGHT)
-        pygame.draw.rect(self.screen, COLOR['BLUE'], window_rect, 2)
-        pygame.draw.rect(self.screen, COLOR['BLUE'], panel_rect)
+        pygame.draw.rect(self.screen, self.PANEL_BG_COLOR, window_rect, 2)
+        pygame.draw.rect(self.screen, self.PANEL_BG_COLOR, panel_rect)
 
     def interface_draw(self):
         self.draw_terminal_window()
         super().interface_draw()
 
+    def mark_choice(self):
+        if self.choice:
+            if self.is_travel_possible():
+                choice_color = self.CHOICE_ALLOWED_COLOR
+            else:
+                choice_color = self.CHOICE_UNALLOWED_COLOR
+            integer_pos = (round(self.choice.pos.x), round(self.choice.pos.y))
+            pygame.draw.circle(self.screen, choice_color, integer_pos, self.CHOICE_VIEW_RADIUS)
+
     def planets_draw(self):
+        self.mark_choice()
         for planet in self.planets:
             planet.process_draw()
 
@@ -141,7 +156,7 @@ class SpacemapScene(GameScene):
         self.fuel_label.update_text('Топливо: {}'.format(self.common_data.fuel))
         cost = '---'
         if self.choice:
-            cost = self.travel_cost_counter.get_cost(self.current_planet, self.choice)
+            cost = self.get_current_cost()
         self.cost_label.update_text('Стоимость: {}'.format(cost))
 
     def interface_logic(self):
@@ -166,6 +181,15 @@ class SpacemapScene(GameScene):
         super().process_all_logic()
         self.planets_logic()
 
+    def get_current_cost(self):
+        """
+        Стоимость перелета на выбранную планету.
+        """
+        return self.travel_cost_counter.get_cost(self.current_planet, self.choice)
+
+    def is_travel_possible(self):
+        return self.get_current_cost() <= self.common_data.fuel
+
     def run_level(self):
         self.current_planet.run_level()
 
@@ -174,10 +198,9 @@ class SpacemapScene(GameScene):
         Перелет от текущей планеты к выбранной пользователем, если это возможно.
         """
         if self.choice:
-            cost = self.travel_cost_counter.get_cost(self.current_planet, self.choice)
-            if cost > self.common_data.fuel:
+            if not self.is_travel_possible():
                 return
-            self.common_data.fuel -= cost
+            self.common_data.fuel -= self.get_current_cost()
             self.current_planet = self.choice
 
     def back_to_spaceship(self):

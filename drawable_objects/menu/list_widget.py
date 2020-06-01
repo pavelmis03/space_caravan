@@ -4,6 +4,7 @@ from typing import Tuple, List
 
 from scenes.base import Scene
 from controller.controller import Controller
+from constants.color import COLOR
 from drawable_objects.base import DrawableObject
 from drawable_objects.menu.text import Text
 from geometry.rectangle import Rectangle, tuple_to_rectangle, rectangle_to_rect, intersect
@@ -20,10 +21,10 @@ class ListWidgetItem(DrawableObject):
     :param parent: родительский объект списка
     :param value: значение пункта - отображаемая на нем строка
     """
-    TEXT_COLOR = (0, 0, 0)
-    BG_COLOR = (255, 255, 255)
-    BG_CHOSEN_COLOR = (150, 255, 150)
-    FRAME_COLOR = (0, 0, 0)
+    TEXT_COLOR = COLOR['BLACK']
+    BG_COLOR = COLOR['WHITE']
+    BG_CHOSEN_COLOR = COLOR['LIGHT_GREEN']
+    FRAME_COLOR = COLOR['BLACK']
     FONT_NAME = 'freesansbold'
 
     def __init__(self, scene: Scene, controller: Controller, parent, value: str):
