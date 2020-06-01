@@ -48,6 +48,7 @@ class Player(Humanoid):
     TAB_WEAPON_SLOTS_CONTROLS = pygame.K_TAB
     WEAPON_RELOAD_KEY = pygame.K_r
     SPEED = 10
+    MAXHP = 300
 
     DATA_FILENAME = 'player'
 
