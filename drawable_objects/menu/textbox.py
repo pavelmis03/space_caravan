@@ -8,6 +8,7 @@ from drawable_objects.base import DrawableObject
 from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect
 from geometry.point import Point
 from drawable_objects.menu.text import Text
+from utils.sound import SoundManager
 
 
 class TextBox(DrawableObject):
@@ -24,6 +25,7 @@ class TextBox(DrawableObject):
     MAIN_TEXT_COLOR = (0, 0, 0)
     FONT_NAME = 'freesansbold'
     BG_COLOR = (255, 255, 255)
+    TYPE_SOUND = 'ui.keytype'
 
     def __init__(self, scene: Scene, controller: Controller, geometry: Tuple, prompt_str: str):
         self.geometry = tuple_to_rectangle(geometry)
@@ -70,6 +72,7 @@ class TextBox(DrawableObject):
         Логика объекта - фиксирование нажатий клавиш, воспринимаемых от контроллера.
         """
         if self.controller.get_bumped_key():
+            SoundManager.play_sound(TextBox.TYPE_SOUND)
             if self.controller.get_bumped_key() == pygame.K_BACKSPACE:
                 self.value = self.main_str[0:-1]
             else:

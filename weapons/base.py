@@ -80,6 +80,8 @@ class Weapon(GameSprite):
 
 class RangedWeapon(Weapon):
 
+    SHOOT_SOUND = 'weapon.shoot.default'
+
     def __init__(self, owner, interface_image, bullets_in_magazine, magazine_size, main_attack_interval,
                  reload_time, ammo_type, accuracy, damage,
                  is_automatic=False, shells=1, combo_attack_interval=0, combo_size=1):
@@ -162,7 +164,7 @@ class RangedWeapon(Weapon):
             self.reload()
             return
         self.magazine -= 1
-        SoundManager.play_sound('weapon.shoot')
+        SoundManager.play_sound(self.SHOOT_SOUND)
         end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.owner.angle)
         if self.scene.grid.intersect_seg_walls(Segment(self.owner.pos, end_of_the_barrel)) is None:
             self.shot(end_of_the_barrel, self.owner.angle)
