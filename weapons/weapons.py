@@ -22,7 +22,7 @@ class BurstFiringPistol(RangedWeapon):
     IMAGE_NAME = 'weapons.BurstFiringPistol'
 
     def __init__(self, owner, bullets_in_magazine=20):
-        super().__init__(owner, interface_image='interface.weapon_icons.Pistol',
+        super().__init__(owner, interface_image='interface.weapon_icons.BurstFiringPistol',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=20,
                          main_attack_interval=15, reload_time=60, ammo_type='Pistol',
                          accuracy=40, damage=45, combo_attack_interval=3, combo_size=4)
@@ -68,7 +68,7 @@ class ThreeBarrelShotgun(TwoBarrelShotgun):
     def __init__(self, owner, bullets_in_magazine=3):
         super().__init__(owner, bullets_in_magazine)
         self.image_name = 'weapons.ThreeBarrelShotgun'
-        self.interface_image = 'other.gun'
+        self.interface_image = 'interface.weapon_icons.ThreeBarrelShotgun'
         self.magazine_size = 3
         self.alternative_attack_combo = 3
 
@@ -80,7 +80,7 @@ class TacticalShotgun(RangedWeapon):
     IMAGE_NAME = 'weapons.TacticalShotgun'
 
     def __init__(self, owner, bullets_in_magazine=6):
-        super().__init__(owner, interface_image='other.gun',
+        super().__init__(owner, interface_image='interface.weapon_icons.TacticalShotgun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=6,
                          main_attack_interval=9, reload_time=70, ammo_type='Shotgun',
                          accuracy=42, damage=45, is_automatic=True, shells=4)
@@ -93,7 +93,7 @@ class AutomaticRifle(RangedWeapon):
     IMAGE_NAME = 'weapons.AutomaticRifle'
 
     def __init__(self, owner, bullets_in_magazine=25):
-        super().__init__(owner, interface_image='other.gun',
+        super().__init__(owner, interface_image='interface.weapon_icons.AutomaticRifle',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=25,
                          main_attack_interval=4, reload_time=60, ammo_type='Rifle',
                          accuracy=60, damage=80, is_automatic=True)
@@ -106,7 +106,7 @@ class SniperRifle(RangedWeapon):
     IMAGE_NAME = 'weapons.SniperRifle'
 
     def __init__(self, owner, bullets_in_magazine=5):
-        super().__init__(owner, interface_image='other.gun',
+        super().__init__(owner, interface_image='interface.weapon_icons.SniperRifle',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=5,
                          main_attack_interval=20, reload_time=80, ammo_type='Rifle',
                          accuracy=110, damage=120)
@@ -119,7 +119,7 @@ class OldRifle(RangedWeapon):
     IMAGE_NAME = 'weapons.OldRifle'
 
     def __init__(self, owner, bullets_in_magazine=8):
-        super().__init__(owner, interface_image='other.gun',
+        super().__init__(owner, interface_image='interface.weapon_icons.OldRifle',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=8,
                          main_attack_interval=14, reload_time=40, ammo_type='Rifle',
                          accuracy=90, damage=90)
@@ -134,7 +134,7 @@ class SemiAutomaticRifle(OldRifle):
     def __init__(self, owner, bullets_in_magazine=8):
         super().__init__(owner, bullets_in_magazine)
         self.image_name = self.IMAGE_NAME
-        self.scene_image = 'other.gun'
+        self.interface_image = 'interface.weapon_icons.SemiAutomaticRifle'
         self.main_attack_interval = 10
         self.reload_time = 50
         self.accuracy = 60
@@ -156,11 +156,8 @@ class Fist(MeleeWeapon):
     Кулак(персонаж бьёт только одним)
     """
     def __init__(self, owner):
-        super().__init__(owner, interface_image='other.bullet',
+        super().__init__(owner, interface_image='interface.weapon_icons.Nothing',
                          main_attack_interval=7, length=30)
-
-    def process_draw(self):
-        pass
 
     def attack(self):
         """
@@ -189,15 +186,15 @@ WEAPON_VOCABULARY = {
 
 WEAPON_ON_FLOOR_IMAGE = {
     'Pistol': 'weapons_on_floor.Pistol',
-    BurstFiringPistol: 'weapons_on_floor.BurstFiringPistol',
-    Shotgun: 'weapons_on_floor.Shotgun',
+    'BurstFiringPistol': 'weapons_on_floor.BurstFiringPistol',
+    'Shotgun': 'weapons_on_floor.Shotgun',
     'TwoBarrelShotgun': 'weapons_on_floor.TwoBarrelShotgun',
-    ThreeBarrelShotgun: 'weapons_on_floor.ThreeBarrelShotgun',
-    TacticalShotgun: 'weapons_on_floor.TacticalShotgun',
-    AutomaticRifle: 'weapons_on_floor.AutomaticRifle',
-    SniperRifle: 'weapons_on_floor.SniperRifle',
-    OldRifle: 'weapons_on_floor.OldRifle',
-    SemiAutomaticRifle: 'weapons_on_floor.SemiAutomaticRifle',
+    'ThreeBarrelShotgun': 'weapons_on_floor.ThreeBarrelShotgun',
+    'TacticalShotgun': 'weapons_on_floor.TacticalShotgun',
+    'AutomaticRifle': 'weapons_on_floor.AutomaticRifle',
+    'SniperRifle': 'weapons_on_floor.SniperRifle',
+    'OldRifle': 'weapons_on_floor.OldRifle',
+    'SemiAutomaticRifle': 'weapons_on_floor.SemiAutomaticRifle',
     'Sword': 'other.gun',
 }
 

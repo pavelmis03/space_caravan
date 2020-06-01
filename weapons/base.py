@@ -212,3 +212,6 @@ class MeleeWeapon(Weapon):
             self.scene.game_objects.append(PlayerSlash(self.owner, self.length))
         else:
             self.scene.game_objects.append(EnemySlash(self.owner, self.length))
+
+    def process_draw(self):
+        pass

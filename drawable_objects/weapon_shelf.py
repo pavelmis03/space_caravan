@@ -13,12 +13,16 @@ class WeaponShelf(UsableObject):
     IMAGE_ZOOM = 1.15
     COOLDOWN_TIME = 20
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0, weapon: str = None):
         super().__init__ (scene, controller, self.IMAGE_NAME,
                            pos, angle, self.IMAGE_ZOOM)
-        self.weapon = None
-        self.HITBOX_RADIUS = 25
+        self.HITBOX_RADIUS = 25 # для создания оружий
+        if weapon is None:
+            self.weapon = None
+        else:
+            self.weapon = WEAPON_VOCABULARY[weapon](self)
         self.changing_cooldown = 0
+        self.usage_radius = 40
 
     def process_logic(self):
         super().process_logic()
@@ -43,6 +47,7 @@ class WeaponShelf(UsableObject):
             if self.weapon is None:
                 self.weapon = self.scene.player.weapon
                 self.weapon.owner = self
+                self.weapon.angle = self.angle
                 self.weapon.image_name = WEAPON_ON_FLOOR_IMAGE[self.weapon.__class__.__name__]
                 self.scene.player.weapon_slots[self.scene.player.weapon_slots_ind] =\
                     WEAPON_VOCABULARY['Fist'](self.scene.player)
@@ -60,6 +65,7 @@ class WeaponShelf(UsableObject):
                 weapon = self.weapon
                 self.weapon = self.scene.player.weapon
                 self.weapon.owner = self
+                self.weapon.angle = self.angle
                 self.weapon.image_name = WEAPON_ON_FLOOR_IMAGE[self.weapon.__class__.__name__]
                 self.scene.player.weapon_slots[self.scene.player.weapon_slots_ind] = weapon
                 self.scene.player.weapon = self.scene.player.weapon_slots[self.scene.player.weapon_slots_ind]
@@ -70,6 +76,7 @@ class WeaponShelf(UsableObject):
         weapon = data_dict['weapon']
         if weapon is not None:
             self.weapon = WEAPON_VOCABULARY[weapon](self)
+            self.weapon.image_name = WEAPON_ON_FLOOR_IMAGE[self.weapon.__class__.__name__]
             if self.weapon.type == 'Ranged':
                 self.weapon.magazine = data_dict['weapon_magazine']
         else:

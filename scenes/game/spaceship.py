@@ -6,6 +6,7 @@ from drawable_objects.clone_capsule import CloneCapsule
 from drawable_objects.weapon_shelf import WeaponShelf
 from drawable_objects.player import Player
 from space.common_game_data import CommonGameData
+from math import pi
 
 
 class SpaceshipScene(LevelScene):
@@ -51,7 +52,14 @@ class SpaceshipScene(LevelScene):
         self.game_objects.append(CloneCapsule(
             self, self.game.controller, capsule_spawn_point, 0))
         self.game_objects.append(WeaponShelf(
-            self, self.game.controller, shelf_spawn_point, 0))
+            self, self.game.controller, shelf_spawn_point, 0, 'Pistol'))
+
+        shelf_spawn_point = Point(
+            10, (self.ROOM_HEIGHT - 3) * self.CELL_SIZE)
+        shelf_spawn_point += Point (1, 1) * \
+                             self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
+        self.game_objects.append(WeaponShelf(
+            self, self.game.controller, shelf_spawn_point, -pi/2, 'TwoBarrelShotgun'))
 
         self.player = Player(self, self.game.controller,
                              self.PLAYER_SPAWN_POINT)

@@ -148,6 +148,10 @@ class CommandHumanoid(MovingHumanoid):
 
     def set_weapon(self, weapon_name):
         self.weapon = weapons.weapons.WEAPON_VOCABULARY[weapon_name](self)
+        if self.weapon.type == 'Ranged':
+            self.image_name = 'moving_objects.Enemy'
+        else:
+            self.image_name = 'moving_objects.EnemyWithSword'
 
     def process_logic(self):
         """
