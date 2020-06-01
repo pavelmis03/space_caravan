@@ -1,12 +1,8 @@
-import pygame
-
-from constants.color import COLOR
 from drawable_objects.base import AbstractObject
-from drawable_objects.button import Button
-from drawable_objects.checkbox import CheckBox
-from drawable_objects.multiline_text import MultilineText
+from drawable_objects.menu.button import Button
+from drawable_objects.menu.checkbox import CheckBox
+from drawable_objects.menu.multiline_text import MultilineText
 from geometry.point import Point
-from geometry.rectangle import tuple_to_rectangle
 
 
 class WidgetGroup(AbstractObject):
@@ -62,7 +58,8 @@ class WidgetGroup(AbstractObject):
     def get_actual_pos(self):
         """
         Получение точки для верхней границы нового виджета
-        :return точка верхней границы нового виджета
+
+        :return: точка верхней границы нового виджета
         """
         if self.widgets:
             last = self.widgets[-1].geometry
@@ -72,6 +69,7 @@ class WidgetGroup(AbstractObject):
     def add_button(self, text, function, kwargs={}, size=None):
         """
         Добавляет кнопку в отображаемые виджеты
+
         :param size: точка, состаящия из высоты(x) и ширины(y) кнопки
         :param text: текст для кнопки
         :param function: вызываемая кнопкой при нажатии на неё функция
@@ -92,7 +90,7 @@ class WidgetGroup(AbstractObject):
 
         :param text: Текст для чекбокса
         :param size: Размеры чекбокса (самого квадрата)
-        :return ссылка на созданный checkbox
+        :return: ссылка на созданный checkbox
         """
         if not size:
             size = WidgetGroup.CHECKBOX_DEF_SIZE
@@ -107,6 +105,7 @@ class WidgetGroup(AbstractObject):
     def add_multilinetext(self, text, **text_kwargs):
         """
         Добавляет многострочный текст в отображаемые виджеты
+
         :param text: многострочный текст
         :param text_kwargs: аргументы многострочного текста
         """
@@ -118,6 +117,7 @@ class WidgetGroup(AbstractObject):
     def update_offset(self, offset):
         """
         Изменение оффсета для отображения группы виджетов
+
         :param offset: новоый оффсет
         """
         self.offset = Point(*offset)

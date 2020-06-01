@@ -1,7 +1,7 @@
 """
 полезные функции для работы с списками
 """
-from typing import List
+from typing import List, Tuple
 
 
 def is_indexes_correct(arr: List[List[any]], i: int, j: int) -> bool:
@@ -52,3 +52,17 @@ def copy_2dimensional_list(arr: List[List[any]]) -> List[List[any]]:
     """
     result = [copy_list(item) for item in arr]
     return result
+
+
+def get_list_chance_sum(arr: List[Tuple[int, any]]):
+    result = 0
+    for item in arr:
+        result += item[0]
+    return result
+
+
+def check_chance_list(arr: List[Tuple[int, any]]):
+    sum_chance = get_list_chance_sum(arr)
+    if sum_chance != 100:
+        raise Exception('sum of chance list not equal 100. The value: {}'. \
+                        format(sum_chance))

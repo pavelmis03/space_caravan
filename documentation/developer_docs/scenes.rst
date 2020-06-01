@@ -25,7 +25,7 @@ final.py
 spacemap.py
 -----------
 
-.. automodule:: scenes.spacemap
+.. automodule:: scenes.game.spacemap
     :members:
     :undoc-members:
 

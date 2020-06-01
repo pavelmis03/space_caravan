@@ -1,10 +1,24 @@
 utils
 =====
 
+camera.py
+---------
+
+.. automodule:: utils.camera
+    :members:
+    :undoc-members:
+
 disjoint_set.py
 ---------------
 
 .. automodule:: utils.disjoint_set
+    :members:
+    :undoc-members:
+
+font.py
+-------
+
+.. automodule:: utils.font
     :members:
     :undoc-members:
 

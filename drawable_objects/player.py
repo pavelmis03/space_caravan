@@ -12,7 +12,7 @@ from constants.mouse_buttons import MouseButtonID
 from scenes.base import Scene
 from controller.controller import Controller
 
-from weapons.weapons import WEAPON_VOCABULARY
+from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
 
 
 class Player(Humanoid):
@@ -73,11 +73,45 @@ class Player(Humanoid):
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
         self.is_clone = is_clone
 
+    def set_weapon(self, weapon_dict: Dict):
+        """
+        Присвоить на место оружия на текущем слоте weapon
+        """
+        weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](self)
+        if weapon.type == 'Ranged':
+            weapon.magazine = weapon_dict['magazine']
+
+        self.weapon_slots[self.weapon_slots_ind] = weapon
+        self.weapon = self.weapon_slots[self.weapon_slots_ind]
+
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
 
+        self.ammo = data_dict['ammo']
+        self.weapon_slots_ind = data_dict['weapon_slots_ind']
+
+        self.weapon_slots = []
+        for weapon_dict in data_dict['weapons']:
+            weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](self)
+            if weapon.type == 'Ranged':
+                weapon.magazine = weapon_dict['magazine']
+            self.weapon_slots.append(weapon)
+
+        self.weapon = self.weapon_slots[self.weapon_slots_ind]
+
     def to_dict(self) -> Dict:
         result = super().to_dict()
+
+        weapons = []
+        for item in self.weapon_slots:
+            weapon_dict = weapon_to_dict(item)
+            weapons.append(weapon_dict)
+
+        result.update({'weapons': weapons})
+
+        result.update({'weapon_slots_ind': self.weapon_slots_ind})
+        result.update({'ammo': self.ammo})
+
         return result
 
     def load(self):

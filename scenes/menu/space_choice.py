@@ -1,7 +1,7 @@
 from scenes.menu.base import MenuScene
-from drawable_objects.textbox import TextBox
-from drawable_objects.list_widget import ListWidget
-from drawable_objects.button import Button
+from drawable_objects.menu.textbox import TextBox
+from drawable_objects.menu.list_widget import ListWidget
+from drawable_objects.menu.button import Button
 from scenes.game.spaceship import SpaceshipScene
 
 

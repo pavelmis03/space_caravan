@@ -216,6 +216,15 @@ class Humanoid(GameSprite):
                 self.hp = 0
                 self.die(angle_of_attack)
 
+    def to_dict(self) -> Dict:
+        result = super().to_dict()
+        result.update({'hp': self.hp})
+        return result
+
+    def from_dict(self, data_dict):
+        super().from_dict(data_dict)
+        self.hp = data_dict['hp']
+
     def die(self, angle_of_attack=0):
         """
         Смерть

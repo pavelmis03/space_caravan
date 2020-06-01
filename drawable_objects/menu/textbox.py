@@ -7,7 +7,7 @@ from controller.controller import Controller
 from drawable_objects.base import DrawableObject
 from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect
 from geometry.point import Point
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 
 
 class TextBox(DrawableObject):

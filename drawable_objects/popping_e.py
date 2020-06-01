@@ -1,11 +1,9 @@
 from drawable_objects.base import GameSprite
 from geometry.point import Point
 
-from scenes.base import Scene
 from controller.controller import Controller
 from geometry.distances import dist
 
-from drawable_objects.player import Player
 from utils.image import ImageManager
 
 
@@ -19,7 +17,7 @@ class PoppingE(GameSprite):
     ANGLE = 0
     HEIGHT_ABOVE_PARENT = 25
 
-    def __init__(self, scene: Scene, controller: Controller, parent_image_name: str, parent_zoom: float = 1):
+    def __init__(self, scene, controller: Controller, parent_image_name: str, parent_zoom: float = 1):
         super().__init__(scene, controller, self.IMAGE_NAME,
                          Point(0, 0), self.ANGLE, self.IMAGE_ZOOM)
         self.parent_image_name = parent_image_name

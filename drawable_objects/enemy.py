@@ -7,13 +7,13 @@ from controller.controller import Controller
 from drawable_objects.base import Humanoid
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
-from scenes.base import Scene
 from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
 from math import pi
 from utils.timer import Timer, EMPTY_TIMER
 from constants.grid import CELL_SIZE
+from drawable_objects.drop.enemy_drop import AmmoDrop
 
 
 class MovingHumanoid(Humanoid):
@@ -104,7 +104,7 @@ class CommandHumanoid(MovingHumanoid):
     DELAY_BEFORE_HEARING = 8
     LEVEL_LOAD_DELAY = 36
 
-    def __init__(self, scene: Scene, controller: Controller, image_name: str,
+    def __init__(self, scene, controller: Controller, image_name: str,
                  pos: Point, angle: float, image_zoom: float):
         super().__init__(scene, controller, image_name, pos, angle, image_zoom)
 
@@ -130,7 +130,6 @@ class CommandHumanoid(MovingHumanoid):
         """
         Воспроизведение объекта из словаря.
         """
-        self.hp = data_dict['hp']
         self.set_weapon(data_dict['weapon'])
         super().from_dict(data_dict)
 
@@ -139,14 +138,11 @@ class CommandHumanoid(MovingHumanoid):
         Запись характеристик объекта в словарь.
         """
         result = super().to_dict()
-        result.update({'hp': self.hp})
         '''
         работает за O(weapons.weapons.WEAPON_VOCABULARY), но
         в высокой скорости нет необходимости:
         '''
-        for key, value in weapons.weapons.WEAPON_VOCABULARY.items():
-            if isinstance(self.weapon, value):
-                result.update({'weapon': key})
+        result.update(weapons.weapons.weapon_to_dict(self.weapon))
 
         return result
 
@@ -229,7 +225,7 @@ class CommandHumanoid(MovingHumanoid):
 
         :return: команду или None. Если None, то это означает не команду бесдействия, а невозможность атаки
         """
-        if self.__is_range:
+        if self._is_range:
             self.__cooldown = max(self.__cooldown, CommandHumanoid.DELAY_BEFORE_FIRST_SHOOT)
             return EnemyCommand('aim')
 
@@ -274,7 +270,7 @@ class CommandHumanoid(MovingHumanoid):
         self._recount_angle(self.scene.player.pos)
 
         self.weapon.main_attack()
-        if self.__is_range and self.weapon.magazine == 0:
+        if self._is_range and self.weapon.magazine == 0:
             self.weapon.reload()
 
         self.__cooldown = CommandHumanoid.COOLDOWN_TIME
@@ -287,7 +283,7 @@ class CommandHumanoid(MovingHumanoid):
         """
         для melee оружия особое поведение, которое проще всего сделать так:
         """
-        if not self.__is_range:
+        if not self._is_range:
             self.__command = self.__get_attack_command()
             self.__command_logic()
             return
@@ -320,12 +316,12 @@ class CommandHumanoid(MovingHumanoid):
 
     @property
     def _speed(self) -> float:
-        if self.__is_range:
+        if self._is_range:
             return super()._speed
         return self.MELEE_SPEED
 
     @property
-    def __is_range(self) -> bool:
+    def _is_range(self) -> bool:
         """
         Дальнее ли у Enemy оружие
         """
@@ -345,7 +341,7 @@ class Enemy(CommandHumanoid):
     ROTATION_MIN_COOLDOWN = 100
     ROTATION_MAX_COOLDOWN = 250
     ROTATION_CHANGE_DIRECTION_CHANCE = 30
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Enemy.IMAGE_NAME, pos, angle, Enemy.IMAGE_ZOOM)
         self.__rotate_cooldown = randint(
             Enemy.ROTATION_MIN_COOLDOWN, Enemy.ROTATION_MAX_COOLDOWN)
@@ -429,3 +425,10 @@ class Enemy(CommandHumanoid):
         """
         self.weapon.destroy()
         self.destroy()
+
+        if self._is_range:
+            self.__drop_ammo()
+
+    def __drop_ammo(self):
+        ammo = AmmoDrop(self.scene, self.controller, self.pos)
+        self.scene.game_objects.append(ammo)
