@@ -33,8 +33,8 @@ class Player(Humanoid):
     """
 
     ADD_TO_GAME_PLANE = True
-    IMAGE_NAME = 'other.person-up_without_weapon'
-    IMAGE_ZOOM = 0.25
+    IMAGE_NAME = 'moving_objects.Player'
+    IMAGE_ZOOM = 1.15
     CONTROLS = [
         pygame.K_d,
         pygame.K_w,
@@ -54,23 +54,25 @@ class Player(Humanoid):
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
-        self.rotation_offset = [
-            140 * Player.IMAGE_ZOOM,
-            126 * Player.IMAGE_ZOOM
-        ]
+        #self.rotation_offset = [
+        #    140 * Player.IMAGE_ZOOM,
+        #    126 * Player.IMAGE_ZOOM
+        #]
         self.ammo = {
             'Pistol': 200,
             'Shotgun': 60,
             'Rifle': 100,
         }
         self.weapon_slots = [
+            WEAPON_VOCABULARY['TwoBarrelShotgun'](self),
             WEAPON_VOCABULARY['Pistol'](self),
-            WEAPON_VOCABULARY['Sword'](self),
         ]
         self.weapon_slots_ind = 0
         self.change_weapon_request = -1
         self.change_weapon_cooldown = 0
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
+        self.is_clone = False
+        self.is_dead = False
 
     def set_weapon(self, weapon_dict: Dict):
         """
@@ -98,6 +100,9 @@ class Player(Humanoid):
 
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
+        self.is_clone = data_dict['is_clone']
+        self.is_dead = data_dict['is_dead']
+
     def to_dict(self) -> Dict:
         result = super().to_dict()
 
@@ -110,6 +115,9 @@ class Player(Humanoid):
 
         result.update({'weapon_slots_ind': self.weapon_slots_ind})
         result.update({'ammo': self.ammo})
+
+        result.update({'is_clone': self.is_clone})
+        result.update({'is_dead': self.is_dead})
 
         return result
 
@@ -133,6 +141,7 @@ class Player(Humanoid):
         self._movement_controls()
         self._weapon_controls()
         self.weapon.process_logic()
+        self.sprite_manager()
 
     @property
     def is_fired_this_tick(self):
@@ -186,11 +195,11 @@ class Player(Humanoid):
                 if self.controller.is_key_pressed(Player.TAB_WEAPON_SLOTS_CONTROLS):
                     self.change_weapon_request = 1 + self.weapon_slots_ind == 1
         if self.change_weapon_request != -1 and self.weapon.combo == 0:
-            self._change_weapon(self.change_weapon_request)
+            self.change_weapon(self.change_weapon_request)
             self.change_weapon_cooldown = 20
             self.change_weapon_request = -1
 
-    def _change_weapon(self, ind):
+    def change_weapon(self, ind):
         if self.weapon.type == 'Ranged':
             self.weapon.is_reloading = 0
             self.weapon.reload_request = False
@@ -199,6 +208,15 @@ class Player(Humanoid):
         self.weapon_slots_ind = ind
         self.weapon = self.weapon_slots[ind]
         self.weapon.cooldown = 15
+
+    def sprite_manager(self):
+        if self.weapon.__class__.__name__ == 'Pistol' or self.weapon.__class__.__name__ == 'BurstFiringPistol':
+            self.image_name = 'moving_objects.PlayerWithPistol'
+        elif self.weapon.__class__.__name__ == 'Fist':
+            if self.image_name != 'moving_objects.Punch':
+                self.image_name = 'moving_objects.PlayerBarehanded'
+        else:
+            self.image_name = 'moving_objects.Player'
 
     def _pos_after_pull_from_walls(self, player_pos: Point) -> Point:
         """
@@ -244,7 +262,12 @@ class Player(Humanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        # from scenes.game.spacemap import SpacemapScene
-        # scene = SpacemapScene(self.scene.game)
-        # self.scene.game.set_scene(scene)
-        self.scene.game.set_scene_with_index(self.scene.game.CLONE_KILLED_SCENE_INDEX)
+        if self.is_clone:
+            from scenes.game.spaceship import SpaceshipScene
+            self.is_dead = True
+            scene = SpaceshipScene(self.scene.game)
+            self.scene.game.set_scene(scene)
+        else:
+            from scenes.menu.main import MainMenuScene
+            scene = MainMenuScene(self.scene.game)
+            self.scene.game.set_scene(scene)

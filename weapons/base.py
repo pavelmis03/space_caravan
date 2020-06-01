@@ -11,6 +11,15 @@ from drawable_objects.slash import PlayerSlash, EnemySlash
 
 class Weapon(GameSprite):
     IMAGE_NAME = 'other.gun'
+    DESCRIPTION = """
+                Оружие: 
+                Тип: 
+                Урон: 
+                Точность: 
+                Интервал стрельбы: 
+                Время перезарядки: 
+                Описание: 
+                """
 
     def __init__(self, owner, interface_image, main_attack_interval,
                  is_automatic=False, combo_attack_interval=0, combo_size=1):
@@ -103,6 +112,7 @@ class RangedWeapon(Weapon):
         """
         super().__init__(owner, interface_image, main_attack_interval, is_automatic,
                          combo_attack_interval, combo_size)
+        self.zoom = 1.15
         self.reload_time = reload_time
         self.is_reloading = 0
         self.reload_request = False
@@ -156,12 +166,12 @@ class RangedWeapon(Weapon):
         """
         Функция атаки
         """
-        if self.owner.__class__.__name__ == 'Player':
-            self._is_fired_this_tick = True
         if self.magazine == 0:
             self.cooldown = 0
             self.reload()
             return
+        if self.owner.__class__.__name__ == 'Player':
+            self._is_fired_this_tick = True
         self.magazine -= 1
         SoundManager.play_sound(self.SHOOT_SOUND)
         end_of_the_barrel = self.owner.pos + vector_from_length_angle(self.barrel_length, self.owner.angle)

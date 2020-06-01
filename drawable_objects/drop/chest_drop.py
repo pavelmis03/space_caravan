@@ -7,22 +7,25 @@ from random import randint
 
 
 class WeaponDrop(Drop):
-    IMAGE_NAME = 'other.gun' #временное значение. будет изменено в set_weapon_dict
+    IMAGE_NAME = 'other.gun'  # временное значение. будет изменено в set_weapon_dict
 
     def __init__(self, scene, controller: Controller,
-                 pos: Point, angle: float = 0, zoom: float = 0.5, usage_radius: float = 75):
+                 pos: Point, angle: float = 0, zoom: float = 1.15, usage_radius: float = 75):
         super().__init__(scene, controller,
                          pos, angle, zoom, usage_radius)
     # напиши нормальный get_image
+
     def activate(self):
+        is_player_holding_fist = self.scene.player.weapon.__class__.__name__ == 'Fist'
         old_weapon = weapon_to_dict(self.scene.player.weapon)
         self.scene.player.set_weapon(self.__weapon_dict)
         self.destroy()
 
-        new_weapon = WeaponDrop(self.scene, self.controller,
-                            self.pos, self.angle, self.zoom, self.usage_radius)
-        new_weapon.set_weapon_dict(old_weapon)
-        self.scene.game_objects.append(new_weapon)
+        if not is_player_holding_fist:  # если оружие игрка - кулаки(без оружия), ничего не дропнется
+            new_weapon = WeaponDrop(self.scene, self.controller,
+                                self.pos, self.angle, self.zoom, self.usage_radius)
+            new_weapon.set_weapon_dict(old_weapon)
+            self.scene.game_objects.append(new_weapon)
 
     def set_weapon_dict(self, weapon_dict: Dict):
         self.__weapon_dict = weapon_dict
@@ -55,6 +58,7 @@ class MedKitDrop(Drop):
     def activate(self):
         self.scene.player.hp = self.scene.player.MAXHP
         self.destroy()
+
 
 class EssenceDrop(Drop):
     IMAGE_NAME = 'other.essence'

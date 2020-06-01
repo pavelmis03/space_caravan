@@ -35,6 +35,7 @@ class Bullet(GameSprite):
         self.direction = vector_from_length_angle(speed, self.angle)
         self.damage = damage
         self.is_hurting_enemies = weapon.owner.__class__.__name__ != 'Enemy'
+        self.invisibility_time = 1
 
     def process_draw(self):
         """
@@ -46,15 +47,18 @@ class Bullet(GameSprite):
         Если объект вне экрана, он не отрисовывается
         relative_center: центр относительных координат
         """
-        pos = self.pos - vector_from_length_angle(
-            ImageManager.get_width(self.image_name, self.zoom) // 2, self.angle)
-        relative_center = self.scene.relative_center
-        relative_pos = pos - relative_center
-        if ImageManager.is_out_of_screen(self.image_name, self.zoom,
-                                         relative_pos, self.scene.game.screen_rectangle):
-            return
-        ImageManager.process_draw(self.image_name, relative_pos,
-                                  self.scene.screen, self.zoom, self.angle, self.rotation_offset)
+        if self.invisibility_time:
+            self.invisibility_time -= 1
+        else:
+            pos = self.pos - vector_from_length_angle(
+                ImageManager.get_width(self.image_name, self.zoom) // 2, self.angle)
+            relative_center = self.scene.relative_center
+            relative_pos = pos - relative_center
+            if ImageManager.is_out_of_screen(self.image_name, self.zoom,
+                                             relative_pos, self.scene.game.screen_rectangle):
+                return
+            ImageManager.process_draw(self.image_name, relative_pos,
+                                      self.scene.screen, self.zoom, self.angle, self.rotation_offset)
 
     def process_logic(self):
         next_pos = self.pos + self.direction

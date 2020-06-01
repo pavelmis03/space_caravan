@@ -1,7 +1,9 @@
+from drawable_objects.analisor import WeaponAnalisor
 from scenes.game.level import LevelScene
 from geometry.point import Point
 from map.spaceship_grid import SpaceshipGrid
 from drawable_objects.space_map_terminal import SpaceMapTerminal
+from drawable_objects.clone_capsule import CloneCapsule
 from drawable_objects.player import Player
 from space.common_game_data import CommonGameData
 
@@ -13,10 +15,10 @@ class SpaceshipScene(LevelScene):
     :param game: игра, создающая сцену
     """
 
-    TOP_LEFT_CORNER_BIAS = 25
+    TOP_LEFT_CORNER_BIAS = 45
     CELL_SIZE = 25
-    ROOM_WIDTH = 30
-    ROOM_HEIGHT = 20
+    ROOM_WIDTH = 20
+    ROOM_HEIGHT = 15
     PLAYER_SPAWN_POINT = Point(1, 1) * TOP_LEFT_CORNER_BIAS * \
         CELL_SIZE + Point(ROOM_WIDTH, ROOM_HEIGHT) * CELL_SIZE / 2
     DATA_FILENAME = 'spaceship'
@@ -31,12 +33,26 @@ class SpaceshipScene(LevelScene):
         Инициализация для космического корабля означает создание игрока и общих данных игры (так это первая
         сцена, появляющаяся в новом игровом мире), а также объектов на корабле.
         """
-        terminal_spawn_point = Point(
-            (self.ROOM_WIDTH / 2) * self.CELL_SIZE, (self.ROOM_HEIGHT - 2) * self.CELL_SIZE)
-        terminal_spawn_point += Point(1, 1) * \
+        capsule_spawn_point = Point(
+            (self.ROOM_WIDTH / 2) * self.CELL_SIZE, (self.ROOM_HEIGHT + 2) * self.CELL_SIZE)
+        capsule_spawn_point += Point(1, 1) * \
             self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
+        terminal_spawn_point = Point(
+            (self.ROOM_WIDTH / 2) * self.CELL_SIZE, -1 * self.CELL_SIZE)
+        terminal_spawn_point += Point(1, 1) * \
+                                self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
+        analisor_spawn_point = Point(
+            (self.ROOM_WIDTH * 0.80) * self.CELL_SIZE, -1 * self.CELL_SIZE)
+        analisor_spawn_point += Point(1, 1) * \
+                                self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
+
         self.game_objects.append(SpaceMapTerminal(
             self, self.game.controller, terminal_spawn_point, 0))
+        self.game_objects.append(CloneCapsule(
+            self, self.game.controller, capsule_spawn_point, 0))
+        self.game_objects.append(WeaponAnalisor(
+            self, self.game.controller, analisor_spawn_point, 0))
+
         self.player = Player(self, self.game.controller,
                              self.PLAYER_SPAWN_POINT)
         self.common_data = CommonGameData(self)

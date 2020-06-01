@@ -200,8 +200,8 @@ class Humanoid(GameSprite):
         self.weapon = None
 
     def process_draw(self):
-        self.weapon.process_draw()
         super().process_draw()
+        self.weapon.process_draw()
 
     def get_damage(self, damage=0, angle_of_attack=0):
         """
