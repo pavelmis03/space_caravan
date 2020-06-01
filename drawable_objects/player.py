@@ -51,7 +51,7 @@ class Player(Humanoid):
 
     DATA_FILENAME = 'player'
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0, is_clone=False):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
         self.rotation_offset = [
@@ -71,7 +71,8 @@ class Player(Humanoid):
         self.change_weapon_request = -1
         self.change_weapon_cooldown = 0
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
-        self.is_clone = is_clone
+        self.is_clone = False
+        self.is_dead = False
 
     def set_weapon(self, weapon_dict: Dict):
         """
@@ -100,6 +101,7 @@ class Player(Humanoid):
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
         self.is_clone = data_dict['is_clone']
+        self.is_dead = data_dict['is_dead']
 
     def to_dict(self) -> Dict:
         result = super().to_dict()
@@ -115,6 +117,7 @@ class Player(Humanoid):
         result.update({'ammo': self.ammo})
 
         result.update({'is_clone': self.is_clone})
+        result.update({'is_dead': self.is_dead})
 
         return result
 
@@ -249,6 +252,9 @@ class Player(Humanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        from scenes.game.spaceship import SpaceshipScene
-        scene = SpaceshipScene(self.scene.game)
-        self.scene.game.set_scene(scene)
+        if self.is_clone:
+            from scenes.game.spaceship import SpaceshipScene
+            self.is_dead = True
+            scene = SpaceshipScene(self.scene.game)
+            self.scene.game.set_scene(scene)
+        else:
