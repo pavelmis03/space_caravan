@@ -6,6 +6,7 @@ from constants.color import COLOR
 from drawable_objects.base import DrawableObject
 from drawable_objects.menu.text import Text
 from geometry.rectangle import tuple_to_rectangle, rectangle_to_rect, get_rectangle_copy, Rectangle
+from utils.sound import SoundManager
 
 
 class CheckBox(DrawableObject):
@@ -27,6 +28,7 @@ class CheckBox(DrawableObject):
     TEXT_COLOR = COLOR['WHITE']
     FONT_NAME = 'freesansbold'
     SIZE = 3 / 5
+    CLICK_SOUND = 'ui.press2'
 
     def __init__(self, scene, cotroller, pos, size=10, label='Test', font_size=16, align='left', enabled=False):
         self.select = tuple_to_rectangle((0, 0, size, size))
@@ -90,6 +92,7 @@ class CheckBox(DrawableObject):
         click_pos = self.controller.get_click_pos()
         if click_pos and self.geometry.is_inside(click_pos):
             self.check = not self.check
+            SoundManager.play_sound(CheckBox.CLICK_SOUND)
 
     def process_draw(self):
         pygame.draw.rect(self.scene.screen, CheckBox.BG_COLOR,
