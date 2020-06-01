@@ -129,19 +129,17 @@ class OldRifle(RangedWeapon):
                          accuracy=90, damage=90)
 
 
-class SemiAutomaticRifle(OldRifle):
+class SemiAutomaticRifle(RangedWeapon):
     """
     Полуавтоматическая винтовка
     """
     IMAGE_NAME = 'weapons.semi_automatic_rifle'
 
     def __init__(self, owner, bullets_in_magazine=8):
-        super().__init__(owner, bullets_in_magazine)
-        self.image_name = self.IMAGE_NAME
-        self.interface_image = 'interface.weapon_icons.semi_automatic_rifle'
-        self.main_attack_interval = 10
-        self.reload_time = 50
-        self.accuracy = 60
+        super().__init__(owner, interface_image='interface.weapon_icons.semi_automatic_rifle',
+                         bullets_in_magazine=bullets_in_magazine, magazine_size=8,
+                         main_attack_interval=9, reload_time=50, ammo_type='Rifle',
+                         accuracy=60, damage=90)
 
 
 class Sword(MeleeWeapon):
