@@ -11,6 +11,15 @@ from drawable_objects.slash import PlayerSlash, EnemySlash
 
 class Weapon(GameSprite):
     IMAGE_NAME = 'other.gun'
+    DESCRIPTION = """
+                Оружие: 
+                Тип: 
+                Урон: 
+                Точность: 
+                Интервал стрельбы: 
+                Время перезарядки: 
+                Описание: 
+                """
 
     def __init__(self, owner, interface_image, main_attack_interval,
                  is_automatic=False, combo_attack_interval=0, combo_size=1):
