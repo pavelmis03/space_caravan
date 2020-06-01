@@ -51,7 +51,7 @@ class Player(Humanoid):
 
     DATA_FILENAME = 'player'
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0, is_clone = False):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
         self.rotation_offset = [
@@ -71,6 +71,7 @@ class Player(Humanoid):
         self.change_weapon_request = -1
         self.change_weapon_cooldown = 0
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
+        self.is_clone = is_clone
 
     def from_dict(self, data_dict: Dict):
         super().from_dict(data_dict)
@@ -152,11 +153,11 @@ class Player(Humanoid):
                 if self.controller.is_key_pressed(Player.TAB_WEAPON_SLOTS_CONTROLS):
                     self.change_weapon_request = 1 + self.weapon_slots_ind == 1
         if self.change_weapon_request != -1 and self.weapon.combo == 0:
-            self._change_weapon(self.change_weapon_request)
+            self.change_weapon(self.change_weapon_request)
             self.change_weapon_cooldown = 20
             self.change_weapon_request = -1
 
-    def _change_weapon(self, ind):
+    def change_weapon(self, ind):
         if self.weapon.type == 'Ranged':
             self.weapon.is_reloading = 0
             self.weapon.reload_request = False
@@ -210,6 +211,6 @@ class Player(Humanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
-        from scenes.game.spacemap import SpacemapScene
-        scene = SpacemapScene(self.scene.game)
+        from scenes.game.spaceship import SpaceshipScene
+        scene = SpaceshipScene(self.scene.game)
         self.scene.game.set_scene(scene)

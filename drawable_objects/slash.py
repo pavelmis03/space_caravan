@@ -98,7 +98,6 @@ class Punch(PlayerSlash):
     def __init__(self, creator: GameSprite, length):
         super().__init__(creator, length)
         self.zoom = 0.5
-        self.one_frame_vision_time = 2
         self.damage = 25
         self.reach = 1
 
