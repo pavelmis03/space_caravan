@@ -36,7 +36,7 @@ class SpaceshipScene(LevelScene):
             (self.ROOM_WIDTH / 2) * self.CELL_SIZE, (self.ROOM_HEIGHT - 1) * self.CELL_SIZE)
         terminal_spawn_point += Point(1, 1) * \
             self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
-        capsule_spawn_point = Point (
+        capsule_spawn_point = Point(
             (self.ROOM_WIDTH - 1) * self.CELL_SIZE, (self.ROOM_HEIGHT - 2) * self.CELL_SIZE)
         capsule_spawn_point += Point (1, 1) * \
                                 self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE

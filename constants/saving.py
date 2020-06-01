@@ -16,7 +16,6 @@ from drawable_objects.drop.chest_drop import WeaponDrop, MedKitDrop, EssenceDrop
 from drawable_objects.drop.enemy_drop import AmmoDrop
 
 
-
 CLASSES_BASE = {
     'Ladder': Ladder,
     'Planet': Planet,

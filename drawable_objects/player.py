@@ -51,7 +51,7 @@ class Player(Humanoid):
 
     DATA_FILENAME = 'player'
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0, is_clone = False):
+    def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0, is_clone=False):
         super().__init__(scene, controller, Player.IMAGE_NAME, pos, angle, Player.IMAGE_ZOOM)
         # head - 140x126
         self.rotation_offset = [
@@ -99,6 +99,8 @@ class Player(Humanoid):
 
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
 
+        self.is_clone = data_dict['is_clone']
+
     def to_dict(self) -> Dict:
         result = super().to_dict()
 
@@ -111,6 +113,8 @@ class Player(Humanoid):
 
         result.update({'weapon_slots_ind': self.weapon_slots_ind})
         result.update({'ammo': self.ammo})
+
+        result.update({'is_clone': self.is_clone})
 
         return result
 

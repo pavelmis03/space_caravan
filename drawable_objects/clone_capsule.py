@@ -1,15 +1,17 @@
 from typing import Dict
 
 from controller.controller import Controller
-from drawable_objects.base import GameSprite
+from drawable_objects.base import Humanoid
 from drawable_objects.usable_object import UsableObject
 from geometry.point import Point
 from scenes.base import Scene
-from weapons.weapons import WEAPON_VOCABULARY
+from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
 
 
 def transplant_soul_between_bodies(player, soulless_body):
-    soulless_body.weapon.owner = player
+    player = soulless_body.scene.player
+    soulless_body.weapon_slots[0].owner = player
+    soulless_body.weapon_slots[1].owner = player
 
     if player.weapon.type == 'Ranged':
         player.weapon.is_reloading = 0
@@ -37,7 +39,8 @@ def transplant_soul_between_bodies(player, soulless_body):
     player.weapon_slots_ind, soulless_body.weapon_slots_ind = soulless_body.weapon_slots_ind, player.weapon_slots_ind
 
     soulless_body.weapon = soulless_body.weapon_slots[soulless_body.weapon_slots_ind]
-    soulless_body.weapon.owner = soulless_body
+    soulless_body.weapon_slots[0].owner = soulless_body
+    soulless_body.weapon_slots[1].owner = soulless_body
     player.weapon = player.weapon_slots[player.weapon_slots_ind]
 
     player.is_clone = not player.is_clone
@@ -91,14 +94,66 @@ class CloneCapsule(UsableObject):
             else:
                 transplant_soul_between_bodies(self.scene.player, self.soulless_player)
 
+    def from_dict(self, data_dict: Dict):
+        super().from_dict(data_dict)
+        self.is_clone_created = data_dict['is_clone_created']
+        if self.is_clone_created:
+            self.soulless_player = SoullessPlayer(self.scene.player)
+            new_pos = Point()
+            new_pos.from_dict(data_dict['player_pos'])
+            self.soulless_player.move(new_pos)
+            self.soulless_player.angle = data_dict['player_angle']
+            self.soulless_player.image_name = data_dict['player_image_name']
+            self.soulless_player.zoom = data_dict['player_zoom']
 
-class SoullessPlayer(GameSprite):
+            self.soulless_player.weapon_slots[0].owner = self.scene.player
+            self.soulless_player.weapon_slots[1].owner = self.scene.player
+
+            self.soulless_player.ammo = data_dict['ammo']
+            self.soulless_player.weapon_slots_ind = data_dict['weapon_slots_ind']
+
+            self.soulless_player.weapon_slots = []
+            for weapon_dict in data_dict['weapons']:
+                weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](self.soulless_player)
+                if weapon.type == 'Ranged':
+                    weapon.magazine = weapon_dict['magazine']
+                self.soulless_player.weapon_slots.append(weapon)
+            self.soulless_player.weapon = self.soulless_player.weapon_slots[self.soulless_player.weapon_slots_ind]
+
+            self.scene.game_objects.append(self.soulless_player)
+
+    def to_dict(self) -> Dict:
+        result = super().to_dict()
+        result.update({'is_clone_created': self.is_clone_created})
+        if self.is_clone_created:
+            result.update({'player_pos': self.soulless_player.pos.to_dict()})
+            result.update({'player_angle': self.soulless_player.angle})
+            result.update({'player_image_name': self.soulless_player.image_name})
+            result.update({'player_zoom': self.soulless_player.zoom})
+
+            weapons = []
+
+            for item in self.soulless_player.weapon_slots:
+                weapon_dict = weapon_to_dict(item)
+                weapons.append(weapon_dict)
+
+            result.update({'weapons': weapons})
+
+            result.update({'weapon_slots_ind': self.soulless_player.weapon_slots_ind})
+            result.update({'ammo': self.soulless_player.ammo})
+
+        return result
+
+
+class SoullessPlayer(Humanoid):
     """
     Неуправляемое тело игрока после создания клона
     """
+    IMAGE_NAME = 'other.person-up_without_weapon'
+    IMAGE_ZOOM = 0.25
 
     def __init__(self, player):
-        super().__init__(player.scene, player.controller, player.image_name, player.pos, player.angle, player.zoom)
+        super().__init__ (player.scene, player.controller, player.image_name, player.pos, player.angle, player.zoom)
         self.ammo = {
             'Pistol': player.ammo['Pistol'],
             'Shotgun': player.ammo['Shotgun'],
@@ -115,3 +170,33 @@ class SoullessPlayer(GameSprite):
     def process_draw(self):
         super().process_draw()
         self.weapon.process_draw()
+
+    def from_dict(self, data_dict: Dict):
+        super().from_dict(data_dict)
+        self.weapon.owner = self.scene.player
+
+        self.ammo = data_dict['ammo']
+        self.weapon_slots_ind = data_dict['weapon_slots_ind']
+
+        self.weapon_slots = []
+        for weapon_dict in data_dict['weapons']:
+            weapon = WEAPON_VOCABULARY[weapon_dict['weapon']](self)
+            if weapon.type == 'Ranged':
+                weapon.magazine = weapon_dict['magazine']
+            self.weapon_slots.append(weapon)
+        self.weapon = self.weapon_slots[self.weapon_slots_ind]
+
+    def to_dict(self) -> Dict:
+        result = super().to_dict()
+
+        weapons = []
+        for item in self.weapon_slots:
+            weapon_dict = weapon_to_dict(item)
+            weapons.append(weapon_dict)
+
+        result.update({'weapons': weapons})
+
+        result.update({'weapon_slots_ind': self.weapon_slots_ind})
+        result.update({'ammo': self.ammo})
+
+        return result

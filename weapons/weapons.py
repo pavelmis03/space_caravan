@@ -85,6 +85,7 @@ class AutomaticRifle(RangedWeapon):
     Автоматическая винтовка
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=25):
         super().__init__(owner, interface_image='other.gun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=25,
@@ -109,6 +110,7 @@ class OldRifle(RangedWeapon):
     Старая винтовка
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=8):
         super().__init__(owner, interface_image='other.gun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=8,
@@ -121,6 +123,7 @@ class SemiAutomaticRifle(OldRifle):
     Полуавтоматическая винтовка
     """
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner, bullets_in_magazine=8):
         super().__init__(owner, bullets_in_magazine)
         self.image_name = self.IMAGE_NAME
@@ -132,15 +135,17 @@ class SemiAutomaticRifle(OldRifle):
 
 class Sword(MeleeWeapon):
     IMAGE_NAME = 'other.gun'
+
     def __init__(self, owner):
         super().__init__(owner, interface_image='other.gun',
                          main_attack_interval=15, length=60)
 
 
 class Fist(MeleeWeapon):
+    IMAGE_NAME = 'other.bullet'
 
     def __init__(self, owner):
-        super().__init__(owner, scene_image='other.bullet', interface_image='other.bullet',
+        super().__init__(owner, interface_image='other.bullet',
                          main_attack_interval=7, length=30)
 
     def attack(self):
