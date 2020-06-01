@@ -114,11 +114,13 @@ class ListWidget(DrawableObject):
         """
         self.items.append(ListWidgetItem(self.scene, self.controller, self, element))
         self.items.sort()
+        self.arrange_items()
 
     def remove_element(self, element: str):
         for item in self.items:
             if item.value == element:
                 self.items.remove(item)
+        self.arrange_items()
 
     def get_choice(self):
         return self.choice
