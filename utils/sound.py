@@ -31,6 +31,8 @@ class SoundManager:
         'weapon.reload.shotgun': 0.08,
         'weapon.reload.rifle1': 0.08,
         'weapon.reload.rifle2': 0.08,
+
+        'usable.pickup': 0.15,
     }
 
     @staticmethod
