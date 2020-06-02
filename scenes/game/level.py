@@ -1,6 +1,9 @@
 from typing import List, Dict
 
+from drawable_objects.interface.ammo_display import AmmoDisplay
 from drawable_objects.interface.pause_manager import PauseManager
+from drawable_objects.interface.player_icon import PlayerIcon
+from drawable_objects.interface.weapons_display import WeaponsDisplay
 from drawable_objects.player import Player
 from drawable_objects.usable_object import UsableObject
 from geometry.point import Point
@@ -73,6 +76,13 @@ class LevelScene(GameScene):
         self.player = Player(self, self.game.controller, Point(0, 0))
         self.player.load()
         self.player.move(self.PLAYER_SPAWN_POINT)
+
+        player_icon = PlayerIcon(self, self.game.controller, self.player)
+        self.interface_objects.append(player_icon)
+        weapons_display = WeaponsDisplay(self.player, Point(100, 0))
+        self.interface_objects.append(weapons_display)
+        ammo_display = AmmoDisplay(self, self.game.controller, Point(240, 20), self.player.weapon)
+        self.interface_objects.append(ammo_display)
 
     def save(self):
         super().save()
