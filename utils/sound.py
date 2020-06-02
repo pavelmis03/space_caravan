@@ -33,6 +33,8 @@ class SoundManager:
         'weapon.reload.rifle2': 0.08,
 
         'usable.pickup': 0.15,
+
+        'humanoid.death': 0.15,
     }
 
     @staticmethod
