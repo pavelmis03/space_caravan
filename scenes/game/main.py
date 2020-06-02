@@ -46,18 +46,6 @@ class MainScene(LevelScene):
         result.update({'grid': self.grid.to_dict()})
         return result
 
-    def load_player(self):
-        super().load_player()
-        player_icon = PlayerIcon(self, self.game.controller, self.player)
-        self.interface_objects.append(player_icon)
-
-        weapons_display = WeaponsDisplay(self.player, Point(100, 0))
-        self.interface_objects.append(weapons_display)
-        ammo_display = AmmoDisplay(self, self.game.controller, Point(240, 20), self.player.weapon)
-        self.interface_objects.append(ammo_display)
-        essence_display = EssenceDisplay(self, self.game.controller, (1, 0), self.common_data)
-        self.interface_objects.append(essence_display)
-
     def game_logic(self):
         super().game_logic()
         if len(self.enemies) == 0:

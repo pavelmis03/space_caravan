@@ -46,13 +46,13 @@ class LevelScene(GameScene):
         self.game_objects = []
         self.enemies = []
         self.relative_center = Point(0, 0)
-        self.game_paused = False
+        self.game_paused_by = 0
         self.plane = GamePlane()
         self.grid = None
         self.player = None
         self.pause_manager = PauseManager(self, self.game.controller)
-        self.interface_objects.append(self.pause_manager)
         self.camera = Camera(self)
+
         self.e_timer = Timer(UsableObject.ACTIVATION_COOLDOWN)  # таймер для "перезарядки" кнопки E
         self.e_timer.start()
 
@@ -70,6 +70,17 @@ class LevelScene(GameScene):
                                                 data_dict['game_objects'])
         self.enemies += from_list_of_dicts(self, data_dict['enemies'])
 
+    def create_state_display(self):
+        """
+        Создание объектов, отображающих состояние игрока и его оружия.
+        """
+        player_icon = PlayerIcon(self, self.game.controller, self.player)
+        self.interface_objects.append(player_icon)
+        weapons_display = WeaponsDisplay(self.player, Point(100, 0))
+        self.interface_objects.append(weapons_display)
+        ammo_display = AmmoDisplay(self, self.game.controller, Point(240, 20), self.player.weapon)
+        self.interface_objects.append(ammo_display)
+
     def load_player(self):
         """
         Загрузка игрока (он хранится отдельно от сцен). Вызывается автоматически в Game.
@@ -77,13 +88,10 @@ class LevelScene(GameScene):
         self.player = Player(self, self.game.controller, Point(0, 0))
         self.player.load()
         self.player.move(self.PLAYER_SPAWN_POINT)
+        self.create_state_display()
 
-        player_icon = PlayerIcon(self, self.game.controller, self.player)
-        self.interface_objects.append(player_icon)
-        weapons_display = WeaponsDisplay(self.player, Point(100, 0))
-        self.interface_objects.append(weapons_display)
-        ammo_display = AmmoDisplay(self, self.game.controller, Point(240, 20), self.player.weapon)
-        self.interface_objects.append(ammo_display)
+    def load_common_data(self):
+        super().load_common_data()
         essence_display = EssenceDisplay(self, self.game.controller, (1, 0), self.common_data)
         self.interface_objects.append(essence_display)
 
@@ -108,6 +116,10 @@ class LevelScene(GameScene):
         self.relative_center = self.camera.get_relative_center(
             not LevelScene.FIXED_CAMERA)
 
+    def interface_logic(self):
+        super().interface_logic()
+        self.pause_manager.process_logic()
+
     def delete_destroyed_objects(self):
         """
         Удаление уничтоженных элементов.
@@ -117,7 +129,7 @@ class LevelScene(GameScene):
 
     def process_all_logic(self):
         super().process_all_logic()
-        if not self.game_paused:
+        if self.game_paused_by == 0:
             self.game_logic()
 
         self.delete_destroyed_objects()
@@ -135,6 +147,10 @@ class LevelScene(GameScene):
             item.process_draw()
 
         self.player.process_draw()
+
+    def interface_draw(self):
+        super().interface_draw()
+        self.pause_manager.process_draw()
 
     def process_all_draw(self):
         self.clear_screen()
