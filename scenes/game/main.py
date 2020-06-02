@@ -1,5 +1,6 @@
 from typing import Dict
 
+from drawable_objects.interface.essence_display import EssenceDisplay
 from drawable_objects.ladder import Ladder
 from drawable_objects.interface.ammo_display import AmmoDisplay
 from drawable_objects.interface.player_icon import PlayerIcon
@@ -22,7 +23,7 @@ class MainScene(LevelScene):
         super().__init__(game, 'planet' + str(planet_index))
         self.planet_index = planet_index
         enemy_count_display = EnemyCountDisplay(self, self.game.controller,
-                                                (1, 0), self.enemies)
+                                                (1, 0.1), self.enemies)
         self.interface_objects.append(enemy_count_display)
 
     def initialize(self):
@@ -54,6 +55,8 @@ class MainScene(LevelScene):
         self.interface_objects.append(weapons_display)
         ammo_display = AmmoDisplay(self, self.game.controller, Point(240, 20), self.player.weapon)
         self.interface_objects.append(ammo_display)
+        essence_display = EssenceDisplay(self, self.game.controller, (1, 0), self.common_data)
+        self.interface_objects.append(essence_display)
 
     def game_logic(self):
         super().game_logic()
