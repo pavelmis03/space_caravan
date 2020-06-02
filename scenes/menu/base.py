@@ -1,7 +1,6 @@
 """
 Основа для создания сцен меню
 """
-
 from drawable_objects.menu.widget_group import WidgetGroup
 from scenes.conservable import ConservableScene
 
@@ -13,6 +12,7 @@ class MenuScene(ConservableScene):
     :param game: игра, создающая сцену
     """
     DATA_FILENAME = None
+    CLEAR_COLOR = (40, 40, 80)
 
     def __init__(self, game):
         super().__init__(game, self.DATA_FILENAME)
