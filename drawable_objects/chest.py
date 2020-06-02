@@ -5,6 +5,7 @@ from geometry.point import Point
 
 from scenes.base import Scene
 from controller.controller import Controller
+from utils.sound import SoundManager
 
 
 class Chest(UsableObject):
@@ -15,6 +16,7 @@ class Chest(UsableObject):
     IMAGE_ZOOM = 1.5
     IMAGE_NAME ='level_objects.boxes.box' #значение по умолчанию. изменяется в set_image
     USAGE_RADIUS = 80
+    ACTIVATION_SOUND = 'usable.chest'
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
         super().__init__(scene, controller, Chest.IMAGE_NAME,
@@ -28,6 +30,7 @@ class Chest(UsableObject):
     def activate(self):
         if self.__activated:
             return
+        SoundManager.play_sound(Chest.ACTIVATION_SOUND)
         self.set_activated(True)
 
         drop = create_drop(self.__drop, self.scene, self.controller, self.pos)

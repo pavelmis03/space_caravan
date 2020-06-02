@@ -2,12 +2,14 @@ from typing import Dict
 from drawable_objects.drop.base import Drop
 from controller.controller import Controller
 from geometry.point import Point
+from utils.sound import SoundManager
 from weapons.weapons import WEAPON_ON_FLOOR_IMAGE, WEAPON_VOCABULARY, weapon_to_dict
 from random import randint
 
 
 class WeaponDrop(Drop):
     IMAGE_NAME = 'other.gun'  # временное значение. будет изменено в set_weapon_dict
+    ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
                  pos: Point, angle: float = 0, zoom: float = 1.15, usage_radius: float = 75):
@@ -16,6 +18,7 @@ class WeaponDrop(Drop):
     # напиши нормальный get_image
 
     def activate(self):
+        SoundManager.play_sound(WeaponDrop.ACTIVATION_SOUND)
         is_player_holding_fist = self.scene.player.weapon.__class__.__name__ == 'Fist'
         old_weapon = weapon_to_dict(self.scene.player.weapon)
         self.scene.player.set_weapon(self.__weapon_dict)
@@ -48,6 +51,7 @@ class WeaponDrop(Drop):
 
 class MedKitDrop(Drop):
     IMAGE_NAME = 'other.medkit'
+    ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
                  pos: Point, angle: float = 0, zoom: float = 0.15, usage_radius: float = 75):
@@ -56,12 +60,14 @@ class MedKitDrop(Drop):
                          (pos + POS_TRANSITION), angle, zoom, usage_radius)
 
     def activate(self):
+        SoundManager.play_sound(MedKitDrop.ACTIVATION_SOUND)
         self.scene.player.hp = self.scene.player.MAXHP
         self.destroy()
 
 
 class EssenceDrop(Drop):
     IMAGE_NAME = 'other.essence'
+    ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
                  pos: Point, angle: float = 0, zoom: float = 0.15, usage_radius: float = 75):
@@ -69,12 +75,14 @@ class EssenceDrop(Drop):
                          pos, angle, zoom, usage_radius)
 
     def activate(self):
+        SoundManager.play_sound(EssenceDrop.ACTIVATION_SOUND)
         self.scene.common_data.essence += 1
         self.destroy()
 
 
 class FuelDrop(Drop):
     IMAGE_NAME = 'other.fuel'
+    ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
                  pos: Point, angle: float = 0, zoom: float = 0.15, usage_radius: float = 75):
@@ -82,6 +90,7 @@ class FuelDrop(Drop):
                          pos, angle, zoom, usage_radius)
 
     def activate(self):
+        SoundManager.play_sound(FuelDrop.ACTIVATION_SOUND)
         MINIMUM_ADD = 75
         MAXIMUM_ADD = 125
         self.scene.common_data.fuel += randint(MINIMUM_ADD, MAXIMUM_ADD)
