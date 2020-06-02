@@ -90,6 +90,7 @@ class Weapon(GameSprite):
 class RangedWeapon(Weapon):
 
     SHOOT_SOUND = 'weapon.attack.default'
+    RELOAD_SOUND = 'weapon.reload.pistol'
 
     def __init__(self, owner, interface_image, bullets_in_magazine, magazine_size, main_attack_interval,
                  reload_time, ammo_type, accuracy, damage,
@@ -136,6 +137,7 @@ class RangedWeapon(Weapon):
             self.reload_request = False
             return
         if not self.is_reloading:
+            SoundManager.play_sound(self.RELOAD_SOUND)
             self.is_reloading = self.reload_time
             self.cooldown = self.reload_time
 

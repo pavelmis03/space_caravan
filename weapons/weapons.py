@@ -10,6 +10,7 @@ class Pistol(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.pistol'
     SHOOT_SOUND = 'weapon.attack.pistol'
+    RELOAD_SOUND = 'weapon.reload.pistol'
     DESCRIPTION = """
                 Оружие: Пистолет
                 Тип: Средние дистанции
@@ -34,6 +35,7 @@ class BurstFiringPistol(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.burst_firing_pistol'
     SHOOT_SOUND = 'weapon.attack.pistol'
+    RELOAD_SOUND = 'weapon.reload.pistol'
     DESCRIPTION = """
                     Оружие: Пистолет стреляющий очередями
                     Тип: Средние дистанции
@@ -57,6 +59,7 @@ class Shotgun(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.shotgun'
     SHOOT_SOUND = 'weapon.attack.shotgun'
+    RELOAD_SOUND = 'weapon.reload.shotgun'
     DESCRIPTION = """
                    Оружие: Дробовик
                    Тип: Средние дистанции
@@ -80,6 +83,7 @@ class TwoBarrelShotgun(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.two_barrel_shotgun'
     SHOOT_SOUND = 'weapon.attack.shotgun'
+    RELOAD_SOUND = 'weapon.reload.shotgun'
     DESCRIPTION = """
                     Оружие: Двустволка
                     Тип: Дальние дистанции
@@ -108,6 +112,7 @@ class ThreeBarrelShotgun(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.three_barrel_shotgun'
     SHOOT_SOUND = 'weapon.attack.shotgun'
+    RELOAD_SOUND = 'weapon.reload.shotgun'
     DESCRIPTION = """
                     Оружие: Трёхстволка
                     Тип: Средние дистанции
@@ -136,6 +141,7 @@ class TacticalShotgun(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.tactical_shotgun'
     SHOOT_SOUND = 'weapon.attack.shotgun'
+    RELOAD_SOUND = 'weapon.reload.shotgun'
     DESCRIPTION = """
                     Оружие: Тактический дробовик
                     Тип: Средние дистанции
@@ -160,6 +166,7 @@ class AutomaticRifle(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.automatic_rifle'
     SHOOT_SOUND = 'weapon.attack.rifle2'
+    RELOAD_SOUND = 'weapon.reload.rifle2'
     DESCRIPTION = """
                 Оружие: Автоматическая винтовка
                 Тип: Средние дистанции
@@ -183,6 +190,7 @@ class SniperRifle(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.sniper_rifle'
     SHOOT_SOUND = 'weapon.attack.rifle1'
+    RELOAD_SOUND = 'weapon.reload.rifle1'
     DESCRIPTION = """
                 Оружие: Снайперская винтовка
                 Тип: Дальние дистанции
@@ -206,6 +214,7 @@ class OldRifle(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.old_rifle'
     SHOOT_SOUND = 'weapon.attack.rifle2'
+    RELOAD_SOUND = 'weapon.reload.rifle2'
     DESCRIPTION = """
                         Оружие: Довоенная винтовка
                         Тип: Дальние дистанции
@@ -230,6 +239,7 @@ class SemiAutomaticRifle(RangedWeapon):
     """
     IMAGE_NAME = 'weapons.semi_automatic_rifle'
     SHOOT_SOUND = 'weapon.attack.rifle1'
+    RELOAD_SOUND = 'weapon.reload.rifle1'
     DESCRIPTION = """
                         Оружие: Полуавтоматическая винтовка
                         Тип: Дальние дистанции

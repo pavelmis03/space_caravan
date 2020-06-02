@@ -19,12 +19,18 @@ class SoundManager:
         'ui.press1': 0.08,
         'ui.press2': 0.08,
         'ui.keytype': 0.8,
+
         'weapon.attack.pistol': 0.15,
         'weapon.attack.shotgun': 0.04,
         'weapon.attack.rifle1': 0.04,
         'weapon.attack.rifle2': 0.1,
         'weapon.attack.sword': 0.15,
-        'weapon.attack.fist': 0.15
+        'weapon.attack.fist': 0.15,
+
+        'weapon.reload.pistol': 0.08,
+        'weapon.reload.shotgun': 0.08,
+        'weapon.reload.rifle1': 0.08,
+        'weapon.reload.rifle2': 0.08,
     }
 
     @staticmethod
