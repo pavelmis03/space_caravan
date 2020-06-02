@@ -19,16 +19,18 @@ class GameDataManager:
         self.__space_name = None
         self.__space_path = None
 
-    def set_current_space(self, space_name):
+    @property
+    def space_name(self):
+        return self.__space_name
+
+    @space_name.setter
+    def space_name(self, value: str):
         """
         Установка текущего космоса. Операции с хранилищем космоса происходят без передачи его имени, так что этот
         метод нужно вызывать перед ними.
         """
-        self.__space_name = space_name
-        if space_name:
-            self.__space_path = os.path.join(self.STORAGE_ROOT, space_name)
-        else:
-            self.__space_name = None
+        self.__space_name = value
+        self.__space_path = os.path.join(self.STORAGE_ROOT, value)
 
     def create_space_storage(self):
         """
@@ -41,29 +43,29 @@ class GameDataManager:
         if os.path.exists(self.__space_path):
             shutil.rmtree(self.__space_path)
 
-    def __get_file_path(self, file_name) -> str:
-        if self.__space_name:
+    def __get_file_path(self, file_name: str, in_space: bool = True) -> str:
+        if in_space:
             return os.path.join(self.__space_path, file_name + '.json')
         else:
             return os.path.join(self.STORAGE_ROOT, file_name + '.json')
 
-    def read_data(self, file_name: str) -> Dict:
+    def read_data(self, file_name: str, in_space: bool = True) -> Dict:
         """
         Чтение словаря из файла в формате json.
         """
-        file_path = self.__get_file_path(file_name)
+        file_path = self.__get_file_path(file_name, in_space)
         file = open(file_path, 'r')
         data_str = file.read()
         file.close()
         data_dict = json.loads(data_str)
         return data_dict
 
-    def write_data(self, file_name: str, data_dict: Dict):
+    def write_data(self, file_name: str, data_dict: Dict, in_space: bool = True):
         """
         Запись словаря в файл в формате json.
         """
         data_str = json.dumps(data_dict, sort_keys=True, indent=2)
-        file_path = self.__get_file_path(file_name)
+        file_path = self.__get_file_path(file_name, in_space)
         file = open(file_path, 'w')
         file.write(data_str)
         file.close()
@@ -76,8 +78,8 @@ class GameDataManager:
                 folders.append(name)
         return folders
 
-    def file_exists(self, file_name: str):
-        file_path = self.__get_file_path(file_name)
+    def file_exists(self, file_name: str, in_space: bool = True):
+        file_path = self.__get_file_path(file_name, in_space)
         return os.path.exists(file_path) and os.path.isfile(file_path)
 
 

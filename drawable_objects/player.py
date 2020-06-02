@@ -259,16 +259,14 @@ class Player(Humanoid):
 
     def die(self, angle_of_attack=0):
         """
-        Смерть
+        Смерть. При гибели клона включается сцена гибели клона. При гибели игрока космос отмечается проигранным
+        для последующего удаления и включается сцена конца игры.
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
         if self.is_clone:
-            from scenes.game.spaceship import SpaceshipScene
             self.is_dead = True
-            scene = SpaceshipScene(self.scene.game)
-            self.scene.game.set_scene(scene)
+            self.scene.game.set_scene_with_index(self.scene.game.CLONE_KILLED_SCENE_INDEX)
         else:
-            from scenes.menu.main import MainMenuScene
-            scene = MainMenuScene(self.scene.game)
-            self.scene.game.set_scene(scene)
+            self.scene.game.set_current_space_lost()
+            self.scene.game.set_scene_with_index(self.scene.game.GAMEOVER_SCENE_INDEX)

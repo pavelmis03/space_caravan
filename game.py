@@ -55,7 +55,8 @@ class Game:
         ]
         self.__current_scene = None
         self.set_scene_with_index(0)
-        self.__to_delete = list()
+        self.__scenes_to_delete = list()
+        self.__lost_spaces = list()
 
     @property
     def size(self) -> Tuple[int, int]:
@@ -102,7 +103,7 @@ class Game:
     def set_scene(self, scene: Scene):
         """
         Установка заданной сцены текущей. Старая сцена может быть None; если она не None, она сохраняется. Если
-        старая сцена игровая, она готовится к удалению. Далее новой сцене подгружается игрок и объект с общими
+        старая сцена игровая, она отправляется на удаление. Далее новой сцене подгружается игрок и объект с общими
         данными игры, если необходимо. После вызывается конструирование новой сцены и обновляется __current_scene.
 
         :param scene: ссылка на новую сцену
@@ -110,13 +111,11 @@ class Game:
         if self.__current_scene:
             self.__current_scene.save()
         if isinstance(self.__current_scene, GameScene):
-            self.__to_delete.append(self.__current_scene)
+            self.__scenes_to_delete.append(self.__current_scene)
         if isinstance(scene, GameScene):
             scene.load_common_data()
         if isinstance(scene, LevelScene):
             scene.load_player()
-        if isinstance(scene, MenuScene) and not isinstance(scene, RedirectingScene):
-            self.file_manager.set_current_space(None)
         scene.construct()
         self.__current_scene = scene
 
@@ -127,6 +126,12 @@ class Game:
         scene = self.__scenes_classes[scene_index](self)
         self.set_scene(scene)
 
+    def set_current_space_lost(self):
+        """
+        Установка текущего космоса проигранным для дальшейшего удаления.
+        """
+        self.__lost_spaces.append(self.file_manager.space_name)
+
     def end(self):
         self.__running = False
 
@@ -134,9 +139,18 @@ class Game:
         """
         Как такового удаления не происходит, вызывается подчистка сборщиком мусора python'а.
         """
-        if len(self.__to_delete):
-            self.__to_delete.clear()
+        if len(self.__scenes_to_delete):
+            self.__scenes_to_delete.clear()
             gc.collect()
+
+    def __delete_lost_spaces(self):
+        """
+        Удаление проигранных космосов.
+        """
+        for space_name in self.__lost_spaces:
+            self.file_manager.space_name = space_name
+            self.file_manager.delete_space_storage()
+        self.__lost_spaces.clear()
 
     def main_loop(self):
         """
@@ -145,5 +159,6 @@ class Game:
         while self.__running:
             self.__controller.iteration()
             self.__current_scene.iteration()
+            self.__delete_lost_spaces()
             self.__delete_garbage_scenes()
         sys.exit(0)
