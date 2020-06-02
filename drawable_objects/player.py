@@ -11,6 +11,7 @@ from constants.directions import DIRECTIONS
 from constants.mouse_buttons import MouseButtonID
 from scenes.base import Scene
 from controller.controller import Controller
+from utils.sound import SoundManager
 
 from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
 
@@ -35,6 +36,7 @@ class Player(Humanoid):
     ADD_TO_GAME_PLANE = True
     IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 1.15
+    SLOT_SOUND = 'weapon.slot'
     CONTROLS = [
         pygame.K_d,
         pygame.K_w,
@@ -192,8 +194,10 @@ class Player(Humanoid):
                 if not self.controller.is_key_pressed(Player.NUMBERIC_WEAPON_SLOTS_CONTROLS[self.weapon_slots_ind]):
                     for ind in range(len(self.NUMBERIC_WEAPON_SLOTS_CONTROLS)):
                         if self.controller.is_key_pressed(Player.NUMBERIC_WEAPON_SLOTS_CONTROLS[ind]):
+                            SoundManager.play_sound(Player.SLOT_SOUND)
                             self.change_weapon_request = ind
                 if self.controller.is_key_pressed(Player.TAB_WEAPON_SLOTS_CONTROLS):
+                    SoundManager.play_sound(Player.SLOT_SOUND)
                     self.change_weapon_request = 1 + self.weapon_slots_ind == 1
         if self.change_weapon_request != -1 and self.weapon.combo == 0:
             self.change_weapon(self.change_weapon_request)

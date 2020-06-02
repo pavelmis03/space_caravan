@@ -20,6 +20,8 @@ class SoundManager:
         'ui.press2': 0.08,
         'ui.keytype': 0.8,
 
+        'weapon.slot': 0.15,
+
         'weapon.attack.pistol': 0.15,
         'weapon.attack.shotgun': 0.04,
         'weapon.attack.rifle1': 0.04,
