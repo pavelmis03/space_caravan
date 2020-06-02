@@ -35,12 +35,12 @@ class FeaturesArranger:
     Расстановщик характеристик планет. На основе уже сгенерированных центров планет генерирует сами объекты
     планет. Назначает планетам биомы вероятностно, но по определенным правилам: чем больше абсцисса центра,
     тем сложнее в среднем биом для прохождения. Относительная вероятность появления биома задается соответствующей
-    функцией из PROBABILITY_FUNC. Также первой в списке планет идет стартовая. У стартовой планеты всегда самый
-    легкий биом.
+    функцией из PROBABILITY_FUNC. Также первой в списке планет идет стартовая. У стартовой планеты всегда
+    демобиом.
     """
 
     PROBABILITY_FUNC = [
-        HillFunction(0, 250, 1.5),
+        HillFunction(0, 250, 1.7),
         HillFunction(250, 250),
         HillFunction(500, 250, 0.75),
         HillFunction(750, 250),
@@ -72,7 +72,7 @@ class FeaturesArranger:
                 self.__spacemap_scene,
                 self.__controller,
                 planets_centers[i],
-                self.__get_random_value(planets_centers[i].x) if i > 0 else 0,
+                self.__get_random_value(planets_centers[i].x) + 1 if i > 0 else 0,
             ))
         return planets
 
