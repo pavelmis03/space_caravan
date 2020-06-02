@@ -36,6 +36,8 @@ class Player(Humanoid):
     ADD_TO_GAME_PLANE = True
     IMAGE_NAME = 'moving_objects.player'
     IMAGE_ZOOM = 1.15
+    HURT_SOUND = 'humanoid.hurt'
+    DEATH_SOUND = 'humanoid.death'
     SLOT_SOUND = 'weapon.slot'
     CONTROLS = [
         pygame.K_d,
@@ -267,6 +269,7 @@ class Player(Humanoid):
 
         :param angle_of_attack: угол, под которым Enemy ударили(для анимаций)
         """
+        SoundManager.play_sound(Player.DEATH_SOUND)
         if self.is_clone:
             from scenes.game.spaceship import SpaceshipScene
             self.is_dead = True

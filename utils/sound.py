@@ -20,7 +20,7 @@ class SoundManager:
         'ui.press2': 0.08,
         'ui.keytype': 0.8,
 
-        'weapon.slot': 0.15,
+        'weapon.slot': 0.04,
 
         'weapon.attack.pistol': 0.15,
         'weapon.attack.shotgun': 0.04,
@@ -37,6 +37,7 @@ class SoundManager:
         'usable.pickup': 0.15,
         'usable.chest': 0.4,
 
+        'humanoid.hurt': 0.04,
         'humanoid.death': 0.15,
     }
 

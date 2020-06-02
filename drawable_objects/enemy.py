@@ -341,6 +341,7 @@ class Enemy(CommandHumanoid):
 
     IMAGE_ZOOM = 1.2
     IMAGE_NAME = 'moving_objects.Enemy'
+    HURT_SOUND = 'humanoid.hurt'
     DEATH_SOUND = 'humanoid.death'
 
     ANGULAR_VELOCITY = 6 / 65
