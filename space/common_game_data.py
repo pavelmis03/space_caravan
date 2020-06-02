@@ -49,6 +49,12 @@ class CommonGameData:
         self.__scene.game.file_manager.write_data(self.DATA_FILENAME, self.to_dict())
 
     def is_space_completed(self) -> bool:
+        """
+        Пройден ли космос. Пока планеты не сгенерированы, не пройден. Пока сгенерированные планеты не пройдены,
+        не пройден. Иначе пройден.
+        """
+        if len(self.planet_completed) == 0:
+            return False
         for completed in self.planet_completed.values():
             if not completed:
                 return False
