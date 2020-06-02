@@ -1,6 +1,7 @@
 from typing import List, Dict
 
 from drawable_objects.interface.ammo_display import AmmoDisplay
+from drawable_objects.interface.essence_display import EssenceDisplay
 from drawable_objects.interface.pause_manager import PauseManager
 from drawable_objects.interface.player_icon import PlayerIcon
 from drawable_objects.interface.weapons_display import WeaponsDisplay
@@ -83,6 +84,8 @@ class LevelScene(GameScene):
         self.interface_objects.append(weapons_display)
         ammo_display = AmmoDisplay(self, self.game.controller, Point(240, 20), self.player.weapon)
         self.interface_objects.append(ammo_display)
+        essence_display = EssenceDisplay(self, self.game.controller, (1, 0), self.common_data)
+        self.interface_objects.append(essence_display)
 
     def save(self):
         super().save()
