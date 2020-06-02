@@ -9,14 +9,13 @@ from geometry.rectangle import Rectangle
 from scenes.base import Scene
 from scenes.game.base import GameScene
 from scenes.game.level import LevelScene
-from scenes.menu.base import MenuScene
 from scenes.menu.about import AboutMenuScene
 from scenes.menu.main import MainMenuScene
 from scenes.menu.settings import SettingsMenuScene
 from scenes.menu.space_choice import SpaceChoiceMenuScene
-from scenes.menu.redirecting.base import RedirectingScene
 from scenes.menu.redirecting.gameover import GameoverScene
 from scenes.menu.redirecting.clone_killed import CloneKilledScene
+from scenes.menu.redirecting.victory import VictoryScene
 from utils.image import ImageManager
 from utils.game_data_manager import GameDataManager
 from utils.sound import SoundManager
@@ -34,6 +33,7 @@ class Game:
     SPACE_CHOICE_MENU_SCENE_INDEX = 3
     GAMEOVER_SCENE_INDEX = 4
     CLONE_KILLED_SCENE_INDEX = 5
+    VICTORY_SCENE_INDEX = 6
 
     def __init__(self, width: int = 1000, height: int = 700):
         pygame.mixer.init(22100, -16, 2, 64)  # removes sound delay
@@ -52,6 +52,7 @@ class Game:
             SpaceChoiceMenuScene,
             GameoverScene,
             CloneKilledScene,
+            VictoryScene,
         ]
         self.__current_scene = None
         self.set_scene_with_index(0)
