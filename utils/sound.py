@@ -14,6 +14,21 @@ class SoundManager:
     """
     sounds = {}
     SOUND_PATH = 'sounds'
+    VOLUME = {
+        'ui.select': 0.08,
+        'ui.press1': 0.08,
+        'ui.press2': 0.08,
+        'ui.keytype': 0.8
+    }
+
+    @staticmethod
+    def configure_volume():
+        """
+        Установка конкретных значений, что бы звуки были
+        примерно одной громкости
+        """
+        for name, volume in SoundManager.VOLUME.items():
+            SoundManager.set_volume(name, volume)
 
     @staticmethod
     def load_all():
@@ -74,6 +89,12 @@ class SoundManager:
 
     @staticmethod
     def set_volume(sound_path: str, value: float = 1):
+        """
+        Изменение громкости звука
+        :param sound_path: имя звука (путь к нему)
+        :param value: значение
+        :return:
+        """
         sound = SoundManager.get_sound(sound_path)
         if isinstance(sound, dict):
             raise ValueError(sound + ' is a dir, not a file')

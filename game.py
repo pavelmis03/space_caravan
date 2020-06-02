@@ -42,6 +42,7 @@ class Game:
         self.__running = True
         ImageManager.load_all()
         SoundManager.load_all()
+        SoundManager.configure_volume()
         self.__file_manager = GameDataManager()
 
         self.__controller = Controller(self)
