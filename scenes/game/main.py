@@ -46,7 +46,10 @@ class MainScene(LevelScene):
         result.update({'grid': self.grid.to_dict()})
         return result
 
-    def game_logic(self):
-        super().game_logic()
+    def save(self):
+        """
+        Во избежание ошибок враги подсчитываются перед самым сохранением сцены.
+        """
         if len(self.enemies) == 0:
             self.common_data.planet_completed[self.planet_index] = True
+        super().save()
