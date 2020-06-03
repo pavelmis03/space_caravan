@@ -12,6 +12,8 @@ class ConservableScene(Scene):
     :param game: игра, создающая сцену
     :param data_filename: имя файла, в который сохраняется сцена (расширение не указывать)
     """
+    SAVING_IN_SPACE = True
+
     def __init__(self, game, data_filename: str):
         super().__init__(game)
         self.data_filename = data_filename
@@ -21,7 +23,7 @@ class ConservableScene(Scene):
         Конструирование сцены. Вызывается автоматически игрой при установке сцены текущей. Сцена сама выбирает,
         загружаться или инициализироваться.
         """
-        if self.data_filename and self.game.file_manager.file_exists(self.data_filename):
+        if self.data_filename and self.game.file_manager.file_exists(self.data_filename, self.SAVING_IN_SPACE):
             self.load()
         else:
             self.initialize()
@@ -37,14 +39,14 @@ class ConservableScene(Scene):
         """
         Загрузка сцены из файла.
         """
-        self.from_dict(self.game.file_manager.read_data(self.data_filename))
+        self.from_dict(self.game.file_manager.read_data(self.data_filename, self.SAVING_IN_SPACE))
 
     def save(self):
         """
         Сохранение сцены в файл (если self.data_filename не None).
         """
         if self.data_filename:
-            self.game.file_manager.write_data(self.data_filename, self.to_dict())
+            self.game.file_manager.write_data(self.data_filename, self.to_dict(), self.SAVING_IN_SPACE)
 
     def from_dict(self, data_dict: Dict):
         """

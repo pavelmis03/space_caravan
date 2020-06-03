@@ -11,6 +11,8 @@ from geometry.vector import length
 from random import randint
 from utils.random import is_random_proc
 from math import pi
+
+from utils.sound import SoundManager
 from utils.timer import Timer, EMPTY_TIMER
 from constants.grid import CELL_SIZE
 from drawable_objects.drop.enemy_drop import AmmoDrop
@@ -339,6 +341,8 @@ class Enemy(CommandHumanoid):
 
     IMAGE_ZOOM = 1.2
     IMAGE_NAME = 'moving_objects.Enemy'
+    HURT_SOUND = 'humanoid.hurt'
+    DEATH_SOUND = 'humanoid.death'
 
     ANGULAR_VELOCITY = 6 / 65
 
@@ -430,6 +434,7 @@ class Enemy(CommandHumanoid):
         """
         self.weapon.destroy()
         self.destroy()
+        SoundManager.play_sound(Enemy.DEATH_SOUND)
 
         if self._is_range:
             self.__drop_ammo()

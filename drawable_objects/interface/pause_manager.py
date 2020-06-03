@@ -52,18 +52,17 @@ class PauseManager(AbstractObject):
         """
         Пауза игры
         """
-        self.scene.game_paused_by += 1
+        self.scene.pause(self)
         self.active = True
 
     def resume(self):
         """
         Отмена паузы игры
         """
-        self.scene.game_paused_by -= 1
+        self.scene.resume()
         self.active = False
         self.scene.player.weapon.cooldown = 7
 
     def process_draw(self):
-        if self.active:
-            self.scene.screen.blit(self.surface, (0, 0))
-            self.menu.process_draw()
+        self.scene.screen.blit(self.surface, (0, 0))
+        self.menu.process_draw()
