@@ -7,6 +7,7 @@ from drawable_objects.interface.player_icon import PlayerIcon
 from drawable_objects.interface.weapons_display import WeaponsDisplay
 from drawable_objects.player import Player
 from drawable_objects.usable_object import UsableObject
+from drawable_objects.base import DrawableObject
 from geometry.point import Point
 from scenes.game.base import GameScene
 from utils.camera import Camera
@@ -46,7 +47,7 @@ class LevelScene(GameScene):
         self.game_objects = []
         self.enemies = []
         self.relative_center = Point(0, 0)
-        self.game_paused_by = 0
+        self.pause_object = None
         self.plane = GamePlane()
         self.grid = None
         self.player = None
@@ -99,6 +100,21 @@ class LevelScene(GameScene):
         super().save()
         self.player.save()
 
+    def pause(self, pause_object: DrawableObject):
+        """
+        Пауза игры.
+
+        :param pause_object: объект, ставящий игру на паузу; этот объект не должен быть в interface_objects,
+        его отрисовка и логика будут вызываться отдельно все то время, пока игра на паузе
+        """
+        self.pause_object = pause_object
+
+    def resume(self):
+        """
+        Продолжение игры после паузы.
+        """
+        self.pause_object = None
+
     def game_logic(self):
         """
         Игровая логика в следующем порядке: сетка, игровые объекты и враги, игрок.
@@ -128,9 +144,11 @@ class LevelScene(GameScene):
         delete_destroyed(self.enemies)
 
     def process_all_logic(self):
-        super().process_all_logic()
-        if self.game_paused_by == 0:
+        if not self.pause_object:
+            super().process_all_logic()
             self.game_logic()
+        else:
+            self.pause_object.process_logic()
 
         self.delete_destroyed_objects()
         self.e_timer.process_logic()
@@ -148,11 +166,9 @@ class LevelScene(GameScene):
 
         self.player.process_draw()
 
-    def interface_draw(self):
-        super().interface_draw()
-        self.pause_manager.process_draw()
-
     def process_all_draw(self):
         self.clear_screen()
         self.game_draw()
         self.interface_draw()
+        if self.pause_object:
+            self.pause_object.process_draw()
