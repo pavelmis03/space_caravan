@@ -9,7 +9,7 @@
 
 Состояние
 ---------
-
+* :ref:`game` и сцены, которые в нем переключаются (:ref:`scenes`)
 * drawable_objects -> :ref:`drawable_objects.enemy`
 
 Шаблонный метод
