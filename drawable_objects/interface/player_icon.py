@@ -11,7 +11,12 @@ class PlayerIcon(SpriteObject):
     Иконка игрока. Нужна для отображения хп игрока.
     меняет картинку в зависимоти от hp
     """
-    IMAGES = ['interface.player_icon.state2', 'interface.player_icon.state1']
+    IMAGES = [
+        'interface.player_icon.state4',
+        'interface.player_icon.state3',
+        'interface.player_icon.state2',
+        'interface.player_icon.state1',
+    ]
     IMAGE_ZOOM = 0.5
 
     def __init__(self, scene: Scene, controller: Controller, player: Player):
