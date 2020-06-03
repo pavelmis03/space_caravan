@@ -53,9 +53,9 @@ class SpaceChoiceMenuScene(MenuScene):
         if space_name == '' or space_name in self.space_names_list_widget:
             return
         self.space_name_textbox.value = ''
-        self.game.file_manager.set_current_space(space_name)
-        self.game.file_manager.create_space_storage()
         self.space_names_list_widget.add_element(space_name)
+        self.game.file_manager.space_name = space_name
+        self.game.file_manager.create_space_storage()
         self.init_spaceship_scene()
 
     def delete_space(self):
@@ -67,7 +67,7 @@ class SpaceChoiceMenuScene(MenuScene):
         if not space_name:
             return
         self.space_names_list_widget.remove_element(space_name)
-        self.game.file_manager.set_current_space(space_name)
+        self.game.file_manager.space_name = space_name
         self.game.file_manager.delete_space_storage()
 
     def start_game(self):
@@ -78,6 +78,6 @@ class SpaceChoiceMenuScene(MenuScene):
         space_name = self.space_names_list_widget.choice
         if not space_name:
             return
-        self.game.file_manager.set_current_space(space_name)
+        self.game.file_manager.space_name = space_name
         spaceship_scene = SpaceshipScene(self.game)
         self.game.set_scene(spaceship_scene)
