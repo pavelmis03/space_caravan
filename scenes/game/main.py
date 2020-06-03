@@ -8,7 +8,7 @@ from drawable_objects.interface.weapons_display import WeaponsDisplay
 from drawable_objects.interface.enemy_count_display import EnemyCountDisplay
 from scenes.game.level import LevelScene
 from geometry.point import Point
-from map.level.grid import LevelGrid
+from map.level.grid import LevelGrid, DemoLevel
 
 
 class MainScene(LevelScene):
@@ -29,8 +29,12 @@ class MainScene(LevelScene):
     def initialize(self):
         super().initialize()
 
-        self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
-        self.grid.biom = self.common_data.planet_biom[self.planet_index]
+        biom = self.common_data.planet_biom[self.planet_index]
+        if biom == 0: # demo biom:
+            self.grid = DemoLevel(self, self.game.controller, Point(0, 0))
+        else:
+            self.grid = LevelGrid(self, self.game.controller, Point(0, 0))
+        self.grid.biom = biom
         self.grid.initialize()
 
         self.game_objects.append(Ladder(

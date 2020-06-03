@@ -1,7 +1,7 @@
 import weapons.weapons
 # from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
 
-from typing import Optional, Dict
+from typing import Optional, Dict, Tuple
 
 from controller.controller import Controller
 from drawable_objects.base import Humanoid
@@ -132,6 +132,7 @@ class CommandHumanoid(MovingHumanoid):
         """
         Воспроизведение объекта из словаря.
         """
+        self.set_img((data_dict['ranged_img'], data_dict['melee_img']))
         self.set_weapon(data_dict['weapon'])
         super().from_dict(data_dict)
 
@@ -145,15 +146,30 @@ class CommandHumanoid(MovingHumanoid):
         в высокой скорости нет необходимости:
         '''
         result.update(weapons.weapons.weapon_to_dict(self.weapon))
+        result.update({'ranged_img': self.__ranged_img})
+        result.update({'melee_img': self.__melee_img})
 
         return result
 
     def set_weapon(self, weapon_name):
+        '''
+        установить текущее оружие (которое в руках)
+        '''
         self.weapon = weapons.weapons.WEAPON_VOCABULARY[weapon_name](self)
         if self.weapon.type == 'Ranged':
-            self.image_name = 'moving_objects.enemy'
+            self.image_name = self.__ranged_img
         else:
-            self.image_name = 'moving_objects.enemy_with_sword'
+            self.image_name = self.__melee_img
+
+    def set_img(self, imgs: Tuple[str, str]):
+        """
+        установить картинку. стоит использовать до set_weapon, если враг не погружается from_dict
+
+        :param imgs: Tuple[ranged weapon, melee weapon]
+        """
+        self.__ranged_img = imgs[0]
+        self.__melee_img = imgs[1]
+        self.image_name = self.__ranged_img
 
     def process_logic(self):
         """

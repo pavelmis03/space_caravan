@@ -91,6 +91,7 @@ class LevelGrid(CollisionGrid):
                         level_settings[self.biom].chest_weapon_drop,
                         level_settings[self.biom].CHEST_OTHER_DROP,
                         level_settings[self.biom].CHEST_WEAPON_DROP_CHANCE,
+                        level_settings[self.biom].enemy_img,
                         level_settings[self.biom].chest_imgs)
         enemy_generator.generate()
 
@@ -149,3 +150,10 @@ class LevelGrid(CollisionGrid):
         Может ли услышать Enemy Player'а
         """
         return self.enemy_interaction_manager.is_hearing_player(enemy)
+
+
+class DemoLevel(LevelGrid):
+    def initialize(self):
+        ARR_W = 75
+        ARR_H = 50
+        self._fill_arr(CELL_SIZE, CELL_SIZE, ARR_W, ARR_H)
