@@ -7,7 +7,7 @@ from utils.sound import SoundManager
 
 
 class WeaponAnalisor(UsableObject):
-    IMAGE_ZOOM = 0.04
+    IMAGE_ZOOM = 0.05
     ACTIVATE_SOUND = 'usable.terminal'
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
