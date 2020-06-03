@@ -30,7 +30,7 @@ class SoundManager:
         'weapon.attack.fist': 0.15,
 
         'weapon.reload.pistol': 0.08,
-        'weapon.reload.shotgun': 0.08,
+        'weapon.reload.shotgun': 0.03,
         'weapon.reload.rifle1': 0.08,
         'weapon.reload.rifle2': 0.08,
 
