@@ -57,10 +57,10 @@ LevelSettings('level.simple_planet.floor2', 'level.simple_planet.wall',
                   ('moving_objects.enemy_violet_rifle', 'moving_objects.enemy_with_sword'),
                 ('level_objects.boxes.box', 'level_objects.boxes.box_open'),
                 [(35, 'SniperRifle'), (35, 'Shotgun'), (30, 'AutomaticRifle')],
-                  [(50, 'Sword'), (30, 'AutomaticRifle'), (20, 'TacticalShotgun')]),
+                  [(10, 'Sword'), (40, 'AutomaticRifle'), (50, 'TacticalShotgun')]),
     LevelSettings('level.mushroom_planet.floor1', 'level.mushroom_planet.wall',
                   ('moving_objects.enemy_mushroom_rifle', 'moving_objects.enemy_with_sword'),
                 ('level_objects.boxes.box', 'level_objects.boxes.box_open'),
                 [(25, 'AutomaticRifle'), (35, 'Shotgun'), (40, 'TacticalShotgun')],
-                  [(40, 'AutomaticRifle'), (60, 'TacticalShotgun')])
+                  [(50, 'Sword'), (40, 'AutomaticRifle'), (10, 'TacticalShotgun')])
 ]
