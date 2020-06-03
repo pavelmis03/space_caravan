@@ -59,16 +59,17 @@ class MessageDisplay(AbstractObject):
         """
         Показ сообщения и приостановка игры
         """
-        self.scene.game_paused = self.active = True
+        self.scene.pause(self)
+        self.active = True
 
     def resume(self):
         """
         Отмена паузы игры и закрытие сообщения
         """
-        self.scene.game_paused = self.active = False
+        self.scene.resume()
+        self.active = False
         self.scene.player.weapon.cooldown = 7
 
     def process_draw(self):
-        if self.active:
-            self.scene.screen.blit(self.surface, (0, 0))
-            self.buttons.process_draw()
+        self.scene.screen.blit(self.surface, (0, 0))
+        self.buttons.process_draw()

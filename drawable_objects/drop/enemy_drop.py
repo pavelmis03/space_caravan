@@ -3,9 +3,12 @@ from drawable_objects.drop.base import Drop
 from geometry.point import Point
 from random import randint
 
+from utils.sound import SoundManager
+
 
 class AmmoDrop(Drop):
     IMAGE_NAME = 'other.ammo'
+    ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
                  pos: Point, angle: float = 0, zoom: float = 0.15, usage_radius: float = 42):
@@ -18,6 +21,7 @@ class AmmoDrop(Drop):
             self.destroy()
 
     def activate(self):
+        SoundManager.play_sound(AmmoDrop.ACTIVATION_SOUND)
         MINIMUM_AMMO = 1
         MAXIMUM_AMMO = 5
         ammo_cnt = randint(MINIMUM_AMMO, MAXIMUM_AMMO)

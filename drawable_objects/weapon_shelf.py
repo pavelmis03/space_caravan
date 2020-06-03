@@ -4,6 +4,7 @@ from controller.controller import Controller
 from drawable_objects.usable_object import UsableObject
 from geometry.point import Point
 from scenes.base import Scene
+from utils.sound import SoundManager
 from weapons.weapons import WEAPON_VOCABULARY, WEAPON_ON_FLOOR_IMAGE
 
 
@@ -12,6 +13,7 @@ class WeaponShelf(UsableObject):
     IMAGE_NAME = 'level_objects.weapon_shelf'
     IMAGE_ZOOM = 1.15
     COOLDOWN_TIME = 20
+    ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0, weapon: str = None):
         super().__init__ (scene, controller, self.IMAGE_NAME,
@@ -37,6 +39,7 @@ class WeaponShelf(UsableObject):
     def activate(self):
         if not(self.changing_cooldown or
                (self.scene.player.weapon.__class__.__name__ == 'Fist' and self.weapon is None)):
+            SoundManager.play_sound(WeaponShelf.ACTIVATION_SOUND)
             self.changing_cooldown = self.COOLDOWN_TIME
             self.scene.player.weapon.cooldown = 0
             self.scene.player.weapon.burst = 0
