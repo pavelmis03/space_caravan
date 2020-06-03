@@ -3,29 +3,34 @@
 
 Стратегия
 ---------
-controller.controller
-drawable_objects.menu.text
+
+* controller -> :ref:`controller.controller`
+* drawable_objects -> :ref:`drawable_objects.menu.text`
 
 Состояние
 ---------
-drawable_objects.enemy
+
+* drawable_objects -> :ref:`drawable_objects.enemy`
 
 Шаблонный метод
 ---------------
-utils.is_marked_manager
+
+* utils -> :ref:`utils.is_marked_manager`
 
 Цепочка обязанностей
 --------------------
-enemy_interaction_with_grid.manager...
+
+* enemy_interaction_with_grid -> :ref:`enemy_interaction_with_grid.manager` и классы-помощники из
+  :ref:`enemy_interaction_with_grid.hearing.manager` и :ref:`enemy_interaction_with_grid.vision.manager`
 
 Фасад
 -----
-map.level.grid (вместе с методами предков) - фасад
+
+* map -> :ref:`map.level.grid` вместе с методами предков
 
 Декоратор
 ---------
-map.grid и map.grid_index_manager
-map.collision_grid.collision_grid
-map.collision_grid.draw_static_manager
-map.collision_grid.intersection_manager)
-map.level.grid и (map.level.map_generator, map.level.objects_generator)
+
+* map -> :ref:`map.grid`
+* drawable_objects -> :ref:`drawable_objects.enemy`
+
