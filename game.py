@@ -34,13 +34,16 @@ class Game:
     GAMEOVER_SCENE_INDEX = 4
     CLONE_KILLED_SCENE_INDEX = 5
     VICTORY_SCENE_INDEX = 6
+    TITLE = 'Space Caravan'
 
     def __init__(self, width: int = 1000, height: int = 700):
         pygame.mixer.init(22100, -16, 2, 64)  # removes sound delay
         pygame.init()
+        pygame.display.set_caption(Game.TITLE)
         self.size = (width, height)
         self.__running = True
         ImageManager.load_all()
+        pygame.display.set_icon(ImageManager.get_image('other.icon'))
         SoundManager.load_all()
         SoundManager.configure_volume()
         self.__file_manager = GameDataManager()
