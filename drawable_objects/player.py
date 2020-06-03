@@ -14,6 +14,7 @@ from controller.controller import Controller
 from utils.sound import SoundManager
 
 from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
+from drawable_objects.drop.chest_drop import WeaponDrop
 
 
 class Player(Humanoid):
@@ -273,6 +274,15 @@ class Player(Humanoid):
         SoundManager.play_sound(Player.DEATH_SOUND)
         if self.is_clone:
             self.is_dead = True
+
+            for item in self.weapon_slots:
+                weapon_dict = weapon_to_dict(item)
+                if weapon_dict['weapon'] == 'Fist': #кулак не нужно дропать
+                    continue
+                drop = WeaponDrop(self.scene, self.controller, self.pos)
+                drop.set_weapon_dict(weapon_dict)
+                self.scene.game_objects.append(drop)
+
             self.scene.game.set_scene_with_index(self.scene.game.CLONE_KILLED_SCENE_INDEX)
         else:
             self.scene.game.set_current_space_lost()
