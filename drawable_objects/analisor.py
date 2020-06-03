@@ -14,7 +14,7 @@ class WeaponAnalisor(UsableObject):
         super().__init__(scene, controller, 'level_objects.analisor',
                          pos, angle, WeaponAnalisor.IMAGE_ZOOM)
         self.message = MessageDisplay(self.scene, self.scene.game.controller, self.scene.player.weapon.DESCRIPTION)
-        self.scene.interface_objects.append(self.message)
+
     def activate(self):
         SoundManager.play_sound(WeaponAnalisor.ACTIVATE_SOUND)
         self.message.buttons.widgets[0].set_text(self.scene.player.weapon.DESCRIPTION)
