@@ -55,7 +55,7 @@ level_settings = [
                   [(16, 'SniperRifle'), (28, 'BurstFiringPistol'),
                    (28, 'Shotgun'), (28, 'AutomaticRifle')]),
     LevelSettings('level.violet_planet.floor1', 'level.violet_planet.wall',
-                  ('enemy.violet.range', 'enemy.simple.melee'),
+                  ('enemy.violet.range', 'enemy.violet.melee'),
                 ('level_objects.boxes.box', 'level_objects.boxes.box_open'),
                 [(10, 'Sword'), (30, 'SniperRifle'), (30, 'Shotgun'), (30, 'AutomaticRifle')],
                   [(10, 'Knife'), (40, 'AutomaticRifle'), (50, 'TacticalShotgun')]),
