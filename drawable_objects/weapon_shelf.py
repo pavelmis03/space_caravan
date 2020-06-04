@@ -43,7 +43,7 @@ class WeaponShelf(UsableObject):
             SoundManager.play_sound(WeaponShelf.ACTIVATION_SOUND)
             self.changing_cooldown = self.COOLDOWN_TIME
             self.scene.player.weapon.cooldown = 0
-            self.scene.player.weapon.burst = 0
+            self.scene.player.weapon.combo = 0
             if self.scene.player.weapon.type == 'Ranged':
                 self.scene.player.weapon.reload_request = False
                 self.scene.player.weapon.is_reloading = 0

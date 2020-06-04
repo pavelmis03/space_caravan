@@ -146,7 +146,7 @@ class TacticalShotgun(RangedWeapon):
                     Оружие: Тактический дробовик
                     Тип: Средние дистанции
                     Урон: 45
-                    Точность: 42
+                    Точность: 40
                     Интервал стрельбы: 9
                     Время перезарядки: 70
                     С самого начала у этого дробовика была какая-то тактика
@@ -157,7 +157,7 @@ class TacticalShotgun(RangedWeapon):
         super().__init__(owner, interface_image='interface.weapon_icons.tactical_shotgun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=6,
                          main_attack_interval=9, reload_time=70, ammo_type='Shotgun',
-                         accuracy=42, damage=45, is_automatic=True, shells=4)
+                         accuracy=40, damage=45, is_automatic=True, shells=4)
 
 
 class AutomaticRifle(RangedWeapon):
@@ -170,18 +170,18 @@ class AutomaticRifle(RangedWeapon):
     DESCRIPTION = """
                 Оружие: Автоматическая винтовка
                 Тип: Средние дистанции
-                Урон: 80
-                Точность: 60
-                Интервал стрельбы: 4
+                Урон: 30
+                Точность: 40
+                Интервал стрельбы: 2
                 Время перезарядки: 60
                 Эта винтовка настолько автоматическая, что ты ей, впрочем, и не нужен...
                 """
 
-    def __init__(self, owner, bullets_in_magazine=25):
+    def __init__(self, owner, bullets_in_magazine=30):
         super().__init__(owner, interface_image='interface.weapon_icons.automatic_rifle',
-                         bullets_in_magazine=bullets_in_magazine, magazine_size=25,
-                         main_attack_interval=4, reload_time=60, ammo_type='Rifle',
-                         accuracy=60, damage=80, is_automatic=True)
+                         bullets_in_magazine=bullets_in_magazine, magazine_size=30,
+                         main_attack_interval=2, reload_time=60, ammo_type='Rifle',
+                         accuracy=40, damage=45, is_automatic=True)
 
 
 class SniperRifle(RangedWeapon):
@@ -196,15 +196,15 @@ class SniperRifle(RangedWeapon):
                 Тип: Дальние дистанции
                 Урон: 120
                 Точность: 110
-                Интервал стрельбы: 20
-                Время перезарядки: 80
+                Интервал стрельбы: 25
+                Время перезарядки: 100
                 Она настолько крутая, что с ее помощью ты сможешь попасть в глаз на расстоянии 300 м, правда себе...  
                 """
 
     def __init__(self, owner, bullets_in_magazine=5):
         super().__init__(owner, interface_image='interface.weapon_icons.sniper_rifle',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=5,
-                         main_attack_interval=20, reload_time=80, ammo_type='Rifle',
+                         main_attack_interval=25, reload_time=100, ammo_type='Rifle',
                          accuracy=110, damage=120)
 
 

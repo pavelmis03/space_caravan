@@ -25,7 +25,7 @@ def transplant_soul_between_bodies(soulless_body):
         player.weapon.is_reloading = 0
         player.weapon.reload_request = False
     player.weapon.cooldown = 0
-    player.weapon.burst = 0
+    player.weapon.combo = 0
     player.weapon_slots[player.weapon_slots_ind] = player.weapon
     player.change_weapon_request = -1
     player.change_weapon_cooldown = 0
@@ -60,7 +60,7 @@ class CloneCapsule(UsableObject):
     """
     IMAGE_NAME = 'level_objects.clone'
     IMAGE_ZOOM = 0.38
-    CLONE_COST = 0
+    CLONE_COST = 3
     COOLDOWN_TIME = 30
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
@@ -89,7 +89,7 @@ class CloneCapsule(UsableObject):
                 if self.scene.common_data.essence >= CloneCapsule.CLONE_COST:
                     self.scene.common_data.essence -= CloneCapsule.CLONE_COST
                     self.scene.player.weapon.cooldown = 0
-                    self.scene.player.weapon.burst = 0
+                    self.scene.player.weapon.combo = 0
                     if self.scene.player.weapon.type == 'Ranged':
                         self.scene.player.weapon.is_reloading = 0
                         self.scene.player.weapon.reload_request = False
