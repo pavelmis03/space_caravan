@@ -1,13 +1,12 @@
 import pygame
 
+from typing import Dict
+
 from geometry.point import Point
 from controller.controller import Controller
 from scenes.base import Scene
 from utils.image import ImageManager
-
-from geometry.distances import dist
-from math import cos
-from math import sin
+from utils.sound import SoundManager
 
 
 class AbstractObject:
@@ -23,7 +22,6 @@ class AbstractObject:
     def __init__(self, scene: Scene, controller: Controller):
         self.scene = scene
         self.controller = controller
-        self.type = ''
 
     def process_logic(self):
         """
@@ -85,7 +83,8 @@ class DrawableObject(AbstractObject):
 
 class SpriteObject(DrawableObject):
     """
-    Базовый класс объекта с текстурой. Имеет абсолютную позицию на экране и угол поворота.
+    Базовый класс объекта с текстурой. Имеет абсолютную позицию на экране и угол поворота. На этом уровне
+    наследования появляются загрузка и сохранение.
 
     :param scene: сцена объекта
     :param controller: ссылка на объект контроллера
@@ -101,6 +100,25 @@ class SpriteObject(DrawableObject):
         self.image_name = image_name
         self.angle = angle
         self.zoom = zoom
+
+    def from_dict(self, data_dict: Dict):
+        """
+        Воспроизведение объекта из словаря.
+        """
+        new_pos = Point()
+        new_pos.from_dict(data_dict['pos'])
+        self.move(new_pos)
+        self.angle = data_dict['angle']
+
+    def to_dict(self) -> Dict:
+        """
+        Запись характеристик объекта в словарь.
+        """
+        return {
+            'pos': self.pos.to_dict(),
+            'angle': self.angle,
+            'classname': self.__class__.__name__
+        }
 
     def process_draw(self):
         ImageManager.process_draw(
@@ -128,19 +146,23 @@ class GameSprite(SpriteObject):
     :param angle: угол поворота объекта
     :param zoom: масштаб картинки
     """
+    ADD_TO_GAME_PLANE = False
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
                  zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
-        self.scene.plane.insert(self, self.pos)
         self.enabled = True
         self.rotation_offset = None
+        if self.ADD_TO_GAME_PLANE:
+            self.scene.plane.insert(self, self.pos)
 
     def destroy(self):
         """
         Уничтожение игрового объекта. Будет уничтожен на ближайшей итерации своей сценой.
         """
         self.enabled = False
+        if self.ADD_TO_GAME_PLANE:
+            self.scene.plane.erase(self, self.pos)
 
     def process_draw(self):
         """
@@ -160,7 +182,8 @@ class GameSprite(SpriteObject):
                                   self.scene.screen, self.zoom, self.angle, self.rotation_offset)
 
     def move(self, new_pos):
-        self.scene.plane.do_step(self, self.pos, new_pos)
+        if self.ADD_TO_GAME_PLANE:
+            self.scene.plane.do_step(self, self.pos, new_pos)
         self.pos = new_pos
 
 
@@ -170,8 +193,65 @@ class Humanoid(GameSprite):
     """
     HITBOX_RADIUS = 25
     MAXHP = 100
+    HURT_SOUND = ''
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
                  zoom: float = 1):
         super().__init__(scene, controller, image_name, pos, angle, zoom)
-        self.hp = Humanoid.MAXHP
+        self.hp = self.MAXHP
+        self.weapon = None
+
+    def process_draw(self):
+        super().process_draw()
+        self.weapon.process_draw()
+
+    def get_damage(self, damage, angle_of_attack=0):
+        """
+        Получение урона
+
+        :param damage: урон
+        :param angle_of_attack: угол, под которым был получен урон(для анимаций)
+        """
+        if damage > 0:
+            self.hp -= damage
+            if self.hp <= 0:
+                self.hp = 0
+                self.die(angle_of_attack)
+            else:
+                SoundManager.play_sound(self.HURT_SOUND)
+
+    def to_dict(self) -> Dict:
+        result = super().to_dict()
+        result.update({'hp': self.hp})
+        return result
+
+    def from_dict(self, data_dict):
+        super().from_dict(data_dict)
+        self.hp = data_dict['hp']
+
+    def die(self, angle_of_attack=0):
+        """
+        Смерть
+
+        :param angle_of_attack: угол, под которым был получен урон(для анимаций)
+        """
+
+
+class Animation(GameSprite):
+
+    IMAGE_NAMES = []
+
+    def __init__(self, scene, controller, pos: Point, angle: float = 0, one_frame_vision_time=3):
+        super().__init__(scene, controller,
+                           self.IMAGE_NAMES[0], pos, angle)
+        self.image_ind = -1
+        self.one_frame_vision_time = one_frame_vision_time
+
+    def process_logic(self):
+        self.image_name = self.IMAGE_NAMES[self.image_ind // self.one_frame_vision_time]
+        self.image_ind += 1
+        if self.image_ind >= len(self.IMAGE_NAMES) * self.one_frame_vision_time:
+            self.animation_end()
+
+    def animation_end(self):
+        self.destroy()

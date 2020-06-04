@@ -1,6 +1,5 @@
-from typing import List
+from typing import List, Dict
 
-from controller.controller import Controller
 from drawable_objects.base import GameSprite
 from geometry.point import Point
 from geometry.rectangle import Rectangle, create_rectangle_with_left_top
@@ -8,7 +7,7 @@ from geometry.segment import Segment
 from map.collision_grid.draw_static_manager import GridDrawStaticManager
 from map.collision_grid.intersection_manager import GridIntersectionManager
 from map.grid import Grid
-from scenes.base import Scene
+from constants.grid import CELL_SIZE
 
 
 class CollisionGrid(Grid):
@@ -21,20 +20,23 @@ class CollisionGrid(Grid):
     Генерируется в map_construction, далее преобразует
     инты в объекты.
     """
-    FILENAMES = ['level.wall1', 'level.floor3']
+    def initialize(self):
+        self._fill_arr(CELL_SIZE, CELL_SIZE)
 
-    def __init__(self, scene: Scene, controller: Controller, pos: Point,
-                 cell_width: int, cell_height: int,
-                 width: int = 100, height: int = 100):
-        super().__init__(scene, controller, pos, 0, cell_width, cell_height, width, height)
-
+    def _fill_arr(self, cell_width: int, cell_height: int,
+                  width_arr: int = 100, height_arr: int = 100):
+        super()._fill_arr(0, cell_width, cell_height, width_arr, height_arr)
         self.map_construction()
 
         self.transform_ints_to_objects()
-        self.static_draw_manager = GridDrawStaticManager(self)
-        self.grid_intersection_manager = GridIntersectionManager(self)
+
+        self._other_initialize()
 
         self.enemy_generation()
+
+    def _other_initialize(self):
+        self.static_draw_manager = GridDrawStaticManager(self)
+        self.grid_intersection_manager = GridIntersectionManager(self)
 
     def enemy_generation(self):
         """
@@ -62,10 +64,14 @@ class CollisionGrid(Grid):
                 filename_index = int(bool(self.arr[i][j]))
 
                 self.arr[i][j] = GameSprite(self.scene, self.controller,
-                                            CollisionGrid.FILENAMES[filename_index], Point(pos_x, pos_y))
+                                            self._get_filename(filename_index), Point(pos_x, pos_y))
 
     def is_passable(self, i: int, j: int) -> bool:
-        return self.arr[i][j].image_name != CollisionGrid.FILENAMES[0]
+        return self.arr[i][j].image_name != self._get_filename(0)
+
+    def _get_filename(self, filename_index: int) -> str:
+        FILENAMES = ['level.spaceship.wall', 'level.spaceship.floor']
+        return FILENAMES[filename_index]
 
     def get_collision_rect(self, i: int, j: int) -> Rectangle:
         h = self.cell_height

@@ -112,9 +112,25 @@ class Rectangle:
         self._top_left -= movement
         self._bottom_right += movement
 
+    @property
+    def size(self):
+        """
+        Размеры прямоугольника (в ввиде Point)
+        """
+        return self.bottom_right - self.top_left
+
+    @size.setter
+    def size(self, new_size: Point):
+        self.width = new_size.x
+        self.height = new_size.y
+
+    def __eq__(self, other):
+        """ Overload eq operation for tests """
+        return self.top_left == other.top_left and self.size == other.size
+
     def is_inside(self, point):
         """
-        Проверка принадлежности точки прямоугольнику.
+        Проверка принадлежности точки прямоугольнику (точки на сторонах также ему принадлежат).
 
         :param point: точка
         :return: логическое значение
@@ -122,6 +138,19 @@ class Rectangle:
         if self._top_left.x > point.x or self._top_left.y > point.y:
             return False
         if self._bottom_right.x < point.x or self._bottom_right.y < point.y:
+            return False
+        return True
+
+    def is_strictly_inside(self, point):
+        """
+        Лежит ли точка строго внутри прямоуголиника.
+
+        :param point: точка
+        :return: логическое значение
+        """
+        if self._top_left.x >= point.x or self._top_left.y >= point.y:
+            return False
+        if self._bottom_right.x <= point.x or self._bottom_right.y <= point.y:
             return False
         return True
 

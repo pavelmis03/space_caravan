@@ -12,6 +12,7 @@
 
    developer_docs/code
    architecture_docs/arch
+   architecture_docs/patterns
 
 
 Инструменты

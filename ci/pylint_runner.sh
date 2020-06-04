@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-pylint game.py run.py weapons utils scenes geometry enemy_interaction_with_grid drawable_objects controller constants console
+pylint console constants controller drawable_objects enemy_interaction_with_grid game.py geometry map run.py scenes space utils weapons

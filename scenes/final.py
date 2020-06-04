@@ -1,6 +1,6 @@
 # coding=utf-8
 from constants.color import COLOR
-from drawable_objects.text import Text
+from drawable_objects.menu.text import Text
 from scenes.base import Scene
 
 

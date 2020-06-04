@@ -1,9 +1,13 @@
+ .. _other:
+
 other
 =====
+
+ .. _game:
 
 game.py
 -------
 
-.. automodule:: game
+ .. automodule:: game
     :members:
     :undoc-members:
