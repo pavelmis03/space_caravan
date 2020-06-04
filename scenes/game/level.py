@@ -115,6 +115,15 @@ class LevelScene(GameScene):
         """
         self.pause_object = None
 
+    def update_relative_center(self):
+        """
+        Обновление центра относительных координат сцены. Чтобы управление персонажем было наиболее удобным,
+        должно вызываться в правильный момент: после перемещение персонажа по клавишам, но перед его поворотом
+        к мыши.
+        """
+        self.relative_center = self.camera.get_relative_center(
+            not LevelScene.FIXED_CAMERA)
+
     def game_logic(self):
         """
         Игровая логика в следующем порядке: сетка, игровые объекты и враги, игрок.
@@ -129,8 +138,6 @@ class LevelScene(GameScene):
             item.process_logic()
 
         self.player.process_logic()
-        self.relative_center = self.camera.get_relative_center(
-            not LevelScene.FIXED_CAMERA)
 
     def interface_logic(self):
         super().interface_logic()
