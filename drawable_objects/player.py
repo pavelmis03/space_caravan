@@ -143,8 +143,9 @@ class Player(Humanoid):
             self.DATA_FILENAME, self.to_dict())
 
     def process_logic(self):
-        self._turn_to_mouse()
         self._movement_controls()
+        self.scene.update_relative_center()
+        self._turn_to_mouse()
         self._weapon_controls()
         self.weapon.process_logic()
         self.sprite_manager()
