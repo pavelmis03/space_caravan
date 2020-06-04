@@ -2,7 +2,8 @@
 Файл содержит словарь названий классов, которые могут сохраняться и подгружаться из списка с помощью процедур из
 game_data_manager.py. Так можно загрузить список объектов разных классов вперемешку.
 """
-from drawable_objects.analisor import WeaponAnalisor
+from drawable_objects.analyser import WeaponAnalyser
+from drawable_objects.bed import Bed
 from drawable_objects.player import Player #не удалять. без этой строчки все ломается
 from drawable_objects.ladder import Ladder
 from drawable_objects.planet import Planet
@@ -21,8 +22,9 @@ CLASSES_BASE = {
     'Planet': Planet,
     'SpaceMapTerminal': SpaceMapTerminal,
     'CloneCapsule': CloneCapsule,
-    'WeaponAnalisor' : WeaponAnalisor,
+    'WeaponAnalyser' : WeaponAnalyser,
     'WeaponShelf': WeaponShelf,
+    'Bed': Bed,
     'Enemy': Enemy,
     # для сохранения оптимизированной структуры grid_interaction_with_enemy
     'GridRectangle': GridRectangle,

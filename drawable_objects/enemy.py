@@ -5,6 +5,7 @@ from typing import Optional, Dict, Tuple
 
 from controller.controller import Controller
 from drawable_objects.base import Humanoid
+from drawable_objects.particles import create_particles
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
 from geometry.vector import length
@@ -445,6 +446,16 @@ class Enemy(CommandHumanoid):
         Только ли начал поворачиваться
         """
         return self.__rotating_cycles == 0
+
+    def get_damage(self, damage, angle_of_attack=0):
+        """
+        Получение урона
+
+        :param damage: урон
+        :param angle_of_attack: угол, под которым был получен урон(для анимаций)
+        """
+        create_particles(self, damage, self.pos, angle_of_attack)
+        super().get_damage(damage, angle_of_attack)
 
     def die(self, angle_of_attack=0):
         """

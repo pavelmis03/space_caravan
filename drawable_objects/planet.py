@@ -38,7 +38,7 @@ class Planet(SpriteObject):
         'Mushroom',
     ]
     IMAGES = [
-        ('spacemap.demo_planet', 0.07),
+        ('spacemap.demo_planet', 0.45),
         ('spacemap.simple_planet', 0.07),
         ('spacemap.ice_planet', 0.35),
         ('spacemap.lava_planet', 0.3),

@@ -3,14 +3,13 @@ from drawable_objects.bullet import BULLET_CLASS
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
 from geometry.point import Point
-from utils.image import ImageManager
 from utils.sound import SoundManager
 from random import randrange
 from drawable_objects.slash import PlayerSlash, EnemySlash
 
 
 class Weapon(GameSprite):
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.gun'
     DESCRIPTION = """
                 Оружие: 
                 Тип: 
@@ -127,6 +126,10 @@ class RangedWeapon(Weapon):
         self.shells = shells
         self.type = 'Ranged'
         self._is_fired_this_tick = False
+        if self.is_automatic and self.owner.__class__.__name__ == 'Enemy' and self.main_attack_interval < 8 and\
+                self.combo_size == 1:
+            self.combo_size = 1 + 10 // self.main_attack_interval
+            self.combo_attack_interval = self.main_attack_interval
 
     def reload(self):
         """
@@ -146,8 +149,7 @@ class RangedWeapon(Weapon):
         Делает всё, что нужно после перезарядки
         """
         self.reload_request = False
-        ammo_to_add = min(
-            self.ammo, self.magazine_size - self.magazine)
+        ammo_to_add = min(self.ammo, self.magazine_size - self.magazine)
         self.magazine += ammo_to_add
         self.ammo -= ammo_to_add
         self.owner.ammo[self.ammo_type] -= ammo_to_add
@@ -158,7 +160,6 @@ class RangedWeapon(Weapon):
             self.is_reloading -= 1
             if not self.is_reloading:
                 self.end_reloading()
-
         self._is_fired_this_tick = False
         super().process_logic()
         if self.reload_request and not self.is_reloading and self.combo == 0:
@@ -212,6 +213,7 @@ class MeleeWeapon(Weapon):
         :param length: Длина клинка -> int
         """
         super().__init__(owner, interface_image, main_attack_interval)
+        self.zoom = 1.15
         self.length = owner.HITBOX_RADIUS + length
         self.type = 'Melee'
 
@@ -226,4 +228,6 @@ class MeleeWeapon(Weapon):
             self.scene.game_objects.append(EnemySlash(self.owner, self.length))
 
     def process_draw(self):
-        pass
+        if self.owner.__class__.__name__ != 'Player' and self.owner.__class__.__name__ != 'Enemy' and \
+                self.owner.__class__.__name__ != 'SoullessPlayer':
+            super().process_draw()
