@@ -8,7 +8,7 @@ from random import randint
 
 
 class WeaponDrop(Drop):
-    IMAGE_NAME = 'weapon.gun'  # временное значение. будет изменено в set_weapon_dict
+    IMAGE_NAME = 'weapons.gun'  # временное значение. будет изменено в set_weapon_dict
     ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
