@@ -3,7 +3,6 @@ from drawable_objects.bullet import BULLET_CLASS
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
 from geometry.point import Point
-from utils.image import ImageManager
 from utils.sound import SoundManager
 from random import randrange
 from drawable_objects.slash import PlayerSlash, EnemySlash

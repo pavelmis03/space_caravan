@@ -9,6 +9,11 @@ from weapons.weapons import WEAPON_VOCABULARY, weapon_to_dict
 
 
 def transplant_soul_between_bodies(soulless_body):
+    """
+    Swap всех параметров игрока и неуправляемоо тела. Фактически подмена тела игрока на заданное
+
+    :param soulless_body: тело, в которое перемещается игрок
+    """
     player = soulless_body.scene.player
 
     player.hp, soulless_body.hp = soulless_body.hp, player.hp
@@ -55,7 +60,7 @@ class CloneCapsule(UsableObject):
     """
     IMAGE_NAME = 'level_objects.clone'
     IMAGE_ZOOM = 0.38
-    CLONE_COST = 1
+    CLONE_COST = 3
     COOLDOWN_TIME = 30
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
@@ -81,13 +86,14 @@ class CloneCapsule(UsableObject):
                     if self.scene.player.weapon.type == 'Ranged':
                         self.scene.player.weapon.is_reloading = 0
                         self.scene.player.weapon.reload_request = False
-                    self.scene.player.weapon_slots[self.scene.player.weapon_slots_ind] = self.scene.player.weapon
 
                     self.scene.player.change_weapon_request = -1
                     self.scene.player.change_weapon_cooldown = 0
 
                     self.soulless_player = SoullessPlayer(self.scene.player)
                     self.scene.game_objects.append(self.soulless_player)
+
+                    self.scene.player.hp = self.scene.player.MAXHP
                     self.scene.player.ammo = {
                         'Pistol': 100,
                         'Shotgun': 30,
@@ -105,6 +111,12 @@ class CloneCapsule(UsableObject):
                 transplant_soul_between_bodies(self.soulless_player)
 
     def load_player_paremeters(self, player: Humanoid, data_dict: Dict):
+        """
+        Загрузка параметров неуправляемого игрока(клона или оригинала)
+
+        :param player: неуправляемое тело
+        :param data_dict: словарь, из которого происходит загрузка
+        """
         new_pos = Point()
         new_pos.from_dict(data_dict['player_pos'])
         player.move(new_pos)
@@ -188,7 +200,7 @@ class SoullessPlayer(Humanoid):
         self.weapon_slots_ind = player.weapon_slots_ind
         self.weapon = self.weapon_slots[self.weapon_slots_ind]
         self.weapon.owner = self
-        self.hp = 100
+        self.hp = player.hp
 
     def process_draw(self):
         super().process_draw()

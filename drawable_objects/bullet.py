@@ -1,5 +1,6 @@
-from drawable_objects.base import GameSprite
+from drawable_objects.base import GameSprite, Animation
 from drawable_objects.enemy import Enemy
+from drawable_objects.particles import create_particles
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.circle import Circle
@@ -72,19 +73,19 @@ class Bullet(GameSprite):
 
         :param next_pos: следующая позиция
         """
-        trajectory = Segment(self.pos, next_pos)
+        tragectory = Segment(self.pos, next_pos)
 
-        intersect_player_point = self.is_colliding_with_player(trajectory)
+        intersect_player_point = self.is_colliding_with_player(tragectory)
         intersect_player = [intersect_player_point, self.collision_with_player]
         intersection = intersect_player
 
-        intersect_walls_point = self.scene.grid.intersect_seg_walls(trajectory)
+        intersect_walls_point = self.scene.grid.intersect_seg_walls(tragectory)
         intersect_walls = [intersect_walls_point, self.collision_with_wall]
         if dist(intersect_walls[0], self.pos) < dist(intersection[0], self.pos):
             intersection = intersect_walls
 
         intersect_enemy_point, shooted_enemy = self.is_colliding_with_enemies(
-            trajectory)
+            tragectory)
         intersect_enemies = [intersect_enemy_point, self.collision_with_enemy]
         if dist(intersect_enemies[0], self.pos) < dist(intersection[0], self.pos):
             intersect_enemies[1](intersect_enemies[0], shooted_enemy)
@@ -186,7 +187,7 @@ class RifleBullet(Bullet):
                          image_name, zoom)
 
 
-class CollisionAnimation(GameSprite):
+class CollisionAnimation(Animation):
 
     IMAGE_NAMES = [
         'moving_objects.bullet.2',
@@ -194,19 +195,14 @@ class CollisionAnimation(GameSprite):
     ]
     IMAGE_ZOOMS = [0.7, 1.8]
 
-    def __init__(self, scene, controller, pos: Point, angle: float = 0):
+    def __init__(self, scene, controller, pos, angle = 0):
         pos = pos - vector_from_length_angle(8, angle)
-        super().__init__(scene, controller,
-                         CollisionAnimation.IMAGE_NAMES[0], pos, angle, CollisionAnimation.IMAGE_ZOOMS[0])
-        self.image_ind = 0
-        self.one_frame_vision_time = 3
+        super().__init__(scene, controller, pos, angle, one_frame_vision_time=3)
+        self.zoom = self.IMAGE_ZOOMS[0]
 
     def process_logic(self):
-        self.image_name = CollisionAnimation.IMAGE_NAMES[self.image_ind // self.one_frame_vision_time]
         self.zoom = CollisionAnimation.IMAGE_ZOOMS[self.image_ind // self.one_frame_vision_time]
-        self.image_ind += 1
-        if self.image_ind >= len(CollisionAnimation.IMAGE_NAMES) * self.one_frame_vision_time:
-            self.destroy()
+        super().process_logic()
 
 
 BULLET_CLASS = {
