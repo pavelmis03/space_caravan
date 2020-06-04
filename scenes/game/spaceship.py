@@ -8,6 +8,7 @@ from drawable_objects.space_map_terminal import SpaceMapTerminal
 from drawable_objects.clone_capsule import CloneCapsule
 from drawable_objects.weapon_shelf import WeaponShelf
 from drawable_objects.analyser import WeaponAnalyser
+from drawable_objects.base import GameSprite
 from drawable_objects.player import Player
 from space.common_game_data import CommonGameData
 from utils.timer import Timer
@@ -42,7 +43,6 @@ class SpaceshipScene(LevelScene):
         """
         self.player = Player(self, self.game.controller,
                              self.PLAYER_SPAWN_POINT)
-
         bed_spawn_point = Point(
             self.ROOM_WIDTH * 0.09 * self.CELL_SIZE,
             self.ROOM_HEIGHT * 0.17 * self.CELL_SIZE
@@ -88,6 +88,9 @@ class SpaceshipScene(LevelScene):
 
         self.common_data = CommonGameData(self)
         self.common_data.initialize()
+
+        self.space_ship = GameSprite(self, self.game.controller, 'other.spaceship', analisor_spawn_point)
+        self.game_objects.append(self.space_ship)
 
     def load_common_data(self):
         super().load_common_data()
