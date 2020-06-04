@@ -4,7 +4,6 @@ from random import randrange
 from geometry.point import Point
 from geometry.segment import Segment
 from geometry.vector import vector_from_length_angle
-from math import pi
 
 
 def create_particles(enemy, damage, pos, angle):
@@ -13,7 +12,7 @@ def create_particles(enemy, damage, pos, angle):
     elif damage < 100:
         amount = randrange(6, 10)
     else:
-        amount = randrange(8, 12)
+        amount = randrange(12, 17)
     for _ in range(amount):
         enemy.scene.game_objects.append(Particle(enemy, pos, angle))
 
@@ -21,10 +20,11 @@ def create_particles(enemy, damage, pos, angle):
 class Particle(Animation):
 
     IMAGE_NAMES = [
-        'moving_objects.particles.particle3',
-        'moving_objects.particles.particle2',
-        'moving_objects.particles.particle1',
+        'moving_objects.particles.particle23',
+        'moving_objects.particles.particle22',
+        'moving_objects.particles.particle21',
     ]
+    SECOND_TYPE_IMAGE = 'moving_objects.particles.particle24'
 
     def __init__(self, bullet, pos, angle):
         self.angle = angle + randrange(-100, 100) / 100
@@ -38,13 +38,20 @@ class Particle(Animation):
         if self.direction != Point(0, 0):
             next_pos = self.pos + self.direction
             tragectory = Segment(self.pos, next_pos)
-            if self.scene.grid.intersect_seg_walls(tragectory):
+            intersection_point = self.scene.grid.intersect_seg_walls(tragectory)
+            if intersection_point is not None:
+                self.pos = intersection_point
                 self.animation_end()
             else:
                 self.move(next_pos)
-            super().process_logic()
+                super().process_logic()
 
     def animation_end(self):
-        self.image_name = self.IMAGE_NAMES[2]
+        type = randrange(0, 100)
+        if type >= 70:
+            self.image_name = self.SECOND_TYPE_IMAGE
+            self.angle = randrange(0, 314)/100
+        else:
+            self.image_name = self.IMAGE_NAMES[2]
+            self.zoom *= 2
         self.direction = Point(0, 0)
-        self.zoom *= 2

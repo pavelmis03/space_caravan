@@ -11,7 +11,7 @@ class AmmoDrop(Drop):
     ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
-                 pos: Point, angle: float = 0, zoom: float = 0.15, usage_radius: float = 42):
+                 pos: Point, angle: float = 0, zoom: float = 1.15, usage_radius: float = 42):
         super().__init__(scene, controller, pos, angle, zoom, usage_radius)
 
     def process_logic(self):
