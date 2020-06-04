@@ -7,7 +7,7 @@ from utils.sound import SoundManager
 
 
 class AmmoDrop(Drop):
-    IMAGE_NAME = 'other.ammo'
+    IMAGE_NAME = 'drop.ammo'
     ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,

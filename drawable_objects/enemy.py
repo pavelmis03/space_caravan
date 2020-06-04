@@ -350,6 +350,10 @@ class CommandHumanoid(MovingHumanoid):
         """
         return self.weapon.type == 'Ranged'
 
+    def get_damage(self, damage=0, angle_of_attack=0):
+        self._is_aggred = True
+        super().get_damage(damage, angle_of_attack)
+
 
 class Enemy(CommandHumanoid):
     """

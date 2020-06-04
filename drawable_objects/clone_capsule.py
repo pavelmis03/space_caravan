@@ -190,7 +190,7 @@ class SoullessPlayer(Humanoid):
     """
     Неуправляемое тело игрока после создания клона
     """
-    IMAGE_NAME = 'other.person-up_without_weapon'
+    IMAGE_NAME = 'moving_objects.player.soulless'
     IMAGE_ZOOM = 0.25
 
     def __init__(self, player):

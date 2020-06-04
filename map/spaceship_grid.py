@@ -19,6 +19,10 @@ class SpaceshipGrid(CollisionGrid):
         super().__init__(scene, controller, pos)
         self.initialize()
 
+    def _get_filename(self, filename_index: int) -> str:
+        FILENAMES = ['level.spaceship.empty', 'level.spaceship.floor']
+        return FILENAMES[filename_index]
+
     def map_construction(self):
         width = self.top_left_corner_bias + self.room_width
         height = self.top_left_corner_bias + self.room_height

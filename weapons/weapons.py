@@ -261,7 +261,7 @@ class Sword(MeleeWeapon):
     """
     Меч
     """
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.gun'
     ATTACK_SOUND = 'weapon.attack.sword'
     DESCRIPTION = """
                             Оружие: Меч
@@ -274,7 +274,7 @@ class Sword(MeleeWeapon):
                             """
 
     def __init__(self, owner):
-        super().__init__(owner, interface_image='other.gun',
+        super().__init__(owner, interface_image='weapons.gun',
                          main_attack_interval=15, length=60)
 
 
@@ -380,7 +380,7 @@ WEAPON_ON_FLOOR_IMAGE = {
     'OldRifle': 'weapons_on_floor.old_rifle',
     'SemiAutomaticRifle': 'weapons_on_floor.semi_automatic_rifle',
     'Knife': 'weapons_on_floor.knife',
-    'Sword': 'other.gun',
+    'Sword': 'weapons_on_floor.knife', #не стоит его использовать
 }
 
 
