@@ -32,7 +32,7 @@ class LevelSettings:
 # список настроек для каждого уровня.
 level_settings = [
     LevelSettings('level.simple_planet.floor2', 'level.simple_planet.wall',
-                  ('enemy.demo.range', 'enemy.simple.melee'),
+                  ('enemy.simple.range', 'enemy.simple.melee'),
                   ('level_objects.boxes.box_wood', 'level_objects.boxes.box_wood_open'),
                   [(60, 'Pistol'), (40, 'TwoBarrelShotgun')],
                   [(50, 'TwoBarrelShotgun'), (50, 'OldRifle')]),

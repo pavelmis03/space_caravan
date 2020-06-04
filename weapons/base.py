@@ -9,7 +9,7 @@ from drawable_objects.slash import PlayerSlash, EnemySlash
 
 
 class Weapon(GameSprite):
-    IMAGE_NAME = 'other.gun'
+    IMAGE_NAME = 'weapons.gun'
     DESCRIPTION = """
                 Оружие: 
                 Тип: 

@@ -8,7 +8,7 @@ from random import randint
 
 
 class WeaponDrop(Drop):
-    IMAGE_NAME = 'other.gun'  # временное значение. будет изменено в set_weapon_dict
+    IMAGE_NAME = 'drop.gun'  # временное значение. будет изменено в set_weapon_dict
     ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
@@ -50,7 +50,7 @@ class WeaponDrop(Drop):
 
 
 class MedKitDrop(Drop):
-    IMAGE_NAME = 'other.medkit'
+    IMAGE_NAME = 'drop.medkit'
     ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
@@ -66,7 +66,7 @@ class MedKitDrop(Drop):
 
 
 class EssenceDrop(Drop):
-    IMAGE_NAME = 'other.essence'
+    IMAGE_NAME = 'drop.essence'
     ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
@@ -81,7 +81,7 @@ class EssenceDrop(Drop):
 
 
 class FuelDrop(Drop):
-    IMAGE_NAME = 'other.fuel'
+    IMAGE_NAME = 'drop.fuel'
     ACTIVATION_SOUND = 'usable.pickup'
 
     def __init__(self, scene, controller: Controller,
