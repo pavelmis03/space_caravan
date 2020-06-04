@@ -6,7 +6,7 @@ from geometry.optimized.segment import StaticSegment
 from map.level.rect.splitter import GridRectangle
 from geometry.sector import Sector
 from constants.grid import CELL_SIZE
-from math import pi
+from math import sqrt
 
 
 class EnemyVisionManager:
@@ -40,7 +40,7 @@ class EnemyVisionManager:
         если враг стоит вплотную к игроку, то он может быть не в vision_sector, но логично сказать,
         что он видит игрока
         '''
-        MIN_DISTANCE = CELL_SIZE / 2
+        MIN_DISTANCE = sqrt(2) / 2 * CELL_SIZE
         if not (segment.length < MIN_DISTANCE or self.__is_player_in_vision_sector(enemy, radius)):
             return False
 
