@@ -23,6 +23,7 @@ class WeaponShelf(UsableObject):
             self.weapon = None
         else:
             self.weapon = WEAPON_VOCABULARY[weapon](self)
+            self.weapon.image_name = WEAPON_ON_FLOOR_IMAGE[self.weapon.__class__.__name__]
         self.changing_cooldown = 0
         self.usage_radius = 40
 
@@ -42,7 +43,7 @@ class WeaponShelf(UsableObject):
             SoundManager.play_sound(WeaponShelf.ACTIVATION_SOUND)
             self.changing_cooldown = self.COOLDOWN_TIME
             self.scene.player.weapon.cooldown = 0
-            self.scene.player.weapon.burst = 0
+            self.scene.player.weapon.combo = 0
             if self.scene.player.weapon.type == 'Ranged':
                 self.scene.player.weapon.reload_request = False
                 self.scene.player.weapon.is_reloading = 0

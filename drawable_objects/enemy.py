@@ -1,10 +1,11 @@
 import weapons.weapons
 # from weapons.weapons import WEAPON_VOCABULARY - это единственное, что тут нужно из weapons
 
-from typing import Optional, Dict
+from typing import Optional, Dict, Tuple
 
 from controller.controller import Controller
 from drawable_objects.base import Humanoid
+from drawable_objects.particles import create_particles
 from geometry.point import Point
 from geometry.vector import polar_angle, vector_from_length_angle
 from geometry.vector import length
@@ -132,6 +133,7 @@ class CommandHumanoid(MovingHumanoid):
         """
         Воспроизведение объекта из словаря.
         """
+        self.set_img((data_dict['ranged_img'], data_dict['melee_img']))
         self.set_weapon(data_dict['weapon'])
         super().from_dict(data_dict)
 
@@ -145,15 +147,30 @@ class CommandHumanoid(MovingHumanoid):
         в высокой скорости нет необходимости:
         '''
         result.update(weapons.weapons.weapon_to_dict(self.weapon))
+        result.update({'ranged_img': self.__ranged_img})
+        result.update({'melee_img': self.__melee_img})
 
         return result
 
     def set_weapon(self, weapon_name):
+        '''
+        установить текущее оружие (которое в руках)
+        '''
         self.weapon = weapons.weapons.WEAPON_VOCABULARY[weapon_name](self)
         if self.weapon.type == 'Ranged':
-            self.image_name = 'moving_objects.enemy'
+            self.image_name = self.__ranged_img
         else:
-            self.image_name = 'moving_objects.enemy_with_sword'
+            self.image_name = self.__melee_img
+
+    def set_img(self, imgs: Tuple[str, str]):
+        """
+        установить картинку. стоит использовать до set_weapon, если враг не погружается from_dict
+
+        :param imgs: Tuple[ranged weapon, melee weapon]
+        """
+        self.__ranged_img = imgs[0]
+        self.__melee_img = imgs[1]
+        self.image_name = self.__ranged_img
 
     def process_logic(self):
         """
@@ -333,6 +350,10 @@ class CommandHumanoid(MovingHumanoid):
         """
         return self.weapon.type == 'Ranged'
 
+    def get_damage(self, damage=0, angle_of_attack=0):
+        self._is_aggred = True
+        super().get_damage(damage, angle_of_attack)
+
 
 class Enemy(CommandHumanoid):
     """
@@ -425,6 +446,16 @@ class Enemy(CommandHumanoid):
         Только ли начал поворачиваться
         """
         return self.__rotating_cycles == 0
+
+    def get_damage(self, damage, angle_of_attack=0):
+        """
+        Получение урона
+
+        :param damage: урон
+        :param angle_of_attack: угол, под которым был получен урон(для анимаций)
+        """
+        create_particles(self, damage, self.pos, angle_of_attack)
+        super().get_damage(damage, angle_of_attack)
 
     def die(self, angle_of_attack=0):
         """

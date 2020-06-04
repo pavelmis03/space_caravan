@@ -5,7 +5,8 @@ from enemy_interaction_with_grid.vision.room.graph import RoomsGraph
 from geometry.optimized.segment import StaticSegment
 from map.level.rect.splitter import GridRectangle
 from geometry.sector import Sector
-from math import pi
+from constants.grid import CELL_SIZE
+from math import sqrt
 
 
 class EnemyVisionManager:
@@ -35,8 +36,12 @@ class EnemyVisionManager:
         """
         segment = StaticSegment(
             enemy.pos, self._grid.scene.player.pos)  # важен порядок точек
-
-        if not self.__is_player_in_vision_sector(enemy, radius):
+        '''
+        если враг стоит вплотную к игроку, то он может быть не в vision_sector, но логично сказать,
+        что он видит игрока
+        '''
+        MIN_DISTANCE = sqrt(2) / 2 * CELL_SIZE
+        if not (segment.length < MIN_DISTANCE or self.__is_player_in_vision_sector(enemy, radius)):
             return False
 
         return not self.rooms_graph.is_seg_intersect_wall(segment)

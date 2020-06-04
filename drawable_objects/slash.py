@@ -60,7 +60,8 @@ class PlayerSlash(GameSprite):
             if dist(neighbour.pos, self.creator.pos) <= self.length + neighbour.HITBOX_RADIUS and is_angle_correct:
                 segment_to_neighbour = Segment(self.creator.pos, neighbour.pos)
                 if self.scene.grid.intersect_seg_walls(segment_to_neighbour) is None:
-                    neighbour.get_damage(self.damage, neighbour_to_attacker_angle)
+                    if self.damage != 0:
+                        neighbour.get_damage(self.damage, self.creator.angle)
 
     def sprite_manager(self):
         self.image_name = self.IMAGE_NAMES[self.image_ind // self.one_frame_vision_time]
@@ -81,7 +82,7 @@ class EnemySlash(PlayerSlash):
 
     def collision_manager(self):
         if dist(self.creator.pos, self.scene.player.pos) <= self.length:
-            self.scene.player.get_damage(self.damage)
+            self.scene.player.die(self.angle)
 
 
 class Punch(PlayerSlash):
@@ -100,12 +101,12 @@ class Punch(PlayerSlash):
         self.zoom = 1.15
         self.damage = 25
         self.reach = 1
-        self.scene.player.image_name = 'moving_objects.punch'
+        self.scene.player.image_name = 'moving_objects.player.punch'
 
     def process_logic(self):
         super().process_logic()
         self.damage = 0
 
     def destroy(self):
-        self.scene.player.image_name = 'moving_objects.player_barehanded'
+        self.scene.player.image_name = 'moving_objects.player.barehanded'
         super().destroy()

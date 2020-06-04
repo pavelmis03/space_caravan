@@ -8,12 +8,13 @@ from utils.random import is_accurate_random_proc
 from utils.random import weight_choice
 
 
-def create_enemy(grid, i: int, j: int, weapon_name: str):
+def create_enemy(grid, i: int, j: int, weapon_name: str, enemy_img: Tuple[str, str]):
     """
     Создать врага под данным индексом с рандомным поворотом.
     """
     enemy = Enemy(grid.scene, grid.controller,
                   grid.get_center_of_cell_by_indexes(i, j), random())
+    enemy.set_img(enemy_img)
     enemy.set_weapon(weapon_name)
     grid.scene.enemies.append(enemy)
 
@@ -33,13 +34,14 @@ class LevelObjectsGenerator:
     def __init__(self, grid, rectangles: List[GridRectangle],
                  enemy_weapons: List[Tuple[int, str]], chest_weapon_drop: List[Tuple[int, str]],
                  chest_other_drop: List[Tuple[int, str]], chance_weapon_drop: int,
-                 chest_imgs: Tuple[str, str]):
+                 enemy_img: Tuple[str, str], chest_imgs: Tuple[str, str]):
         self.__grid = grid
         self.__rectangles = rectangles
         self.__enemy_weapons = enemy_weapons
         self.__chest_weapon_drop = chest_weapon_drop
         self.__chest_other_drop = chest_other_drop
         self.__chance_weapon_drop = chance_weapon_drop
+        self.__enemy_img = enemy_img
         self.__chest_imgs = chest_imgs
 
     def generate(self):
@@ -71,7 +73,7 @@ class LevelObjectsGenerator:
         if self.__grid.is_enemy_can_stay(random_i, random_j):
             # этот if вроде не нужен, но оставлю его, чтобы ничего не сломать (при будущих модификациях)
             random_weapon = weight_choice(self.__enemy_weapons)
-            create_enemy(self.__grid, random_i, random_j, random_weapon)
+            create_enemy(self.__grid, random_i, random_j, random_weapon, self.__enemy_img)
 
     def __generate_chest(self, room: GridRectangle):
         CHANCE_SPAWN = 10
