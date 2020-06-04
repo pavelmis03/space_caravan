@@ -284,8 +284,8 @@ class Knife(MeleeWeapon):
     """
     IMAGE_NAME = 'weapons.knife'
     ANIMATION = [
-        'moving_objects.knife_attack1',
-        'moving_objects.knife_attack2',
+        'moving_objects.player.knife1',
+        'moving_objects.player.knife2',
     ]
     ATTACK_SOUND = 'weapon.attack.sword'
     DESCRIPTION = """
@@ -313,7 +313,7 @@ class Knife(MeleeWeapon):
         if self.animation_ind != -1:
             if self.animation_ind == (self.one_animation_frame_vision_time * len(self.ANIMATION)):
                 self.animation_ind = -1
-                self.scene.player.image_name = 'moving_objects.player_with_knife'
+                self.scene.player.image_name = 'moving_objects.player.knife'
             else:
                 self.scene.player.image_name = self.ANIMATION[self.animation_ind //
                                                               self.one_animation_frame_vision_time]

@@ -80,10 +80,10 @@ class CloneCapsule(UsableObject):
             self.changing_cooldown = self.COOLDOWN_TIME
 
             if self.scene.player.weapon.__class__.__name__ == 'Knife':
-                self.scene.player.image_name = 'moving_objects.player_with_knife'
+                self.scene.player.image_name = 'moving_objects.player.knife'
                 self.scene.player.weapon.animation_ind = -1
             elif self.scene.player.weapon.__class__.__name__ == 'Fist':
-                self.scene.player.image_name = 'moving_objects.player_barehanded'
+                self.scene.player.image_name = 'moving_objects.player.barehanded'
 
             if not(self.scene.player.is_clone or self.is_clone_created):
                 if self.scene.common_data.essence >= CloneCapsule.CLONE_COST:
