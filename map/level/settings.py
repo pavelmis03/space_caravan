@@ -58,10 +58,10 @@ level_settings = [
                   ('enemy.violet.range', 'enemy.simple.melee'),
                 ('level_objects.boxes.box', 'level_objects.boxes.box_open'),
                 [(10, 'Sword'), (30, 'SniperRifle'), (30, 'Shotgun'), (30, 'AutomaticRifle')],
-                  [(10, 'Sword'), (40, 'AutomaticRifle'), (50, 'TacticalShotgun')]),
+                  [(10, 'Knife'), (40, 'AutomaticRifle'), (50, 'TacticalShotgun')]),
     LevelSettings('level.mushroom_planet.floor1', 'level.mushroom_planet.wall',
                   ('enemy.mushroom.range', 'enemy.mushroom.melee'),
                 ('level_objects.boxes.box', 'level_objects.boxes.box_open'),
                 [(10, 'Sword'), (20, 'AutomaticRifle'), (30, 'Shotgun'), (40, 'TacticalShotgun')],
-                  [(50, 'Sword'), (40, 'AutomaticRifle'), (10, 'TacticalShotgun')])
+                  [(50, 'Knife'), (40, 'AutomaticRifle'), (10, 'TacticalShotgun')])
 ]
