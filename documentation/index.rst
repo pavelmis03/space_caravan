@@ -6,13 +6,14 @@
 Документация проекта Space Caravan
 ==================================
 
-.. toctree::
+ .. toctree::
    :maxdepth: 1
    :caption: Содержание:
 
    developer_docs/code
    architecture_docs/arch
    architecture_docs/patterns
+   user_docs/user
 
 
 Инструменты
