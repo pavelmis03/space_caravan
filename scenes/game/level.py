@@ -41,11 +41,13 @@ class LevelScene(GameScene):
     """
     FIXED_CAMERA = False
     PLAYER_SPAWN_POINT = Point(100, 100)
+    DRAW_GRID = True
 
     def __init__(self, game, data_filename: str):
         super().__init__(game, data_filename)
         self.game_objects = []
         self.enemies = []
+        self.soulless_bodies = []
         self.relative_center = Point(0, 0)
         self.pause_object = None
         self.plane = GamePlane()
@@ -58,6 +60,9 @@ class LevelScene(GameScene):
         self.e_timer.start()
 
     def to_dict(self) -> Dict:
+        """
+        Список soulless_bodies не сохраняется, бездушное тело созраняет капсула клонирования.
+        """
         result = super().to_dict()
         result.update({
             'game_objects': to_list_of_dicts(self.game_objects),
@@ -132,6 +137,8 @@ class LevelScene(GameScene):
 
         for item in self.game_objects:
             item.process_logic()
+        for item in self.soulless_bodies:
+            item.process_logic()
         for item in self.enemies:
             self.grid.save_enemy_pos(item.pos)
         for item in self.enemies:
@@ -149,6 +156,7 @@ class LevelScene(GameScene):
         """
         delete_destroyed(self.game_objects)
         delete_destroyed(self.enemies)
+        delete_destroyed(self.soulless_bodies)
 
     def process_all_logic(self):
         if not self.pause_object:
@@ -164,11 +172,14 @@ class LevelScene(GameScene):
         """
         Игровая отрисовка в следующем порядке: сетка, игровые объекты и враги, игрок.
         """
-        self.grid.process_draw()
+        if self.DRAW_GRID:
+            self.grid.process_draw()
 
         for item in self.game_objects:
             item.process_draw()
         for item in self.enemies:
+            item.process_draw()
+        for item in self.soulless_bodies:
             item.process_draw()
 
         self.player.process_draw()

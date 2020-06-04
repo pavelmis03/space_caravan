@@ -380,7 +380,7 @@ WEAPON_ON_FLOOR_IMAGE = {
     'OldRifle': 'weapons_on_floor.old_rifle',
     'SemiAutomaticRifle': 'weapons_on_floor.semi_automatic_rifle',
     'Knife': 'weapons_on_floor.knife',
-    'Sword': 'weapons.gun',
+    'Sword': 'weapons_on_floor.knife', #не стоит его использовать
 }
 
 
