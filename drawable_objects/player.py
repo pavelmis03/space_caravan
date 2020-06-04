@@ -223,6 +223,9 @@ class Player(Humanoid):
         elif self.weapon.__class__.__name__ == 'Fist':
             if self.image_name != 'moving_objects.punch':
                 self.image_name = 'moving_objects.player_barehanded'
+        elif self.weapon.__class__.__name__ == 'Knife':
+            if self.image_name != 'moving_objects.knife_attack1' and self.image_name != 'moving_objects.knife_attack2':
+                self.image_name = 'moving_objects.player_with_knife'
         else:
             self.image_name = 'moving_objects.player'
 

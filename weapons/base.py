@@ -211,6 +211,7 @@ class MeleeWeapon(Weapon):
         :param length: Длина клинка -> int
         """
         super().__init__(owner, interface_image, main_attack_interval)
+        self.zoom = 1.15
         self.length = owner.HITBOX_RADIUS + length
         self.type = 'Melee'
 
@@ -225,4 +226,6 @@ class MeleeWeapon(Weapon):
             self.scene.game_objects.append(EnemySlash(self.owner, self.length))
 
     def process_draw(self):
-        pass
+        if self.owner.__class__.__name__ != 'Player' and self.owner.__class__.__name__ != 'Enemy' and \
+                self.owner.__class__.__name__ != 'SoullessPlayer':
+            super().process_draw()

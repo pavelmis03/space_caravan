@@ -73,7 +73,7 @@ class SpaceshipScene(LevelScene):
         shelf_spawn_point += Point (1, 1) * \
                              self.TOP_LEFT_CORNER_BIAS * self.CELL_SIZE
         self.game_objects.append(WeaponShelf(
-            self, self.game.controller, shelf_spawn_point, -pi/2, 'AutomaticRifle'))
+            self, self.game.controller, shelf_spawn_point, -pi/2, 'Knife'))
 
         self.common_data = CommonGameData(self)
         self.common_data.initialize()

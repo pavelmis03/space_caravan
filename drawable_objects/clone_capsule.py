@@ -60,7 +60,7 @@ class CloneCapsule(UsableObject):
     """
     IMAGE_NAME = 'level_objects.clone'
     IMAGE_ZOOM = 0.38
-    CLONE_COST = 3
+    CLONE_COST = 0
     COOLDOWN_TIME = 30
 
     def __init__(self, scene: Scene, controller: Controller, pos: Point, angle: float = 0):
@@ -78,6 +78,13 @@ class CloneCapsule(UsableObject):
     def activate(self):
         if not self.changing_cooldown:
             self.changing_cooldown = self.COOLDOWN_TIME
+
+            if self.scene.player.weapon.__class__.__name__ == 'Knife':
+                self.scene.player.image_name = 'moving_objects.player_with_knife'
+                self.scene.player.weapon.animation_ind = -1
+            elif self.scene.player.weapon.__class__.__name__ == 'Fist':
+                self.scene.player.image_name = 'moving_objects.player_barehanded'
+
             if not(self.scene.player.is_clone or self.is_clone_created):
                 if self.scene.common_data.essence >= CloneCapsule.CLONE_COST:
                     self.scene.common_data.essence -= CloneCapsule.CLONE_COST

@@ -41,7 +41,7 @@ class BurstFiringPistol(RangedWeapon):
                     Тип: Средние дистанции
                     Урон: 35
                     Точность: 40
-                    Интервал между очередями: 15
+                    Интервал между очередями: 14
                     Время перезарядки: 40
                     Очереди стреляющие пистолетом. Стоп, что-то тут не так... 
                     """
@@ -49,7 +49,7 @@ class BurstFiringPistol(RangedWeapon):
     def __init__(self, owner, bullets_in_magazine=20):
         super().__init__(owner, interface_image='interface.weapon_icons.burst_firing_pistol',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=20,
-                         main_attack_interval=15, reload_time=60, ammo_type='Pistol',
+                         main_attack_interval=14, reload_time=40, ammo_type='Pistol',
                          accuracy=40, damage=35, combo_attack_interval=3, combo_size=4)
 
 
@@ -278,6 +278,49 @@ class Sword(MeleeWeapon):
                          main_attack_interval=15, length=60)
 
 
+class Knife(MeleeWeapon):
+    """
+    Нож(только для Player)
+    """
+    IMAGE_NAME = 'weapons.knife'
+    ANIMATION = [
+        'moving_objects.knife_attack1',
+        'moving_objects.knife_attack2',
+    ]
+    ATTACK_SOUND = 'weapon.attack.sword'
+    DESCRIPTION = """
+                            Оружие: Меч
+                            Тип: Ближние дистанции
+                            Урон: 999
+                            Точность: 999
+                            Интервал удара: 15
+                            Время перезарядки: ОНА ЕМУ НЕ НУЖНА
+                            Этим ножом можно резать масло как своих врагов
+                            """
+
+    def __init__(self, owner):
+        super().__init__(owner, interface_image='interface.weapon_icons.knife',
+                         main_attack_interval=15, length=60)
+        self.one_animation_frame_vision_time = 3
+        self.animation_ind = -1
+
+    def attack(self):
+        super().attack()
+        self.scene.player.image_name = self.ANIMATION[0]
+        self.animation_ind = 0
+
+    def process_logic(self):
+        if self.animation_ind != -1:
+            if self.animation_ind == (self.one_animation_frame_vision_time * len(self.ANIMATION)):
+                self.animation_ind = -1
+                self.scene.player.image_name = 'moving_objects.player_with_knife'
+            else:
+                self.scene.player.image_name = self.ANIMATION[self.animation_ind //
+                                                              self.one_animation_frame_vision_time]
+                self.animation_ind += 1
+        super().process_logic()
+
+
 class Fist(MeleeWeapon):
     """
     Кулак(персонаж бьёт только одним)
@@ -286,9 +329,9 @@ class Fist(MeleeWeapon):
     DESCRIPTION = """
                                 Оружие: братиш, у тебя его нет
                                 Тип: а да
-                                Урон: 20
+                                Урон: 25
                                 Точность: ну так себе
-                                Интервал удара: 9
+                                Интервал удара: 8
                                 Время перезарядки: ручки быстро устают
                                 Ты конечно можешь подкрасться к роботу сзади и открутить роботу голову, 
                                 но идти в бой без оружия может только безмозглый или Чак Норрис, 
@@ -297,7 +340,7 @@ class Fist(MeleeWeapon):
 
     def __init__(self, owner):
         super().__init__(owner, interface_image='interface.weapon_icons.nothing',
-                         main_attack_interval=9, length=40)
+                         main_attack_interval=8, length=40)
 
     def attack(self):
         """
@@ -320,6 +363,7 @@ WEAPON_VOCABULARY = {
     'OldRifle': OldRifle, #t1
     'SemiAutomaticRifle': SemiAutomaticRifle, #t2
     'Sword': Sword, #t?
+    'Knife': Knife,
     'Fist': Fist,
 }
 
@@ -335,6 +379,7 @@ WEAPON_ON_FLOOR_IMAGE = {
     'SniperRifle': 'weapons_on_floor.sniper_rifle',
     'OldRifle': 'weapons_on_floor.old_rifle',
     'SemiAutomaticRifle': 'weapons_on_floor.semi_automatic_rifle',
+    'Knife': 'weapons_on_floor.knife',
     'Sword': 'other.gun',
 }
 
