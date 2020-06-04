@@ -40,11 +40,11 @@ class FeaturesArranger:
     """
 
     PROBABILITY_FUNC = [
-        HillFunction(0, 250, 1.7),
-        HillFunction(250, 250),
-        HillFunction(500, 250, 0.75),
-        HillFunction(750, 250),
-        HillFunction(1000, 250, 1.5),
+        HillFunction(0, 175),
+        HillFunction(300, 175),
+        HillFunction(500, 175),
+        HillFunction(700, 175),
+        HillFunction(1000, 175),
     ]
     START_POSITION = Point(0, ESTIMATED_SPACE_SIZE[1] / 2)
 
