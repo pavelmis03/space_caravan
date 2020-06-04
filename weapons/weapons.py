@@ -64,7 +64,7 @@ class Shotgun(RangedWeapon):
                    Оружие: Дробовик
                    Тип: Средние дистанции
                    Урон: 50
-                   Точность: 35
+                   Точность: 33
                    Интервал стрельбы: 15
                    Время перезарядки: 70
                    Ну тут все просто, стреляй по толпе и хоть в кого-то точно попадешь 
@@ -74,7 +74,7 @@ class Shotgun(RangedWeapon):
         super().__init__(owner, interface_image='interface.weapon_icons.shotgun',
                          bullets_in_magazine=bullets_in_magazine, magazine_size=6,
                          main_attack_interval=15, reload_time=70, ammo_type='Shotgun',
-                         accuracy=35, damage=50, shells=5)
+                         accuracy=33, damage=50, shells=5)
 
 
 class TwoBarrelShotgun(RangedWeapon):
