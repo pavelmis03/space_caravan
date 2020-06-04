@@ -31,7 +31,7 @@ class SpaceshipScene(LevelScene):
     PLAYER_SPAWN_POINT = Point(1, 1) * TOP_LEFT_CORNER_BIAS * \
         CELL_SIZE + Point(ROOM_WIDTH, ROOM_HEIGHT) * CELL_SIZE / 2
     DATA_FILENAME = 'spaceship'
-    CONGRATULATION_DELAY = 100
+    CONGRATULATION_DELAY = 20
     DRAW_GRID = False
 
     def __init__(self, game):
