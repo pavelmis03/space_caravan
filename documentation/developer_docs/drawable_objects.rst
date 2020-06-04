@@ -12,12 +12,22 @@ base.py
     :members:
     :undoc-members:
 
- .. _drawable_objects.analisor:
+ .. _drawable_objects.analyser:
 
-analisor.py
+analyser.py
 -----------
 
- .. automodule:: drawable_objects.analisor
+ .. automodule:: drawable_objects.analyser
+    :members:
+    :undoc-members:
+
+
+ .. _drawable_objects.bed:
+
+bed.py
+------
+
+ .. automodule:: drawable_objects.bed
     :members:
     :undoc-members:
 
