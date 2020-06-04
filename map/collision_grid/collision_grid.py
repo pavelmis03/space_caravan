@@ -70,7 +70,7 @@ class CollisionGrid(Grid):
         return self.arr[i][j].image_name != self._get_filename(0)
 
     def _get_filename(self, filename_index: int) -> str:
-        FILENAMES = ['level.wall1', 'level.floor3']
+        FILENAMES = ['level.spaceship.wall', 'level.spaceship.floor']
         return FILENAMES[filename_index]
 
     def get_collision_rect(self, i: int, j: int) -> Rectangle:

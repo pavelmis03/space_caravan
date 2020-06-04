@@ -1,4 +1,6 @@
 from typing import Dict
+
+from utils.sound import SoundManager
 from weapons.base import Weapon, RangedWeapon, MeleeWeapon
 
 
@@ -7,6 +9,8 @@ class Pistol(RangedWeapon):
     Пистолет
     """
     IMAGE_NAME = 'weapons.pistol'
+    SHOOT_SOUND = 'weapon.attack.pistol'
+    RELOAD_SOUND = 'weapon.reload.pistol'
     DESCRIPTION = """
                 Оружие: Пистолет
                 Тип: Средние дистанции
@@ -30,7 +34,8 @@ class BurstFiringPistol(RangedWeapon):
     Стреляющий очередями пистолет
     """
     IMAGE_NAME = 'weapons.burst_firing_pistol'
-
+    SHOOT_SOUND = 'weapon.attack.pistol'
+    RELOAD_SOUND = 'weapon.reload.pistol'
     DESCRIPTION = """
                     Оружие: Пистолет стреляющий очередями
                     Тип: Средние дистанции
@@ -53,7 +58,8 @@ class Shotgun(RangedWeapon):
     Дробовик
     """
     IMAGE_NAME = 'weapons.shotgun'
-
+    SHOOT_SOUND = 'weapon.attack.shotgun'
+    RELOAD_SOUND = 'weapon.reload.shotgun'
     DESCRIPTION = """
                    Оружие: Дробовик
                    Тип: Средние дистанции
@@ -76,7 +82,8 @@ class TwoBarrelShotgun(RangedWeapon):
     Двустволка
     """
     IMAGE_NAME = 'weapons.two_barrel_shotgun'
-
+    SHOOT_SOUND = 'weapon.attack.shotgun'
+    RELOAD_SOUND = 'weapon.reload.shotgun'
     DESCRIPTION = """
                     Оружие: Двустволка
                     Тип: Дальние дистанции
@@ -104,7 +111,8 @@ class ThreeBarrelShotgun(RangedWeapon):
     Трёхстволка
     """
     IMAGE_NAME = 'weapons.three_barrel_shotgun'
-
+    SHOOT_SOUND = 'weapon.attack.shotgun'
+    RELOAD_SOUND = 'weapon.reload.shotgun'
     DESCRIPTION = """
                     Оружие: Трёхстволка
                     Тип: Средние дистанции
@@ -132,7 +140,8 @@ class TacticalShotgun(RangedWeapon):
     Тактический дробовик
     """
     IMAGE_NAME = 'weapons.tactical_shotgun'
-
+    SHOOT_SOUND = 'weapon.attack.shotgun'
+    RELOAD_SOUND = 'weapon.reload.shotgun'
     DESCRIPTION = """
                     Оружие: Тактический дробовик
                     Тип: Средние дистанции
@@ -156,7 +165,8 @@ class AutomaticRifle(RangedWeapon):
     Автоматическая винтовка
     """
     IMAGE_NAME = 'weapons.automatic_rifle'
-
+    SHOOT_SOUND = 'weapon.attack.rifle2'
+    RELOAD_SOUND = 'weapon.reload.rifle2'
     DESCRIPTION = """
                 Оружие: Автоматическая винтовка
                 Тип: Средние дистанции
@@ -164,7 +174,7 @@ class AutomaticRifle(RangedWeapon):
                 Точность: 60
                 Интервал стрельбы: 4
                 Время перезарядки: 60
-                Описание:  
+                Эта винтовка настолько автоматическая, что ты ей, впрочем, и не нужен...
                 """
 
     def __init__(self, owner, bullets_in_magazine=25):
@@ -179,7 +189,8 @@ class SniperRifle(RangedWeapon):
     Снайперская винтовка
     """
     IMAGE_NAME = 'weapons.sniper_rifle'
-
+    SHOOT_SOUND = 'weapon.attack.rifle1'
+    RELOAD_SOUND = 'weapon.reload.rifle1'
     DESCRIPTION = """
                 Оружие: Снайперская винтовка
                 Тип: Дальние дистанции
@@ -187,7 +198,7 @@ class SniperRifle(RangedWeapon):
                 Точность: 110
                 Интервал стрельбы: 20
                 Время перезарядки: 80
-                Описание:  
+                Она настолько крутая, что с ее помощью ты сможешь попасть в глаз на расстоянии 300 м, правда себе...  
                 """
 
     def __init__(self, owner, bullets_in_magazine=5):
@@ -202,7 +213,8 @@ class OldRifle(RangedWeapon):
     Старая винтовка
     """
     IMAGE_NAME = 'weapons.old_rifle'
-
+    SHOOT_SOUND = 'weapon.attack.rifle2'
+    RELOAD_SOUND = 'weapon.reload.rifle2'
     DESCRIPTION = """
                         Оружие: Довоенная винтовка
                         Тип: Дальние дистанции
@@ -226,7 +238,8 @@ class SemiAutomaticRifle(RangedWeapon):
     Полуавтоматическая винтовка
     """
     IMAGE_NAME = 'weapons.semi_automatic_rifle'
-
+    SHOOT_SOUND = 'weapon.attack.rifle1'
+    RELOAD_SOUND = 'weapon.reload.rifle1'
     DESCRIPTION = """
                         Оружие: Полуавтоматическая винтовка
                         Тип: Дальние дистанции
@@ -249,7 +262,7 @@ class Sword(MeleeWeapon):
     Меч
     """
     IMAGE_NAME = 'other.gun'
-
+    ATTACK_SOUND = 'weapon.attack.sword'
     DESCRIPTION = """
                             Оружие: Меч
                             Тип: Ближние дистанции
@@ -269,15 +282,17 @@ class Fist(MeleeWeapon):
     """
     Кулак(персонаж бьёт только одним)
     """
+    ATTACK_SOUND = 'weapon.attack.fist'
     DESCRIPTION = """
                                 Оружие: братиш, у тебя его нет
-                                Тип: угу
+                                Тип: а да
                                 Урон: 20
                                 Точность: ну так себе
                                 Интервал удара: 9
                                 Время перезарядки: ручки быстро устают
                                 Ты конечно можешь подкрасться к роботу сзади и открутить роботу голову, 
-                                но идти в бой без оружия может только безмозглый или Чак Норрис, но что-то я не вижу на тебе шляпы
+                                но идти в бой без оружия может только безмозглый или Чак Норрис, 
+                                но что-то я не вижу на тебе шляпы
                                 """
 
     def __init__(self, owner):
@@ -289,7 +304,7 @@ class Fist(MeleeWeapon):
         Функция атаки
         """
         from drawable_objects.slash import Punch
-        # SoundManager.play_sound('weapon.shoot')
+        SoundManager.play_sound(self.ATTACK_SOUND)
         self.scene.game_objects.append(Punch(self.owner, self.length))
 
 

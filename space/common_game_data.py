@@ -19,6 +19,8 @@ class CommonGameData:
         self.essence = 0
         self.planet_biom = {}
         self.planet_completed = {}
+        self.__space_completed = False
+        self.user_congratulated = False
 
     def initialize(self):
         self.fuel = self.START_FUEL
@@ -29,6 +31,7 @@ class CommonGameData:
         self.essence = data_dict['essence']
         self.planet_biom = data_dict['planet_biom']
         self.planet_completed = data_dict['planet_completed']
+        self.user_congratulated = data_dict['user_congratulated']
 
     def to_dict(self) -> Dict:
         return {
@@ -36,6 +39,7 @@ class CommonGameData:
             'essence': self.essence,
             'planet_biom': self.planet_biom,
             'planet_completed': self.planet_completed,
+            'user_congratulated': self.user_congratulated,
         }
 
     def load(self):
@@ -43,3 +47,15 @@ class CommonGameData:
 
     def save(self):
         self.__scene.game.file_manager.write_data(self.DATA_FILENAME, self.to_dict())
+
+    def is_space_completed(self) -> bool:
+        """
+        Пройден ли космос. Пока планеты не сгенерированы, не пройден. Пока сгенерированные планеты не пройдены,
+        не пройден. Иначе пройден.
+        """
+        if len(self.planet_completed) == 0:
+            return False
+        for completed in self.planet_completed.values():
+            if not completed:
+                return False
+        return True

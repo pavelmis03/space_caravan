@@ -6,6 +6,7 @@ from geometry.point import Point
 from controller.controller import Controller
 from scenes.base import Scene
 from utils.image import ImageManager
+from utils.sound import SoundManager
 
 
 class AbstractObject:
@@ -192,6 +193,7 @@ class Humanoid(GameSprite):
     """
     HITBOX_RADIUS = 25
     MAXHP = 100
+    HURT_SOUND = ''
 
     def __init__(self, scene: Scene, controller: Controller, image_name: str, pos: Point, angle: float = 0,
                  zoom: float = 1):
@@ -215,6 +217,8 @@ class Humanoid(GameSprite):
             if self.hp <= 0:
                 self.hp = 0
                 self.die(angle_of_attack)
+            else:
+                SoundManager.play_sound(self.HURT_SOUND)
 
     def to_dict(self) -> Dict:
         result = super().to_dict()
