@@ -98,7 +98,7 @@ class CloneCapsule(UsableObject):
                     self.scene.player.change_weapon_cooldown = 0
 
                     self.soulless_player = SoullessPlayer(self.scene.player)
-                    self.scene.game_objects.append(self.soulless_player)
+                    self.scene.soulless_bodies.append(self.soulless_player)
 
                     self.scene.player.hp = self.scene.player.MAXHP
                     self.scene.player.ammo = {
@@ -159,7 +159,7 @@ class CloneCapsule(UsableObject):
             else:
                 self.soulless_player = SoullessPlayer(self.scene.player)
                 self.load_player_paremeters(self.soulless_player, data_dict)
-                self.scene.game_objects.append(self.soulless_player)
+                self.scene.soulless_bodies.append(self.soulless_player)
 
     def to_dict(self) -> Dict:
         result = super().to_dict()

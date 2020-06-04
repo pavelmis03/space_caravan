@@ -32,6 +32,7 @@ class SpaceshipScene(LevelScene):
         CELL_SIZE + Point(ROOM_WIDTH, ROOM_HEIGHT) * CELL_SIZE / 2
     DATA_FILENAME = 'spaceship'
     CONGRATULATION_DELAY = 100
+    DRAW_GRID = False
 
     def __init__(self, game):
         super().__init__(game, self.DATA_FILENAME)
@@ -93,7 +94,6 @@ class SpaceshipScene(LevelScene):
         self.game_objects.append(WeaponShelf(
             self, self.game.controller, shelf2_spawn_point, 0, 'TwoBarrelShotgun'))
 
-
     def load_common_data(self):
         super().load_common_data()
         if self.common_data.is_space_completed() and not self.common_data.user_congratulated:
@@ -108,10 +108,4 @@ class SpaceshipScene(LevelScene):
 
     def game_draw(self):
         self.background.process_draw()
-
-        for item in self.game_objects:
-            item.process_draw()
-        for item in self.enemies:
-            item.process_draw()
-
-        self.player.process_draw()
+        super().game_draw()
