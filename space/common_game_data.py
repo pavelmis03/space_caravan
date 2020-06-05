@@ -8,7 +8,7 @@ class CommonGameData:
     Объект с общими данными игры, которые нужны всем игровым сценам. Здесь хранятся запасы ресурсов игрока,
     некоторые данные о планетах.
     """
-    START_FUEL = 1000
+    START_FUEL = 400
     START_ESSENCE = 0
 
     DATA_FILENAME = 'common_game_data'
