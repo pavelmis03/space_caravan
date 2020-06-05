@@ -1,16 +1,21 @@
 from math import ceil
 
 from drawable_objects.planet import Planet
-from geometry.distances import dist
+from geometry.vector import length
 
 
 class TravelCostCounter:
     """
     Счетчик стоимости перелета между планетами.
     """
+    HORIZONTAL_KOEF = 0.6
+    VERTICAL_KEOF = 0.4
+    
     def __init__(self):
         pass
 
     def get_cost(self, planet_from: Planet, planet_to: Planet) -> int:
-        travel_length = dist(planet_from.estimated_pos, planet_to.estimated_pos)
-        return ceil(travel_length / 2.5)
+        travel_vector = planet_to.estimated_pos - planet_from.estimated_pos
+        travel_vector.x *= self.HORIZONTAL_KOEF
+        travel_vector.y *= self.VERTICAL_KEOF
+        return ceil(length(travel_vector))

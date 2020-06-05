@@ -52,8 +52,8 @@ class Player(Humanoid):
     ]
     TAB_WEAPON_SLOTS_CONTROLS = pygame.K_TAB
     WEAPON_RELOAD_KEY = pygame.K_r
-    SPEED = 10
-    MAXHP = 300
+    SPEED = 20 # 10
+    MAXHP = 3000000 # 300
 
     DATA_FILENAME = 'player'
 
@@ -66,7 +66,7 @@ class Player(Humanoid):
         #]
         self.ammo = {
             'Pistol': 200,
-            'Shotgun': 60,
+            'Shotgun': 60000, # 60
             'Rifle': 100,
         }
         self.weapon_slots = [
@@ -176,7 +176,8 @@ class Player(Humanoid):
             if self.controller.is_key_pressed(Player.CONTROLS[i]):
                 velocity += DIRECTIONS[i]
         velocity *= self.SPEED
-        new_player_pos = self._pos_after_pull_from_walls(self.pos + velocity)
+        # new_player_pos = self._pos_after_pull_from_walls(self.pos + velocity)
+        new_player_pos = self.pos + velocity
         self.move(new_player_pos)
 
     def _weapon_controls(self):
