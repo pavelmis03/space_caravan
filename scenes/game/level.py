@@ -167,7 +167,6 @@ class LevelScene(GameScene):
 
         self.delete_destroyed_objects()
         self.e_timer.process_logic()
-        self.enemies.clear()
 
     def game_draw(self):
         """
